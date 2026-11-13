@@ -1,0 +1,34 @@
+{
+  "sourceProject": "StudyJunior",
+  "copiedOn": "2026-11-13",
+  "selectionNote": "Selected from the project owner’s local SVG exports at their request. Original SVG bytes are preserved. No remote MCP calls or credentials were used.",
+  "assets": [
+    {
+      "file": "octopus.svg",
+      "description": "Purple octopus with curling arms",
+      "sourcePath": "tools/aquatic-rigging/work/static/octopus.svg",
+      "sha256": "f98fb7e72a347cc922e5db6721e13f863a3c9d62b78227d713104086ae389593",
+      "bytes": 21891,
+      "viewBox": "63.677 32.3632 65.646 54.5235",
+      "modified": false
+    },
+    {
+      "file": "penguin.svg",
+      "description": "Smiling blue penguin",
+      "sourcePath": "tools/aquatic-rigging/work/static/penguin.svg",
+      "sha256": "97196dc1fb27c0bf63464af2591a553d1fc17112915186bd015b3763486d5ead",
+      "bytes": 5969,
+      "viewBox": "98.7956 119.8488 23.6587 28.6243",
+      "modified": false
+    },
+    {
+      "file": "saturn.svg",
+      "description": "Warm golden Saturn with rings",
+      "sourcePath": "main/src/assets/environments/space/solar-system/saturn.svg",
+      "sha256": "7448e5a48a373452d76ab9e24bbe0870dc3e6b5a52d9b65608c762f81644b35f",
+      "bytes": 7367,
+      "viewBox": "0 0 7718.506 4631.87",
+      "modified": false
+    }
+  ]
+}

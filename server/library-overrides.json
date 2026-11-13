@@ -1,0 +1,166 @@
+{
+  "hundred-game-01-drift": {
+    "description": "Hold to drift right, release to move left. Dodge the walls and collect glowing orbs.",
+    "genre": "Arcade",
+    "label": "Arcade",
+    "kind": "game"
+  },
+  "littlejs-astroblast": {
+    "description": "Pilot your ship, blast asteroids and chase a new high score.",
+    "genre": "Arcade",
+    "label": "Arcade",
+    "kind": "game"
+  },
+  "aba-draft-line": {
+    "description": "Slipstream past traffic and keep your run alive before the clock runs out.",
+    "genre": "Racing",
+    "label": "Racing",
+    "kind": "game"
+  },
+  "aba-sum-ten": {
+    "description": "Guide the cursor and collect numbers that add up to ten.",
+    "genre": "Maths",
+    "label": "Maths",
+    "kind": "puzzle"
+  },
+  "chogan-dots": {
+    "genre": "Board games",
+    "label": "Board games",
+    "kind": "game"
+  },
+  "chogan-mancala": {
+    "genre": "Board games",
+    "label": "Board games",
+    "kind": "game"
+  },
+  "chogan-freecell": {
+    "genre": "Card games",
+    "label": "Card games",
+    "kind": "game"
+  },
+  "chogan-reversi": {
+    "genre": "Board games",
+    "label": "Board games",
+    "kind": "game"
+  },
+  "chogan-backgammon": {
+    "genre": "Board games",
+    "label": "Board games",
+    "kind": "game"
+  },
+  "chogan-morris": {
+    "genre": "Board games",
+    "label": "Board games",
+    "kind": "game"
+  },
+  "chogan-battleship": {
+    "genre": "Board games",
+    "label": "Board games",
+    "kind": "game"
+  },
+  "chogan-pasur": {
+    "genre": "Card games",
+    "label": "Card games",
+    "kind": "game"
+  },
+  "chogan-chess": {
+    "genre": "Board games",
+    "label": "Board games",
+    "kind": "game"
+  },
+  "chogan-hokm": {
+    "genre": "Card games",
+    "label": "Card games",
+    "kind": "game"
+  },
+  "chogan-gomoku": {
+    "genre": "Board games",
+    "label": "Board games",
+    "kind": "game"
+  },
+  "chogan-go": {
+    "genre": "Board games",
+    "label": "Board games",
+    "kind": "game"
+  },
+  "chogan-blackjack": {
+    "genre": "Card games",
+    "label": "Card games",
+    "kind": "game"
+  },
+  "chogan-chain": {
+    "genre": "Board games",
+    "label": "Board games",
+    "kind": "game"
+  },
+  "chogan-ludo": {
+    "genre": "Board games",
+    "label": "Board games",
+    "kind": "game"
+  },
+  "chogan-snakes": {
+    "genre": "Board games",
+    "label": "Board games",
+    "kind": "game"
+  },
+  "chogan-checkers": {
+    "genre": "Board games",
+    "label": "Board games",
+    "kind": "game"
+  },
+  "chogan-klondike": {
+    "genre": "Card games",
+    "label": "Card games",
+    "kind": "game"
+  },
+  "chogan-crazyeights": {
+    "genre": "Card games",
+    "label": "Card games",
+    "kind": "game"
+  },
+  "chogan-ginrummy": {
+    "genre": "Card games",
+    "label": "Card games",
+    "kind": "game"
+  },
+  "chogan-shelem": {
+    "genre": "Card games",
+    "label": "Card games",
+    "kind": "game"
+  },
+  "chogan-spider": {
+    "genre": "Card games",
+    "label": "Card games",
+    "kind": "game"
+  },
+  "chogan-xiangqi": {
+    "genre": "Board games",
+    "label": "Board games",
+    "kind": "game"
+  },
+  "chogan-corridor": {
+    "genre": "Board games",
+    "label": "Board games",
+    "kind": "game"
+  },
+  "chogan-linkup": {
+    "genre": "Board games",
+    "label": "Board games",
+    "kind": "game"
+  },
+  "chogan-dominoes": {
+    "genre": "Board games",
+    "label": "Board games",
+    "kind": "game"
+  },
+  "chogan-fourrow": {
+    "genre": "Board games",
+    "label": "Board games",
+    "kind": "game"
+  },
+  "chogan-peak": {
+    "genre": "Card games",
+    "label": "Card games",
+    "kind": "game"
+  }
+}

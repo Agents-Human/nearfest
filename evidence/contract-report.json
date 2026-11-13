@@ -1,0 +1,51 @@
+{
+  "network": "isolated NEAR sandbox",
+  "wasm_sha256": "81f76634014a928d3750d655bc443cc06efd91986bd1eedff5838fa09310eff0",
+  "checks": [
+    {
+      "name": "exact funding, unique creation and immutable terms",
+      "passed": true
+    },
+    {
+      "name": "self, referee, wrong deposit and duplicate acceptance are rejected",
+      "passed": true
+    },
+    {
+      "name": "concession credits exact pot; only beneficiary can withdraw once",
+      "passed": true
+    },
+    {
+      "name": "invited opponent restriction and unmatched cancellation",
+      "passed": true
+    },
+    {
+      "name": "premature reports and automatic results are rejected",
+      "passed": true
+    },
+    {
+      "name": "unmatched expiry refund is permissionless and not repeatable",
+      "passed": true
+    },
+    {
+      "name": "matching player results settle and disagreements require chosen referee",
+      "passed": true
+    },
+    {
+      "name": "oracle authorization, evidence commitment and review window",
+      "passed": true
+    },
+    {
+      "name": "unchallenged verdict finalizes; disputed verdict cannot bypass players",
+      "passed": true
+    },
+    {
+      "name": "48-hour timeout refunds matched and challenged bets exactly once",
+      "passed": true
+    },
+    {
+      "name": "all remaining obligations can be collected and no callback is externally callable",
+      "passed": true
+    }
+  ],
+  "completed_at": "2026-11-13T15:01:03.944Z"
+}

@@ -1,0 +1,37 @@
+{
+  "collections": [
+    {
+      "repository": "Srikanth-AD/100games",
+      "sourceUrl": "https://github.com/Srikanth-AD/100games",
+      "archiveUrl": "https://codeload.github.com/Srikanth-AD/100games/legacy.tar.gz/HEAD",
+      "archiveSha256": "cb675ad909494e2fb02d64b5af5c5005c1c454fe74e22152d77e26aa1176cfcc",
+      "revision": "8d805f98a120e1185041aa9c55828e83f8903b84",
+      "licence": "MIT",
+      "licenceUrl": "https://github.com/Srikanth-AD/100games/blob/main/LICENSE",
+      "licenceSha256": "52b94fef26d5a57bfda76faf708351af072613707382a92e0e50910048380787",
+      "copyright": "2026 Srikanth-AD"
+    },
+    {
+      "repository": "KilledByAPixel/LittleJSArcade",
+      "sourceUrl": "https://github.com/KilledByAPixel/LittleJSArcade",
+      "archiveUrl": "https://codeload.github.com/KilledByAPixel/LittleJSArcade/legacy.tar.gz/HEAD",
+      "archiveSha256": "22a265b503bf84f48fb90c583a0fc8961c82c944bb5c7dcc654f0d6a1b3c7b06",
+      "revision": "c14102b706a5f1bbedbbe5087706d6425660300c",
+      "licence": "MIT",
+      "licenceUrl": "https://github.com/KilledByAPixel/LittleJSArcade/blob/main/LICENSE",
+      "licenceSha256": "c88188d58389fe50cacc713ba867fc9f2f0904de06971af625541388bbd0c162",
+      "copyright": "2026 Frank Force"
+    },
+    {
+      "repository": "choganhq/chogan",
+      "sourceUrl": "https://github.com/choganhq/chogan",
+      "archiveUrl": "https://codeload.github.com/choganhq/chogan/legacy.tar.gz/HEAD",
+      "archiveSha256": "4088e45238162c09725e5e5536ed88e9bf519ba66d29429db139f05c543e8999",
+      "revision": "03f5ae75971168182222acf30c67d7effec48370",
+      "licence": "MIT",
+      "licenceUrl": "https://github.com/choganhq/chogan/blob/main/LICENSE",
+      "licenceSha256": "5d56a517b9046037b4a83024e79314c8f3b74f9b7144c7a68ac939efb8da1a97",
+      "copyright": "2026 Chogan (choganhq)"
+    }
+  ]
+}

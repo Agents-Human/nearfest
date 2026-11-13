@@ -1,0 +1,28 @@
+{
+  "name": "sounds-some-sounds",
+  "version": "3.0.0",
+  "description": "Add sounds to your game in a minute",
+  "author": "abagames",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/abagames/sounds-some-sounds.git"
+  },
+  "homepage": "https://github.com/abagames/sounds-some-sounds",
+  "main": "build/index.js",
+  "typings": "typings/index.d.ts",
+  "scripts": {
+    "build": "vite build",
+    "dev_demo": "vite dev --config vite_demo.config.js",
+    "build_demo": "vite build --config vite_demo.config.js",
+    "preview_demo": "vite preview --config vite_demo.config.js"
+  },
+  "devDependencies": {
+    "typescript": "^4.7.4",
+    "vite": "^3.0.9"
+  },
+  "dependencies": {
+    "@tonaljs/tonal": "^4.6.5",
+    "mml-iterator": "^1.1.0"
+  }
+}

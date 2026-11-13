@@ -1,0 +1,10 @@
+node_modules/
+dist/
+data/
+.env
+.env.*
+!.env.example
+contract/target/
+contract/*.wasm
+.DS_Store
+evidence/*.png

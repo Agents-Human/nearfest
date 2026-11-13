@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 440"><title>BOOMERANG — slotVend cover</title><rect width="640" height="440" fill="#d8c9f1"/><circle cx="550" cy="20" r="230" fill="#fff9e9" opacity=".13"/><path d="M0 373Q190 330 341 397T640 372V440H0Z" fill="#fff9e9" opacity=".13"/><g stroke="#242820" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><ellipse cx="324" cy="358" rx="160" ry="17" fill="#242820" opacity=".08" stroke="none"/>
+    <path d="M113 245C57 160 168 67 326 70C473 73 558 145 528 228C510 280 435 309 371 309" fill="none" stroke-width="3" stroke-dasharray="9 11" opacity=".42"/>
+    <path d="M399 293L369 310L399 322" fill="none" stroke-width="3"/>
+    <g transform="rotate(-12 320 220)">
+      <path d="M191 103Q177 98 173 113Q170 121 176 134L257 303Q267 326 291 316L480 225Q494 219 488 204L477 183Q470 169 458 175L299 250L215 119Q204 102 191 103Z" fill="#b56d44"/>
+      <path d="M185 94Q171 89 167 104Q164 112 170 125L251 294Q261 317 285 307L474 216Q488 210 482 195L471 174Q464 160 452 166L293 241L209 110Q198 93 185 94Z" fill="#dfaa6f"/>
+      <path d="M190 102L281 258L466 179" fill="none" stroke="#f4d2a0" stroke-width="5"/>
+      <path d="M183 153L215 134L235 165L199 186Z" fill="#f7e663"/>
+      <path d="M205 200L245 181L258 202L216 222Z" fill="#fff9e9"/>
+      <path d="M403 189L422 241L444 230L426 178Z" fill="#f7e663"/>
+      <path d="M371 205L387 258L365 269L350 216Z" fill="#fff9e9"/>
+      <path d="M251 257L263 280L289 270" fill="none" stroke="#242820" stroke-width="3"/>
+      <circle cx="273" cy="291" r="3" fill="#242820" stroke="none"/>
+    </g>
+    <path d="M94 261L115 281M119 250L144 270M143 241L169 260M469 107L487 116M457 122L480 135" fill="none" stroke-width="3"/>
+    <path d="M99 335Q132 306 165 333Q134 349 99 335Z" fill="#a8d6bc"/>
+    <path d="M101 335L151 331" fill="none" stroke-width="1.5"/>
+    <circle cx="523" cy="284" r="7" fill="#f18e79" /></g></svg>

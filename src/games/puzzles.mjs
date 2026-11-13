@@ -1,0 +1,7 @@
+export function shuffle(values){const a=[...values];for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;}
+export function toggleLights(board,index){return board.map((on,i)=>i===index||Math.abs(Math.floor(i/4)-Math.floor(index/4))+Math.abs(i%4-index%4)===1?!on:on);}
+export function lightBoard(){let b=Array(16).fill(false);for(const i of shuffle([...Array(16).keys()]).slice(0,7))b=toggleLights(b,i);return b.some(Boolean)?b:toggleLights(b,5);}
+export function slideTile(board,index){const empty=board.indexOf(0);if(Math.abs(Math.floor(index/3)-Math.floor(empty/3))+Math.abs(index%3-empty%3)!==1)return board;const next=[...board];[next[index],next[empty]]=[next[empty],next[index]];return next;}
+export function slideBoard(){let b=[1,2,3,4,5,6,7,8,0],last=-1;for(let n=0;n<100;n++){const zero=b.indexOf(0),options=b.map((_,i)=>i).filter(i=>i!==last&&slideTile(b,i)!==b),index=options[Math.floor(Math.random()*options.length)];b=slideTile(b,index);last=zero;}return b.every((v,i)=>v===(i+1)%9)?slideTile(b,7):b;}
+export const solvedSlide=b=>b.every((v,i)=>v===(i+1)%9);
+export function codeClue(secret,guess){let exact=0;const left=[],right=[];secret.forEach((n,i)=>{if(n===guess[i])exact++;else{left.push(n);right.push(guess[i]);}});let nearby=0;for(const n of right){const i=left.indexOf(n);if(i!==-1){nearby++;left.splice(i,1);}}return {exact,nearby};}

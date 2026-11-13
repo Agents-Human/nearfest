@@ -1,0 +1,8 @@
+{
+  "entrypoints": 1004,
+  "missing_assets": [],
+  "external_scripts": [],
+  "inline_scripts_compiled": 1318,
+  "syntax_errors": [],
+  "method": "Parse launch HTML, resolve static asset references, compile classic inline scripts without execution. Does not certify gameplay or dynamic dependencies."
+}

@@ -1,0 +1,30 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 440"><title>A perfect match — slotVend cover</title><rect width="640" height="440" fill="#efbfc9"/><circle cx="550" cy="20" r="230" fill="#fff9e9" opacity=".13"/><path d="M0 373Q190 330 341 397T640 372V440H0Z" fill="#fff9e9" opacity=".13"/><g stroke="#242820" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><ellipse cx="324" cy="374" rx="202" ry="17" fill="#242820" opacity=".08" stroke="none"/>
+    <g transform="rotate(-17 188 232)">
+      <rect x="103" y="112" width="170" height="245" rx="18" fill="#242820" />
+      <rect x="98" y="105" width="170" height="245" rx="18" fill="#ed825e" />
+      <rect x="111" y="118" width="144" height="219" rx="11" fill="#ed825e" />
+      <path d="M134 143l9 13-9 13-9-13Z" fill="#fff9e9" stroke-width="1.5"/><path d="M176 143l9 13-9 13-9-13Z" fill="#fff9e9" stroke-width="1.5"/><path d="M218 143l9 13-9 13-9-13Z" fill="#fff9e9" stroke-width="1.5"/><path d="M134 182l9 13-9 13-9-13Z" fill="#fff9e9" stroke-width="1.5"/><path d="M176 182l9 13-9 13-9-13Z" fill="#fff9e9" stroke-width="1.5"/><path d="M218 182l9 13-9 13-9-13Z" fill="#fff9e9" stroke-width="1.5"/><path d="M134 221l9 13-9 13-9-13Z" fill="#fff9e9" stroke-width="1.5"/><path d="M176 221l9 13-9 13-9-13Z" fill="#fff9e9" stroke-width="1.5"/><path d="M218 221l9 13-9 13-9-13Z" fill="#fff9e9" stroke-width="1.5"/><path d="M134 260l9 13-9 13-9-13Z" fill="#fff9e9" stroke-width="1.5"/><path d="M176 260l9 13-9 13-9-13Z" fill="#fff9e9" stroke-width="1.5"/><path d="M218 260l9 13-9 13-9-13Z" fill="#fff9e9" stroke-width="1.5"/><path d="M134 299l9 13-9 13-9-13Z" fill="#fff9e9" stroke-width="1.5"/><path d="M176 299l9 13-9 13-9-13Z" fill="#fff9e9" stroke-width="1.5"/><path d="M218 299l9 13-9 13-9-13Z" fill="#fff9e9" stroke-width="1.5"/>
+    </g>
+    <g transform="rotate(-7 270 208)">
+      <rect x="185" y="78" width="182" height="259" rx="18" fill="#242820" />
+      <rect x="180" y="69" width="182" height="259" rx="18" fill="#fff9e9" />
+      <rect x="193" y="82" width="156" height="233" rx="10" fill="#fff9e9" stroke-width="1.2" opacity=".5"/>
+      <path d="M248 225Q253 176 279 142Q304 173 304 217" fill="none" stroke="#242820" stroke-width="4"/>
+    <path d="M279 142Q240 117 224 147Q254 166 279 142Z" fill="#a8d6bc"/>
+    <path d="M233 146L277 142" fill="none" stroke-width="1.5"/>
+    <circle cx="245" cy="229" r="29" fill="#f47e70" /><circle cx="302" cy="224" r="28" fill="#f47e70" />
+    <path d="M227 220Q230 211 239 210M286 213Q289 206 297 205" fill="none" stroke="#fff9e9" stroke-width="5"/>
+      <circle cx="205" cy="95" r="5" fill="#f47e70" stroke="none"/><circle cx="337" cy="302" r="5" fill="#f47e70" stroke="none"/>
+    </g>
+    <g transform="rotate(12 422 244)">
+      <rect x="337" y="120" width="182" height="259" rx="18" fill="#242820" />
+      <rect x="331" y="111" width="182" height="259" rx="18" fill="#fff9e9" />
+      <rect x="344" y="124" width="156" height="233" rx="10" fill="#fff9e9" stroke-width="1.2" opacity=".5"/>
+      <path d="M400 267Q405 218 431 184Q456 215 456 259" fill="none" stroke="#242820" stroke-width="4"/>
+    <path d="M431 184Q392 159 376 189Q406 208 431 184Z" fill="#a8d6bc"/>
+    <path d="M385 188L429 184" fill="none" stroke-width="1.5"/>
+    <circle cx="397" cy="271" r="29" fill="#f47e70" /><circle cx="454" cy="266" r="28" fill="#f47e70" />
+    <path d="M379 262Q382 253 391 252M438 255Q441 248 449 247" fill="none" stroke="#fff9e9" stroke-width="5"/>
+      <circle cx="356" cy="137" r="5" fill="#f47e70" stroke="none"/><circle cx="488" cy="344" r="5" fill="#f47e70" stroke="none"/>
+    </g>
+    <path d="M509 84L521 70M526 105L545 101" fill="none" stroke-width="3"/></g></svg>

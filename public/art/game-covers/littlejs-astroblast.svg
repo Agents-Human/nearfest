@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 440"><title>Astroblast — slotVend cover</title><rect width="640" height="440" fill="#c5dcf1"/><circle cx="550" cy="20" r="230" fill="#fff9e9" opacity=".13"/><path d="M0 373Q190 330 341 397T640 372V440H0Z" fill="#fff9e9" opacity=".13"/><g stroke="#242820" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M88 314Q227 380 433 304M148 93Q298 34 496 139" fill="none" opacity=".19" stroke-dasharray="5 13"/>
+    <g transform="translate(127 145) rotate(-12) scale(1.02)"><path d="M-43-25L-19-45L13-42L40-21L47 9L25 38L-9 45L-37 28L-49 3Z" fill="#c7b7e7"/><ellipse cx="-15" cy="-13" rx="12" ry="9" fill="none" opacity=".45"/><ellipse cx="18" cy="15" rx="10" ry="13" fill="none" opacity=".45"/><path d="M-32 15L-21 24M15-28L26-19" fill="none" opacity=".45"/></g>
+    <g transform="translate(496 309) rotate(25) scale(1.05)"><path d="M-43-25L-19-45L13-42L40-21L47 9L25 38L-9 45L-37 28L-49 3Z" fill="#e79eae"/><ellipse cx="-15" cy="-13" rx="12" ry="9" fill="none" opacity=".45"/><ellipse cx="18" cy="15" rx="10" ry="13" fill="none" opacity=".45"/><path d="M-32 15L-21 24M15-28L26-19" fill="none" opacity=".45"/></g>
+    <g transform="translate(465 91) rotate(10) scale(0.44)"><path d="M-43-25L-19-45L13-42L40-21L47 9L25 38L-9 45L-37 28L-49 3Z" fill="#f4d96e"/><ellipse cx="-15" cy="-13" rx="12" ry="9" fill="none" opacity=".45"/><ellipse cx="18" cy="15" rx="10" ry="13" fill="none" opacity=".45"/><path d="M-32 15L-21 24M15-28L26-19" fill="none" opacity=".45"/></g>
+    <g transform="translate(171 346) rotate(12) scale(0.36)"><path d="M-43-25L-19-45L13-42L40-21L47 9L25 38L-9 45L-37 28L-49 3Z" fill="#a8d6bc"/><ellipse cx="-15" cy="-13" rx="12" ry="9" fill="none" opacity=".45"/><ellipse cx="18" cy="15" rx="10" ry="13" fill="none" opacity=".45"/><path d="M-32 15L-21 24M15-28L26-19" fill="none" opacity=".45"/></g>
+    <g transform="translate(322 226) rotate(38)">
+      <path d="M-24 69Q-35 125 0 170Q35 125 24 69Z" fill="#f47e70"/>
+      <path d="M-12 79Q-18 113 0 143Q18 113 12 79Z" fill="#f4d96e" stroke="none"/>
+      <path d="M-42-8L-86 57L-81 94L-33 62M42-8L86 57L81 94L33 62" fill="#f7e663"/>
+      <path d="M-37 49L-32 77Q0 90 32 77L37 49Z" fill="#242820"/>
+      <path d="M0-136Q-55-89-41 47Q0 69 41 47Q55-89 0-136Z" fill="#fff9e9"/>
+      <path d="M0-136Q-21-117-31-87Q0-72 31-87Q21-117 0-136Z" fill="#f7e663"/>
+      <ellipse cx="0" cy="-37" rx="24" ry="33" fill="#4966c8"/>
+      <path d="M-14-49Q-11-62 1-62" fill="none" stroke="#fff9e9" stroke-width="5"/>
+      <path d="M-25 25Q0 37 25 25" fill="none"/>
+      <path d="M0 20V85" fill="none" stroke-width="8"/>
+    </g>
+    <path d="M447 145L463 129M468 168L493 148M437 120L444 113M93 258H111M102 249V267M535 204H547M541 198V210" fill="none" stroke-width="3"/>
+    <circle cx="218" cy="81" r="4" fill="#242820" stroke="none"/><circle cx="553" cy="111" r="4" fill="#242820" stroke="none"/></g></svg>

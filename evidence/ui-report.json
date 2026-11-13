@@ -1,0 +1,43 @@
+{
+  "catalogue": {
+    "entries": 1028,
+    "imported_standalone_titles": 1004,
+    "existing_casual_games": 5,
+    "timed_online_challenges": 19,
+    "imported_native_shared_device_titles": 29,
+    "imported_native_online_titles": 0,
+    "archived_quiz_configurations_excluded_from_discovery": 1000
+  },
+  "automated_tests": {
+    "passed": 30,
+    "suites": "domain, HTTP integration, community, games, media"
+  },
+  "browser_checks": [
+    "Desktop catalogue: five columns, 24 initial cards, original logo/hero retained",
+    "390px catalogue: no horizontal page overflow, no broken images, two columns",
+    "Sudoku accepts a numbered move",
+    "SUM TEN, CLEAN ROBO, BOX SNAKE and BLOCK STACKER launch and respond to input",
+    "BOX SNAKE audio worklets load locally with no remote network exception",
+    "DRAFT LINE racer renders and advances",
+    "DRIFT starts through its Dive control",
+    "Astroblast starts, shoots and increments score",
+    "xx142-b2.exe starts and responds to arrow-key movement",
+    "Pinball physics loads and flippers respond",
+    "Mobile Chess two-player mode records e4 and switches to Black",
+    "Pinball-linked group pot creation, persistent game while changing chat tabs, local message delivery, cancellation/refund"
+  ],
+  "builds": [
+    "staging production build",
+    "original clone npm ci and production build"
+  ],
+  "limitations": [
+    "NEAR AI key absent; bank fallback exercised",
+    "Multiplayer payouts use practice FUN",
+    "NEAR head-to-head escrow is sandbox-tested, not public-testnet deployed",
+    "Existing DAO/Trezu treasury integration remains unimplemented",
+    "Imported games use group-reviewed results; client scores cannot release pots",
+    "Static checks cover every launch; browser gameplay samples engines, not all 1004 titles",
+    "Imported iframe progress lasts only for that play session"
+  ],
+  "date": "2026-11-13"
+}

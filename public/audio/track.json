@@ -1,0 +1,35 @@
+{
+  "title": "Lobby Time",
+  "artist": "Kevin MacLeod",
+  "source": "https://incompetech.com/music/royalty-free/index.html?isrc=USUAN1600054",
+  "license": "CC BY 4.0",
+  "license_url": "https://creativecommons.org/licenses/by/4.0/",
+  "attribution": "\"Lobby Time\" Kevin MacLeod (incompetech.com)\nLicensed under Creative Commons: By Attribution 4.0 License\nhttps://creativecommons.org/licenses/by/4.0/",
+  "file": "/audio/lounge-jazz.mp3",
+  "download_url": "https://incompetech.com/music/royalty-free/mp3-royaltyfree/Lobby%20Time.mp3",
+  "artist_linked_youtube_url": "https://youtu.be/7FsKlW3xYN8",
+  "isrc": "USUAN1600054",
+  "duration_seconds": 193.201656,
+  "source_duration": "00:03:13",
+  "tempo_bpm": 128,
+  "instruments": [
+    "Vibraphone",
+    "Piano",
+    "Bass",
+    "Drums"
+  ],
+  "source_mood": [
+    "Calming",
+    "Grooving",
+    "Relaxed"
+  ],
+  "mime_type": "audio/mpeg",
+  "sample_rate_hz": 44100,
+  "channels": 2,
+  "bit_rate_bps": 256000,
+  "bytes": 6184700,
+  "sha256": "bc47dc1f1a0b1fe4ff631cee89ca3987b8f7b52f533d06233665d51300331beb",
+  "modifications": "None. Original MP3 downloaded directly from the artist website; local filename changed.",
+  "playback_note": "Suitable for repeated background playback. The original track has not been edited into a seamless loop.",
+  "source_uploaded_date": "2016-09-22"
+}
