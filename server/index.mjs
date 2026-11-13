@@ -5,9 +5,9 @@ import { resolve, extname } from 'node:path';
 import { verifyMessage } from 'near-api-js/nep413';
 import { openStore } from './store.mjs';
 import { UNIT, STORAGE, validateDraft, createBet, shortText, validAccount, moderate } from './domain.mjs';
-import { resolveBet, fixtures, fixture, prices, hasAI, semanticModerate } from './resolvers.mjs';
+import { resolveBet, fixtures, fixture, scoreboard, prices, hasAI, semanticModerate } from './resolvers.mjs';
 import {createMultiplayer} from './multiplayer.mjs';
-import {SPORT_LEAGUES,verifySportsEntry} from './sports.mjs';
+import {SPORT_LEAGUES,verifySportsEntry,validSportsDate,leagueSchedule} from './sports.mjs';
 import {createPlay} from './play.mjs';
 import {serveLibrary} from './library.mjs';
 import {createCommunity} from './community.mjs';
@@ -100,8 +100,14 @@ const server = createServer(async (req, res) => {
     if (path === '/api/prices') return json(res, await cached('prices', prices));
     if(path==='/api/sports-feed'&&req.method==='GET'){
       const date=url.searchParams.get('date')||new Date().toISOString().slice(0,10).replaceAll('-','');
-      if(!/^\d{8}$/.test(date))throw Error('Choose a valid date.');
-      const data=await cached(`sports-feed:${date}`,async()=>{const leagues=Object.keys(SPORT_LEAGUES);const results=await Promise.allSettled(leagues.map(l=>fixtures(l,date)));return {events:results.flatMap(r=>r.status==='fulfilled'?r.value:[]),unavailable:leagues.filter((_,i)=>results[i].status==='rejected'),observed_at:Date.now(),date,leagues:SPORT_LEAGUES};});
+      const league=url.searchParams.get('league')||'all';
+      if(!validSportsDate(date)||league!=='all'&&!Object.hasOwn(SPORT_LEAGUES,league))throw Error('Choose a valid league and date.');
+      const data=await cached(`sports-feed:${league}:${date}`,async()=>{
+        const leagues=league==='all'?Object.keys(SPORT_LEAGUES):[league];
+        const results=await Promise.allSettled(leagues.map(l=>leagueSchedule(l,date,(id,day)=>cached(`scoreboard:${id}:${day}`,()=>scoreboard(id,day)),{lookAhead:league!=='all'})));
+        const available=results.filter(r=>r.status==='fulfilled').map(r=>r.value);
+        return {events:available.flatMap(r=>r.events),unavailable:leagues.filter((_,i)=>results[i].status==='rejected'),next_date:available.find(r=>r.next_date)?.next_date||null,looked_ahead:available.some(r=>r.looked_ahead),lookahead_failed:available.some(r=>r.lookahead_failed),observed_at:Date.now(),date,leagues:SPORT_LEAGUES};
+      });
       return json(res,data);
     }
     if (path === '/api/fixtures') { const league = url.searchParams.get('league') || 'eng.1', date = url.searchParams.get('date') || ''; return json(res, await cached(`fixtures:${league}:${date}`, () => fixtures(league, date))); }
@@ -154,7 +160,7 @@ const server = createServer(async (req, res) => {
     const root = resolve('dist'), requested = resolve(root, '.' + decodeURIComponent(path));
     if (!requested.startsWith(root + '/') && requested !== root) return json(res, { error: 'Not found.' }, 404);
     let file = requested; try { if (!(await stat(file)).isFile()) file = root + '/index.html'; } catch { file = root + '/index.html'; }
-    const types = { '.html': 'text/html', '.js': 'text/javascript', '.css': 'text/css', '.svg': 'image/svg+xml', '.ttf': 'font/ttf', '.png': 'image/png', '.jpg':'image/jpeg', '.jpeg':'image/jpeg', '.webp':'image/webp', '.woff2':'font/woff2' };
+    const types = { '.html': 'text/html', '.js': 'text/javascript', '.css': 'text/css', '.svg': 'image/svg+xml', '.ttf': 'font/ttf', '.png': 'image/png', '.jpg':'image/jpeg', '.jpeg':'image/jpeg', '.webp':'image/webp', '.woff2':'font/woff2', '.mp3':'audio/mpeg', '.ogg':'audio/ogg' };
     res.writeHead(200, { 'content-type': types[extname(file)] || 'application/octet-stream', 'x-content-type-options': 'nosniff', 'referrer-policy': 'strict-origin-when-cross-origin' }); res.end(await readFile(file));
   } catch (e) { if (!res.headersSent) json(res, { error: e.message || 'Something went wrong. Please try again.' }, 400); else res.end(); }
 });

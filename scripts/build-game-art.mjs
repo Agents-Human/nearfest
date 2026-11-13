@@ -1,5 +1,7 @@
 import {readFile,mkdir,writeFile} from 'node:fs/promises';
-import {discoveryGames} from '../server/game-catalog.mjs';
+import {games} from '../server/game-catalog.mjs';
+// Preserve artwork for parked titles as well as the published multiplayer catalogue.
+const discoveryGames=games.filter(game=>!game.pack);
 import {featuredScene} from './card-art/featured.mjs';
 import {sceneFor} from './card-art/scenes.mjs';
 const palettes=[

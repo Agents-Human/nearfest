@@ -1,6 +1,7 @@
 import type {SVGProps} from 'react';
 export default function UiIcon({name,size=20,...props}:SVGProps<SVGSVGElement>&{name:string;size?:number}){
  const paths:Record<string,React.ReactNode>={
+  chevron:<path d="m6 9 6 6 6-6"/>,
   search:<><circle cx="10.5" cy="10.5" r="6.5"/><path d="m16 16 5 5"/></>,
   games:<><path d="M7 7h10a4 4 0 0 1 4 3l1 7a2 2 0 0 1-3 2l-4-3H9l-4 3a2 2 0 0 1-3-2l1-7a4 4 0 0 1 4-3Z"/><path d="M7 9v6m-3-3h6m6-2h.01m3 3h.01"/></>,
   live:<><rect x="3" y="5" width="18" height="13" rx="3"/><path d="M9 21h6m-3-3v3"/><path d="m10 9 5 3-5 3Z"/></>,

@@ -42,6 +42,109 @@ Use explicit mode labels in the registry and UI:
 
 Show the actual player range and interaction mode. Never label a same-device game “online.” Existing timed packs may remain visible only after auditing that they meet the online release requirements; describe them as timed challenges. Do not present the existing one-move chess puzzle as the rebuilt chess game.
 
+## Game roster and hackathon priorities — 14 November 2026
+
+This section defines the requested games for the next implementing model. It supersedes the earlier three-game shortlist. The immediate showcase priorities are **Ludo, Oware, Checkers, Draw & Guess and Paddle Duel**; **Connect Four** is a compact additional match. These are priorities, not a promise that all can be finished before the demo. Complete and verify games individually; tomorrow's public selection must reflect actual passing builds.
+
+The requirements roster contains **40 distinct game concepts**, including familiar board games, social party games, arcade games and science/puzzle games. It is the first curated implementation roster toward the user's longer-term 1,000-title ambition; it does not claim to define all 1,000. The existing topic packs and variants do not inflate this count. Working names for original mini-games may change without creating extra titles.
+
+Every row inherits the shared requirements below: independently authenticated players on separate devices, server-owned state and results, synchronized start/turns, reconnection, touch and keyboard controls, readable rules, optional SFX, accessible illustrations, and a real completed-match demonstration. No local pass-and-play fallback qualifies. Competitive games can offer free play and practice FUN pots only after their settlement checks pass. Cooperative and subjective party modes start as free play; their results do not automatically settle FUN pots.
+
+### Tomorrow's showcase order
+
+1. Finish the shared room/invite/reconnect/result path with one small game, Dots and Boxes or Connect Four. Reuse that infrastructure immediately for the named priorities.
+2. **Oware and Checkers:** two recognisable strategic duels, distinctive boards, clear move animations, quick rematches. Oware must use its own rules; Kalah is a separate later game.
+3. **Ludo:** the group centrepiece for 2–4 people, animated server-generated dice, shared tokens and a satisfying race home. Complete the exact launch rules below before polishing effects.
+4. **Draw & Guess:** the social group choice, with a live drawing surface and private guesses. Do not expose the secret word to spectators.
+5. **Paddle Duel:** the fast simultaneous-action option; only include it after real network play feels good on phone and laptop. Connect Four is an additional lower-complexity option if it is already complete.
+6. Preserve the existing multiplayer maths/science/trivia challenges as ready-to-test variety. After the core games work, add one party or arcade game at a time. Full physics racing, complex hidden-role games and backgammon are later work, not tomorrow's critical path.
+
+### Board and table games — 12
+
+| ID / game | Players and interaction | Required game loop and result |
+| --- | --- | --- |
+| `oware` — **Oware** | 2, shared turns | Abapa sowing and capture game; exact rules below. Server tracks all 48 seeds and both scores; win/draw comes from board state. |
+| `checkers` — **Checkers / Draughts** | 2, shared turns | Named 8×8 English rules initially; mandatory jumps, complete capture chains and crowning. Capture or immobilise the opponent to win; draw rules below. |
+| `ludo` — **Ludo** | 2–4, shared turns | Four tokens each, server dice, entry on six, captures, safe squares and exact finish. First to bring all four tokens home wins. Explicit launch rules below. |
+| `chess-online` — **Chess** | 2, shared turns | A full legal chess match with clocks, special moves, draw claims, resignation and checkmate. Preserve the detailed chess acceptance criteria below. |
+| `connect-four` — **Connect Four** | 2, shared turns | Drop into a non-full column on a 7×6 board; four connected pieces in any direction wins; full board without a winner draws. Show the winning line. |
+| `dots-boxes` — **Dots and Boxes** | 2, shared turns | Claim shared edges, complete boxes and retain the turn after scoring; most boxes wins. Default 4×4 boxes; handle one edge completing two boxes. |
+| `reversi` — **Reversi** | 2, shared turns | Place on an 8×8 board only when bracketing opponents; flip all valid rays, pass only with no legal move, finish when neither can move. Most discs wins. |
+| `dominoes` — **Dominoes** | 2–4, shared turns and private hands | Double-six draw variant, seven tiles each; match either end, draw until playable or stock exhausted. Empty hand wins; blocked game uses lowest pip total, tied totals draw. Hide hands and stock order. |
+| `nine-mens-morris` — **Nine Men's Morris** | 2, shared turns | Place nine pieces, then slide along connected points; a mill removes an eligible opposing piece. Permit flying at three pieces; below three or no legal move loses. Define repetition draw. |
+| `hex` — **Hex** | 2, shared turns | An 11×11 hex board, opposite-edge connections and a swap option after the opening move. Server checks connectivity after every placement; no draw. |
+| `backgammon` — **Backgammon** | 2, shared turns | Server dice, legal bar entry, hitting, forced available moves and bearing off. First to bear off wins. Single-game stakes only initially; no doubling cube; verify a named ruleset before implementation. |
+| `kalah` — **Kalah** | 2, shared turns | Six pits with four stones each, stores, own-store extra turn, capture and final sweep. Retain existing Kalah requirements; its mechanics and ID stay separate from Oware. |
+
+### Social party and word games — 8
+
+| ID / game | Players and interaction | Required game loop and result |
+| --- | --- | --- |
+| `draw-guess` — **Draw & Guess** | 3–8, rotating drawer and live guesses | Each player draws once per cycle, 60 seconds per drawing. Server-only answer aliases, private guesses and ordered correct answers. Guessers receive 100/80/60/40/20 points by correct-answer rank (20 thereafter); drawer earns 20 per solver. Most points after one cycle wins; equal scores tie. Free play initially. |
+| `word-hunt` — **Word Hunt** | 2–8, simultaneous shared letter grid | Shared 4×4 letters, 90 seconds; adjacent cells form dictionary words without reusing a cell. One score per word per player, server dictionary/version and length-based scores; highest total wins. |
+| `word-relay` — **Word Relay** | 2–8, live turns | Begin with the last letter of the previous word; ten seconds per turn, no repeated words and a published dictionary. Invalid/time-out loses a life; last player with a life wins. |
+| `category-sprint` — **Category Sprint** | 2–8, simultaneous private answers | Same letter and five categories, 60 seconds, submit privately then reveal together. Valid unique answers score 10, shared answers 5; four rounds, highest total wins. Dictionary/curation plus visible dispute review; free play while judgment is subjective. |
+| `clue-crew` — **Clue Crew** | 4–8 in two teams, rotating clue giver | Give text clues for a private word without listed forbidden terms; server validates prohibited words and exact answer aliases. Five equal timed turns per team, most solved cards wins. Give fair score/skip rules and hide cards from opponents. Free play initially. |
+| `trivia-showdown` — **Trivia Showdown** | 2–16, synchronized question race | Build on the existing multiplayer quiz engine: curated mixed subjects, hidden prompts before start, server scoring and shared round reveals. Highest correct count wins; tied players share. Categories remain variants, not new titles. |
+| `bluff-club` — **Bluff Club** | 3–8, simultaneous writing and secret voting | Submit plausible false answers to a safe prompt, mix with the curated truth, then vote. Correct votes score two; each opponent fooled scores one. Five rounds, most points wins. Moderate submissions, prevent self-voting and duplicate options; free play initially. |
+| `deduction-club` — **Deduction Club** | 5–10, hidden roles and timed phases | One secret saboteur, other players investigators; night action then discussion and vote. Investigators win by identifying the saboteur; saboteur wins at one remaining investigator. Roles/actions stay server-private; eliminated players have separate spectator chat. Free play initially. |
+
+### Arcade and movement mini-games — 10
+
+| ID / game | Players and interaction | Required game loop and result |
+| --- | --- | --- |
+| `paddle-duel` — **Paddle Duel** | 2, shared real-time arena | Each player controls one paddle; authoritative ball, bounds and serves. First to seven points wins; rotate the serve after each point. Drag controls and keyboard, speed limits and latency handling. |
+| `air-hockey` — **Air Hockey** | 2, shared real-time table | Move a striker only inside your half; server simulates puck/striker collisions and goals. First to five wins; prevent teleport hits and cross-half movement. |
+| `pocket-racers` — **Pocket Racers** | 2–4, shared real-time track | Three-lap top-down race with checkpoints, visible opponents and authoritative physics/finish order. Follow the detailed racing acceptance tests below. |
+| `snake-arena` — **Snake Arena** | 2–6, shared real-time grid | Simultaneous snakes eat server-spawned food and avoid walls/bodies; last survivor wins. Simultaneous final collisions draw; five-minute cap uses length among survivors, with tied lengths sharing. |
+| `bomb-maze` — **Bomb Maze** | 2–4, shared real-time grid | A playful foam-bomb maze with blocked paths, timed blasts and breakable tiles. Three short rounds; last survivor scores a round, tied survivors after the timer split that round's point. Most round points wins. No graphic violence. |
+| `mini-golf` — **Mini Golf** | 2–4, live turns on shared holes | Three original holes; server simulates aim/power strokes, hazards, resets and cup detection. Eight-stroke cap per hole; lowest total wins and equal totals tie. Everyone sees each shot. |
+| `marble-knockout` — **Marble Knockout** | 2–6, shared real-time arena | Steer marbles on a shrinking circular platform; server validates speed, collisions and boundary exits. Last marble wins; same-tick final eliminations draw. |
+| `kitchen-rush` — **Kitchen Rush** | 2–4, cooperative shared workspace | Pick, chop, cook and deliver safe fictional meals against a three-minute timer. Lock item ownership, station actions and recipes; team wins at the published order target. Free play, shared achievement. |
+| `paint-tag` — **Paint Tag** | 2–4, shared real-time arena | Move, aim and tag with bright paint; obstacles, bounded projectile speed and respawns. Most validated tags after two minutes wins; equal totals tie. Cosmetic splashes, no weapons branding or gore. |
+| `platform-relay` — **Platform Relay** | 2–4, cooperative shared platform course | Players open switches and carry a baton through one original obstacle course. Server owns movement, checkpoints and baton transfer; everyone reaching the exit within three minutes wins. Free play. |
+
+### Puzzle, maths and science games — 10
+
+| ID / game | Players and interaction | Required game loop and result |
+| --- | --- | --- |
+| `maths-tug` — **Maths Tug-of-War** | 2–8 in balanced teams, simultaneous | Equivalent hidden arithmetic challenges; each verified correct answer pulls the shared rope one unit, wrong answers impose a two-second input cooldown. First to ten net pulls wins; 90-second limit uses rope position, centre draws. No raw click-speed scoring. |
+| `equation-forge` — **Equation Forge** | 2–8, simultaneous puzzle rounds | Same six numbers and a target; construct an expression using each number at most once. Server parses safe arithmetic and scores target distance, then fewer operations; five rounds with published round points. Ties stay ties. |
+| `circuit-crew` — **Circuit Crew** | 2–4, cooperative shared board | Rotate wires, switches and logic gates to power target lamps without short circuits. Three low-voltage fictional boards, three-minute timer; server evaluates connectivity and win state. Free play. |
+| `orbit-rescue` — **Orbit Rescue** | 2–4, cooperative shared simulation | Divide steering, thrust and docking tasks to rescue three stranded probes before fuel/time runs out. Server physics, fuel and dock conditions; team success only when all probes are safe. Free play; illustrative space physics. |
+| `bridge-builders` — **Bridge Builders** | 2–4, cooperative shared construction | Place limited beams between legal anchors, then run a shared load test. Three original gaps; server owns budget and stable bridge evaluation. Team wins if the test vehicle crosses all three. Free play; simplified mechanics clearly labelled. |
+| `molecule-match` — **Molecule Match** | 2–4, simultaneous educational puzzle race | Assemble safe, curated molecule graphs from atom tokens; server checks allowed bonds and exact target graph. Five equal rounds, most valid completions wins. No experimental procedures or dangerous chemistry content. |
+| `sudoku-race` — **Sudoku Race** | 2–4, synchronized puzzle race | Same server-generated solvable board, private entries, opponent progress only. First server-validated solution wins; cap uses correct cells with ties shared. Reject invalid or forged completions; spectating cannot reveal a solution. |
+| `2048-race` — **2048 Race** | 2–4, synchronized move-based race | Each player has a private board and equivalent server RNG stream; send moves, never scores. First validated 2048 wins; three-minute cap compares highest tile then score. Name it a race, not a shared-board game. |
+| `memory-match` — **Memory Match** | 2–4, shared turns | Twenty-four concealed cards, flip two per turn; a pair scores and retains the turn. Non-matches conceal after a shared reveal period; most pairs wins. Never send unrevealed identities to clients or spectators. |
+| `codebreakers` — **Codebreakers** | 2–4, synchronized deduction race | Same secret of four symbols from six possible symbols; eight private guesses, exact/partial position feedback. Server handles duplicate symbols correctly. Solve with fewest guesses, then tie rather than a latency race; unresolved players do not win. |
+
+### Detailed launch requirements for the named favourites
+
+**Oware — Abapa, two players.** Twelve houses, four seeds each; sow counterclockwise, skipping the starting house on repeated laps. Capture backward along consecutive opposing houses containing two or three seeds after the final drop. A capture clearing the opponent's entire row takes nothing. Feed an empty opposing row whenever possible. No sowing into score bowls or extra turns. More than 24 captured seeds wins; 24 each draws. Reference: [Ply Yard's documented Abapa implementation](https://oware.plyyard.com/rules/). For slotVend, explicitly declare these endgame conventions in the room rules: if an empty opposing row cannot be fed, end the game and credit remaining seeds to the player whose row contains them; on the third identical board/score/side-to-move position, end and credit each row's remaining seeds to its owner. Compare final scores. Label the threefold endgame convention as a slotVend rule, not a universal Abapa rule. Record these choices in the engine rules version.
+
+Oware's acceptance fixtures must include a long sow, chained capture, void grand slam, mandatory feed, no-feed ending, repetition ending, reconnection mid-animation and exact 48-seed conservation. Use a tactile wooden-style SVG board, individually animated seeds, readable pit counts and gentle seed clicks. Each device may orient its own row at the bottom, with a consistent server pit mapping. Board animation never delays authoritative turn processing or permits a second move.
+
+**Checkers — 8×8 English draughts, two players.** Twelve men per side; men move and capture forward, kings in both directions. Captures are compulsory; choose any legal capture line and finish it. Promotion ends that turn, including capture chains. Winning requires taking all opposing pieces or leaving no legal move. Implement the WCDF repetition/no-progress draw conditions and draw agreement; identify the rules and clocks before joining. Reference: [WCDF Rules of Draughts](https://wcdf.net/rules/rules_of_checkers_english.pdf). Ghanaian/international variants require their own verified rule IDs and must not be silently mixed into this ruleset.
+
+Checkers acceptance fixtures cover ignored mandatory jumps, branching multi-jumps, crowning during a jump, king movement, immobilisation, draw eligibility and duplicate move submissions. Use chunky coral/lilac SVG pieces, a crisp crown marker, highlighted legal moves and a short capture animation. Colour and orientation must not change move legality.
+
+**Ludo — slotVend launch rules, two to four players.** Label this chosen house ruleset in the room; Ludo has multiple variants. Use a shared 52-cell outer track and six-cell home lane per colour, four tokens per player, one server-generated six-sided die. A six may enter a token at its own start or move an active token; six grants another roll. Three consecutive sixes forfeit the third roll and end the turn before a move; earlier moves stand. Players choose among legal tokens; if none can move, pass. Capturing an opponent on an unsafe square sends it home to the yard. Mark all four start squares and four star squares safe; safe squares allow coexistence and cannot capture. Own tokens may stack without forming movement blockades. Capturing/finishing grants no extra roll. Enter the home lane after a full track circuit; reaching its final cell requires the exact roll. First player with all four tokens home wins and ends the match. Document stable track indexes and clockwise turn order, including skipped empty seats.
+
+Ludo acceptance fixtures cover every colour's home entry, safe-square coexistence, unsafe capture, stacks, overshoot, third-six handling, no-move turns and the final token. A duplicate roll request must return the original die result. Reconnect cannot reroll. Dice animation reflects the accepted server roll; no client-selected randomness. Draw a polished four-colour SVG board with distinct token shapes, an obvious active player, dice bounce, token hops, capture return animation and a brief winner celebration. Use a fixed published inactivity/forfeit policy for full matches; do not silently alter dice to make a demo faster.
+
+**Draw & Guess.** Use a 30-second optional practice canvas before readying; the match begins only when everyone is ready. Private word choice from three moderated options goes only to the drawer. Other players and spectators receive bounded stroke events and public score changes, never the chosen word or other players' unsuccessful guesses. Exact normalized answers/curated aliases determine correctness; AI may curate safe words before play but cannot judge payout-worthy answers during a match. Cap stroke size/rate, implement undo/clear as ordered drawing events and reconnect with the current canvas. Give touch users a roomy canvas, colour dots, undo and an obvious guess field. Chat uses a separate tab to avoid accidental answer disclosure. Free play initially.
+
+**Paddle Duel.** Send bounded paddle input at a rate the server explicitly supports. Use an authoritative ball and collision engine, equal paddle speeds, a ready countdown, score-to-seven and one result. Prediction may smooth motion but cannot award a goal. Test wall/paddle collisions, reconnect grace, duplicate goal detection, input flooding and latency on two devices. Use a bright, high-contrast court, satisfying restrained trails and optional bounce sounds. Respect reduced motion and the shared SFX control.
+
+### What makes the collection feel fun
+
+- Illustrate the actual game on each compact card: Ludo tokens/dice, an Oware board/seeds, checkers/crowns, a drawing pencil or an air-hockey puck. Avoid repeating a generic controller across the roster. Reuse verified StudyJunior production animals/items for avatars, pairs, prompts and scene decoration where appropriate.
+- Make inviting a group effortless: one shareable room link plus a QR invite, visible seats, readiness, readable rules, friends' reactions and one-click rematch with fresh consent. No QR token may bypass the room's access policy.
+- Keep the first action obvious and controls easy on phones. Spectators see the match, reactions and results, without secret information. Small win celebrations, turn cues, dice/seed/card motion and optional sounds should reinforce play rather than obstruct it.
+- The social economy demo is create → invite → choose free/FUN entry → everyone ready → actual multiplayer game → server-verified result → pot/return → rematch. Cooperative/subjective games show shared achievements or reviewed community activities instead of an invented automatic winner payout.
+- Avoid slow onboarding, long rules walls and forced background music. Provide a short interactive rules explanation and an expandable rules reference. Never shorten a traditional game by changing rules without naming the variant.
+
 ## Delivery batches
 
 Each batch ends with runnable code, meaningful tests, a demonstration, updated registry/docs and a list of remaining limitations. Publish only the games that have passed. Later batches cannot be represented as already delivered.
@@ -53,9 +156,9 @@ Each batch ends with runnable code, meaningful tests, a demonstration, updated r
 3. Implement shared room lifecycle, private/public access, queue/invites, reconnection, versioned input handling and FUN settlement integration. Build only the framework needed for the first real game.
 4. Complete Dots and Boxes as the first end-to-end vertical slice. Do not call a generic empty room the completed foundation.
 
-### Batch 1 — three real board games
+### Batch 1 — named favourites and the showcase shortlist
 
-Finish Dots and Boxes, Chess and Mancala. Default all three to two remote players; do not claim 2–16 just because the old quiz lobby supports that range.
+Follow the showcase order above: finish the foundation game, then Oware, Checkers and Ludo, followed by Draw & Guess and Paddle Duel as capacity allows. Their detailed specifications above are required. Do not infer player limits from the old quiz lobby. The following established specifications are retained for Dots and Boxes, Chess and Kalah; Chess and Kalah follow the named favourites unless the user reprioritises them.
 
 | Game | Required rules and behavior | Release examples |
 | --- | --- | --- |
@@ -75,7 +178,7 @@ Prototype targets: 20 Hz authoritative simulation, 10–20 Hz updates and smooth
 
 ### Batch 3 — expand in small, distinct batches
 
-Choose three to five games per subsequent batch based on achievable online rules and source/asset rights. Candidate next games are shared Connect Four, shared Reversi, turn-based Memory with hidden unrevealed cards, and clearly labelled Sudoku or 2048 races. Specify each game's actual multiplayer interaction before writing it. A server-validatable puzzle race needs input validation and server-owned puzzle/RNG, not a reported local score.
+Select three to five entries per subsequent batch from the 40-game roster above. Ludo, Oware and Checkers are explicit user priorities, not optional unnamed candidates. Preserve each entry's interaction, player range and outcome requirements. A server-validatable puzzle race needs input validation and server-owned puzzle/RNG, not a reported local score. Add a full rule/edge-case specification before starting any later game; a roster row alone is not a release approval.
 
 Keep unsupported imports parked. Maintain an inventory linking old IDs to replacements or archive status. New rules, tracks, themes or quiz packs are variants of an existing game unless they materially change its mechanics. Review the completed batch before selecting the next one.
 
@@ -180,7 +283,7 @@ At handoff time, no connected production StudyJunior MCP tools are established i
 
 Support desktop keyboard/mouse and phone touch, visible focus, usable hit areas, readable contrast, text descriptions of moves/status and non-colour-only player identification. Board games need keyboard-operable cells/moves and meaningful labels; announce turn changes and results without flooding screen readers with every network tick. Respect reduced-motion settings. Racing needs usable touch controls and equivalent keyboard controls. Check narrow screens, landscape/portrait and fullscreen exit.
 
-Honor the existing `slotvend-sound` preference, with sound off unless enabled. All new game audio must route through one shared setting; turning sound off immediately silences active and future sounds. Start/resume audio only after a user gesture, recover gracefully if the browser refuses it, and clean up audio contexts/listeners on exit. No background music or imported iframe audio may bypass mute.
+Honor the existing `slotvend-sound` preference, with sound off unless enabled. All new game audio must route through one shared setting; turning sound off immediately silences active and future sounds. Start/resume audio only after a user gesture, recover gracefully if the browser refuses it, and clean up audio contexts/listeners on exit. Keep music and game effects separately controllable, matching the existing footer controls. Muting effects immediately silences all game effects; pausing music silences the music track. No renderer or imported frame may bypass the relevant control.
 
 Preserve creator/source/licence notices for reused assets and dependencies. A permissive code licence does not automatically license every bundled image or sound; check assets separately. Implement original mechanics/UI or use documented permissible primitives. Do not copy proprietary game code/assets or imply affiliation with original creators. Record new art, track and sound provenance.
 
@@ -236,7 +339,7 @@ A deliverable summary must name files changed, games actually released, checks r
 
 > Work in `betvend-development`. Read this entire handoff, repository instructions, current README, game catalogue, party server, storage, API, game rendering and design files before editing. Preserve ongoing user changes. Rebuild actual multiplayer games from scratch inside the existing React/Vite/Node/SQLite app; every discoverable playable game must support two or more independent devices. Park solo and local-only titles; keep archives, art and attribution. A room/chat wrapper, a quiz substitution or a client score submission is not a multiplayer rebuild.
 >
-> Implement Batch 0 and Batch 1 first: shared infrastructure plus real Dots and Boxes, Chess and Kalah Mancala. Reuse existing sessions, origin checks, FUN balances/Collect and the bright UI. Keep current quiz-room compatibility, sandbox isolation, StudyJunior assets and shared sound preference. Use server-authoritative rules, durable state, idempotent commands and settlement, private viewer projections, reconnect and real matchmaking/invites. Do not change the NEAR contract or enable real-money play.
+> Read the 40-game roster and 14 November showcase priorities first. Implement Batch 0 and Batch 1 in that order of priority: one complete foundation game, then Oware (Abapa), Checkers and Ludo, then Draw & Guess and Paddle Duel as capacity allows. Oware is not Kalah. Use the detailed launch rules and acceptance fixtures; ship only individually verified games. Retain Chess, Kalah and the rest of the roster as explicit later work. Reuse existing sessions, origin checks, FUN balances/Collect and the bright UI. Keep current quiz-room compatibility, sandbox isolation, StudyJunior assets and shared sound preference. Use server-authoritative rules, durable state, idempotent commands and settlement, private viewer projections, reconnect and real matchmaking/invites. Do not change the NEAR contract or enable real-money play.
 >
 > Use production StudyJunior MCP `list_collections`, `search_assets` and `get_assets` via the documented admin bearer + mTLS connection for StudyJunior art. Read the two referenced StudyJunior integration documents. Existing local SVGs are provisional until matched to production; never invent production UUIDs or provenance, expose credentials, or assume local stdio inherits the production database. Report unavailable production access explicitly and continue independent implementation work.
 >

@@ -1,5 +1,5 @@
 import { calculate } from './domain.mjs';
-import {SPORT_LEAGUES,normalizeFixture} from './sports.mjs';
+import {SPORT_LEAGUES,normalizeFixture,validSportsDate} from './sports.mjs';
 import { createHash } from 'node:crypto';
 const AI_URL = process.env.NEAR_AI_BASE_URL || 'https://cloud-api.near.ai/v1';
 const AI_MODEL = process.env.NEAR_AI_MODEL || 'zai-org/GLM-5.1-FP8';
@@ -11,10 +11,13 @@ export async function jsonFetch(url, options = {}) {
 }
 const ESPN = 'https://site.api.espn.com/apis/site/v2/sports/';
 const path = league => SPORT_LEAGUES[league]?.path;
-export async function fixtures(league = 'eng.1', date = '') {
+export async function scoreboard(league = 'eng.1', date = '') {
   if (!Object.hasOwn(SPORT_LEAGUES,league)) throw Error('Unsupported league.');
-  if (date && !/^\d{8}$/.test(date)) throw Error('Use YYYYMMDD for the fixture date.');
-  const data = await jsonFetch(`${ESPN}${path(league)}/scoreboard${date ? '?dates=' + date : ''}`);
+  if (date && !validSportsDate(date)) throw Error('Use a valid YYYYMMDD fixture date.');
+  return jsonFetch(`${ESPN}${path(league)}/scoreboard${date ? '?dates=' + date : ''}`);
+}
+export async function fixtures(league = 'eng.1', date = '') {
+  const data = await scoreboard(league,date);
   return (data.events || []).map(e => normalizeFixture(e,league));
 }
 export async function fixture(league, id) {
