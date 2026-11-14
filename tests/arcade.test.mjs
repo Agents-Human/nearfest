@@ -13,7 +13,7 @@ import {initialState,applyMove,legalMoves,ended} from '../server/skill/engines.m
 import {sowingFrames} from '../src/games/sowing-frames.mjs';
 const step=(s,count,advance=advancePuzzle)=>{for(let i=0;i<count;i++)s=advance(s);return s;};
 test('every new title has a unique original simulation and reaches a bounded finish without input',()=>{
- assert.equal(arcadeGames.length,26);assert.equal(freeOnly.size,10);
+ assert.equal(arcadeGames.length,28);assert.equal(freeOnly.size,12);
  for(const g of arcadeGames){let s=worldIds.has(g.id)?newWorld(g.id,g.min_players):puzzleIds.has(g.id)?newPuzzle(g.id,g.min_players):newParty(g.id,g.min_players);
   const advance=worldIds.has(g.id)?s=>advanceWorld(s,[]):puzzleIds.has(g.id)?advancePuzzle:advanceParty;
   for(let i=0;i<12500&&!s.finished;i++)s=advance(s);assert(s.finished,g.id);assert(s.players.length>=g.min_players);assert.doesNotThrow(()=>JSON.stringify(s));

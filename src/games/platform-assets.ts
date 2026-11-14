@@ -88,12 +88,12 @@ function characterInstance(source: GLTF, seat: number) {
   const actions = new Map<string, THREE.AnimationAction>();
   for (const clip of source.animations) actions.set(clip.name, mixer.clipAction(clip.clone()));
   let current: THREE.AnimationAction | undefined;
-  function playAnimation(name: string, fade = .12) {
+  function playAnimation(name: string, fade = .12, restart = false) {
     const next = actions.get(name) || actions.get('idle');
-    if (!next || next === current) return;
+    if (!next || next === current && !restart) return;
     current?.fadeOut(fade);
     next.reset();next.enabled = true;next.setEffectiveTimeScale(1);next.setEffectiveWeight(1);
-    const once = ['jump', 'fall', 'die', 'pick-up'].includes(name);
+    const once = name.startsWith('attack-') || ['jump', 'fall', 'die', 'pick-up'].includes(name);
     next.setLoop(once ? THREE.LoopOnce : THREE.LoopRepeat, once ? 1 : Infinity);
     next.clampWhenFinished = once;next.fadeIn(fade).play();current = next;
     root.userData.animationState = next.getClip().name;

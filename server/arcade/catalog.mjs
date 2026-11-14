@@ -1,11 +1,13 @@
 const rows=[
+ ['marble-run','Marble Skyway','Racing',2,4,120,'Roll along a floating skyway. Steer for coins, hop the gaps and race your friends to the finish.'],
+ ['tank-arena','Toy Tank Arena','Action',2,4,120,'Drive, find cover and fire. Your turret helps you aim. Smash crates, bounce shots and be first to five knockouts.'],
  ['pocket-racers','Pocket Racers','Racing',2,4,120,'A quick coastal sprint. Just steer left or right, dodge traffic, collect gold coins for boost and race to the finish.'],
  ['stick-rivals','Stick Rivals','Action',2,2,180,'Jump, block and land your punches. Three rounds in a shared arena.'],
  ['paddle-duel','Paddle Duel','Sports',2,2,180,'Move your paddle, read the bounce. First to seven.'],
  ['air-hockey','Air Hockey','Sports',2,2,180,'Guard your goal and strike the puck. First to five.'],
  ['snake-arena','Snake Arena','Action',2,6,300,'Claim the fixed food trail. Outlast the other snakes.'],
  ['bomb-maze','Foam Frenzy','Action',2,4,180,'Place foam bombs, dodge the blast and survive three rounds.'],
- ['mini-golf','Mini Golf','Sports',2,4,240,'Aim, choose your power and sink the ball. Three original holes.'],
+ ['mini-golf','Mini Golf','Sports',2,4,480,'Six sculpted garden courses. Aim by touching the green, bank off rails and thread the castle passage. Fewest strokes wins.'],
  ['marble-knockout','Marble Knockout','Action',2,6,120,'Keep your marble on the shrinking platform.'],
  ['kitchen-rush','Kitchen Rush','Co-op',2,4,180,'Pick, chop, cook and serve. Beat the kitchen clock together.'],
  ['paint-tag','Paint Tag','Action',2,4,120,'Dodge, aim and tag your rivals with colourful paint.'],
@@ -26,6 +28,6 @@ const rows=[
  ['sudoku-race','Sudoku Race','Puzzles',2,4,300,'One shared puzzle. Private answers. Race to a correct solution.'],
  ['codebreakers','Codebreakers','Puzzles',2,4,180,'Use every clue to deduce a unique four-symbol code.'],
 ];
-export const freeOnly=new Set(['draw-guess','category-sprint','clue-crew','bluff-club','deduction-club','kitchen-rush','platform-relay','circuit-crew','orbit-rescue','bridge-builders']);
+export const freeOnly=new Set(['marble-run','tank-arena','draw-guess','category-sprint','clue-crew','bluff-club','deduction-club','kitchen-rush','platform-relay','circuit-crew','orbit-rescue','bridge-builders']);
 export const arcadeGames=rows.map(([id,title,genre,min,max,seconds,description])=>({id,title,label:genre,genre,category:['Maths','Science'].includes(genre)?genre:'Gaming',min_players:min,max_players:max,seconds,description,engine:'arcade',kind:'game',solo:true,multiplayer:true,standalone:true,bettable:!freeOnly.has(id),rounds:1,art:id,rules_version:'slotvend-original-1'}));
 export const arcadeGame=id=>arcadeGames.find(g=>g.id===id);

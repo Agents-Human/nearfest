@@ -40,8 +40,8 @@ const tracks = {
 };
 
 export function arcadeMusicCredit(game: string): ArcadeMusicCredit {
-  if (['pocket-racers', 'stick-rivals', 'paint-tag', 'bomb-maze'].includes(game)) return tracks.action;
-  if (['platform-relay', 'mini-golf', 'marble-knockout', 'orbit-rescue'].includes(game)) return tracks.island;
+  if (['pocket-racers', 'stick-rivals', 'tank-arena', 'paint-tag', 'bomb-maze'].includes(game)) return tracks.action;
+  if (['platform-relay', 'mini-golf', 'marble-knockout', 'marble-run', 'orbit-rescue'].includes(game)) return tracks.island;
   return tracks.groove;
 }
 
@@ -271,7 +271,9 @@ export function createArcadeAudio(game: string): ArcadeAudio {
         else if (ready && state.reset <= 0 && before.reset <= 0 && (Math.sign(state.ball.vx) !== Math.sign(before.ball.vx) || Math.sign(state.ball.vy) !== Math.sign(before.ball.vy))) {
           tone(game === 'air-hockey' ? 740 : 430, .075, .09, 'triangle', 280); lastEffect = now;
         }
-      } else if (game === 'paint-tag') {
+      } else if (game === 'marble-run') {
+        if(oldMine.ground&&!mine.ground&&mine.vz>0)tone(240,.15,.06,'sine',520);if(mine.lives<oldMine.lives)tone(360,.3,.09,'triangle',90);
+      } else if (game === 'paint-tag' || game === 'tank-arena') {
         if (mine.cooldown > oldMine.cooldown) tone(760, .09, .07, 'triangle', 140);
         if (state.players.some((p: any, i: number) => p.score > before.players[i]?.score)) { noise(.12, .12, 1600); chime(); }
       } else if (game === 'snake-arena') {

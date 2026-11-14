@@ -1,6 +1,6 @@
 # NearFest game delivery checklist
 
-The catalogue currently exposes 53 original entries. All expose solo and independent online modes. Topic packs are catalogue entries, not claims of distinct engines. Imported titles, Ludo and the duplicate Kalah title stay out of discovery.
+The catalogue currently exposes 55 original entries. All expose solo and independent online modes. Topic packs are catalogue entries, not claims of distinct engines. Imported titles, Ludo and the duplicate Kalah title stay out of discovery.
 
 ## Current catalogue
 
@@ -10,6 +10,8 @@ The catalogue currently exposes 53 original entries. All expose solo and indepen
 | Checkers | checkers | skill | NEAR testnet + free |
 | Chess | chess-online | skill | NEAR testnet + free |
 | Pocket Racers | pocket-racers | arcade | NEAR testnet + free |
+| Marble Skyway | marble-run | arcade | Free multiplayer + solo practice |
+| Toy Tank Arena | tank-arena | arcade | Free multiplayer + solo practice |
 | Stick Rivals | stick-rivals | arcade | NEAR testnet + free |
 | Number rush | maths | knowledge / puzzle | NEAR testnet + free |
 | Lab partners | science | knowledge / puzzle | NEAR testnet + free |
