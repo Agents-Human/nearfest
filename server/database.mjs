@@ -18,6 +18,7 @@ export function databaseConfig(connectionString=process.env.DATABASE_URL,environ
  if(!/^[a-z_][a-z0-9_]*$/.test(namespace))throw Error('Invalid DATABASE_SCHEMA.');
  return {connectionString,namespace,
   poolMax:setting(environment,'DATABASE_POOL_MAX',2,1,100),
+  connectionTimeoutMillis:setting(environment,'DATABASE_CONNECTION_TIMEOUT_MS',10000,100,60000),
   idleTimeoutMillis:setting(environment,'DATABASE_IDLE_TIMEOUT_MS',5000,100,60000),
   startupTimeoutMillis:setting(environment,'DATABASE_STARTUP_TIMEOUT_MS',30000,0,300000),
  };
@@ -28,7 +29,7 @@ export async function openDatabase(connectionString,options={}){
  return retryDatabaseStartup(()=>connectDatabase(config,namespace),{timeoutMillis:config.startupTimeoutMillis});
 }
 async function connectDatabase(config,namespace){
- const shared={connectionString:config.connectionString,connectionTimeoutMillis:10000,idleTimeoutMillis:config.idleTimeoutMillis,application_name:'nearfest',options:'-c search_path='+namespace};
+ const shared={connectionString:config.connectionString,connectionTimeoutMillis:config.connectionTimeoutMillis,idleTimeoutMillis:config.idleTimeoutMillis,application_name:'nearfest',options:'-c search_path='+namespace+' -c lock_timeout=5000 -c idle_in_transaction_session_timeout=15000'};
  // Per process: two query connections by default, plus at most one sponsor lock.
  const pool=new Pool({...shared,max:config.poolMax,types:parsers});
  pool.on('error',error=>console.error('PostgreSQL connection error:',error.message));
@@ -40,8 +41,14 @@ async function connectDatabase(config,namespace){
   const result=active.pending.then(()=>active.client.query(sql,params));
   active.pending=result.catch(()=>{});return result;
  };
- async function transaction(fn){
+ let transactions=Promise.resolve();
+ function transaction(fn){
   if(context.getStore())return fn();
+  // Wait before checking out a connection, leaving readers a free pool slot.
+  const result=transactions.then(()=>runTransaction(fn));
+  transactions=result.catch(()=>{});return result;
+ }
+ async function runTransaction(fn){
   const client=await pool.connect(),active={client,pending:Promise.resolve()};
   try{
    await client.query('BEGIN');
@@ -58,6 +65,7 @@ async function connectDatabase(config,namespace){
   finally{try{await client.query('SELECT pg_advisory_unlock(hashtext(current_schema()),hashtext($1))',[key]);}finally{client.release();}}
  }
  const db={query,transaction,withLock,
+  connectionStats:()=>({queries:{total:pool.totalCount,idle:pool.idleCount,waiting:pool.waitingCount},locks:{total:lockPool.totalCount,idle:lockPool.idleCount,waiting:lockPool.waitingCount}}),
   exec:sql=>query(sql),
   prepare(sql){return {all:async(...values)=>(await query(sql,values)).rows,get:async(...values)=>(await query(sql,values)).rows[0],run:async(...values)=>({changes:(await query(sql,values)).rowCount})};},
   close:()=>Promise.all([pool.end(),lockPool.end()]),

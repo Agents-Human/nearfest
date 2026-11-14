@@ -10,6 +10,7 @@ import { readFile, stat } from 'node:fs/promises';
 import { resolve, extname } from 'node:path';
 import {createWalletAuth} from './wallet-auth.mjs';
 import { openStore } from './store.mjs';
+import {startBackgroundJob} from './background-job.mjs';
 import { UNIT, STORAGE, amount, validateDraft, createBet, shortText, moderate } from './domain.mjs';
 import { resolveBet, fixtures, fixture, scoreboard, prices, hasAI, semanticModerate } from './resolvers.mjs';
 import {createMultiplayer} from './multiplayer.mjs';
@@ -23,6 +24,7 @@ import { coverKey, streamLink } from './media.mjs';
 import { contractId, oracleReady, view, provider, transaction as nearTransaction, propose, assertTestnet, balance as nearBalance, requireBalance } from './near.mjs';
 
 const port = Number(process.env.PORT || 5189), origin = process.env.APP_ORIGIN || 'http://127.0.0.1:5188';
+const host=process.env.HOST||(process.env.NODE_ENV==='production'?'0.0.0.0':'127.0.0.1');
 const store = await openStore();
 const play=createPlay(store),community=createCommunity(store),quizRooms=createMultiplayer(store),boardRooms=createBoardRooms(store),arcadeRooms=(await createArcadeRooms(store));
 const roomService=id=>id.startsWith('arena-')?arcadeRooms:id.startsWith('board-')?boardRooms:quizRooms;
@@ -36,9 +38,7 @@ const multiplayer={
  tick:async ()=>{const board=(await boardRooms.tick()),quiz=(await quizRooms.tick());return board||quiz;}
 };
 const economy=(await createNearEconomy(store,{services:{...multiplayer,community,changed:async id=>(await arcadeRooms.notify(id)),get:async (id,u,key)=>id.startsWith('arena-')?(await arcadeRooms.get(id,u,key)):(await multiplayer.get(id,u)),action:async (id,u,d,key)=>id.startsWith('arena-')?(await arcadeRooms.action(id,u,d,key)):(await multiplayer.action(id,u,d)),start:async (id,u,key)=>id.startsWith('arena-')?(await arcadeRooms.start(id,u,key)):(await multiplayer.start(id,u))}}));
-setInterval(()=>{void economy.tick().then(changed=>{if(changed)broadcast();}).catch(()=>{});},5000).unref();
 const faucet=createFaucet(store);
-const walletRecoveryTimer=setInterval(async ()=>{void Promise.all([economy.recoverPending(),faucet.tick()]).then(results=>{if(results.some(Boolean))broadcast();}).catch(()=>{});},20000);walletRecoveryTimer.unref();
 const { db } = store, streams = new Set(), arenaStreams = new Set(), limits = new Map(), resolving = new Set(), cache = new Map();
 const hash = x => createHash('sha256').update(x).digest('hex');
 const config = { network: 'testnet', contract_id: contractId, oracle_ready: oracleReady, ai_ready: hasAI, semantic_moderation: hasAI, room_storage_fee:'100000000000000000000000',currency:'NEAR',storage_fee: STORAGE.toString(), review_ms: 900000, resolution_ms: 172800000 };
@@ -217,8 +217,6 @@ const server = createServer(async (req, res) => {
     res.writeHead(200, { 'content-type': types[extname(file)] || 'application/octet-stream', 'x-content-type-options': 'nosniff', 'referrer-policy': 'strict-origin-when-cross-origin' }); res.end(await readFile(file));
   } catch (e) { if (!res.headersSent) json(res, { error: e.message || 'Something went wrong. Please try again.' }, 400); else res.end(); }
 });
-let arcadeProcessing=false;
-const arcadeTimer=setInterval(async ()=>{if(arcadeProcessing)return;arcadeProcessing=true;try{if(await arcadeRooms.tick())broadcast();}catch(e){console.error('Arcade tick failed:',e.message);}finally{arcadeProcessing=false;}},50);arcadeTimer.unref();
 let processing = false;
 async function tick() {
   if (processing) return; processing = true;
@@ -237,17 +235,25 @@ async function tick() {
     (await db.prepare('DELETE FROM sessions WHERE expires<$1').run(Date.now()));
   } finally { processing = false; }
 }
-const interval = setInterval(tick, 30000);
-const partyInterval=setInterval(async ()=>{try{if((await multiplayer.tick()))broadcast();}catch(e){console.error('Multiplayer settlement failed:',e.message);}},1000);
-server.listen(port, process.env.HOST || '127.0.0.1', () => console.log(`NearFest API http://127.0.0.1:${server.address().port}`));
+const schedule=(name,milliseconds,work)=>startBackgroundJob(name,milliseconds,work,{onError:error=>console.error(name+':',error.message,JSON.stringify(db.connectionStats()))});
+const changed=operation=>async()=>{if(await operation())broadcast();};
+const jobs=[
+ schedule('Arcade tick failed',50,changed(()=>arcadeRooms.tick())),
+ schedule('Multiplayer settlement failed',1000,changed(()=>multiplayer.tick())),
+ schedule('Escrow synchronization failed',5000,changed(()=>economy.tick())),
+ schedule('Wallet recovery failed',20000,changed(()=>economy.recoverPending())),
+ schedule('Faucet recovery failed',20000,changed(()=>faucet.tick())),
+ schedule('Room maintenance failed',30000,tick),
+];
+server.listen(port,host,()=>{const address=server.address();console.log(`NearFest API http://${address.family==='IPv6'?'['+address.address+']':address.address}:${address.port}`);});
 let closing=false;
 function close() {
   if(closing)return;closing=true;
-  clearInterval(interval);clearInterval(partyInterval);clearInterval(arcadeTimer);clearInterval(walletRecoveryTimer);
+  for(const job of jobs)void job.stop();
   // Arcade SSE connections must close too, otherwise --watch never starts the replacement API.
   for(const response of [...streams,...arenaStreams])response.end();
   const force=setTimeout(()=>server.closeAllConnections(),3000);force.unref();
-  server.close(async ()=>{clearTimeout(force);(await db.close());process.exit(0);});
+  server.close(async ()=>{await Promise.all(jobs.map(job=>job.stop()));await db.close();clearTimeout(force);process.exit(0);});
   server.closeIdleConnections();
 }
 process.on('SIGINT', close); process.on('SIGTERM', close);

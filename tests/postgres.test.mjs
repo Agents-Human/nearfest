@@ -8,6 +8,7 @@ import {openStore,testSchema} from './helpers/store.mjs';
 import {migrateSqlite} from '../scripts/migrate-sqlite.mjs';
 import {openDatabase} from '../server/database.mjs';
 import {createArcadeRooms} from '../server/arcade/rooms.mjs';
+import {startBackgroundJob} from '../server/background-job.mjs';
 
 test('PostgreSQL transactions roll back and concurrent read/modify/write operations retain every update',async()=>{
  const store=await openStore(':memory:');
@@ -100,4 +101,34 @@ test('parallel requests reuse two query connections, one sponsor connection, and
    assert.equal(stillOpen.rowCount,0);
   }finally{await observer.close();}
  }catch(error){await db.close();throw error;}
+});
+
+
+test('waiting write transactions leave a connection available for reads',async()=>{
+ const db=await openDatabase(process.env.TEST_DATABASE_URL,{schema:testSchema()});
+ let release,entered;const gate=new Promise(resolve=>{release=resolve;}),started=new Promise(resolve=>{entered=resolve;});
+ const first=db.transaction(async()=>{entered();await gate;});let second,timeout;
+ try{
+  await started;second=db.transaction(()=>db.query('SELECT 2'));
+  const reading=db.query('SELECT 1 AS n');
+  const result=await Promise.race([reading,new Promise((_,reject)=>{timeout=setTimeout(()=>reject(Error('Queued writes starved a reader')),1000);})]);
+  assert.equal(result.rows[0].n,1);
+ }finally{clearTimeout(timeout);release();await Promise.allSettled([first,second]);await db.close();}
+});
+
+test('a real exhausted-pool timeout does not kill maintenance and it recovers after release',async()=>{
+ const previous={max:process.env.DATABASE_POOL_MAX,timeout:process.env.DATABASE_CONNECTION_TIMEOUT_MS};let db;
+ try{
+  process.env.DATABASE_POOL_MAX='1';process.env.DATABASE_CONNECTION_TIMEOUT_MS='150';
+  db=await openDatabase(process.env.TEST_DATABASE_URL,{schema:testSchema()});
+ }finally{
+  for(const [key,value] of [['DATABASE_POOL_MAX',previous.max],['DATABASE_CONNECTION_TIMEOUT_MS',previous.timeout]])if(value===undefined)delete process.env[key];else process.env[key]=value;
+ }
+ let release,entered;const gate=new Promise(resolve=>{release=resolve;}),started=new Promise(resolve=>{entered=resolve;}),errors=[];let completed=0;
+ const holding=db.transaction(async()=>{entered();await gate;});
+ const job=startBackgroundJob('maintenance',60000,async()=>{await db.query('SELECT 1');completed++;},{onError:error=>errors.push(error.message)});
+ try{
+  await started;await job.run();assert.deepEqual(errors,['timeout exceeded when trying to connect']);
+  release();await holding;await job.run();assert.equal(completed,1);
+ }finally{release();await job.stop();await holding;await db.close();}
 });
