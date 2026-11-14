@@ -1,6 +1,6 @@
 # NearFest
 
-**A social multiplayer arcade, strategy board, and challenge platform with a real NEAR testnet game economy — built for instant play without wallet extensions or seed phrases.**
+**A social multiplayer arcade, strategy board, and challenge platform with a real NEAR testnet game economy built for instant play without wallet extensions or seed phrases.**
 
 > **NEAR Hackathon 2026 Submission** ([nearhackathon.com](https://nearhackathon.com)) · **Submitted**  
 > **Tracks:** Games With Real Economies · Social Money (Social Fun) · Open Innovation  
@@ -19,7 +19,7 @@ NearFest turns casual and competitive multiplayer gaming into a self-contained o
 - **Chain-abstracted onboarding:** Players join with a username and password. NearFest provisions a named `.testnet` account, encrypts its signing key server-side (`AES-256-GCM`), and automatically funds it with **10 test NEAR** via NEAR's testnet account helper—removing browser wallet popups, gas prompts, and seed phrases from the core game loop.
 - **42 live playable games & challenges** in the discovery lobby (across real-time 2D/3D arcade games, deterministic two-player strategy board games, and timed quizzes/puzzles), playable **solo** or in **staked multiplayer rooms**.
 - **Four on-chain economic primitives** on one Rust smart contract (`contract/src/lib.rs` & `contract/src/rooms.rs`), with **0% platform fees**, exact yoctoNEAR payout splitting, pull-based withdrawals, and permissionless timeout refunds.
-- **AI-assisted help** powered by **NEAR AI Cloud** (`zai-org/GLM-5.1-FP8`) for bounded quiz curation, semantic moderation, and source-cited factual dispute proposals—always constrained by verbatim citation checks and human challenge windows—plus transparent disclosure of AI-assisted development.
+- **AI-assisted help** AI assited in developing some of the games.
 
 ---
 
@@ -28,7 +28,8 @@ NearFest turns casual and competitive multiplayer gaming into a self-contained o
 | Track | How NearFest Delivers |
 | --- | --- |
 | **Games With Real Economies** | 42 live games & challenges wired directly to on-chain NEAR escrow (`settle_game`), with 0% platform cut, exact yoctoNEAR payout splits, deterministic 2-leg board matches, real-time server-authoritative arcade rooms, and automatic 10 test NEAR starter grants so the economy powers every match loop. |
-| **Social Money *(Social Fun)*** | Built for friends and groups pooling money together: **Group Pots** (`kind: "pot"`, 2–30 members) and **Community Bounties** (`kind: "bounty"`) govern shared prize pools via contributor majority voting (`vote_room`), paired with two-player challenges, live sideline chat, emoji reactions, invite links, broadcast overlays, and optional peer referees. |
+| **Social Money *(Social Fun)*** | Built for friends and groups pooling money together: **Group Pots** (`kind: "pot"`, 2–30 members) and **Community 
+
 | **Open Innovation** | Combines seamless chain abstraction (password-authenticated `nf-<hex>.testnet` accounts with server-MAC-verified TX execution and PostgreSQL `managed_locks` nonce leases), **NEAR AI Cloud** evidence judging with a 15-minute on-chain challenge window, and durable `pg-boss` payment/deadline recovery in one cohesive web arcade. |
 
 ---
