@@ -88,7 +88,7 @@ export const actionAssetGroups: Readonly<Record<string, readonly string[]>> = {
     'track-straight', 'track-wide', 'track-curve', 'track-ramp', 'track-support', 'track-gate', 'track-fan', 'track-end',
     'tunnel', 'banner-double-high', 'banner-hanging-double-high', 'helix-large-left', 'helix-large-right', 'funnel-long', 's-curve-left-large',
     'support-color-four-top', 'support-color-four-middle', 'support-color-four-bottom', 'fan-standing-four', 'fan-four', 'tree-large', 'tree-tall-large',
-    'arrow-basic', 'indicator-special-arrow', 'button-floor-round', 'piston-round', 'warning-orange', 'cone', 'beacon', 'rock-flat-grass', 'rock-flat',
+    'arrow-basic', 'indicator-special-arrow', 'button-floor-round', 'piston-round', 'warning-orange', 'cone', 'beacon', 'rock-flat-grass', 'rock-flat', 'crate', 'barrel',
   ],
   // Tank scenery is code-authored; only the combat effect textures are loaded.
   'tank-arena': [],

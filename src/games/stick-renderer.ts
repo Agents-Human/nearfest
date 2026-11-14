@@ -1,15 +1,16 @@
-import {WorldSnapshots} from './world-snapshots.mjs';
+import {StickSnapshots} from './stick-snapshots.mjs';
 import type {WorldMetrics} from './world-renderer';
 import {idlePose,travelPose,guardPose,recoilPose,airbornePose,fallenPose,sampleAttackPose,mixPose,fitAttackReach,jumpFlipAngle} from './stick-poses';
 import type {StickPose} from './stick-poses';
 
 const clamp=(n:number,a:number,b:number)=>Math.max(a,Math.min(b,n));
 const lerp=(a:number,b:number,t:number)=>a+(b-a)*t;
-const ink=['#307ae8','#171722'];
+const ink=['#307ae8','#51406f'];
+const fighterGradients=[['#8bbde3','#5b8bcc','#3f629c'],['#b5a2c4','#8a759b','#5c4b6e']];
 const accents=['#93c5ff','#eee8e0'];
 const TAU=Math.PI*2;
 type Trail={pose:StickPose;x:number;y:number;facing:number;age:number;rotation:number};
-type Animation={seq:number;kind:string;duration:number;age:number;stride:number;lastX:number;pose:StickPose;trail:Trail[];trailAge:number;ko:number;flip:number;flipping:boolean};
+type Animation={hp:number;hurtAge:number;seq:number;kind:string;duration:number;age:number;stride:number;lastX:number;pose:StickPose;trail:Trail[];trailAge:number;ko:number;flip:number;flipping:boolean};
 type Burst={id:number;x:number;y:number;kind:string;dir:number;age:number;life:number;label:string};
 type Drop={x:number;y:number;vx:number;vy:number;age:number;life:number;r:number};
 type Stain={x:number;r:number;life:number};
@@ -17,7 +18,7 @@ let terrace:Promise<HTMLImageElement>|undefined;
 export class StickRenderer {
  private canvas=document.createElement('canvas');
  private ctx:CanvasRenderingContext2D;
- private snapshots=new WorldSnapshots();
+ private snapshots=new StickSnapshots();
  private resize:ResizeObserver;
  private observer:IntersectionObserver;
  private anims:Animation[]=[];
@@ -28,6 +29,7 @@ export class StickRenderer {
  private finishAge=0;private freeze=0;private shake=0;private blood=true;private visible=true;private disposed=false;
  private width=960;private height=540;private ratio=1;private center=480;private zoom=1.6;
  private sampleAt=0;private frames=0;private frameTimes:number[]=[];
+ private paused=false;private pausedAt=0;
  private reducedMotion=matchMedia('(prefers-reduced-motion: reduce)').matches;
  constructor(private host:HTMLElement,state:any,_seat:number|null,private metrics:(m:WorldMetrics)=>void,private background:HTMLImageElement){
   const ctx=this.canvas.getContext('2d',{alpha:false});if(!ctx)throw new Error('The 2D canvas could not start.');this.ctx=ctx;
@@ -43,11 +45,12 @@ export class StickRenderer {
   return terrace??=new Promise<HTMLImageElement>((resolve,reject)=>{const image=new Image();image.onload=()=>resolve(image);image.onerror=()=>reject(new Error('The terrace artwork could not load.'));image.src='/models/fighters/vampire-terrace.webp';}).catch(e=>{terrace=undefined;throw e;});
  }
  push(state:any,_seat:number|null){this.snapshots.push(state,performance.now());}
+ setPaused(paused:boolean){if(paused===this.paused)return;this.paused=paused;this.pausedAt=performance.now();this.last=0;}
  setBlood(enabled:boolean){this.blood=enabled;if(!enabled){this.drops=[];this.stains=[];}}
  setAim(_angle:number,_power:number){}
  setCamera(_mode:string){}
  aimAt(_x:number,_y:number):{angle:number;power:number}|null{return null;}
- private resetAnimations(state:any){this.anims=state.players.map((p:any)=>({seq:p.attackSeq||0,kind:p.attackKind||'punch',duration:p.attackDuration||.22,age:1,stride:0,lastX:p.x,pose:idlePose(0),trail:[],trailAge:0,ko:0,flip:0,flipping:false}));}
+ private resetAnimations(state:any){this.anims=state.players.map((p:any)=>({hp:p.hp,hurtAge:p.hurtTimer>0?0:1,seq:p.attackSeq||0,kind:p.attackKind||'punch',duration:p.attackDuration||.22,age:p.attack>0?(p.attackDuration||.22)-p.attack:1,stride:0,lastX:p.x,pose:idlePose(0),trail:[],trailAge:0,ko:0,flip:0,flipping:false}));}
  private size(){
   const w=this.host.clientWidth,h=this.host.clientHeight;if(!w||!h)return;
   this.ratio=Math.min(devicePixelRatio||1,2);this.width=w;this.height=h;
@@ -55,9 +58,9 @@ export class StickRenderer {
  }
  private draw=(now:number)=>{
   if(this.disposed)return;this.frame=requestAnimationFrame(this.draw);
-  const ms=this.last?now-this.last:16.7,dt=Math.min(.04,Math.max(0,ms/1000));this.last=now;
+  const ms=this.last?now-this.last:16.7,dt=this.paused?0:Math.min(.04,Math.max(0,ms/1000));this.last=now;
   if(document.hidden||!this.visible){this.sampleAt=now;this.frames=0;this.frameTimes=[];return;}
-  const s=this.snapshots.sample(now);if(!s)return;this.elapsed+=dt;
+  const s=this.snapshots.sample(this.paused?this.pausedAt:now);if(!s)return;this.elapsed+=dt;
   this.render(s,dt);this.frames++;this.frameTimes.push(ms);
   if(now-this.sampleAt>1500){
    this.metrics({fps:Math.round(this.frames*1000/(now-(this.sampleAt||now-1500))),drawCalls:1,triangles:0,quality:'2D',frameP95:[...this.frameTimes].sort((a,b)=>a-b)[Math.floor(this.frameTimes.length*.95)]||0,geometries:0,textures:1});
@@ -71,10 +74,11 @@ export class StickRenderer {
   const motionDt=this.freeze>0?0:dt;this.freeze=Math.max(0,this.freeze-dt);
   s.players.forEach((p:any,i:number)=>{
    const a=this.anims[i];
+   a.hurtAge=p.hp<a.hp?0:a.hurtAge+motionDt;a.hp=p.hp;
    if(a.seq!==p.attackSeq){a.seq=p.attackSeq;a.kind=p.attackKind;a.duration=p.attackDuration||.22;a.age=Math.max(0,a.duration-(p.attack||0));}
    else a.age+=motionDt;
    const dx=p.x-a.lastX;a.lastX=p.x;if(Math.abs(dx)<50)a.stride+=Math.abs(dx);
-   if(p.hurtTimer>0||p.hp<=0)a.age=a.duration;
+   if(p.attack<=0||p.stun>0||p.tumble>0||p.hp<=0)a.age=a.duration;
    a.ko=p.hp<=0?a.ko+motionDt:0;
    if(p.airFlip>0&&!a.flipping)a.flip=.32;a.flipping=p.airFlip>0;a.flip=Math.max(0,a.flip-motionDt);
    if(p.hurtTimer>0||p.stun>0||p.tumble>0||p.hp<=0)a.flip=0;
@@ -105,25 +109,26 @@ export class StickRenderer {
    const settled=p.ground||(s.finished&&this.finishAge>.5);
    if(p.hp<=0)target=settled?fallenPose():mixPose(recoilPose('kick',1),fallenPose(),clamp(a.ko/.3,0,1));
    else if(s.finished)target=idlePose(this.elapsed+i*.7);
-   else if(p.hurtTimer>0||p.stun>0)target=recoilPose(p.hurtKind||'cross',clamp((p.hurtTimer||p.stun)/.16,.25,1));
+   else if(p.stun>0)target=recoilPose(p.hurtKind||'cross',clamp(a.hurtAge/.08,.12,1)*clamp((p.hurtTimer||p.stun)/.16,.25,1));
    else if(p.tumble>0)target=p.ground?mixPose(fallenPose(),idlePose(this.elapsed),1-clamp(p.tumble/.16,0,1)):recoilPose(p.hurtKind||'cross',.8);
    else if(p.parryPose>0)target=guardPose(this.elapsed,0,1);
    else if(active)target=fitAttackReach(sampleAttackPose(a.kind,progress),a.kind,(s.players[1-i].x-p.x)*p.facing);
    else if(p.blocking&&!(p.dashTimer>0))target=guardPose(this.elapsed,clamp((p.guardHit||0)/.18,0,1));
    else if(!p.ground)target=airbornePose(p.vy);
    else if(Math.abs(p.vx)>16)target=travelPose(a.stride,p.vx*p.facing<0?-1:1,p.dashTimer>0);
+   else if(p.hurtTimer>0)target=recoilPose(p.hurtKind||'cross',clamp(p.hurtTimer/.16,.25,1));
    else target=idlePose(this.elapsed+i*.7);
    a.pose=active||p.hp<=0?target:mixPose(a.pose,target,dt?1-Math.exp(-motionDt*32):1);
    // Final KO snapshots stop simulating: visually settle the body onto the floor.
    const y=s.finished?lerp(p.y,410,clamp(this.finishAge/.5,0,1)):p.y;
    const rotation=jumpFlipAngle(p,a.flip);
-   for(const tr of a.trail){tr.age+=dt;if(tr.age<.13)this.figure(tr.pose,tr.x,tr.y,tr.facing,ink[i],(.13-tr.age)*1.15,tr.rotation,false);}
+   for(const tr of a.trail){tr.age+=dt;if(tr.age<.13)this.figure(tr.pose,tr.x,tr.y,tr.facing,i,(.13-tr.age)*1.15,tr.rotation,false);}
    a.trail=a.trail.filter(tr=>tr.age<.13);
    if(!this.reducedMotion&&(p.dashTimer>0||active&&['divekick','kick','roundhouse','frontkick'].includes(a.kind))){
     a.trailAge+=dt;if(a.trailAge>.025){a.trailAge=0;a.trail.push({pose:a.pose,x:p.x,y,facing:p.facing,age:0,rotation});if(a.trail.length>5)a.trail.shift();}
    }
    if(active&&progress>.25&&progress<.68)this.smear(p,a);
-   this.figure(a.pose,p.x,y,p.facing,ink[i],1,rotation,true);
+   this.figure(a.pose,p.x,y,p.facing,i,1,rotation,true);
    if(p.dashTimer>0)this.speedLines(p,ink[i]);
   });
   for(const beam of s.beams||[])this.beam(beam);
@@ -131,7 +136,7 @@ export class StickRenderer {
   for(const d of this.drops){ctx.globalAlpha=clamp((d.life-d.age)*5,0,1);ctx.strokeStyle=d.r>1.6?'#b71d3b':'#e64658';ctx.lineWidth=d.r;ctx.lineCap='round';ctx.beginPath();ctx.moveTo(d.x,d.y);ctx.lineTo(d.x-d.vx*.018,d.y-d.vy*.018);ctx.stroke();}ctx.globalAlpha=1;
   ctx.restore();this.updateEffects(dt);
  }
- private figure(p:StickPose,x:number,y:number,facing:number,color:string,alpha:number,rotation:number,outline:boolean){
+ private figure(p:StickPose,x:number,y:number,facing:number,seat:number,alpha:number,rotation:number,outline:boolean){
   const c=this.ctx;c.save();c.translate(x,y);c.scale(facing||1,1);
   if(rotation){c.translate(p.hip[0],p.hip[1]);c.rotate(rotation);c.translate(-p.hip[0],-p.hip[1]);}
   c.globalAlpha=alpha;c.lineCap='round';c.lineJoin='round';
@@ -141,8 +146,12 @@ export class StickRenderer {
   for(const [elbow,hand] of [[p.rearElbow,p.rearHand],[p.leadElbow,p.leadHand]]){arms.moveTo(...p.shoulder);arms.lineTo(...elbow);arms.lineTo(...hand);}
   const spine=new Path2D();spine.moveTo(...p.hip);spine.quadraticCurveTo(...p.waist,...p.shoulder);spine.lineTo(p.head[0],p.head[1]+7);
   // A narrow paper edge keeps the black silhouette legible on the supplied dark terrace.
-  if(outline){c.strokeStyle='rgba(238,231,218,.5)';c.lineWidth=8.6;c.stroke(body);c.lineWidth=8;c.stroke(arms);c.lineWidth=10.5;c.stroke(spine);c.fillStyle='rgba(238,231,218,.5)';c.beginPath();c.arc(...p.head,11,0,TAU);c.fill();}
-  c.strokeStyle=color;c.fillStyle=color;c.lineWidth=7.4;c.stroke(body);c.lineWidth=6.9;c.stroke(arms);c.lineWidth=9.5;c.stroke(spine);c.beginPath();c.arc(...p.head,10.5,0,TAU);c.fill();c.restore();
+  if(outline){c.strokeStyle='rgba(214,203,217,.28)';c.lineWidth=8.6;c.stroke(body);c.lineWidth=8;c.stroke(arms);c.lineWidth=10.5;c.stroke(spine);c.fillStyle='rgba(214,203,217,.28)';c.beginPath();c.arc(...p.head,11,0,TAU);c.fill();}
+  // One flat gradient runs from the head to the feet and follows the pose.
+  const colors=fighterGradients[seat%fighterGradients.length];
+  const fill=c.createLinearGradient(p.head[0],p.head[1]-10.5,(p.rearFoot[0]+p.leadFoot[0])/2,(p.rearFoot[1]+p.leadFoot[1])/2+4);
+  fill.addColorStop(0,colors[0]);fill.addColorStop(.48,colors[1]);fill.addColorStop(1,colors[2]);
+  c.strokeStyle=fill;c.fillStyle=fill;c.lineWidth=7.4;c.stroke(body);c.lineWidth=6.9;c.stroke(arms);c.lineWidth=9.5;c.stroke(spine);c.beginPath();c.arc(...p.head,10.5,0,TAU);c.fill();c.restore();
  }
  private shadow(p:any,a:Animation){
   const c=this.ctx,altitude=Math.max(0,410-p.y),opacity=.24*clamp(1-altitude/240,.22,1);
@@ -164,7 +173,7 @@ export class StickRenderer {
   this.bursts.push({id:imp.id,x:imp.x,y:imp.y,dir:imp.dir||1,kind:imp.kind,age:0,life:['parry','ko','break'].includes(imp.kind)?.4:.25,label:imp.kind==='parry'?'PARRY':imp.kind==='ko'?'K.O.':imp.kind==='break'?'BREAK':imp.kind==='dodge'?'MISS':imp.kind==='heavy'?'WHAM':''});if(this.bursts.length>20)this.bursts.shift();
   if(this.blood&&['hit','heavy','ko'].includes(imp.kind))for(let n=0;n<(imp.kind==='hit'?11:21);n++){
    const seed=Math.sin((imp.id*31+n*17)*12.9898)*43758.5453,r=seed-Math.floor(seed),v=Math.sin(n*37+imp.id)*.5+.5;
-   this.drops.push({x:imp.x,y:imp.y,vx:imp.dir*(70+r*230),vy:-50-v*180,age:0,life:.45+r*.4,r:.8+v*1.7});
+   this.drops.push({x:imp.x+imp.dir*(12+r*23),y:imp.y-3-v*15,vx:imp.dir*(70+r*230),vy:-50-v*180,age:0,life:.45+r*.4,r:.8+v*1.7});
   }
   if(this.drops.length>120)this.drops.splice(0,this.drops.length-120);
  }

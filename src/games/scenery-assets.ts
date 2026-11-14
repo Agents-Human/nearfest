@@ -83,6 +83,13 @@ export const sceneryGroups: Readonly<Record<string, readonly string[]>> = {
   'mini-golf': ['windmill', 'castle', 'golf-ball', 'flag', 'fox'],
   'kitchen-rush': ['tomato', 'cabbage', 'cheese', 'loaf', 'burger', 'pan', 'pot', 'cutting-board', 'plate', 'salad', 'soup'],
   'marble-knockout': ['marble', 'fan', 'tree', 'tree-tall', 'banner', 'fox'],
+  'marble-run': [
+    'marble', 'fan', 'tree', 'tree-tall', 'banner', 'fox',
+    'house-a', 'house-h', 'house-q', 'city-tree', 'tree-large', 'fence', 'planter',
+    'windmill', 'castle', 'flag',
+    'building-a', 'building-c', 'building-f', 'detail-parasol-a', 'light-curved-double', 'light-square-double', 'sign-highway-wide',
+    'pipe', 'machine', 'crane', 'screen', 'robot-arm',
+  ],
   'pocket-racers': [
     'house-a',
     'house-b',
@@ -211,7 +218,7 @@ export function loadSceneryAssets(game: string): Promise<SceneryAssets> {
     return {
       game, prop, propIds: [...ids], dimensions: sizes,
       ball(color?: THREE.ColorRepresentation) {
-        const id = game === 'mini-golf' ? 'golf-ball' : game === 'marble-knockout' ? 'marble' : '';
+        const id = game === 'mini-golf' ? 'golf-ball' : (game === 'marble-knockout' || game === 'marble-run') ? 'marble' : '';
         const ball = prop(id);
         if (!ball) return null;
         const radius = sizes[id].y / 2;

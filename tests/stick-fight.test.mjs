@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {newWorld,advanceWorld} from '../server/arcade/world.mjs';
+import {newWorld,advanceWorld,worldBot} from '../server/arcade/world.mjs';
 import {createArcadeRooms} from '../server/arcade/rooms.mjs';
 import {openStore} from '../server/store.mjs';
 const step=(s,n,c=[])=>{for(let i=0;i<n;i++)s=advanceWorld(s,c);return s;};
@@ -15,6 +15,32 @@ test('terrace fights stay on one floor; a held attack lands all four moves in on
 test('a quick attack during recovery is buffered without requiring the button to stay held',()=>{
  let s=close();s=advanceWorld(s,[{attack:true},{}]);s=step(s,2);s=advanceWorld(s,[{attack:true},{}]);s=step(s,4);
  assert.equal(s.players[0].attackSeq,2);assert.equal(s.players[0].attackKind,'cross');assert.equal(s.players[1].hp,89);
+});
+test('releasing a held attack ends the chain; an idle player never attacks automatically',()=>{
+ let s=step(newWorld('stick-rivals',2),4,[{attack:true},{}]);
+ const sequence=s.players[0].attackSeq;
+ s=step(s,20);
+ assert.equal(s.players[0].attackSeq,sequence,'release must not queue one more move');
+ for(let i=0;i<60;i++)s=advanceWorld(s,[{},worldBot(s,1)]);
+ assert.equal(s.players[0].attackSeq,sequence,'the practice bot cannot drive the human fighter');
+});
+test('footwork stops on release and reverses on the next simulation step',()=>{
+ let s=step(newWorld('stick-rivals',2),3,[{right:true},{}]);const x=s.players[0].x;
+ s=advanceWorld(s,[{},{}]);assert.equal(s.players[0].x,x);assert.equal(s.players[0].vx,0);
+ s=advanceWorld(s,[{left:true},{}]);assert(s.players[0].x<x);assert(s.players[0].vx<0);
+});
+test('guard and buffered jump can interrupt strike recovery, while contact remains committed',()=>{
+ let s=newWorld('stick-rivals',2);s=advanceWorld(s,[{attack:true},{}]);
+ s=advanceWorld(s,[{block:true},{}]);assert.equal(s.players[0].blocking,false,'startup cannot be cancelled');
+ s=step(s,2,[{block:true},{}]);assert.equal(s.players[0].blocking,true);assert.equal(s.players[0].attack,0);
+ s=step(s,12,[{block:true},{}]);assert.equal(s.players[0].attackSeq,1,'guard clears the attack buffer');
+ s=advanceWorld(newWorld('stick-rivals',2),[{attack:true},{}]);
+ s=advanceWorld(s,[{up:true},{}]);s=step(s,2);
+ assert.equal(s.players[0].ground,false,'a quick jump during recovery cannot be lost');assert(s.players[0].vy<0);
+});
+test('guard becomes available on the step hit stun ends',()=>{
+ let s=newWorld('stick-rivals',2);Object.assign(s.players[0],{stun:.05,hurtTimer:.2});
+ s=advanceWorld(s,[{block:true},{}]);assert.equal(s.players[0].stun,0);assert.equal(s.players[0].blocking,true);
 });
 test('holding jump does not auto-flip or bunny-hop; a second press performs exactly one air flip',()=>{
  let s=newWorld('stick-rivals',2);s=step(s,30,[{up:true},{}]);assert.equal(s.players[0].y,410);assert.equal(s.players[0].airJumps,1);assert.equal(s.players[0].airFlip,0);

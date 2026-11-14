@@ -14,7 +14,7 @@ export function createStickFighter(i,round=0){
   dashTimer:0,dashCooldown:0,parryTimer:0,
   weapon:null,weaponTimer:0,airJumps:1,
   tumble:0,charging:false,heavyAlt:0,moveCallout:'',calloutTimer:0,
-  jumpHeld:false,queued:null,bufferTime:0,hitCombo:0,hitComboTimer:0,
+  jumpHeld:false,jumpBuffer:0,inputHeld:{},queued:null,bufferTime:0,hitCombo:0,hitComboTimer:0,
   hurtKind:'',hurtTimer:0,hitFlash:0,guardBroken:0,guardHit:0,parryPose:0,weaponUses:0
  };
 }
@@ -65,10 +65,17 @@ export function stepStickWorld(s,cs,DT,ranked){
   p.hurtTimer=Math.max(0,(p.hurtTimer||0)-DT);p.hitFlash=Math.max(0,(p.hitFlash||0)-DT);
   p.hitComboTimer=Math.max(0,(p.hitComboTimer||0)-DT);if(!p.hitComboTimer)p.hitCombo=0;
   p.guardBroken=Math.max(0,(p.guardBroken||0)-DT);p.guardHit=Math.max(0,(p.guardHit||0)-DT);p.parryPose=Math.max(0,(p.parryPose||0)-DT);
-  // Remember quick taps during recovery; holding attack also continues the chain.
-  if(c.fire||c.down||c.attack){p.queued=c.fire?'fire':c.down?'down':c.up?'uppercut':'attack';p.bufferTime=.18;}
-  else p.bufferTime=Math.max(0,(p.bufferTime||0)-DT);
+  // Only a fresh press is buffered. A held button may repeat while held, but
+  // releasing it must not leave an extra strike queued by the previous tick.
+  const pressed=p.inputHeld||{};
+  const command=c.fire&&!pressed.fire?'fire':c.down&&!pressed.down?'down':c.attack&&!pressed.attack?c.up?'uppercut':'attack':null;
+  p.inputHeld={attack:Boolean(c.attack),down:Boolean(c.down),fire:Boolean(c.fire)};
+  p.bufferTime=Math.max(0,(p.bufferTime||0)-DT);
+  if(command){p.queued=command;p.bufferTime=.18;}
   const jumpPressed=Boolean(c.up&&!p.jumpHeld);p.jumpHeld=Boolean(c.up);
+  p.jumpBuffer=jumpPressed&&!c.attack?.16:Math.max(0,(p.jumpBuffer||0)-DT);
+  // Guard and a deliberate jump take priority over a buffered combo.
+  if(c.block||p.jumpBuffer>0){p.queued=null;p.bufferTime=0;}
   if(p.bufferTime>0&&p.cooldown<=DT){if(p.queued==='uppercut'){c.attack=true;c.up=true;}else c[p.queued]=true;}
   p.cooldown=Math.max(0,p.cooldown-DT);
   p.comboTimer=Math.max(0,(p.comboTimer||0)-DT);
@@ -76,25 +83,29 @@ export function stepStickWorld(s,cs,DT,ranked){
   p.dashTimer=Math.max(0,(p.dashTimer||0)-DT);
   p.dashCooldown=Math.max(0,(p.dashCooldown||0)-DT);
   p.tumble=Math.max(0,(p.tumble||0)-DT);p.airFlip=Math.max(0,(p.airFlip||0)-DT);
+  p.stun=Math.max(0,(p.stun||0)-DT);
   // Clear equipment carried by older saved rounds. The duel is unarmed.
   p.weapon=null;p.weaponTimer=0;p.weaponUses=0;
 
   const dx=Number(Boolean(c.right))-Number(Boolean(c.left)),rival=s.players[1-i]||p;
+  // The contact phase is committed; the retracting hand/foot can transition
+  // straight into footwork, a jump or guard instead of locking every input.
+  if(p.attack>0&&p.attack<=(p.attackDuration||.22)*.4&&p.attackKind!=='divekick'&&
+   p.stun<=0&&p.tumble<=0&&(dx||c.block||p.jumpBuffer>0))p.attack=0;
   // Keep the guard aimed at the rival while shuffling or retreating.
   if(p.attack<=0)p.facing=rival.x>=p.x?1:-1;
 
   const wasBlocking=p.blocking;
-  const stationaryCharge=Boolean(c.block&&!dx&&p.ground&&p.attack<=0&&p.stun<=0);
+  const stationaryCharge=Boolean(c.block&&!dx&&p.ground&&p.attack<=0&&p.stun<=0&&p.tumble<=0);
   p.charging=stationaryCharge&&p.energy<100;
   p.energy=clamp(p.energy+(stationaryCharge?26:c.block?7:15)*DT,0,100);
-  p.blocking=Boolean(c.block&&p.energy>1&&p.attack<=0&&p.stun<=0&&p.guardBroken<=0);
+  p.blocking=Boolean(c.block&&p.energy>1&&p.attack<=0&&p.stun<=0&&p.tumble<=0&&p.guardBroken<=0);
   if(p.blocking&&!wasBlocking)p.parryTimer=.20;
   p.parryTimer=Math.max(0,(p.parryTimer||0)-DT);
   if(p.blocking&&!stationaryCharge)p.energy=Math.max(0,p.energy-5*DT);
-  p.stun=Math.max(0,(p.stun||0)-DT);
 
   // A quick defensive step when pressing guard + direction
-  if(c.block&&dx&&p.dashCooldown<=0&&p.stun<=0&&p.attack<=0&&p.guardBroken<=0&&p.energy>=14){
+  if(c.block&&dx&&p.dashCooldown<=0&&p.stun<=0&&p.tumble<=0&&p.attack<=0&&p.guardBroken<=0&&p.energy>=14){
    p.dashTimer=.16;p.dashCooldown=.65;p.energy-=14;p.dashDir=dx;
    p.vx=dx*480;
    p.leanVel=(p.leanVel||0)+dx*10;
@@ -112,15 +123,17 @@ export function stepStickWorld(s,cs,DT,ranked){
    p.vx*=Math.exp(-(p.attackKind==='divekick'?1:8)*DT);
   }else{
    const targetVx=dx*(p.blocking?105:310);
-   p.vx=dx?targetVx:p.vx*Math.exp(-14*DT);
+   p.vx=targetVx;
   }
 
   // Jump & Double Air-Flip Somersault
-  if(jumpPressed&&!c.attack&&p.stun<=0&&p.tumble<=0&&p.attack<=0){
+  if(p.jumpBuffer>0&&!c.attack&&p.stun<=0&&p.tumble<=0&&p.attack<=0){
    if(p.ground){
+    p.jumpBuffer=0;
     p.vy=-480;p.ground=false;p.airJumps=1;
     p.leanVel=(p.leanVel||0)+p.facing*5;
    }else if((p.airJumps||0)>0){
+    p.jumpBuffer=0;
     p.vy=-420;p.airJumps=0;p.airFlip=.32;
     p.leanVel=(p.leanVel||0)+p.facing*15;
     p.moveCallout='AIR FLIP';p.calloutTimer=.6;
@@ -159,7 +172,7 @@ export function stepStickWorld(s,cs,DT,ranked){
   p.lean=clamp((p.lean||0)+p.leanVel*DT,-1.6,1.6);
 
   // Special Move (F / c.fire): Close-Range Judo Overhead Throw OR Ranged Ki Energy Blast!
-  if(c.fire&&!p.blocking&&p.cooldown===0&&p.stun===0){
+  if(c.fire&&!c.block&&!p.blocking&&p.cooldown===0&&p.stun===0&&p.tumble<=0){
    const dist=Math.abs(rival.x-p.x),vDist=Math.abs(rival.y-p.y);
    if(dist<86&&vDist<75&&p.energy>=18){
     p.attackKind='throw';
@@ -191,7 +204,7 @@ export function stepStickWorld(s,cs,DT,ranked){
   // - W + Space (c.up + c.attack): Rising Dragon Uppercut
   // - S (c.down) in Air: Horizontal Two-Foot Dropkick
   // - S (c.down) on Ground: High Roundhouse Kick / Low Leg Sweep
-  if((c.attack||c.down)&&!p.blocking&&p.cooldown===0&&p.stun===0){
+  if((c.attack||c.down)&&!c.block&&!p.blocking&&p.cooldown===0&&p.stun===0&&p.tumble<=0){
    const isHeavy=Boolean(c.down);
    const cost=isHeavy?18:7;
    if(p.energy>=cost){

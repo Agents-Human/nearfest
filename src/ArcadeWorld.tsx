@@ -20,7 +20,7 @@ export function useWorldControls(active:boolean,send:(held:Held)=>Promise<void>,
  useEffect(()=>{
   if(!active){held.current={};pressed.current={};return;}
 
-  const keyboard=(e:KeyboardEvent)=>{if((e.target as HTMLElement).closest('input,textarea,select,[contenteditable]'))return;const key=worldControlKey(e.code,game);if(key){e.preventDefault();if(!e.repeat)set(key,e.type==='keydown');}};
+  const keyboard=(e:KeyboardEvent)=>{const key=worldControlKey(e.code,game);if(!key)return;const editing=(e.target as HTMLElement).closest('input,textarea,select,[contenteditable]');if(editing&&e.type==='keydown')return;if(editing&&!held.current[key])return;e.preventDefault();if(!e.repeat)set(key,e.type==='keydown');};
   const clear=()=>{held.current={};pressed.current={};void flush.current();};window.addEventListener('keydown',keyboard);window.addEventListener('keyup',keyboard);window.addEventListener('blur',clear);document.addEventListener('visibilitychange',clear);const heartbeat=setInterval(()=>void flush.current(),100);
   return()=>{window.removeEventListener('keydown',keyboard);window.removeEventListener('keyup',keyboard);window.removeEventListener('blur',clear);document.removeEventListener('visibilitychange',clear);clearInterval(heartbeat);clear();};
  },[active,game]);return set;
@@ -54,8 +54,8 @@ const worlds:Record<string,{name:string;place:string;objective:string;hint:strin
 };
 const displayColors=['#ff795d','#b69cff','#74d5b5','#ffe185','#71caff','#ec91bb'];
 
-export function ArcadeWorld({s,seat,action,controls,controllable=false}:{s:any;seat:number|null;action:GameAction;controls?:(key:string,value:boolean)=>void;controllable?:boolean}){
- const host=useRef<HTMLDivElement>(null),shell=useRef<HTMLDivElement>(null),engine=useRef<Pick<WorldRenderer,'push'|'dispose'|'setBlood'|'setAim'|'setCamera'|'aimAt'>|null>(null),audio=useRef<ReturnType<typeof createArcadeAudio>|null>(null),latest=useRef({s,seat});latest.current={s,seat};
+export function ArcadeWorld({s,seat,action,controls,controllable=false,paused=false}:{s:any;seat:number|null;action:GameAction;controls?:(key:string,value:boolean)=>void;controllable?:boolean;paused?:boolean}){
+ const host=useRef<HTMLDivElement>(null),shell=useRef<HTMLDivElement>(null),engine=useRef<Pick<WorldRenderer,'push'|'dispose'|'setBlood'|'setAim'|'setCamera'|'aimAt'>&{setPaused?:(paused:boolean)=>void}|null>(null),audio=useRef<ReturnType<typeof createArcadeAudio>|null>(null),latest=useRef({s,seat,paused});latest.current={s,seat,paused};
  const [ready,setReady]=useState(false),[error,setError]=useState(''),[retry,setRetry]=useState(0),[camera,setCamera]=useState('follow'),[expanded,setExpanded]=useState(false),[blood,setBlood]=useState(()=>localStorage.getItem('yokai-blood')!=='off'),[sound,setSound]=useState(()=>localStorage.getItem('slotvend-game-audio')!=='off'),[volume,setVolume]=useState(.4),[settings,setSettings]=useState(false),[stats,setStats]=useState<WorldMetrics|null>(null),[aim,setAim]=useState(0),[power,setPower]=useState(.65);
  const soundEnabled=useRef(sound);soundEnabled.current=sound;
  useEffect(()=>{
@@ -64,7 +64,7 @@ export function ArcadeWorld({s,seat,action,controls,controllable=false}:{s:any;s
    const game=latest.current.s.game;
    if(game==='stick-rivals'){
     const {StickRenderer}=await import('./games/stick-renderer');const terrace=await StickRenderer.prepare();
-    if(cancelled||!host.current)return;engine.current=new StickRenderer(host.current,latest.current.s,latest.current.seat,setStats,terrace);
+    if(cancelled||!host.current)return;engine.current=new StickRenderer(host.current,latest.current.s,latest.current.seat,setStats,terrace);engine.current.setPaused?.(latest.current.paused);
    }else{
     const {WorldRenderer}=await import('./games/world-renderer');const assets=await WorldRenderer.prepare(game);
     if(cancelled||!host.current)return;engine.current=new WorldRenderer(host.current,latest.current.s,latest.current.seat,setStats,assets);
@@ -73,6 +73,7 @@ export function ArcadeWorld({s,seat,action,controls,controllable=false}:{s:any;s
   }catch(e){if(!cancelled)setError('The game environment could not load. Check your connection and retry.');console.error(e);}})();
   return()=>{cancelled=true;engine.current?.dispose();engine.current=null;};
  },[s.game,retry]);
+ useEffect(()=>{engine.current?.setPaused?.(paused);},[paused,ready]);
  useEffect(()=>{engine.current?.setBlood(blood);},[blood,ready]);
  useEffect(()=>{engine.current?.push(s,seat);audio.current?.update(s,seat);},[s,seat]);
  useEffect(()=>{const a=createArcadeAudio(s.game);audio.current=a;a.setMuted(!soundEnabled.current);a.setVolume(volume);const unlock=(e:Event)=>{if(e instanceof KeyboardEvent&&!['ArrowUp','ArrowDown','ArrowLeft','ArrowRight','KeyW','KeyA','KeyS','KeyD','Space','KeyF','KeyJ','KeyK','ShiftLeft','ShiftRight'].includes(e.code))return;if(soundEnabled.current)void a.unlock().catch(()=>{});};window.addEventListener('keydown',unlock);const target=host.current?.closest('.arena-main');target?.addEventListener('pointerdown',unlock);return()=>{window.removeEventListener('keydown',unlock);target?.removeEventListener('pointerdown',unlock);a.dispose();audio.current=null;};},[s.game]);
@@ -99,7 +100,7 @@ export function ArcadeWorld({s,seat,action,controls,controllable=false}:{s:any;s
    {s.game==='pocket-soccer'&&s.reset>0&&<div className="soccer-announcement"><b>{s.goal!==null?'GOAL!':'KICK OFF'}</b><span>{s.goal!==null?`${s.goal===0?'Blue':'Red'} scores`:'Run onto the ball. Space to shoot.'}</span></div>}
    {s.game==='bridge-builders'&&!s.finished&&<div className="bridge-prompt"><b>{mine?.phase==='waiting'?'HOLD TO GROW':mine?.phase==='stretching'?'RELEASE TO DROP':mine?.phase==='turning'?'HERE WE GO…':mine?.phase==='walking'?mine?.perfect?'PERFECT CROSSING!':'WALKING…':mine?.phase==='landed'?'SAFE!': 'MISSED IT!'}</b><span>{mine?.phase==='waiting'?'Touch & hold anywhere in the game':mine?.phase==='stretching'?'Aim the tip for the gold centre':mine?.phase==='landed'&&s.players.length>1?'Waiting for the other crossings':''}</span></div>}
    {s.game==='stick-rivals'&&<StickFightFeedback state={s} seat={seat}/>}
-   {s.game==='stick-rivals'&&s.breakTime>0&&!s.finished&&<div className="fighter-break"><b>K.O.</b><span>Next round…</span></div>}{seat===null&&<div className="world-spectating">SPECTATING</div>}
+   {s.game==='stick-rivals'&&s.breakTime>0&&!s.finished&&<div className="fighter-break"><b>K.O.</b><span>Next round…</span></div>}{seat===null&&!paused&&<div className="world-spectating">SPECTATING</div>}
    </>}
    {settings&&<div className="world-audio-panel"><b>Soundtrack & effects</b><label>Volume<input aria-label="Game volume" type="range" min="0" max="1" step=".05" value={volume} onChange={e=>{const value=Number(e.target.value);setVolume(value);audio.current?.setVolume(value);}}/></label><p>{credit.title}<br/>{credit.artist}</p><a href={credit.source} target="_blank" rel="noreferrer">Track source ↗</a><a href={credit.license} target="_blank" rel="noreferrer">CC BY 4.0 ↗</a><small>Music starts with your first game control.</small>{['pocket-soccer','pocket-racers','platform-relay','mini-golf','marble-knockout','marble-run','tank-arena','kitchen-rush','orbit-rescue'].includes(s.game)&&<p className="world-asset-credit">Models, portraits & game effects by <a href="https://kenney.nl" target="_blank" rel="noreferrer">Kenney</a> · CC0</p>}{s.game==='cat-defense'&&<p className="world-asset-credit">Cat Defense artwork by <a href="https://craftpix.net" target="_blank" rel="noreferrer">CraftPix</a> · <a href="https://craftpix.net/file-licenses/" target="_blank" rel="noreferrer">Freebie license</a></p>}{s.game==='stick-rivals'&&<p className="world-asset-credit">Vampire terrace by <a href="https://craftpix.net" target="_blank" rel="noreferrer">CraftPix</a> · <a href="https://craftpix.net/file-licenses/" target="_blank" rel="noreferrer">Freebie license</a>. Stick fighters & combat effects are original.</p>}</div>}
   </div>
