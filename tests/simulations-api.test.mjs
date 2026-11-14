@@ -1,3 +1,4 @@
+import {testSchema} from './helpers/store.mjs';
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {spawn} from 'node:child_process';
@@ -10,7 +11,7 @@ const wait=ms=>new Promise(resolve=>setTimeout(resolve,ms));
 
 test('four HTTP sessions walk, vote, work and receive consistent simulation worlds with private NPC relationships',{timeout:70000},async()=>{
  const dir=await mkdtemp(join(tmpdir(),'nearfest-sim-http-')),origin='http://127.0.0.1:5193';
- const child=spawn(process.execPath,['server/index.mjs'],{cwd:new URL('..',import.meta.url),env:{...process.env,PORT:'5193',APP_ORIGIN:origin,DATABASE_PATH:join(dir,'qa.sqlite'),NEAR_CONTRACT_ID:'',NEAR_AI_API_KEY:'',SEED_PRACTICE:'false'},stdio:['ignore','pipe','pipe']});
+ const child=spawn(process.execPath,['server/index.mjs'],{cwd:new URL('..',import.meta.url),env:{...process.env,PORT:'5193',APP_ORIGIN:origin,DATABASE_URL:process.env.TEST_DATABASE_URL,DATABASE_SCHEMA:testSchema(dir),NEAR_CONTRACT_ID:'',NEAR_AI_API_KEY:'',SEED_PRACTICE:'false'},stdio:['ignore','pipe','pipe']});
  let log='';child.stdout.on('data',x=>log+=x);child.stderr.on('data',x=>log+=x);
  const readers=[],drains=[];
  function client(){let cookie='',sequence=0;const request=async(path,data,status=200)=>{

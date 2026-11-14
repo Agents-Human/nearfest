@@ -4,7 +4,7 @@ import {newWorld,advanceWorld,worldBot} from '../server/arcade/world.mjs';
 import {extendRaceCourse} from '../server/arcade/race-physics.mjs';
 import {raceBiome,raceWaterAt,raceWeather,roadHeight,roadGrade,raceBridgeSections,raceTerrainHeight,raceSceneryAllowed,raceRampSections,raceRampHeight,raceTrafficX} from '../server/arcade/race-course.mjs';
 import {createArcadeRooms} from '../server/arcade/rooms.mjs';
-import {openStore} from '../server/store.mjs';
+import {openStore} from './helpers/store.mjs';
 
 const drive=(s,count,input=[])=>{for(let i=0;i<count;i++){const held=typeof input==='function'?input(s):input;s=advanceWorld(s,s.players.map((_,seat)=>({up:true,...held[seat]})));}return s;};
 const clear=s=>{s.traffic=[];s.pickups=[];s.boostPads=[];return s;};
@@ -64,17 +64,17 @@ test('ten-minute sessions remain bounded, generate all environments, and keep re
  const spread=newWorld('pocket-racers',4);spread.players.forEach((p,i)=>p.y=i*100000);extendRaceCourse(spread);assert(spread.traffic.length<=48);assert(spread.pickups.length<=128);
 });
 
-test('room duration is validated, shown to everyone, locked at start and includes only racing time',()=>{
- const store=openStore(':memory:');try{
-  const rooms=createArcadeRooms(store),a=store.ensureUser('race-a','A','practice'),b=store.ensureUser('race-b','B','practice');
-  for(const value of [0,59,Infinity,'bad',601])assert.throws(()=>rooms.create({game_id:'pocket-racers',entry:'0',race_seconds:value},a,1000),/duration/);
-  let r=rooms.create({game_id:'pocket-racers',entry:'0',race_seconds:'60'},a,1000);assert.equal(r.race_seconds,60);
-  rooms.action(r.id,b,{type:'join'},null,1001);for(const u of [a,b])rooms.action(r.id,u,{type:'ready',ready:true},null,1002);
-  r=rooms.start(r.id,a,null,1003);assert.equal(r.state.timeLimit,60);assert.equal(r.ends_at-r.starts_at,60000);assert.equal(rooms.get(r.id,b).race_seconds,60);
-  rooms.tick(r.starts_at);assert.equal(rooms.get(r.id,a).state.elapsed,0);
-  for(let t=r.starts_at+50;t<=r.ends_at;t+=50)rooms.tick(t);
-  const result=rooms.get(r.id,a);assert.equal(result.status,'finished');assert.equal(result.state.elapsed,60);assert(result.winners.length>0);
- }finally{store.db.close();}
+test('room duration is validated, shown to everyone, locked at start and includes only racing time',async ()=>{
+ const store=(await openStore(':memory:'));try{
+  const rooms=(await createArcadeRooms(store)),a=(await store.ensureUser('race-a','A','practice')),b=(await store.ensureUser('race-b','B','practice'));
+  for(const value of [0,59,Infinity,'bad',601])(await assert.rejects(async ()=>(await rooms.create({game_id:'pocket-racers',entry:'0',race_seconds:value},a,1000)),/duration/));
+  let r=(await rooms.create({game_id:'pocket-racers',entry:'0',race_seconds:'60'},a,1000));assert.equal(r.race_seconds,60);
+  (await rooms.action(r.id,b,{type:'join'},null,1001));for(const u of [a,b])(await rooms.action(r.id,u,{type:'ready',ready:true},null,1002));
+  r=(await rooms.start(r.id,a,null,1003));assert.equal(r.state.timeLimit,60);assert.equal(r.ends_at-r.starts_at,60000);assert.equal((await rooms.get(r.id,b)).race_seconds,60);
+  (await rooms.tick(r.starts_at));assert.equal((await rooms.get(r.id,a)).state.elapsed,0);
+  for(let t=r.starts_at+50;t<=r.ends_at;t+=50)(await rooms.tick(t));
+  const result=(await rooms.get(r.id,a));assert.equal(result.status,'finished');assert.equal(result.state.elapsed,60);assert(result.winners.length>0);
+ }finally{(await store.db.close());}
 });
 
 
@@ -144,15 +144,15 @@ test('rain rolls in and clears reproducibly, with gentle grip and speed effects'
  let s=clear(newWorld('pocket-racers',1));s.raceSeed=0;s.elapsed=30;s.players[0].speed=560;s=advanceWorld(s,[{up:true,right:true}]);assert(s.players[0].speed<560&&s.players[0].speed>530);assert(s.players[0].vx>0&&s.players[0].vx<15);
 });
 
-test('a quick fire press/release between server ticks is preserved',()=>{
- const store=openStore(':memory:');try{
-  const rooms=createArcadeRooms(store),a=store.ensureUser('pulse-a','A','practice'),b=store.ensureUser('pulse-b','B','practice');
-  let r=rooms.create({game_id:'pocket-racers',entry:'0',race_seconds:60},a,1000);rooms.action(r.id,b,{type:'join'},null,1001);
-  for(const u of [a,b])rooms.action(r.id,u,{type:'ready',ready:true},null,1002);
-  r=rooms.start(r.id,a,null,1003);rooms.tick(r.starts_at);
-  rooms.input(r.id,a,{seq:1,controls:{fire:true}},null,r.starts_at+10);rooms.input(r.id,a,{seq:2,controls:{fire:false}},null,r.starts_at+20);
-  rooms.tick(r.starts_at+50);const next=rooms.get(r.id,a).state;assert.equal(next.players[0].shotsFired,1);assert.equal(next.players[0].ammo,2);
- }finally{store.db.close();}
+test('a quick fire press/release between server ticks is preserved',async ()=>{
+ const store=(await openStore(':memory:'));try{
+  const rooms=(await createArcadeRooms(store)),a=(await store.ensureUser('pulse-a','A','practice')),b=(await store.ensureUser('pulse-b','B','practice'));
+  let r=(await rooms.create({game_id:'pocket-racers',entry:'0',race_seconds:60},a,1000));(await rooms.action(r.id,b,{type:'join'},null,1001));
+  for(const u of [a,b])(await rooms.action(r.id,u,{type:'ready',ready:true},null,1002));
+  r=(await rooms.start(r.id,a,null,1003));(await rooms.tick(r.starts_at));
+  (await rooms.input(r.id,a,{seq:1,controls:{fire:true}},null,r.starts_at+10));(await rooms.input(r.id,a,{seq:2,controls:{fire:false}},null,r.starts_at+20));
+  (await rooms.tick(r.starts_at+50));const next=(await rooms.get(r.id,a)).state;assert.equal(next.players[0].shotsFired,1);assert.equal(next.players[0].ammo,2);
+ }finally{(await store.db.close());}
 });
 
 

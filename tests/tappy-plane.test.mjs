@@ -4,7 +4,7 @@ import {readFileSync} from 'node:fs';
 import {createHash} from 'node:crypto';
 import {newWorld,advanceWorld,worldAction,worldBot} from '../server/arcade/world.mjs';
 import {createArcadeRooms} from '../server/arcade/rooms.mjs';
-import {openStore} from '../server/store.mjs';
+import {openStore} from './helpers/store.mjs';
 import {discoveryGames} from '../server/game-catalog.mjs';
 const step=(state,n,input=[])=>{for(let i=0;i<n&&!state.finished;i++)state=advanceWorld(state,input);return state;};
 
@@ -51,21 +51,21 @@ test('shared course and identical controls stay deterministic; long flights keep
  assert.deepEqual(a,b);assert.equal(a.players[0].score,a.players[1].score);assert(a.players[0].gates>10);assert(a.gates.length<9);assert(a.gates[0].id>5);
  for(const g of a.gates){assert(g.gap>=148);assert(g.center-g.gap/2>=45);assert(g.center+g.gap/2<=385);}
 });
-test('rooms enforce readiness, countdown, invitations, replay protection and free solo without bots',()=>{
- const store=openStore(':memory:');try{
-  const rooms=createArcadeRooms(store),a=store.ensureUser('tappy-a','Pilot A','practice'),b=store.ensureUser('tappy-b','Pilot B','practice'),outsider=store.ensureUser('tappy-c','Spectator','practice');
-  assert.throws(()=>rooms.create({game_id:'tappy-plane',entry:'0.1'},a),/deposit/);
-  let r=rooms.create({game_id:'tappy-plane',entry:'0',visibility:'invite'},a,1000);
-  assert.throws(()=>rooms.get(r.id,b),/invitation/);rooms.action(r.id,b,{type:'join'},r.invite_key,1001);assert.throws(()=>rooms.start(r.id,a,null,1002),/ready/);
-  for(const user of [a,b])rooms.action(r.id,user,{type:'ready',ready:true},null,1003);r=rooms.start(r.id,a,null,1004);assert.equal(r.ends_at,null);
+test('rooms enforce readiness, countdown, invitations, replay protection and free solo without bots',async ()=>{
+ const store=(await openStore(':memory:'));try{
+  const rooms=(await createArcadeRooms(store)),a=(await store.ensureUser('tappy-a','Pilot A','practice')),b=(await store.ensureUser('tappy-b','Pilot B','practice')),outsider=(await store.ensureUser('tappy-c','Spectator','practice'));
+  (await assert.rejects(async ()=>(await rooms.create({game_id:'tappy-plane',entry:'0.1'},a)),/deposit/));
+  let r=(await rooms.create({game_id:'tappy-plane',entry:'0',visibility:'invite'},a,1000));
+  (await assert.rejects(async ()=>(await rooms.get(r.id,b)),/invitation/));(await rooms.action(r.id,b,{type:'join'},r.invite_key,1001));(await assert.rejects(async ()=>(await rooms.start(r.id,a,null,1002)),/ready/));
+  for(const user of [a,b])(await rooms.action(r.id,user,{type:'ready',ready:true},null,1003));r=(await rooms.start(r.id,a,null,1004));assert.equal(r.ends_at,null);
   const flap={type:'play',input_id:'tappy-flap-receipt',action:{type:'flap'}};
-  assert.throws(()=>rooms.action(r.id,a,flap,null,1005),/Wait for the game/);assert.throws(()=>rooms.action(r.id,outsider,flap,r.invite_key,4010),/Join/);
-  rooms.action(r.id,a,flap,null,4010);rooms.tick(4054);assert.equal(rooms.get(r.id,a).state.players[0].flaps,1);
-  rooms.action(r.id,a,flap,null,4060);rooms.tick(4104);assert.equal(rooms.get(r.id,a).state.players[0].flaps,1);
-  assert.throws(()=>rooms.action(r.id,a,{...flap,action:{score:100}},null,4110),/reused/);
-  rooms.action(r.id,a,{type:'resign'},null,4120);
-  r=rooms.create({game_id:'tappy-plane',solo:true,entry:'0'},a,5000);assert.equal(r.players.length,1);assert(!r.players[0].bot);assert.equal(r.ends_at,null);
-  rooms.action(r.id,a,{...flap,input_id:'solo-flight-start'},null,8010);
-  for(let time=8050;time<10500;time+=50)rooms.tick(time);assert.equal(rooms.get(r.id,a).status,'finished');
- }finally{store.db.close();}
+  (await assert.rejects(async ()=>(await rooms.action(r.id,a,flap,null,1005)),/Wait for the game/));(await assert.rejects(async ()=>(await rooms.action(r.id,outsider,flap,r.invite_key,4010)),/Join/));
+  (await rooms.action(r.id,a,flap,null,4010));(await rooms.tick(4054));assert.equal((await rooms.get(r.id,a)).state.players[0].flaps,1);
+  (await rooms.action(r.id,a,flap,null,4060));(await rooms.tick(4104));assert.equal((await rooms.get(r.id,a)).state.players[0].flaps,1);
+  (await assert.rejects(async ()=>(await rooms.action(r.id,a,{...flap,action:{score:100}},null,4110)),/reused/));
+  (await rooms.action(r.id,a,{type:'resign'},null,4120));
+  r=(await rooms.create({game_id:'tappy-plane',solo:true,entry:'0'},a,5000));assert.equal(r.players.length,1);assert(!r.players[0].bot);assert.equal(r.ends_at,null);
+  (await rooms.action(r.id,a,{...flap,input_id:'solo-flight-start'},null,8010));
+  for(let time=8050;time<10500;time+=50)(await rooms.tick(time));assert.equal((await rooms.get(r.id,a)).status,'finished');
+ }finally{(await store.db.close());}
 });

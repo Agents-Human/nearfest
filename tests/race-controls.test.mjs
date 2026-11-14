@@ -2,7 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import {newWorld,advanceWorld,worldBot} from '../server/arcade/world.mjs';
 import {createArcadeRooms} from '../server/arcade/rooms.mjs';
-import {openStore} from '../server/store.mjs';
+import {openStore} from './helpers/store.mjs';
 import {worldControlKey} from '../src/games/world-controls.mjs';
 
 const ticks=(s,n,input=[])=>{for(let i=0;i<n;i++)s=advanceWorld(s,input);return s;};
@@ -50,22 +50,22 @@ test('bots explicitly press throttle while a human without input remains parked'
  assert.equal(s.players[0].y,before);assert.equal(s.players[0].speed,0);assert(s.players[1].y>500);
 });
 
-test('authoritative rooms wait for input and stop accelerating when held input expires',()=>{
- const store=openStore(':memory:');try{
-  const rooms=createArcadeRooms(store),a=store.ensureUser('driver-a','A','practice'),b=store.ensureUser('driver-b','B','practice');
-  let room=rooms.create({game_id:'pocket-racers',entry:'0',race_seconds:60},a,1000);rooms.action(room.id,b,{type:'join'},null,1001);
-  for(const user of [a,b])rooms.action(room.id,user,{type:'ready',ready:true},null,1002);
-  room=rooms.start(room.id,a,null,1003);const start=room.starts_at;
-  for(let t=start;t<=start+500;t+=50)rooms.tick(t);
-  assert(rooms.get(room.id,a).state.players.every(p=>p.speed===0&&p.y===0));
-  rooms.input(room.id,a,{seq:1,controls:{up:true}},null,start+510);
-  for(let t=start+550;t<=start+1000;t+=50)rooms.tick(t);
-  assert(rooms.get(room.id,a).state.players[0].speed>0);
-  for(let t=start+1050;t<=start+3000;t+=50)rooms.tick(t);
-  const stopped=rooms.get(room.id,a).state.players[0];assert.equal(stopped.speed,0);const distance=stopped.y;
-  for(let t=start+3050;t<=start+3500;t+=50)rooms.tick(t);
-  assert.equal(rooms.get(room.id,a).state.players[0].y,distance);
- }finally{store.db.close();}
+test('authoritative rooms wait for input and stop accelerating when held input expires',async ()=>{
+ const store=(await openStore(':memory:'));try{
+  const rooms=(await createArcadeRooms(store)),a=(await store.ensureUser('driver-a','A','practice')),b=(await store.ensureUser('driver-b','B','practice'));
+  let room=(await rooms.create({game_id:'pocket-racers',entry:'0',race_seconds:60},a,1000));(await rooms.action(room.id,b,{type:'join'},null,1001));
+  for(const user of [a,b])(await rooms.action(room.id,user,{type:'ready',ready:true},null,1002));
+  room=(await rooms.start(room.id,a,null,1003));const start=room.starts_at;
+  for(let t=start;t<=start+500;t+=50)(await rooms.tick(t));
+  assert((await rooms.get(room.id,a)).state.players.every(p=>p.speed===0&&p.y===0));
+  (await rooms.input(room.id,a,{seq:1,controls:{up:true}},null,start+510));
+  for(let t=start+550;t<=start+1000;t+=50)(await rooms.tick(t));
+  assert((await rooms.get(room.id,a)).state.players[0].speed>0);
+  for(let t=start+1050;t<=start+3000;t+=50)(await rooms.tick(t));
+  const stopped=(await rooms.get(room.id,a)).state.players[0];assert.equal(stopped.speed,0);const distance=stopped.y;
+  for(let t=start+3050;t<=start+3500;t+=50)(await rooms.tick(t));
+  assert.equal((await rooms.get(room.id,a)).state.players[0].y,distance);
+ }finally{(await store.db.close());}
 });
 
 test('nitro starts empty, comes only from driving through a fuel can, and stays empty after use',()=>{

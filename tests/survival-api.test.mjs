@@ -1,3 +1,4 @@
+import {testSchema} from './helpers/store.mjs';
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {spawn} from 'node:child_process';
@@ -9,7 +10,7 @@ const delay=ms=>new Promise(resolve=>setTimeout(resolve,ms));
 
 test('two independent survival clients share coins, course and the first-death result',{timeout:35000},async()=>{
  const dir=await mkdtemp(join(tmpdir(),'nearfest-survival-')),origin='http://127.0.0.1:5194';
- const child=spawn(process.execPath,['server/index.mjs'],{cwd:new URL('..',import.meta.url),env:{...process.env,PORT:'5194',APP_ORIGIN:origin,DATABASE_PATH:join(dir,'test.sqlite'),NEAR_CONTRACT_ID:'',NEAR_AI_API_KEY:'',SEED_PRACTICE:'false'},stdio:['ignore','pipe','pipe']});let log='';child.stdout.on('data',b=>log+=b);child.stderr.on('data',b=>log+=b);
+ const child=spawn(process.execPath,['server/index.mjs'],{cwd:new URL('..',import.meta.url),env:{...process.env,PORT:'5194',APP_ORIGIN:origin,DATABASE_URL:process.env.TEST_DATABASE_URL,DATABASE_SCHEMA:testSchema(dir),NEAR_CONTRACT_ID:'',NEAR_AI_API_KEY:'',SEED_PRACTICE:'false'},stdio:['ignore','pipe','pipe']});let log='';child.stdout.on('data',b=>log+=b);child.stderr.on('data',b=>log+=b);
  const client=()=>{let cookie='';return async(path,data)=>{const res=await fetch(origin+'/api'+path,{method:data===undefined?'GET':'POST',headers:{origin,cookie,'content-type':'application/json'},body:data===undefined?undefined:JSON.stringify(data)});if(res.headers.has('set-cookie'))cookie=res.headers.get('set-cookie').split(';')[0];const body=await res.json();assert(res.ok,JSON.stringify(body));return body;};};
  try{
   let ready=false;for(let i=0;i<80;i++){try{if((await fetch(origin+'/api/config')).ok){ready=true;break;}}catch{}await delay(50);}assert(ready,log);

@@ -4,7 +4,7 @@ import {readFile} from 'node:fs/promises';
 import {createHash} from 'node:crypto';
 import {newSimulation,simulationAction,simulationView,advanceSimulation,simulationIds} from '../server/arcade/simulations.mjs';
 import {createArcadeRooms} from '../server/arcade/rooms.mjs';
-import {openStore} from '../server/store.mjs';
+import {openStore} from './helpers/store.mjs';
 import {arcadeGame} from '../server/arcade/catalog.mjs';
 const act=(s,seat,d)=>simulationAction(s,seat,{day:s.day,...d});
 const step=(s,n=1)=>{for(let i=0;i<n&&!s.finished;i++)s=advanceSimulation(s);return s;};
@@ -82,23 +82,23 @@ test('solo, two and four players can complete both games through authored decisi
   }assert(s.finished,game);assert.deepEqual(s.winners,Array.from({length:count},(_,i)=>i),`${game} / ${count}: ${s.reason}`);
  }
 });
-test('room sessions preserve shared state, redact personal memories, deduplicate receipts and cancel on restart',()=>{
- const store=openStore(':memory:');try{let rooms=createArcadeRooms(store);const a=store.ensureUser('sim-a','Ari','practice'),b=store.ensureUser('sim-b','Bea','practice'),c=store.ensureUser('sim-c','Cai','practice');
-  assert.throws(()=>rooms.create({game_id:'town-council',entry:'0.1'},a,1000),/deposit/);
-  let r=rooms.create({game_id:'castaway-crew',visibility:'invite'},a,1000);assert.throws(()=>rooms.get(r.id,c),/invitation/);rooms.action(r.id,b,{type:'join'},r.invite_key,1001);
-  for(const u of [a,b])rooms.action(r.id,u,{type:'ready',ready:true},null,1002);r=rooms.start(r.id,a,null,1003);
-  let now=4003;for(let i=0;i<40;i++){now+=50;rooms.input(r.id,a,{seq:i,controls:i<20?{right:true}:{right:true,up:true}},null,now);rooms.tick(now);}
+test('room sessions preserve shared state, redact personal memories, deduplicate receipts and cancel on restart',async ()=>{
+ const store=(await openStore(':memory:'));try{let rooms=(await createArcadeRooms(store));const a=(await store.ensureUser('sim-a','Ari','practice')),b=(await store.ensureUser('sim-b','Bea','practice')),c=(await store.ensureUser('sim-c','Cai','practice'));
+  (await assert.rejects(async ()=>(await rooms.create({game_id:'town-council',entry:'0.1'},a,1000)),/deposit/));
+  let r=(await rooms.create({game_id:'castaway-crew',visibility:'invite'},a,1000));(await assert.rejects(async ()=>(await rooms.get(r.id,c)),/invitation/));(await rooms.action(r.id,b,{type:'join'},r.invite_key,1001));
+  for(const u of [a,b])(await rooms.action(r.id,u,{type:'ready',ready:true},null,1002));r=(await rooms.start(r.id,a,null,1003));
+  let now=4003;for(let i=0;i<40;i++){now+=50;(await rooms.input(r.id,a,{seq:i,controls:i<20?{right:true}:{right:true,up:true}},null,now));(await rooms.tick(now));}
   const payload={type:'play',input_id:'sim-receipt-001',action:{type:'task',task:'radio',day:1}};
-  r=rooms.action(r.id,a,payload,null,now+1);const before=r.state.resources.parts;rooms.action(r.id,a,payload,null,now+2);assert.equal(rooms.get(r.id,b).state.resources.parts,before);
-  assert.throws(()=>rooms.action(r.id,a,{...payload,action:{type:'task',task:'food',day:1}},null,now+3),/receipt/);
-  assert.throws(()=>rooms.action(r.id,c,{...payload,input_id:'sim-spectator-1'},r.invite_key,now+3),/Join/);
-  rooms.input(r.id,a,{seq:41,controls:{}},null,now+4);
-  const snapshots=[[],[]],unsub=[rooms.subscribe(r.id,a,null,v=>snapshots[0].push(v)),rooms.subscribe(r.id,b,null,v=>snapshots[1].push(v))];
-  for(let t=now+50;t<=now+12000;t+=50)rooms.tick(t);
-  assert.equal(rooms.get(r.id,b).state.metrics.radio,16);const sa=snapshots[0].at(-1),sb=snapshots[1].at(-1);assert.deepEqual(sa.state.players,sb.state.players);assert.equal(sa.state.tick,sb.state.tick);assert(sa.state.npcs[0].trust>sb.state.npcs[0].trust);unsub.forEach(f=>f());
-  rooms=createArcadeRooms(store);assert.equal(rooms.get(r.id,a).status,'cancelled');
-  const solo=rooms.create({game_id:'town-council',solo:true},a,20000);assert.equal(solo.players.length,1);assert(!solo.players[0].bot);
- }finally{store.db.close();}
+  r=(await rooms.action(r.id,a,payload,null,now+1));const before=r.state.resources.parts;(await rooms.action(r.id,a,payload,null,now+2));assert.equal((await rooms.get(r.id,b)).state.resources.parts,before);
+  (await assert.rejects(async ()=>(await rooms.action(r.id,a,{...payload,action:{type:'task',task:'food',day:1}},null,now+3)),/receipt/));
+  (await assert.rejects(async ()=>(await rooms.action(r.id,c,{...payload,input_id:'sim-spectator-1'},r.invite_key,now+3)),/Join/));
+  (await rooms.input(r.id,a,{seq:41,controls:{}},null,now+4));
+  const snapshots=[[],[]],unsub=[(await rooms.subscribe(r.id,a,null,v=>snapshots[0].push(v))),(await rooms.subscribe(r.id,b,null,v=>snapshots[1].push(v)))];
+  for(let t=now+50;t<=now+12000;t+=50)(await rooms.tick(t));
+  assert.equal((await rooms.get(r.id,b)).state.metrics.radio,16);const sa=snapshots[0].at(-1),sb=snapshots[1].at(-1);assert.deepEqual(sa.state.players,sb.state.players);assert.equal(sa.state.tick,sb.state.tick);assert(sa.state.npcs[0].trust>sb.state.npcs[0].trust);unsub.forEach(f=>f());
+  rooms=(await createArcadeRooms(store));assert.equal((await rooms.get(r.id,a)).status,'cancelled');
+  const solo=(await rooms.create({game_id:'town-council',solo:true},a,20000));assert.equal(solo.players.length,1);assert(!solo.players[0].bot);
+ }finally{(await store.db.close());}
 });
 test('selected original asset bytes, textures and licences are present with recorded hashes',async()=>{
  const root=new URL('../public/models/simulation/',import.meta.url),manifest=JSON.parse(await readFile(new URL('manifest.json',root),'utf8'));

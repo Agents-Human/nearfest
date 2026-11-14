@@ -1,0 +1,30 @@
+// Money stays in decimal text; millisecond timestamps and generated IDs use BIGINT.
+export const schema = `
+CREATE TABLE users(id TEXT PRIMARY KEY,name TEXT NOT NULL,balance TEXT NOT NULL,credit TEXT NOT NULL,kind TEXT NOT NULL);
+CREATE TABLE sessions(token TEXT PRIMARY KEY,user_id TEXT NOT NULL,expires BIGINT NOT NULL);
+CREATE INDEX sessions_expires ON sessions(expires);
+CREATE TABLE bets(id TEXT PRIMARY KEY,mode TEXT NOT NULL,json TEXT NOT NULL,created_order BIGSERIAL UNIQUE);
+CREATE TABLE messages(id BIGSERIAL PRIMARY KEY,bet_id TEXT NOT NULL,user_id TEXT NOT NULL,text TEXT NOT NULL,created_at BIGINT NOT NULL);
+CREATE INDEX messages_room ON messages(bet_id,id);
+CREATE TABLE reactions(bet_id TEXT NOT NULL,user_id TEXT NOT NULL,emoji TEXT NOT NULL,PRIMARY KEY(bet_id,user_id));
+CREATE TABLE reports(id BIGSERIAL PRIMARY KEY,user_id TEXT NOT NULL,target TEXT NOT NULL,reason TEXT NOT NULL,created_at BIGINT NOT NULL,UNIQUE(user_id,target));
+CREATE TABLE prepared(request_id TEXT PRIMARY KEY,user_id TEXT NOT NULL,json TEXT NOT NULL,expires BIGINT NOT NULL);
+CREATE TABLE room_media(bet_id TEXT PRIMARY KEY,cover TEXT,stream_json TEXT,updated_at BIGINT NOT NULL);
+CREATE TABLE evidence(bet_id TEXT PRIMARY KEY,hash TEXT NOT NULL,json TEXT NOT NULL);
+CREATE TABLE play_runs(id TEXT PRIMARY KEY,user_id TEXT NOT NULL,game_id TEXT NOT NULL,json TEXT NOT NULL,created_order BIGSERIAL UNIQUE);
+CREATE INDEX play_runs_player ON play_runs(user_id,game_id,created_order);
+CREATE TABLE community_rooms(id TEXT PRIMARY KEY,json TEXT NOT NULL,created_order BIGSERIAL UNIQUE);
+CREATE TABLE multiplayer_rooms(id TEXT PRIMARY KEY,json TEXT NOT NULL,created_order BIGSERIAL UNIQUE);
+CREATE TABLE skill_rooms(id TEXT PRIMARY KEY,json TEXT NOT NULL,created_order BIGSERIAL UNIQUE);
+CREATE TABLE arcade_rooms(id TEXT PRIMARY KEY,json TEXT NOT NULL,created_order BIGSERIAL UNIQUE);
+CREATE TABLE arcade_chat(id BIGSERIAL PRIMARY KEY,room TEXT,user_id TEXT,text TEXT,channel TEXT,at BIGINT);
+CREATE INDEX arcade_chat_room ON arcade_chat(room,channel,id);
+CREATE TABLE near_rooms(id TEXT PRIMARY KEY,kind TEXT NOT NULL,json TEXT NOT NULL,updated BIGINT NOT NULL,error TEXT);
+CREATE TABLE near_intents(id TEXT PRIMARY KEY,user_id TEXT NOT NULL,json TEXT NOT NULL,complete INTEGER NOT NULL DEFAULT 0,result TEXT,created BIGINT NOT NULL);
+CREATE INDEX near_intents_player ON near_intents(user_id,complete,created);
+CREATE TABLE near_payouts(room_id TEXT NOT NULL,user_id TEXT NOT NULL,amount TEXT NOT NULL,kind TEXT NOT NULL,created BIGINT NOT NULL,PRIMARY KEY(room_id,user_id));
+CREATE TABLE faucet_claims(id TEXT PRIMARY KEY,user_id TEXT NOT NULL,ip_hash TEXT NOT NULL,created BIGINT NOT NULL,status TEXT NOT NULL,tx_hash TEXT NOT NULL,signed_tx TEXT NOT NULL,amount TEXT NOT NULL DEFAULT '1000000000000000000000000');
+CREATE INDEX faucet_user ON faucet_claims(user_id,created);
+`;
+export const orderedTables = new Set(['bets','play_runs','community_rooms','multiplayer_rooms','skill_rooms','arcade_rooms']);
+export const identityTables = ['messages','reports','arcade_chat',...orderedTables];

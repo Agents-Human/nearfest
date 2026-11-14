@@ -1,3 +1,4 @@
+import {testSchema} from './helpers/store.mjs';
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {spawn} from 'node:child_process';
@@ -8,7 +9,7 @@ import {join} from 'node:path';
 
 test('API restarts cleanly while both lobby and arcade event streams are open',{timeout:15000},async()=>{
  const directory=await mkdtemp(join(tmpdir(),'nearfest-shutdown-'));
- const child=spawn(process.execPath,['server/index.mjs'],{cwd:process.cwd(),env:{...process.env,PORT:'0',DATABASE_PATH:join(directory,'test.sqlite'),APP_ORIGIN:'http://127.0.0.1:5188',NEAR_CONTRACT_ID:'',NEAR_ORACLE_ACCOUNT:'',NEAR_ORACLE_PRIVATE_KEY:'',NEAR_FAUCET_ACCOUNT:'',NEAR_FAUCET_PRIVATE_KEY:'',NEAR_AI_API_KEY:''},stdio:['ignore','pipe','pipe']});
+ const child=spawn(process.execPath,['server/index.mjs'],{cwd:process.cwd(),env:{...process.env,PORT:'0',DATABASE_URL:process.env.TEST_DATABASE_URL,DATABASE_SCHEMA:testSchema(directory),APP_ORIGIN:'http://127.0.0.1:5188',NEAR_CONTRACT_ID:'',NEAR_ORACLE_ACCOUNT:'',NEAR_ORACLE_PRIVATE_KEY:'',NEAR_FAUCET_ACCOUNT:'',NEAR_FAUCET_PRIVATE_KEY:'',NEAR_AI_API_KEY:''},stdio:['ignore','pipe','pipe']});
  const readers=[];let timeout;
  try{
   const port=await new Promise((resolve,reject)=>{let output='';timeout=setTimeout(()=>reject(Error('API did not start')),7000);child.once('error',reject);child.stdout.on('data',data=>{output+=data;const match=output.match(/NearFest API http:\/\/127\.0\.0\.1:(\d+)/);if(match){clearTimeout(timeout);resolve(Number(match[1]));}});});

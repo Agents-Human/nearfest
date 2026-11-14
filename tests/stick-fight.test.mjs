@@ -2,7 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import {newWorld,advanceWorld,worldBot} from '../server/arcade/world.mjs';
 import {createArcadeRooms} from '../server/arcade/rooms.mjs';
-import {openStore} from '../server/store.mjs';
+import {openStore} from './helpers/store.mjs';
 const step=(s,n,c=[])=>{for(let i=0;i<n;i++)s=advanceWorld(s,c);return s;};
 const close=()=>{const s=newWorld('stick-rivals',2);s.weapons=[];s.players[0].x=435;s.players[1].x=495;return s;};
 
@@ -59,14 +59,14 @@ test('dropkicks preserve forward momentum and successful hits locate their conta
 test('round-break physics settles a defeated fighter onto the terrace before resetting',()=>{
  let s=close();s.players[1].hp=5;s=step(s,2,[{attack:true},{}]);assert(s.breakTime>0);s=step(s,18);assert.equal(s.players[1].hp,0);assert.equal(s.players[1].y,410);assert.equal(s.players[1].ground,true);s=step(s,24);assert.equal(s.round,1);assert.equal(s.players[1].hp,100);assert.equal(s.players[0].hitCombo,0);
 });
-test('quick kick, blast and guard taps survive release between server ticks',()=>{
+test('quick kick, blast and guard taps survive release between server ticks',async ()=>{
  for(const [key,kind] of [['down','kick'],['fire','blast'],['block',null]]){
-  const store=openStore(':memory:');try{
-   const rooms=createArcadeRooms(store),user=store.ensureUser('stick-'+key,'Fighter','practice'),r=rooms.create({game_id:'stick-rivals',solo:true,entry:'0'},user,1000);
-   rooms.input(r.id,user,{seq:1,controls:{[key]:true}},null,4001);rooms.input(r.id,user,{seq:2,controls:{[key]:false}},null,4002);rooms.tick(4050);
-   const p=rooms.get(r.id,user).state.players[0];if(kind){assert.equal(p.attackKind,kind);assert.equal(p.attackSeq,1);}else assert.equal(p.blocking,true);
-   rooms.tick(4100);if(!kind)assert.equal(rooms.get(r.id,user).state.players[0].blocking,false);
-  }finally{store.db.close();}
+  const store=(await openStore(':memory:'));try{
+   const rooms=(await createArcadeRooms(store)),user=(await store.ensureUser('stick-'+key,'Fighter','practice')),r=(await rooms.create({game_id:'stick-rivals',solo:true,entry:'0'},user,1000));
+   (await rooms.input(r.id,user,{seq:1,controls:{[key]:true}},null,4001));(await rooms.input(r.id,user,{seq:2,controls:{[key]:false}},null,4002));(await rooms.tick(4050));
+   const p=(await rooms.get(r.id,user)).state.players[0];if(kind){assert.equal(p.attackKind,kind);assert.equal(p.attackSeq,1);}else assert.equal(p.blocking,true);
+   (await rooms.tick(4100));if(!kind)assert.equal((await rooms.get(r.id,user)).state.players[0].blocking,false);
+  }finally{(await store.db.close());}
  }
 });
 

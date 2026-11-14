@@ -21,38 +21,36 @@ export function liveFaucet(){
 }
 export function createFaucet(store,{chain=liveFaucet(),now=Date.now}={}){
  const db=store.db;let busy=false;
- db.exec(`CREATE TABLE IF NOT EXISTS faucet_claims(id TEXT PRIMARY KEY,user_id TEXT NOT NULL,ip_hash TEXT NOT NULL,created INTEGER NOT NULL,status TEXT NOT NULL,tx_hash TEXT NOT NULL,signed_tx TEXT NOT NULL);CREATE INDEX IF NOT EXISTS faucet_user ON faucet_claims(user_id,created);`);
- if(!db.prepare('PRAGMA table_info(faucet_claims)').all().some(c=>c.name==='amount'))db.exec("ALTER TABLE faucet_claims ADD COLUMN amount TEXT NOT NULL DEFAULT '1000000000000000000000000'");
- const latest=id=>db.prepare("SELECT * FROM faucet_claims WHERE user_id=? AND status!='failed' ORDER BY created DESC LIMIT 1").get(id);
+ const latest=async id=>(await db.prepare("SELECT * FROM faucet_claims WHERE user_id=$1 AND status!='failed' ORDER BY created DESC LIMIT 1").get(id));
  const result=row=>({status:row.status,amount:row.amount,transaction_hash:row.tx_hash,explorer:`https://testnet.nearblocks.io/txns/${row.tx_hash}`,next_claim_at:row.created+DAY});
  let reserveCache=null;
  async function reserveBalance(){if(!reserveCache||reserveCache.until<now()){const balance=await chain.balance(chain.id);reserveCache={balance,until:now()+10000};}return reserveCache.balance;}
  const status=async u=>{
-  const last=u?latest(u.id):null,base={enabled:chain.enabled,amount:FAUCET_AMOUNT,claim:last?result(last):null};
+  const last=u?(await latest(u.id)):null,base={enabled:chain.enabled,amount:FAUCET_AMOUNT,claim:last?result(last):null};
   if(!chain.enabled)return {...base,available:false,reason:'unavailable',message:'Test NEAR top-ups are temporarily unavailable. Your invitation is saved.'};
   if(last?.status==='pending')return {...base,available:true,reason:'pending',amount:last.amount};
   if(last&&last.created+DAY>now())return {...base,available:false,reason:'cooldown',amount:last.amount};
   try{
    await chain.network();
-   const [reserve,balance]=await Promise.all([reserveBalance(),u?.kind==='wallet'?chain.balance(u.id):0n]);
+   const [reserve,balance]=await Promise.all([reserveBalance(),u?.kind==='wallet'?(await chain.balance(u.id)):0n]);
    if(balance>=10n*UNIT)return {...base,available:false,reason:'funded',message:'Your wallet already has enough test NEAR.'};
    const grant=faucetGrant(reserve,balance);
    return {...base,amount:grant.toString(),available:grant>0n,reason:grant>0n?'ready':'empty',message:grant>0n?'':'Test NEAR top-ups are temporarily out of funds. Your room invitation is saved.'};
   }catch{return {...base,available:false,reason:'offline',message:'We couldn’t reach NEAR testnet. Retry to check your balance and top-up availability.'};}
  };
 
- function accept(row,tx){
+ async function accept(row,tx){
   if(tx.transaction?.hash!==row.tx_hash)throw Error('Faucet confirmation did not match the prepared transaction.');
   if(tx.final_execution_status!=='FINAL')return result(row);
   const states=[tx.status,...(tx.receipts_outcome||[]).map(r=>r.outcome.status)];
-  if(states.some(s=>s&&typeof s==='object'&&'Failure'in s)){db.prepare("UPDATE faucet_claims SET status='failed',signed_tx='' WHERE id=?").run(row.id);throw Error('The testnet transfer failed. You can request again.');}
+  if(states.some(s=>s&&typeof s==='object'&&'Failure'in s)){(await db.prepare("UPDATE faucet_claims SET status='failed',signed_tx='' WHERE id=$1").run(row.id));throw Error('The testnet transfer failed. You can request again.');}
   if(!tx.status||typeof tx.status!=='object'||!('SuccessValue'in tx.status))return result(row);
-  db.prepare("UPDATE faucet_claims SET status='confirmed',signed_tx='' WHERE id=?").run(row.id);return result({...row,status:'confirmed'});
+  (await db.prepare("UPDATE faucet_claims SET status='confirmed',signed_tx='' WHERE id=$1").run(row.id));return result({...row,status:'confirmed'});
  }
  async function recover(row){
-  try{return accept(row,await chain.status(row.tx_hash));}catch(e){if(db.prepare('SELECT status FROM faucet_claims WHERE id=?').get(row.id).status==='failed')throw e;}
+  try{return (await accept(row,await chain.status(row.tx_hash)));}catch(e){if((await db.prepare('SELECT status FROM faucet_claims WHERE id=$1').get(row.id)).status==='failed')throw e;}
   // Re-broadcast the same signed transaction, never mint a new transfer on retry.
-  try{return accept(row,await chain.send(row.signed_tx));}catch(e){if(db.prepare('SELECT status FROM faucet_claims WHERE id=?').get(row.id).status==='failed')throw e;return result(row);}
+  try{return (await accept(row,await chain.send(row.signed_tx)));}catch(e){if((await db.prepare('SELECT status FROM faucet_claims WHERE id=$1').get(row.id)).status==='failed')throw e;return result(row);}
  }
  async function claim(u,ip){
   if(u?.kind!=='wallet')throw Error('Connect your NEAR testnet wallet first.');
@@ -61,17 +59,17 @@ export function createFaucet(store,{chain=liveFaucet(),now=Date.now}={}){
   if(u.id===chain.id)throw Error('The faucet cannot fund itself.');
   if(busy)throw Error('Another testnet top-up is confirming. Try again in a moment.');
   busy=true;
-  try{
+  try{return await db.withLock('faucet',async()=>{
    await chain.network();
-   const last=latest(u.id);
+   const last=(await latest(u.id));
    if(last?.status==='pending')return await recover(last);
    if(last&&last.created+DAY>now())return result(last);
-   const outstanding=db.prepare("SELECT * FROM faucet_claims WHERE status='pending' ORDER BY created LIMIT 1").get();
-   if(outstanding){try{const recovered=await recover(outstanding);if(recovered.status==='pending')throw Error('Another testnet top-up is still confirming. Try again shortly.');}catch(e){if(db.prepare('SELECT status FROM faucet_claims WHERE id=?').get(outstanding.id).status!=='failed')throw e;}}
+   const outstanding=(await db.prepare("SELECT * FROM faucet_claims WHERE status='pending' ORDER BY created LIMIT 1").get());
+   if(outstanding){try{const recovered=await recover(outstanding);if(recovered.status==='pending')throw Error('Another testnet top-up is still confirming. Try again shortly.');}catch(e){if((await db.prepare('SELECT status FROM faucet_claims WHERE id=$1').get(outstanding.id)).status!=='failed')throw e;}}
    const digest=createHash('sha256').update('nearfest-faucet:'+ip).digest('hex'),since=now()-3600000;
-   const recent=db.prepare("SELECT count(*) AS count FROM faucet_claims WHERE created>? AND status!='failed'").get(since).count;
-   const sameIp=db.prepare("SELECT count(*) AS count FROM faucet_claims WHERE ip_hash=? AND created>? AND status!='failed'").get(digest,since).count;
-   const daily=db.prepare("SELECT count(*) AS count FROM faucet_claims WHERE created>? AND status!='failed'").get(now()-DAY).count;
+   const recent=(await db.prepare("SELECT count(*) AS count FROM faucet_claims WHERE created>$1 AND status!='failed'").get(since)).count;
+   const sameIp=(await db.prepare("SELECT count(*) AS count FROM faucet_claims WHERE ip_hash=$1 AND created>$2 AND status!='failed'").get(digest,since)).count;
+   const daily=(await db.prepare("SELECT count(*) AS count FROM faucet_claims WHERE created>$1 AND status!='failed'").get(now()-DAY)).count;
    if(recent>=10||sameIp>=5||daily>=20)throw Error('The demo faucet has reached its top-up limit. Try later or use the backup faucet.');
    const [balance,reserve]=await Promise.all([chain.balance(u.id),chain.balance(chain.id)]);
    if(balance>=10n*UNIT)throw Error('Your wallet already has at least 10 test NEAR. Top up here when it falls below 10 NEAR.');
@@ -79,17 +77,20 @@ export function createFaucet(store,{chain=liveFaucet(),now=Date.now}={}){
    if(!grant)throw Error('Test NEAR top-ups are temporarily out of funds. Your room invitation is saved.');
    reserveCache=null;
    const prepared=await chain.prepare(u.id,grant.toString()),row={id:randomUUID(),user_id:u.id,ip_hash:digest,created:now(),status:'pending',amount:grant.toString(),tx_hash:prepared.hash,signed_tx:prepared.signed};
-   db.prepare('INSERT INTO faucet_claims(id,user_id,ip_hash,created,status,tx_hash,signed_tx,amount) VALUES(?,?,?,?,?,?,?,?)').run(row.id,row.user_id,row.ip_hash,row.created,row.status,row.tx_hash,row.signed_tx,row.amount);
-   try{return accept(row,await chain.send(row.signed_tx));}catch(e){if(db.prepare('SELECT status FROM faucet_claims WHERE id=?').get(row.id).status==='failed')throw e;return result(row);}
-  }finally{busy=false;}
+   (await db.prepare('INSERT INTO faucet_claims(id,user_id,ip_hash,created,status,tx_hash,signed_tx,amount) VALUES($1,$2,$3,$4,$5,$6,$7,$8)').run(row.id,row.user_id,row.ip_hash,row.created,row.status,row.tx_hash,row.signed_tx,row.amount));
+   try{return (await accept(row,await chain.send(row.signed_tx)));}catch(e){if((await db.prepare('SELECT status FROM faucet_claims WHERE id=$1').get(row.id)).status==='failed')throw e;return result(row);}
+  });}finally{busy=false;}
  }
  async function tick(){
-  if(busy||!chain.enabled)return false;
-  const row=db.prepare("SELECT * FROM faucet_claims WHERE status='pending' ORDER BY created LIMIT 1").get();
-  if(!row)return false;busy=true;
-  try{await chain.network();await recover(row);}catch{}finally{busy=false;}
-  return db.prepare('SELECT status FROM faucet_claims WHERE id=?').get(row.id).status!=='pending';
+  if(busy||!chain.enabled)return false;busy=true;
+  try{return await db.withLock('faucet',async()=>{
+   const row=await db.prepare("SELECT * FROM faucet_claims WHERE status='pending' ORDER BY created LIMIT 1").get();
+   if(!row)return false;
+   try{await chain.network();await recover(row);}catch{}
+   return (await db.prepare('SELECT status FROM faucet_claims WHERE id=$1').get(row.id)).status!=='pending';
+  });}finally{busy=false;}
  }
- function history(u){return db.prepare('SELECT id,amount,created,status,tx_hash FROM faucet_claims WHERE user_id=? ORDER BY created DESC LIMIT 30').all(u.id).map(row=>({id:row.id,title:'Test NEAR top-up',operation:'top_up',amount:row.amount,created_at:row.created,status:row.status,explorer:`https://testnet.nearblocks.io/txns/${row.tx_hash}`}));}
+
+ async function history(u){return (await db.prepare('SELECT id,amount,created,status,tx_hash FROM faucet_claims WHERE user_id=$1 ORDER BY created DESC LIMIT 30').all(u.id)).map(row=>({id:row.id,title:'Test NEAR top-up',operation:'top_up',amount:row.amount,created_at:row.created,status:row.status,explorer:`https://testnet.nearblocks.io/txns/${row.tx_hash}`}));}
  return {claim,status,tick,history};
 }

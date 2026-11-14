@@ -6,7 +6,7 @@ import {resolve} from 'node:path';
 import library from '../server/library-catalog.json' with {type:'json'};
 import {discoveryGames} from '../server/game-catalog.mjs';
 import {libraryHeaders,serveLibrary} from '../server/library.mjs';
-import {openStore} from '../server/store.mjs';
+import {openStore} from './helpers/store.mjs';
 import {createCommunity} from '../server/community.mjs';
 import {createMultiplayer} from '../server/multiplayer.mjs';
 import {createPlay} from '../server/play.mjs';
@@ -48,4 +48,4 @@ test('local preview assets use the requested loopback alias without broadening t
  assert(!proxied.includes('http://localhost:5189/'));
 });
 
-test('parked imports cannot create games or local money pots',async()=>{const s=openStore(':memory:');try{const a=s.ensureUser('a','Alice','practice'),p=createPlay(s),m=createMultiplayer(s),c=createCommunity(s);await assert.rejects(()=>p.start(library[0].id,a),/timed challenge/);assert.throws(()=>m.create({game_id:library[0].id,entry:'0'},a));assert.throws(()=>c.create({kind:'pot',game_id:library[0].id},a),/NEAR/);assert.equal(s.user(a.id).balance,'0');}finally{s.db.close();}});
+test('parked imports cannot create games or local money pots',async()=>{const s=(await openStore(':memory:'));try{const a=(await s.ensureUser('a','Alice','practice')),p=createPlay(s),m=createMultiplayer(s),c=createCommunity(s);await assert.rejects(async ()=>(await p.start(library[0].id,a)),/timed challenge/);(await assert.rejects(async ()=>(await m.create({game_id:library[0].id,entry:'0'},a))));(await assert.rejects(async ()=>(await c.create({kind:'pot',game_id:library[0].id},a)),/NEAR/));assert.equal((await s.user(a.id)).balance,'0');}finally{(await s.db.close());}});
