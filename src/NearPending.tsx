@@ -1,3 +1,26 @@
-import {useEffect,useState} from 'react';
-import {api} from './api';
-export default function NearPending(){const [pending,setPending]=useState<{intent_id:string;room_id:string;operation:string;game_id?:string;entry?:string}[]>([]),[busy,setBusy]=useState(''),[error,setError]=useState('');const refresh=()=>api<typeof pending>('/near/pending').then(setPending);useEffect(()=>{const update=()=>{void refresh().catch(()=>{});};update();window.addEventListener('nearfest:pending-payment',update);return()=>window.removeEventListener('nearfest:pending-payment',update);},[]);async function handle(id:string,abandon=false){setBusy(id);setError('');try{const r=await api<{id:string;cancelled?:boolean}>(abandon?'/near/abandon':'/near/confirm',{intent_id:id});localStorage.removeItem('nearfest-pending');if(r.cancelled){await refresh();return;}location.href=`/?${r.id.startsWith('club-')?'club':'party'}=${r.id}`;}catch(e){setError((e as Error).message);}finally{setBusy('');}}return <section className="near-pending">{pending.length>0&&<><h3>Finish a wallet action</h3><p>Your deposit stays on NEAR if the browser closes. Recover a confirmed action, or cancel a waiting deposit.</p>{pending.map(p=><div key={p.intent_id}><button className="secondary full" disabled={Boolean(busy)} onClick={()=>void handle(p.intent_id)}>{busy===p.intent_id?'Checking NEAR…':p.operation==='create_room'?`Recover pending room${p.entry?' · '+p.entry+' NEAR':''}`:`Recover ${p.operation.replaceAll('_',' ')}`}</button><button className="text-button" disabled={Boolean(busy)} onClick={()=>void handle(p.intent_id,true)}>Cancel pending action / refund</button></div>)}</>}{error&&<p role="alert">{error}</p>}</section>;}
+import {useState} from 'react';
+import {money} from './api';
+import type {PendingPayment, WalletActivity} from './useWalletRecovery';
+
+const operations: Record<string, string> = {create_room: 'Room created', contribute_room: 'Entry paid', start_room: 'Game started', leave_room: 'Left room', cancel_room: 'Room cancelled', refund_room: 'Refund confirmed', remove_player: 'Player refunded', claim_room: 'Result submitted', vote_room: 'Result reviewed', top_up: 'Received', reward: 'Winnings credited', refund: 'Refund credited'};
+export default function NearPending({pending, history, checking, error, refresh, resume}: {
+  pending: PendingPayment[]; history: WalletActivity[]; checking: boolean; error: string; refresh: () => Promise<void>; resume: (id: string) => Promise<void>;
+}) {
+  const [working, setWorking] = useState(''), [failure, setFailure] = useState('');
+  async function continuePayment(id: string) {
+    setWorking(id); setFailure('');
+    try {await resume(id);} catch (e) {setFailure((e as Error).message);} finally {setWorking('');}
+  }
+  return <div className="wallet-activity-list">
+    {pending.map(item => <div className="wallet-activity-row" key={item.intent_id}>
+      <div><b>{item.title}</b><span>{item.status === 'awaiting_wallet' ? 'Awaiting wallet approval' : item.status === 'unavailable' ? 'Reconnecting automatically' : 'Confirming payment'}{BigInt(item.amount) > 0n ? ` · ${money(item.amount)} NEAR` : ''}</span></div>
+      {item.status === 'awaiting_wallet' && <button className="text-button" disabled={Boolean(working)} onClick={() => void continuePayment(item.intent_id)}>{working === item.intent_id ? 'Opening…' : 'Continue'}</button>}
+    </div>)}
+    {history.map(item => <div className="wallet-activity-row" key={item.id}>
+      <div><b>{item.title}</b><span>{item.status === 'expired' ? 'Expired · No payment' : item.status === 'failed' ? 'Transfer failed' : item.status === 'pending' ? 'Confirming automatically' : item.status === 'cancelled' ? 'Cancelled' : operations[item.operation] || 'Confirmed'}{BigInt(item.amount) > 0n ? ` · ${money(item.amount)} NEAR` : ''}</span><time dateTime={new Date(item.created_at).toISOString()}>{new Date(item.created_at).toLocaleString(undefined,{day:'numeric',month:'short',hour:'2-digit',minute:'2-digit'})}</time></div>
+      {item.explorer && <a href={item.explorer} target="_blank" rel="noreferrer" aria-label={`View ${item.title} on NEAR`}>↗</a>}
+    </div>)}
+    {!pending.length && !history.length && <p>{checking ? 'Loading activity…' : 'Your payments and top-ups will appear here.'}</p>}
+    {(failure || error) && <p className="inline-error" role="alert">{failure || error} <button className="text-button" disabled={checking} onClick={() => void refresh()}>Retry</button></p>}
+  </div>;
+}

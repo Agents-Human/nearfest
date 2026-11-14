@@ -17,3 +17,13 @@ test('legacy one-NEAR claims keep their actual amount and cooldown after the ten
 test('low reserves offer a usable grant instead of rejecting every top-up',async()=>{const x=setup();try{x.balances.set(x.chain.id,945636111387500000000000n);const status=await x.faucet.status(x.user);assert.equal(status.available,true);assert.equal(status.amount,(84n*U/100n).toString());const claim=await x.faucet.claim(x.user,'ip');assert.equal(claim.amount,status.amount);assert.equal(x.db.prepare('SELECT amount FROM faucet_claims').get().amount,claim.amount);assert.equal((await x.faucet.claim(x.user,'ip')).transaction_hash,claim.transaction_hash);assert.equal(x.sends,1);}finally{x.db.close();}});
 test('availability reports empty or offline before a user submits a claim',async()=>{const x=setup();try{x.balances.set(x.chain.id,U/10n);let status=await x.faucet.status(x.user);assert.equal(status.available,false);assert.equal(status.reason,'empty');assert.equal(status.amount,'0');x.chain.network=async()=>{throw Error('RPC unavailable');};status=await x.faucet.status(x.user);assert.equal(status.reason,'offline');assert.equal(x.prepared,0);}finally{x.db.close();}});
 test('grants retain gas reserve, cap at target balance and never round up',()=>{assert.equal(faucetGrant(10n*U+U/10n),10n*U);assert.equal(faucetGrant(U/10n),0n);assert.equal(faucetGrant(34n*U/100n),0n);assert.equal(faucetGrant(35n*U/100n),U/4n);assert.equal(faucetGrant(100n*U,9n*U),U);});
+
+test('the server finishes a pending top-up without a browser and retains safe history',async()=>{
+ const x=setup();try{
+  const send=x.chain.send;x.chain.send=async tx=>{await send(tx);throw Error('Lost callback');};
+  const first=await x.faucet.claim(x.user,'ip');assert.equal(first.status,'pending');
+  const restarted=createFaucet(x.store,{chain:x.chain});assert.equal(await restarted.tick(),true);assert.equal(await restarted.tick(),false);
+  const history=restarted.history(x.user);assert.equal(history.length,1);assert.equal(history[0].status,'confirmed');assert.equal(history[0].amount,FAUCET_AMOUNT);assert.equal(history[0].explorer.endsWith(first.transaction_hash),true);
+  assert.equal('signed_tx'in history[0],false);assert.deepEqual(restarted.history({id:'other.testnet'}),[]);assert.equal(x.prepared,1);assert.equal(x.sends,1);
+ }finally{x.db.close();}
+});

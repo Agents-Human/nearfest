@@ -1,9 +1,9 @@
 import Onboarding from './Onboarding';
 import InviteShare from './InviteShare';
 import {hasAccess, roomBudget, parseNearEntry, type AccessRequest} from './account-access';
-import NearPending from './NearPending';
+import WalletPanel from './WalletPanel';
+import useWalletRecovery from './useWalletRecovery';
 import {confirmWalletAction} from './near-confirmation.mjs';
-import WalletFunding from './WalletFunding';
 import {ArcadeIntro} from './ArcadeGames';
 import { useEffect, useLayoutEffect, useRef, useState, lazy, Suspense, type FormEvent, type ReactNode } from 'react';
 import { api, money, remaining, cats, resolverNames, coverFor, type Bet, type Config, type User, type Message, type Fixture, type Leader } from './api';
@@ -73,6 +73,18 @@ export default function App() {
   function beginSetup(request:AccessRequest={}){setAccess(request);setModal('join');}
   useEffect(()=>{const open=(event:Event)=>{setAccess((event as CustomEvent<AccessRequest>).detail||{wallet:true});setModal('join');};window.addEventListener('nearfest:wallet-required',open);window.addEventListener('nearfest:onboard',open);return()=>{window.removeEventListener('nearfest:wallet-required',open);window.removeEventListener('nearfest:onboard',open);};},[]);
   useEffect(()=>{if(user?.id)void refresh().catch(e=>setError(e.message));else setMyParties([]);},[user?.id]);
+  useEffect(()=>{
+    if(user?.kind!=='wallet')return;
+    const account=user.id;let stopped=false,reading=false,last=0;
+    async function balance(){
+      if(stopped||reading||document.visibilityState!=='visible'||Date.now()-last<5000)return;
+      reading=true;last=Date.now();
+      try{const next=await api<User|null>('/me');if(!stopped&&next?.id===account)setUser(next);}catch{}finally{reading=false;}
+    }
+    const timer=setInterval(()=>void balance(),BigInt(user.pending||'0')>0n?10000:30000);
+    const update=()=>void balance();window.addEventListener('focus',update);document.addEventListener('visibilitychange',update);
+    return()=>{stopped=true;clearInterval(timer);window.removeEventListener('focus',update);document.removeEventListener('visibilitychange',update);};
+  },[user?.id,user?.pending]);
   useEffect(() => {
     Promise.all([api<Config>('/config').then(setConfig),api<Game[]>('/play').then(setGames), refresh()]).catch(e => setError(e.message)).finally(() => setLoading(false));
     const stream = new EventSource('/api/events'); stream.addEventListener('ready', () => setLive(true)); stream.addEventListener('update', () => { refresh().catch(() => setLive(false)); }); stream.onerror = () => setLive(false);
@@ -128,19 +140,16 @@ export default function App() {
   function leaveGameplay(){if(partyId&&!soloRoom){setView('mine');changeSection('all');}setGameId(null);setPartyId(null);setPartyGame(null);setModal(null);const url=new URL(location.href);url.searchParams.delete('game');url.searchParams.delete('party');url.searchParams.delete('invite');if(partyId&&!soloRoom)url.searchParams.set('view','mine');history.replaceState({},'',url);void refresh();}
   function onlineGame(game:Game,entry='0'){setPartyGame(game);setPartyEntry(game.bettable===false?'0':entry);setModal(null);}
   function openParty(r:Party){setSoloRoom(Boolean(r.solo));setPartyGame(null);setModal(null);setPartyId(r.id);setGameId(null);setClubId(null);setSelected(null);const url=new URL(location.href);url.searchParams.delete('game');url.searchParams.delete('club');url.searchParams.delete('room');url.searchParams.set('party',r.id);url.searchParams.delete('invite');if(r.invite_key)url.searchParams.set('invite',r.invite_key);history.replaceState({},'',url);void refresh();}
-  useEffect(()=>{
-    if(user?.kind!=='wallet'||partyId)return;
-    let cancelled=false;const controller=new AbortController();
-    void (async()=>{
-      const active=localStorage.getItem('nearfest-pending');if(!active)return;
-      const pending=await api<{intent_id:string;operation:string;game_id?:string}[]>('/near/pending');
-      for(const p of pending.filter(p=>p.intent_id===active&&p.operation==='create_room'&&p.game_id)){
-        if(cancelled)return;
-        try{const room=await confirmWalletAction({signal:controller.signal,confirm:()=>api<Party>('/near/confirm',{intent_id:p.intent_id})});if(!cancelled){localStorage.removeItem('nearfest-pending');openParty(room);notify('Your room is ready.');}return;}catch(e){if(!cancelled)setError((e as Error).message);}
-      }
-    })().catch(()=>{});
-    return()=>{cancelled=true;controller.abort();};
-  },[user?.id]);
+  const walletRecovery=useWalletRecovery(user,result=>{
+    const active=result.resumed_intent||localStorage.getItem('nearfest-pending');
+    const recovered=result.recovered.find(item=>item.intent_id===active);
+    if(result.expired.includes(active||'')||recovered)localStorage.removeItem('nearfest-pending');
+    if(result.recovered.length)void refresh().catch(()=>{});
+    if(recovered&&!recovered.room.cancelled&&!partyId&&recovered.operation==='create_room'&&(modal===null||modal==='account')){
+      if(recovered.room.id.startsWith('club-')){setClubId(recovered.room.id);setModal(null);const url=new URL(location.href);url.searchParams.set('club',recovered.room.id);history.replaceState({},'',url);}
+      else openParty(recovered.room);
+    }
+  });
 
   const gameplayContent=<GamePage resumable={Boolean(partyId)&&!soloRoom} key={partyId||currentGame?.id||'create'} title={currentGame?.title||partyGame?.title||'Game room'} back={leaveGameplay} online={currentGame?()=>onlineGame(currentGame):undefined}>
     {partyId?<MultiplayerRoom id={partyId} user={user} join={()=>beginSetup()} changed={()=>void refresh()} replay={id=>{setPartyId(null);setGameId(id);const u=new URL(location.href);u.searchParams.delete('party');u.searchParams.delete('invite');u.searchParams.set('game',id);history.replaceState({},'',u);}}/>:currentGame?.engine==='arcade'?<ArcadeIntro game={currentGame} user={user} join={()=>beginSetup()} online={entry=>onlineGame(currentGame,entry)} created={r=>{setSoloRoom(Boolean(r.solo));setGameId(null);setPartyId(r.id);const u=new URL(location.href);u.searchParams.delete('game');u.searchParams.set('party',r.id);history.replaceState({},'',u);void refresh();}}/>:currentGame?.engine==='skill'?<SkillIntro game={currentGame} play={entry=>onlineGame(currentGame,entry)}/>:currentGame?<PlayRoom key={currentGame.id} game={currentGame} multiplayer={entry=>onlineGame(currentGame,entry)} user={user} join={()=>beginSetup()} createGroup={()=>{setLinkedGame(currentGame);setSuggestion(`${currentGame.title} group showdown`);requireUser(()=>setModal('create-pot'));}}/>:null}
@@ -186,7 +195,7 @@ export default function App() {
     {modal==='broadcast'&&<Modal title="Broadcast your match" wide close={()=>setModal(null)}><BroadcastSetup bet={room} edit={room&&room.creator===user?.id?()=>setModal('media'):undefined}/></Modal>}
     {modal==='media'&&room&&<Modal title="Artwork & stream" wide close={()=>setModal(null)}><EventMediaEditor bet={room} busy={busy} save={(cover,url)=>run(async()=>{await api(`/bets/${room.id}/media`,{cover,stream_url:url});await refresh();setModal(null);notify('Event artwork and stream updated.');})}/></Modal>}
     {modal === 'join' && <Onboarding user={user} request={access} updated={setUser} close={closeJoin} done={()=>{setModal(current=>current==='join'?null:current);setAccess({});void refresh();}}/>}
-    {modal === 'account' && user && <Modal title="Your testnet wallet" close={() => setModal(null)}><WalletFunding user={user} busy={busy} refresh={()=>run(async()=>{const next=await api<User|null>('/me');if(!next)throw Error('Reconnect your wallet to refresh its balance.');setUser(next);if(next.chain_error)throw Error(next.chain_error);notify('Wallet balance refreshed.');})}/><div className="account-summary wallet-rewards"><span>Winnings & refunds ready to collect</span><b>{money(user.credit)} <small>NEAR</small></b><button className="primary full" disabled={busy || BigInt(user.credit) === 0n || BigInt(user.pending || '0') > 0n} onClick={() => run(async () => { await execute('/collect', {}); notify('Collection confirmed.'); })}>{BigInt(user.pending || '0') > 0n ? 'Withdrawal pending…' : 'Collect winnings / refunds'}</button>{user.chain_error && <p>{user.chain_error}</p>}</div><NearPending/><button className="secondary full" onClick={() => run(async () => { await api('/session/logout', {}); if (user.kind === 'wallet') await disconnectWallet(); setUser(null); setMyParties([]);beginSetup(); })}>Switch account</button></Modal>}
+    {modal === 'account' && user && <Modal title="Your wallet" className="wallet-modal" close={() => setModal(null)}><WalletPanel key={user.id} user={user} recovery={walletRecovery} refresh={async()=>{const next=await api<User|null>('/me');if(!next)throw Error('Reconnect your wallet.');setUser(next);}} collect={async()=>{await execute('/collect',{});notify('Collection confirmed.');}} switchAccount={async()=>{await api('/session/logout',{});if(user.kind==='wallet')await disconnectWallet();setUser(null);setMyParties([]);beginSetup();}}/></Modal>}
     {modal === 'create' && <CreateModal close={() => setModal(null)} busy={busy} run={run} mode={mode} config={config} suggestion={suggestion} activity={creationActivity} preset={fixtureSeed} created={async (draft, preview) => { const response = await api<Bet & TxResponse>('/bets', draft); if (response.transaction) { localStorage.setItem('slotvend-pending', response.request_id!); const b = await confirmWalletAction({send:()=>sendTransaction(response.transaction!),confirm:()=>api<Bet>('/recover', { request_id: response.request_id })}); localStorage.removeItem('slotvend-pending'); await refresh(); openRoom(b.id); } else { await refresh(); openRoom(response.id); } setModal(null); notify(`“${preview.title}” is open. Share the room and find your rival.`); }}/ >}
     {modal === 'network' && <Modal title="NEAR connection" close={() => setModal(null)}><div className="terms"><dl><div><dt>Network</dt><dd>NEAR testnet</dd></div><div><dt>Contract</dt><dd>{config?.contract_id || 'Not deployed / configured'}</dd></div><div><dt>Automatic result signer</dt><dd>{config?.oracle_ready ? 'Connected' : 'Not configured'}</dd></div><div><dt>NEAR AI evidence judge</dt><dd>{config?.ai_ready ? 'Connected' : 'API key needed'}</dd></div></dl></div>{localStorage.getItem('slotvend-pending') && <button className="primary full" disabled={busy} onClick={() => run(async () => { const b = await api<Bet>('/recover', { request_id: localStorage.getItem('slotvend-pending') }); localStorage.removeItem('slotvend-pending'); await refresh(); setModal(null); openRoom(b.id); })}>Recover pending room</button>}<p className="fine-print">Wallet actions always ask your wallet to sign. Automatic results use the immutable oracle chosen when the contract was deployed. The contract does not independently prove API or AI claims.</p></Modal>}
     {(modal === 'how' || modal === 'rules') && <Modal title={modal === 'how' ? 'A little friendly competition.' : 'Keep it friendly.'} close={() => setModal(null)}>{modal === 'how' ? <div className="how-steps">{[['01', 'Make your call', 'Choose a question, two sides, a stake and a result time. Agree on the source or a referee before anyone joins.'], ['02', 'Find your friendly rival', 'Share your room. A second person matches your stake and takes the other side. Chat and react together while it plays out.'], ['03', 'Settle the score', 'Agree together, use a sports or price API, calculate maths, or ask AI to review sources. Challenge automatic results within 15 minutes. Collect your winnings from your profile.']].map(([n, t, p]) => <div key={n}><span>{n}</span><section><h3>{t}</h3><p>{p}</p></section></div>)}</div> : <div className="house-rules"><p>Bring sports, gaming, everyday challenges, facts, science and maths. Keep the competition friendly.</p><ul><li>No drugs, sexual or explicit content, graphic violence, dangerous challenges or illegal activity.</li><li>No harassment, threats, private information or targeting someone without their consent.</li><li>Write specific rules that both players can understand. A claim needs a clear way to establish the outcome.</li><li>AI can be wrong. Inspect the cited evidence and challenge it when needed. Missing evidence never means an automatic win.</li><li>NEAR testnet tokens are for testing. They have no cash value here.</li></ul><p className="fine-print">Content has server-side filters{config?.semantic_moderation ? ' and AI moderation' : '; semantic AI moderation is not yet configured'}. Report anything the filters miss from its room or message.</p></div>}<button className="primary full" onClick={() => setModal(null)}>Let’s play fair <Icon name="check" size={18}/></button></Modal>}

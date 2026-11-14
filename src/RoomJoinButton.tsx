@@ -22,8 +22,7 @@ export default function RoomJoinButton<T extends Party>({room, user, joined, dat
   }
   function begin() {
     const request = {wallet: paid, minimum: roomBudget(room.entry), label: `Join ${room.title}`, next: enter};
-    // Staked joins always review the entry and current wallet balance before signing.
-    if (paid || !hasAccess(user, request)) requestOnboarding(request);
+    if (!hasAccess(user, request)) requestOnboarding(request);
     else void enter().catch(() => {});
   }
   return <div className="room-join-action"><button className="primary" disabled={busy || full || room.status !== 'lobby'} onClick={begin}>{busy ? 'Joining…' : full ? 'Room is full' : paid ? `Join room · ${money(room.entry)} NEAR` : 'Join the room →'}</button>{error && <p className="inline-error" role="alert">{error}</p>}</div>;

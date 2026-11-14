@@ -38,6 +38,7 @@ const multiplayer={
 const economy=createNearEconomy(store,{services:{...multiplayer,community,changed:id=>arcadeRooms.notify(id),get:(id,u,key)=>id.startsWith('arena-')?arcadeRooms.get(id,u,key):multiplayer.get(id,u),action:(id,u,d,key)=>id.startsWith('arena-')?arcadeRooms.action(id,u,d,key):multiplayer.action(id,u,d),start:(id,u,key)=>id.startsWith('arena-')?arcadeRooms.start(id,u,key):multiplayer.start(id,u)}});
 setInterval(()=>{void economy.tick().then(changed=>{if(changed)broadcast();}).catch(()=>{});},5000).unref();
 const faucet=createFaucet(store);
+const walletRecoveryTimer=setInterval(()=>{void Promise.all([economy.recoverPending(),faucet.tick()]).then(results=>{if(results.some(Boolean))broadcast();}).catch(()=>{});},20000);walletRecoveryTimer.unref();
 const { db } = store, streams = new Set(), arenaStreams = new Set(), challenges = new Map(), limits = new Map(), resolving = new Set(), cache = new Map();
 const hash = x => createHash('sha256').update(x).digest('hex');
 const config = { network: 'testnet', contract_id: contractId, oracle_ready: oracleReady, ai_ready: hasAI, semantic_moderation: hasAI, room_storage_fee:'100000000000000000000000',currency:'NEAR',storage_fee: STORAGE.toString(), review_ms: 900000, resolution_ms: 172800000 };
@@ -83,6 +84,8 @@ const server = createServer(async (req, res) => {
     if(path==='/api/near/faucet'&&req.method==='GET')return json(res,await faucet.status(current(req)));
     if(path==='/api/near/faucet'&&req.method==='POST'){const u=required(req);rate('faucet:'+u.id,5);const result=await faucet.claim(u,req.socket.remoteAddress||'unknown');return json(res,result);}
     if(path==='/api/near/pending'&&req.method==='GET')return json(res,economy.pending(required(req)));
+    if(path==='/api/near/reconcile'&&req.method==='POST'){const u=required(req);rate('near-reconcile:'+u.id,12);const result=await economy.reconcile(u);if(result.recovered.length)broadcast();return json(res,{...result,history:[...economy.history(u),...faucet.history(u)].sort((a,b)=>b.created_at-a.created_at).slice(0,30)});}
+    if(path==='/api/near/retry'&&req.method==='POST'){const u=required(req),d=await body(req);rate('near-retry:'+u.id,10);const result=await economy.retry(d.intent_id,u);if(!result.transaction)broadcast();return json(res,result);}
     if(path==='/api/near/abandon'&&req.method==='POST'){const u=required(req),d=await body(req);return json(res,await economy.abandon(d.intent_id,u));}
     if(path==='/api/near/confirm'&&req.method==='POST'){const u=required(req),d=await body(req);const result=await economy.confirm(d.intent_id,u);broadcast();return json(res,result);}
     if (path === '/api/config') return json(res, config);
@@ -241,7 +244,7 @@ server.listen(port, process.env.HOST || '127.0.0.1', () => console.log(`NearFest
 let closing=false;
 function close() {
   if(closing)return;closing=true;
-  clearInterval(interval);clearInterval(partyInterval);clearInterval(arcadeTimer);
+  clearInterval(interval);clearInterval(partyInterval);clearInterval(arcadeTimer);clearInterval(walletRecoveryTimer);
   // Arcade SSE connections must close too, otherwise --watch never starts the replacement API.
   for(const response of [...streams,...arenaStreams])response.end();
   const force=setTimeout(()=>server.closeAllConnections(),3000);force.unref();

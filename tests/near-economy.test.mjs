@@ -71,3 +71,80 @@ test('an unconfirmed creation cannot be discarded while its transaction can stil
 });
 
 test('unchanged escrow does not trigger continuous balance-refresh broadcasts',async()=>{const x=setup();try{assert.equal(await x.economy.tick(),false);assert.equal(await x.economy.tick(),false);}finally{x.s.db.close();}});
+
+test('background recovery restores a confirmed room without signing or paying again',async()=>{
+ const x=setup();try{
+  const prepared=await x.economy.create('game',{game_id:'connect-four',entry:'0.1'},x.a);x.chainCreate(prepared,x.a);
+  let signs=0;x.chain.transaction=()=>{signs++;throw Error('Background recovery must not prepare a transaction');};
+  const result=await x.economy.reconcile(x.a);
+  assert.equal(result.recovered.length,1);assert.equal(result.recovered[0].room.id,prepared.transaction.args.id);assert.equal(result.pending.length,0);assert.equal(signs,0);assert.equal(x.calls.length,0);
+  assert.equal((await x.economy.reconcile(x.a)).recovered.length,0);
+ }finally{x.s.db.close();}
+});
+test('three expired unpaid requests disappear automatically without cancelling any on-chain funds',async()=>{
+ const x=setup();try{
+  const p=await x.economy.create('game',{game_id:'connect-four',entry:'0.01'},x.a),row=x.s.db.prepare('SELECT * FROM near_intents WHERE id=?').get(p.intent_id),intent=JSON.parse(row.json);
+  intent.args.join_until=Date.now()-61000;
+  x.s.db.prepare('UPDATE near_intents SET json=? WHERE id=?').run(JSON.stringify(intent),p.intent_id);
+  for(let i=1;i<3;i++)x.s.db.prepare('INSERT INTO near_intents(id,user_id,json,created) VALUES(?,?,?,?)').run('legacy-'+i,x.a.id,JSON.stringify({...intent,id:'legacy-room-'+i,args:{...intent.args,id:'legacy-room-'+i}}),Date.now());
+  const result=await x.economy.reconcile(x.a);assert.equal(result.expired.length,3);assert.deepEqual(result.pending,[]);assert.deepEqual(result.recovered,[]);assert.equal(x.calls.length,0);
+  assert.deepEqual(await x.economy.confirm(p.intent_id,x.a),{cancelled:true,expired:true});
+  assert((await x.economy.create('game',{game_id:'checkers',entry:'0.02'},x.a)).transaction);
+ }finally{x.s.db.close();}
+});
+test('RPC failure never discards a request; fresh requests remain resumable',async()=>{
+ const x=setup();try{
+  const prepared=await x.economy.create('game',{game_id:'connect-four',entry:'0.1'},x.a);
+  let result=await x.economy.reconcile(x.a);assert.equal(result.pending[0].status,'awaiting_wallet');assert.equal(result.pending[0].title,'Connect Four');
+  x.chain.view=async()=>{throw Error('RPC unavailable');};result=await x.economy.reconcile(x.a);
+  assert.equal(result.pending.length,1);assert.equal(result.pending[0].intent_id,prepared.intent_id);assert.equal(result.pending[0].status,'unavailable');assert.deepEqual(result.expired,[]);
+ }finally{x.s.db.close();}
+});
+test('continuing an unsigned request uses the same room and receipt; a paid request opens directly',async()=>{
+ const x=setup();try{
+  const prepared=await x.economy.create('game',{game_id:'connect-four',entry:'0.1'},x.a),retry=await x.economy.retry(prepared.intent_id,x.a);
+  assert.equal(retry.intent_id,prepared.intent_id);assert.deepEqual(retry.transaction,prepared.transaction);assert.equal(x.economy.pending(x.a).length,1);
+  await assert.rejects(()=>x.economy.retry(prepared.intent_id,x.b),/different wallet/);
+  x.chainCreate(prepared,x.a);const ready=await x.economy.retry(prepared.intent_id,x.a);assert.equal(ready.id,prepared.transaction.args.id);assert.equal(ready.transaction,undefined);
+ }finally{x.s.db.close();}
+});
+
+test('server recovery works without a browser and keeps account-scoped history after recreation',async()=>{
+ const x=setup();try{
+  const prepared=await x.economy.create('game',{game_id:'connect-four',entry:'0.1'},x.a);x.chainCreate(prepared,x.a);
+  assert.equal(await x.economy.recoverPending(),true);assert.equal(x.economy.pending(x.a).length,0);
+  const restarted=createNearEconomy(x.s,{chain:x.chain,services:x.services}),history=restarted.history(x.a);
+  assert.equal(history.length,1);assert.equal(history[0].id,prepared.intent_id);assert.equal(history[0].status,'confirmed');assert.equal(history[0].title,'Connect Four');assert.deepEqual(restarted.history(x.b),[]);
+  assert.equal(await restarted.recoverPending(),false);assert.equal(x.calls.length,0);
+ }finally{x.s.db.close();}
+});
+test('expired unpaid requests remain in history with no payment recorded',async()=>{
+ const x=setup();try{
+  const p=await x.economy.create('game',{game_id:'connect-four',entry:'0.1'},x.a),row=x.s.db.prepare('SELECT json FROM near_intents WHERE id=?').get(p.intent_id),data=JSON.parse(row.json);data.args.join_until=Date.now()-61000;
+  x.s.db.prepare('UPDATE near_intents SET json=? WHERE id=?').run(JSON.stringify(data),p.intent_id);
+  await x.economy.recoverPending();const [event]=x.economy.history(x.a);assert.equal(event.status,'expired');assert.equal(event.amount,'0');assert.equal(event.id,p.intent_id);assert.equal(x.calls.length,0);
+ }finally{x.s.db.close();}
+});
+test('an unsigned join can continue only with its original receipt, then recovers in the background',async()=>{
+ const x=setup();try{
+  const p=await x.economy.create('game',{game_id:'connect-four',entry:'0.1'},x.a);x.chainCreate(p,x.a);const room=await x.economy.confirm(p.intent_id,x.a);
+  const joining=await x.economy.action('game',room.id,'action',{type:'join'},x.b),view=x.chain.view;let paid=false;
+  x.chain.view=async(method,args)=>method==='get_funding_receipt'?paid:view(method,args);
+  assert.equal((await x.economy.reconcile(x.b)).pending[0].status,'awaiting_wallet');
+  const retry=await x.economy.retry(joining.intent_id,x.b);assert.deepEqual(retry.transaction,joining.transaction);
+  x.remote.get(room.id).members.push({account_id:x.b.id,amount:room.entry});paid=true;
+  assert.equal(await x.economy.recoverPending(),true);assert(x.rooms.get(room.id,x.b).players.some(p=>p.id===x.b.id));assert.equal(x.economy.history(x.b)[0].status,'confirmed');
+  assert.equal((await x.economy.retry(joining.intent_id,x.b)).transaction,undefined);
+ }finally{x.s.db.close();}
+});
+
+test('confirmed winnings and refunds are retained once with a stable history date',async()=>{
+ const x=setup();try{
+  const p=await x.economy.create('game',{game_id:'connect-four',entry:'0.1'},x.a);x.chainCreate(p,x.a);const room=await x.economy.confirm(p.intent_id,x.a),remote=x.remote.get(room.id);
+  assert.equal(x.economy.history(x.a).filter(e=>e.operation==='refund').length,0);
+  remote.status='refunded';remote.payouts=[{account_id:x.a.id,amount:room.entry}];await x.economy.load(room.id,'game');
+  const [refund]=x.economy.history(x.a).filter(e=>e.operation==='refund');assert.equal(refund.amount,room.entry);assert.equal(refund.title,'Connect Four');
+  await x.economy.load(room.id,'game');const restarted=createNearEconomy(x.s,{chain:x.chain,services:x.services});
+  assert.deepEqual(restarted.history(x.a).filter(e=>e.operation==='refund'),[refund]);assert.deepEqual(restarted.history(x.b),[]);
+ }finally{x.s.db.close();}
+});

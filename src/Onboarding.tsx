@@ -1,5 +1,5 @@
 import {useState} from 'react';
-import {api, money, type User} from './api';
+import {api, type User} from './api';
 import {connectWallet} from './wallet';
 import WalletFunding from './WalletFunding';
 import Modal from './Modal';
@@ -26,22 +26,24 @@ export default function Onboarding({user, request, updated, done, close}: {
   async function connect() {
     const next = await connectWallet(name.trim() || undefined);
     updated(next); setName(next.name);
-    setStep(next.name === next.id ? 'profile' : 'fund');
+    if(next.name===next.id){setStep('profile');return;}
+    if(hasAccess(next,request)){setStep('fund');await request.next?.();sessionStorage.removeItem('nearfest-player-name');done();}
+    else setStep('fund');
   }
   async function finish() {
     const next = await refresh();
-    if (!hasAccess(next, request)) throw Error(`Add enough test NEAR to cover ${money(minimum)} NEAR, including storage and a network fee allowance.`);
+    if (!hasAccess(next, request)) throw Error('Add test NEAR to continue.');
     await request.next?.();
     sessionStorage.removeItem('nearfest-player-name'); done();
   }
-  return <Modal dismissible={!busy} title={step === 'profile' ? 'Make yourself at home.' : step === 'wallet' ? 'Connect your wallet.' : 'You’re almost in.'} close={() => {if (!busy) close();}}>
+  return <Modal dismissible={!busy} title={step === 'profile' ? 'Set up your account' : step === 'wallet' ? 'Connect your wallet' : hasAccess(user,request)?'Ready to join':'Add test NEAR'} close={() => {if (!busy) close();}}>
     <div className="onboarding">
       <ol className="onboarding-steps" aria-label="Account setup">
         {['Account', 'Wallet', 'Continue'].map((label, i) => <li key={label} aria-current={i === (step === 'profile' ? 0 : step === 'wallet' ? 1 : 2) ? 'step' : undefined}><span>{i + 1}</span>{label}</li>)}
       </ol>
-      {request.label && <p className="onboarding-destination">{request.label} · Your place in this flow is saved.</p>}
+      {request.label && <p className="onboarding-destination">{request.label}</p>}
       {step === 'profile' && <>
-        <p className="modal-intro">Choose the name your friends will see. Next, connect a wallet and add free test NEAR.</p>
+        <p className="modal-intro">Choose the name your friends will see.</p>
         <form onSubmit={e => {e.preventDefault(); void run(async () => {
           const displayName = name.trim();
           if (displayName.length < 2) throw Error('Choose a name with at least two characters.');
@@ -55,9 +57,9 @@ export default function Onboarding({user, request, updated, done, close}: {
         {!user && <button className="text-button full" disabled={busy} onClick={() => void run(connect)}>Already have an account? Connect your wallet</button>}
       </>}
       {step === 'wallet' && <>
-        <p className="modal-intro">Hi {name || user?.name}. Choose a wallet to sign in, or create one through the wallet provider. You’ll return here to finish joining.</p>
+        <p className="modal-intro">Connect a wallet to continue, {name || user?.name}.</p>
         <button className="primary full" disabled={busy} onClick={() => void run(connect)}>{busy ? 'Waiting for your wallet…' : 'Connect or create a wallet →'}</button>
-        <p className="fine-print">NEAR testnet only. Signing in is free. Your wallet asks you to approve any room deposit.</p>
+        <p className="fine-print">Testnet only. Signing in is free.</p>
         {!request.wallet && <button className="secondary full" disabled={busy} onClick={() => void run(async () => {
           const next = user || await api<User>('/session/guest', {name: name.trim()});
           updated(next); await request.next?.(); done();
@@ -65,10 +67,7 @@ export default function Onboarding({user, request, updated, done, close}: {
         <button className="text-button full" disabled={busy} onClick={() => setStep('profile')}>Edit player name</button>
       </>}
       {step === 'fund' && user?.kind === 'wallet' && <>
-        <WalletFunding user={user} busy={busy} refresh={refresh} minimum={minimum}/>
-        {BigInt(minimum) > 0n && <p className="onboarding-cost">Have at least <b>{money(minimum)} NEAR</b> available for the entry, storage and network fee allowance. Your wallet confirms the actual deposit next.</p>}
-        <button className="primary full" disabled={busy || !hasAccess(user, request)} onClick={() => void run(finish)}>{busy ? 'Continuing…' : request.label || 'Continue to NearFest →'}</button>
-        <button className="text-button full" disabled={busy} onClick={() => setStep('profile')}>Edit player name</button>
+        <WalletFunding user={user} busy={busy} refresh={refresh} minimum={minimum} ready={{label:request.label||'Continue',onClick:()=>void run(finish)}}/>
       </>}
       {error && <p className="inline-error" role="alert">{error}</p>}
     </div>

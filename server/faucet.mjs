@@ -83,5 +83,13 @@ export function createFaucet(store,{chain=liveFaucet(),now=Date.now}={}){
    try{return accept(row,await chain.send(row.signed_tx));}catch(e){if(db.prepare('SELECT status FROM faucet_claims WHERE id=?').get(row.id).status==='failed')throw e;return result(row);}
   }finally{busy=false;}
  }
- return {claim,status};
+ async function tick(){
+  if(busy||!chain.enabled)return false;
+  const row=db.prepare("SELECT * FROM faucet_claims WHERE status='pending' ORDER BY created LIMIT 1").get();
+  if(!row)return false;busy=true;
+  try{await chain.network();await recover(row);}catch{}finally{busy=false;}
+  return db.prepare('SELECT status FROM faucet_claims WHERE id=?').get(row.id).status!=='pending';
+ }
+ function history(u){return db.prepare('SELECT id,amount,created,status,tx_hash FROM faucet_claims WHERE user_id=? ORDER BY created DESC LIMIT 30').all(u.id).map(row=>({id:row.id,title:'Test NEAR top-up',operation:'top_up',amount:row.amount,created_at:row.created,status:row.status,explorer:`https://testnet.nearblocks.io/txns/${row.tx_hash}`}));}
+ return {claim,status,tick,history};
 }
