@@ -17,9 +17,10 @@ test('two independent survival clients share coins, course and the first-death r
   let room=await a('/parties',{game_id:'platform-relay',entry:'0',visibility:'public'});await b(`/arcade/${room.id}/action`,{type:'join'});await a(`/arcade/${room.id}/action`,{type:'ready',ready:true});await b(`/arcade/${room.id}/action`,{type:'ready',ready:true});room=await a(`/arcade/${room.id}/start`,{});assert.equal(room.ends_at,null);
   const first=await b(`/arcade/${room.id}`);assert.equal(first.state.seed,room.state.seed);assert.deepEqual(first.state.platforms,room.state.platforms);assert.equal(first.players.length,2);
   await delay(Math.max(0,room.starts_at-Date.now()+70));
-  // B reaches the second island and stops safely. A stalls on the starting
-  // island. The server's advancing storm must eliminate A and finish both views.
-  let seq=0;const start=Date.now();while(Date.now()-start<2950){await b(`/arcade/${room.id}/input`,{seq:seq++,controls:{right:true}});await delay(80);}await b(`/arcade/${room.id}/input`,{seq:seq++,controls:{}});
+  // B runs to the edge of the starting island, jumps across the gap to the second
+  // island and stops safely. A stalls on the starting island. The server's advancing
+  // storm must eliminate A and finish both views.
+  let seq=0;const start=Date.now();while(Date.now()-start<2700){const elapsed=Date.now()-start;const jump=elapsed>1350&&elapsed<1950;await b(`/arcade/${room.id}/input`,{seq:seq++,controls:{right:true,up:jump}});await delay(80);}await b(`/arcade/${room.id}/input`,{seq:seq++,controls:{}});
   let result;for(let i=0;i<200;i++){result=await b(`/arcade/${room.id}`);if(result.status==='finished')break;await delay(100);}
   assert.equal(result.status,'finished');assert.equal(result.state.players[0].alive,false);assert.equal(result.state.players[1].alive,true);assert(result.state.players[1].coins>0);assert.match(result.reason,/storm/);assert.deepEqual(result.state.winners,[1]);
   const other=await a(`/arcade/${room.id}`);assert.deepEqual(other.state,result.state);assert.deepEqual(other.winners,result.winners);assert.equal(other.winners.length,1);

@@ -1,3 +1,4 @@
+import {simulationIds,newSimulation,advanceSimulation} from '../server/arcade/simulations.mjs';
 import {createPlay} from '../server/play.mjs';
 import test from 'node:test';
 import assert from 'node:assert/strict';
@@ -13,10 +14,10 @@ import {initialState,applyMove,legalMoves,ended} from '../server/skill/engines.m
 import {sowingFrames} from '../src/games/sowing-frames.mjs';
 const step=(s,count,advance=advancePuzzle)=>{for(let i=0;i<count;i++)s=advance(s);return s;};
 test('every new title has a unique original simulation and reaches a bounded finish without input',()=>{
- assert.equal(arcadeGames.length,30);assert.equal(freeOnly.size,14);
- for(const g of arcadeGames){let s=worldIds.has(g.id)?newWorld(g.id,g.min_players):puzzleIds.has(g.id)?newPuzzle(g.id,g.min_players):newParty(g.id,g.min_players);
-  const advance=worldIds.has(g.id)?s=>advanceWorld(s,[]):puzzleIds.has(g.id)?advancePuzzle:advanceParty;
-  for(let i=0;i<12500&&!s.finished;i++)s=advance(s);assert(s.finished,g.id);assert(s.players.length>=g.min_players);assert.doesNotThrow(()=>JSON.stringify(s));
+ assert.equal(arcadeGames.length,32);assert.equal(freeOnly.size,16);
+ for(const g of arcadeGames){let s=simulationIds.has(g.id)?newSimulation(g.id,g.min_players):worldIds.has(g.id)?newWorld(g.id,g.min_players):puzzleIds.has(g.id)?newPuzzle(g.id,g.min_players):newParty(g.id,g.min_players);
+  const advance=simulationIds.has(g.id)?advanceSimulation:worldIds.has(g.id)?s=>advanceWorld(s,[]):puzzleIds.has(g.id)?advancePuzzle:advanceParty;
+  for(let i=0;i<19000&&!s.finished;i++)s=advance(s);assert(s.finished,g.id);assert(s.players.length>=g.min_players);assert.doesNotThrow(()=>JSON.stringify(s));
  }
 });
 test('coastal sprint auto-accelerates to a finish, ties equivalent controls and rejects client scores',()=>{
@@ -98,23 +99,56 @@ test('chess draw claims allow intended moves and checkmate takes precedence over
 });
 
 
-test('survival ends on the first death, resolves same-tick deaths fairly, and never respawns',()=>{
- const start=newWorld('platform-relay',2);start.players[0].y=625;start.players[0].vy=150;start.players[0].ground=false;
- const result=advanceWorld(start,[{},{}]);assert(result.finished);assert.deepEqual(result.winners,[1]);assert.equal(result.players[0].alive,false);assert(result.players[0].y>625);assert(start.players[0].alive);
- start.players[1].y=625;start.players[1].vy=150;start.players[1].ground=false;const tie=advanceWorld(start,[]);assert(tie.finished);assert.deepEqual(tie.winners,[]);
+test('survival grants three lives per player, respawns while lives remain, and ends when all three lives are consumed',()=>{
+ const start=newWorld('platform-relay',2);assert.equal(start.players[0].lives,3);assert.equal(start.players[1].lives,3);
+ start.players[0].y=625;start.players[0].vy=150;start.players[0].ground=false;
+ const afterOneFall=advanceWorld(start,[{},{}]);assert(!afterOneFall.finished);assert.equal(afterOneFall.players[0].lives,2);assert.equal(afterOneFall.players[0].alive,true);
+ start.players[0].lives=1;
+ const result=advanceWorld(start,[{},{}]);assert(result.finished);assert.deepEqual(result.winners,[1]);assert.equal(result.players[0].lives,0);assert.equal(result.players[0].alive,false);assert(start.players[0].alive);
+ start.players[1].lives=1;start.players[1].y=625;start.players[1].vy=150;start.players[1].ground=false;const tie=advanceWorld(start,[]);assert(tie.finished);assert.deepEqual(tie.winners,[]);
 });
 test('gold coins are collected once per seat, while race pickups recharge boost',()=>{
  let s=newWorld('platform-relay',2);s.coins=[{id:7,x:65,y:435,collectedBy:[]}];s=advanceWorld(s,[]);assert.deepEqual(s.players.map(p=>p.coins),[1,1]);s=advanceWorld(s,[]);assert.deepEqual(s.players.map(p=>p.coins),[1,1]);
  let race=newWorld('pocket-racers',2);race.players[0].boost=10;race.pickups=[{id:1,x:480,distance:1}];race=advanceWorld(race,[]);assert.equal(race.players[0].coins,1);assert(race.players[0].boost>=18);race=advanceWorld(race,[]);assert.equal(race.players[0].coins,1);
 });
-test('endless terrain extends past the former finish with bounded memory and valid gaps',()=>{
- let s=newWorld('platform-relay',2);for(let i=0;i<1800&&!s.finished;i++){s.hazards=[];s=advanceWorld(s,[{right:true},{right:true}]);}
+test('endless terrain extends past the former finish with bounded memory, valid gaps, and no auto-jump',()=>{
+ let noJump=newWorld('platform-relay',2);for(let i=0;i<360&&!noJump.finished;i++){noJump.hazards=[];noJump.enemies=[];noJump=advanceWorld(noJump,[{right:true},{}]);}
+ assert(noJump.finished);assert.equal(noJump.players[0].lives,0);assert.equal(noJump.players[0].deathReason,'fell into the sea');
+ let s=newWorld('platform-relay',2);const biomesSeen=new Set([s.biome]);
+ for(let i=0;i<1800&&!s.finished;i++){s.hazards=[];s.enemies=[];s=advanceWorld(s,[worldBot(s,0),worldBot(s,1)]);biomesSeen.add(s.biome);}
  assert(!s.finished,JSON.stringify(s.players));assert(s.players[0].x>18000);assert(s.nextIsland>45);assert(s.platforms.length<20);assert(s.coins.length<60);assert(s.platforms[0].id>0);
- for(let i=1;i<s.platforms.length;i++){const gap=s.platforms[i].x-s.platforms[i-1].x-s.platforms[i-1].w;assert(gap>=48&&gap<=96);}
+ assert.equal(biomesSeen.size,5);assert(s.difficulty>=10);
+ for(let i=1;i<s.platforms.length;i++){const gap=(s.platforms[i].baseX??s.platforms[i].x)-(s.platforms[i-1].baseX??s.platforms[i-1].x)-s.platforms[i-1].w;assert(gap>=48&&gap<=96);}
 });
-test('survival hazards eliminate, the storm prevents stalling, and practice has a rival',()=>{
- let s=newWorld('platform-relay',2);s.hazards=[{id:1,kind:'thorns',x:65,y:460,phase:0}];s.players[1].x=160;const hit=advanceWorld(s,[]);assert(hit.finished);assert.deepEqual(hit.winners,[1]);
- s=newWorld('platform-relay',2);for(let i=0;i<1000&&!s.finished;i++)s=advanceWorld(s,[]);assert(s.finished);assert(s.players.every(p=>p.deathReason==='was caught by the storm'));
+test('matter-js moving platforms carry players, springs bounce high, and monsters can be squashed or shot',()=>{
+ let s=newWorld('platform-relay',2);
+ // Spring pad bounce
+ s.springs=[{id:99,platformId:0,offsetX:65,x:65,y:460}];
+ s.hazards=[];s.enemies=[];
+ s=advanceWorld(s,[]);assert(s.players[0].vy<-550);assert.equal(s.players[0].ground,false);
+ // Squashing a monster by jumping onto it from above awards bonus points, removes the monster, and bounces
+ s=newWorld('platform-relay',2);s.hazards=[];s.springs=[];
+ s.enemies=[{id:1,kind:'crab',label:'island crab',biome:'grove',platformId:0,minOffset:20,maxOffset:300,offsetX:65,baseOffsetY:-20,x:65,y:440,vx:0,vy:0,speed:0,flying:false,phase:0,facing:1,alive:true}];
+ s.players[0].x=65;s.players[0].y=415;s.players[0].vy=220;s.players[0].ground=false;s.players[1].x=240;
+ s=advanceWorld(s,[]);assert.equal(s.enemies.some(e=>e.id===1),false);assert.equal(s.players[0].stomps,1);assert(s.players[0].vy<-400);assert(!s.finished);
+ // Shooting a monster with attack (Space / J) blasts the monster and awards points
+ s=newWorld('platform-relay',2);s.hazards=[];s.springs=[];
+ s.enemies=[{id:3,kind:'hog',label:'charging boar',biome:'grove',platformId:0,minOffset:20,maxOffset:300,offsetX:140,baseOffsetY:-20,x:140,y:440,vx:0,vy:0,speed:0,flying:false,phase:0,facing:-1,alive:true}];
+ s.players[0].x=65;s.players[0].facing=1;s.players[1].x=280;
+ for(let i=0;i<6;i++)s=advanceWorld(s,[{attack:i===0},{}]);
+ assert.equal(s.enemies.some(e=>e.id===3),false);assert.equal(s.players[0].stomps,1);assert(!s.finished);
+ // Leaping piranha from water costs a life and eliminates player when final life is consumed
+ s=newWorld('platform-relay',2);s.hazards=[];s.springs=[];
+ s.enemies=[{id:2,kind:'piranha',label:'leaping piranha',biome:'grove',baseX:65,x:65,y:410,vx:0,vy:-100,waterY:445,peakY:400,period:2,phase:0.5,facing:1,submerged:false,alive:true}];
+ s.players[1].x=240;s.players[0].lives=1;
+ s=advanceWorld(s,[]);assert(s.finished);assert.equal(s.players[0].alive,false);assert.match(s.players[0].deathReason,/leaping piranha/);assert.deepEqual(s.winners,[1]);
+});
+test('survival hazards cost lives until eliminated, the storm prevents stalling, and practice has a rival',()=>{
+ let s=newWorld('platform-relay',2);s.hazards=[{id:1,kind:'thorns',x:65,y:460,phase:0}];s.players[1].x=160;
+ s=advanceWorld(s,[]);assert.equal(s.players[0].lives,2);assert(!s.finished);
+ s.players[0].lives=1;s.players[0].invulnerable=0;s.players[0].x=65;s.players[0].y=435;
+ const hit=advanceWorld(s,[]);assert(hit.finished);assert.deepEqual(hit.winners,[1]);
+ s=newWorld('platform-relay',2);for(let i=0;i<1000&&!s.finished;i++)s=advanceWorld(s,[]);assert(s.finished);assert(s.players.every(p=>p.lives===0&&p.deathReason==='was caught by the storm'));
  const store=openStore(':memory:');try{const rooms=createArcadeRooms(store),user=store.ensureUser('survival-solo','Runner','practice'),r=rooms.create({game_id:'platform-relay',solo:true,entry:'0'},user,1000);assert.equal(r.players.length,2);assert(r.players[1].bot);assert.equal(r.ends_at,null);}finally{store.db.close();}
 });
 test('sprint traffic penalizes speed without resetting the player, and steering is direct',()=>{

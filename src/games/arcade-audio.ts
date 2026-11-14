@@ -136,7 +136,7 @@ export function createArcadeAudio(game: string): ArcadeAudio {
     context = new AudioClass();
     if (game === 'platform-relay' || game === 'pocket-racers') {
       const decoding = context;
-      const names = game === 'platform-relay' ? ['coin', 'jump', 'jump-high', 'hurt', 'bump'] : ['coin'];
+      const names = game === 'platform-relay' ? ['coin', 'jump', 'jump-high', 'hurt', 'bump', 'disappear'] : ['coin'];
       // Short supplied CC0 sounds decode once after the first user gesture.
       for (const name of names) void fetch('/audio/games/platform-' + name + '.ogg')
         .then(response => {if (!response.ok) throw new Error('Sound unavailable');return response.arrayBuffer();})
@@ -273,6 +273,10 @@ export function createArcadeAudio(game: string): ArcadeAudio {
         if (ready && mine.speed > 145 && Math.abs(angle(mine.heading - oldMine.heading)) > .13) { noise(.12, .045, 2100); lastEffect = now; }
       } else if (game === 'platform-relay' || game === 'stick-rivals') {
         if ((oldMine.ground || (mine.airJumps ?? 0) < (oldMine.airJumps ?? 0)) && !mine.ground && mine.vy < -50 && !sample(oldMine.ground?'jump':'jump-high',.3)) tone(190, .19, .075, 'triangle', 490);
+        if (game === 'platform-relay' && mine.bouncedAt && mine.bouncedAt !== oldMine.bouncedAt && !sample('jump-high',.35)) tone(260, .24, .09, 'sine', 640);
+        if (game === 'platform-relay' && (mine.stomps || 0) > (oldMine.stomps || 0)) { if (!sample('disappear',.3)) tone(320, .2, .08, 'triangle', 580); }
+        if (game === 'platform-relay' && (mine.shootCooldown || 0) > (oldMine.shootCooldown || 0)) { tone(680, .09, .065, 'triangle', 220); }
+        if (game === 'platform-relay' && (mine.lives ?? 3) < (oldMine.lives ?? 3)) { if (!sample('hurt',.35)) tone(220, .28, .095, 'triangle', 75); }
         if (!oldMine.ground && mine.ground && oldMine.vy > 40 && !sample('bump',.1)) noise(.1, .07, 220);
         if (state.checkpoint > before.checkpoint || state.baton !== before.baton && state.baton != null) chime();
         if (mine.attack > (oldMine.attack || 0)) noise(.12, .09, 1600);

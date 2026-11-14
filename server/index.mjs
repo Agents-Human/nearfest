@@ -1,3 +1,4 @@
+import {createFaucet} from './faucet.mjs';
 import {createNearEconomy} from './near-economy.mjs';
 import {createArcadeRooms} from './arcade/rooms.mjs';
 import {arcadeGame} from './arcade/catalog.mjs';
@@ -36,6 +37,7 @@ const multiplayer={
 };
 const economy=createNearEconomy(store,{services:{...multiplayer,community,get:(id,u,key)=>id.startsWith('arena-')?arcadeRooms.get(id,u,key):multiplayer.get(id,u),action:(id,u,d,key)=>id.startsWith('arena-')?arcadeRooms.action(id,u,d,key):multiplayer.action(id,u,d),start:(id,u,key)=>id.startsWith('arena-')?arcadeRooms.start(id,u,key):multiplayer.start(id,u)}});
 setInterval(()=>{void economy.tick().then(broadcast).catch(()=>{});},5000).unref();
+const faucet=createFaucet(store);
 const { db } = store, streams = new Set(), challenges = new Map(), limits = new Map(), resolving = new Set(), cache = new Map();
 const hash = x => createHash('sha256').update(x).digest('hex');
 const config = { network: 'testnet', contract_id: contractId, oracle_ready: oracleReady, ai_ready: hasAI, semantic_moderation: hasAI, room_storage_fee:'100000000000000000000000',currency:'NEAR',storage_fee: STORAGE.toString(), review_ms: 900000, resolution_ms: 172800000 };
@@ -78,6 +80,8 @@ const server = createServer(async (req, res) => {
   const url = new URL(req.url, origin), path = url.pathname;
   try {
     if (req.method === 'POST') { if (req.headers.origin !== origin) { json(res, { error: 'This request must come from the NearFest application.' }, 403); return; } if(!/^\/api\/arcade\/[^/]+\/input$/.test(path))rate('ip:' + req.socket.remoteAddress, current(req)?1000:120); }
+    if(path==='/api/near/faucet'&&req.method==='GET')return json(res,faucet.status(current(req)));
+    if(path==='/api/near/faucet'&&req.method==='POST'){const u=required(req);rate('faucet:'+u.id,5);const result=await faucet.claim(u,req.socket.remoteAddress||'unknown');return json(res,result);}
     if(path==='/api/near/pending'&&req.method==='GET')return json(res,economy.pending(required(req)));
     if(path==='/api/near/abandon'&&req.method==='POST'){const u=required(req),d=await body(req);return json(res,await economy.abandon(d.intent_id,u));}
     if(path==='/api/near/confirm'&&req.method==='POST'){const u=required(req),d=await body(req);const result=await economy.confirm(d.intent_id,u);broadcast();return json(res,result);}

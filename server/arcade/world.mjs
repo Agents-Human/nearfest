@@ -1,6 +1,7 @@
 import {socialWorldIds,newSocialWorld,advanceSocialWorld,socialWorldAction,socialWorldBot} from './social-worlds.mjs';
 import {extraWorldIds,newExtraWorld,advanceExtraWorld,extraWorldBot} from './extra-worlds.mjs';
 import {resetGolfHole,advanceGolf} from './golf-courses.mjs';
+import {extendPlatformCourse,stepPlatformWorld,platformBotControls} from './platform-physics.mjs';
 export const DT=.05;
 export const clamp=(n,a,b)=>Math.max(a,Math.min(b,n));
 export const angle=n=>Math.atan2(Math.sin(n),Math.cos(n));
@@ -27,9 +28,9 @@ export function newWorld(game,n){
  else if(game==='mini-golf'){s.hole=0;s.turn=0;s.players=Array.from({length:n},()=>({total:0,holes:[]}));s.moving=false;s.shots=[];resetGolfHole(s);}
  else if(game==='kitchen-rush'){s.players=Array.from({length:n},(_,i)=>({x:260+i*100,y:300,carrying:null,cooldown:0}));s.stations=[{x:130,y:110,kind:'tomato',item:null},{x:130,y:430,kind:'lettuce',item:null},{x:460,y:110,kind:'chop',item:null,progress:0},{x:460,y:430,kind:'cook',item:null,progress:0},{x:830,y:280,kind:'serve',item:null}];s.orders=['salad','soup','salad','soup','soup','salad'];s.served=0;}
  else if(game==='platform-relay'){
-  s.seed=Math.floor(Math.random()*1000000);s.nextIsland=0;s.platforms=[];s.coins=[];s.hazards=[];s.stormX=-500;s.difficulty=1;
-  s.players=Array.from({length:n},(_,i)=>({x:65,y:435,vx:0,vy:0,ground:true,alive:true,coyote:.12,jumpBuffer:0,jumpHeld:false,coins:0,airJumps:0,score:0,deathReason:null}));
-  extendIslands(s);
+  s.seed=Math.floor(Math.random()*1000000);s.nextIsland=0;s.platforms=[];s.coins=[];s.hazards=[];s.springs=[];s.enemies=[];s.shots=[];s.nextShot=0;s.stormX=-500;s.difficulty=1;s.biome='grove';
+  s.players=Array.from({length:n},()=>({x:65,y:435,vx:0,vy:0,facing:1,ground:true,platformId:0,alive:true,lives:3,maxLives:3,invulnerable:0,shootCooldown:0,coyote:.22,jumpBuffer:0,jumpHeld:false,coins:0,airJumps:0,stomps:0,score:0,deathReason:null}));
+  extendPlatformCourse(s);
  }
  else if(game==='orbit-rescue'){s.players=Array.from({length:n},(_,i)=>({role:['Steering','Thrust','Docking','Navigation'][i]}));s.ship={x:480,y:280,vx:0,vy:0,heading:0,fuel:100};s.probes=[{x:200,y:150,rescued:false},{x:770,y:130,rescued:false},{x:720,y:440,rescued:false}];s.docked=0;}
  else if(socialWorldIds.has(game))newSocialWorld(s,n);
@@ -140,28 +141,7 @@ export function advanceWorld(previous,input){
  } else if(s.game==='kitchen-rush'){
   s.players.forEach((p,i)=>{movement(p,cs[i],220);p.cooldown=Math.max(0,p.cooldown-DT);});for(const t of s.stations)if(t.item&&t.progress<3){t.progress+=DT;if(t.progress>=3)t.item=t.kind==='cook'?'soup':t.item==='lettuce'?'salad':'chopped tomato';}if(s.elapsed>=180)finish(s,[],'Kitchen closed. Try the orders again.');
  } else if(s.game==='platform-relay'){
-  s.stormX=-500+Math.max(0,s.elapsed-10)*(95+Math.min(75,s.elapsed*.38));
-  s.players.forEach((p,i)=>{
-   if(!p.alive)return;
-   const c=cs[i],oldY=p.y,jump=c.up||c.attack;
-   p.coyote=p.ground?.12:Math.max(0,(p.coyote||0)-DT);
-   p.jumpBuffer=jump&&!p.jumpHeld?.15:Math.max(0,(p.jumpBuffer||0)-DT);
-   p.vx=(Number(c.right)-Number(c.left))*210;
-   const edge=s.platforms.find(f=>p.x>=f.x-8&&p.x<=f.x+f.w+8&&Math.abs(p.y+25-f.y)<2);
-   const assisted=p.ground&&c.right&&edge&&p.x>edge.x+edge.w-32;
-   if(assisted){p.jumpBuffer=.15;p.autoJump=true;}
-   if(p.jumpBuffer>0&&p.coyote>0){p.vy=-510;p.ground=false;p.coyote=0;p.jumpBuffer=0;}else if(p.jumpBuffer>0&&!p.ground&&p.airJumps>0){p.vy=-450;p.airJumps--;p.autoJump=false;p.jumpBuffer=0;}
-   if(!jump&&p.jumpHeld&&!p.autoJump&&p.vy< -230)p.vy=-230;
-   p.jumpHeld=jump;p.vy+=1050*DT;p.x=Math.max(20,p.x+p.vx*DT);p.y+=p.vy*DT;p.ground=false;
-   for(const floor of s.platforms)if(p.x>floor.x-8&&p.x<floor.x+floor.w+8&&oldY+25<=floor.y+.1&&p.y+25>=floor.y&&p.vy>=0){p.y=floor.y-25;p.vy=0;p.ground=true;p.autoJump=false;}
-   for(const coin of s.coins)if(!coin.collectedBy.includes(i)&&Math.hypot(p.x-coin.x,p.y-coin.y)<43){coin.collectedBy.push(i);p.coins++;if(p.coins%8===0)p.airJumps=Math.min(2,(p.airJumps||0)+1);}
-   for(const hazard of s.hazards){const hit=hazard.kind==='thorns'?Math.abs(p.x-hazard.x)<28&&p.y+23>hazard.y-27&&p.y-20<hazard.y:Math.hypot(p.x-hazard.x,p.y-(hazard.y-65+Math.sin(s.elapsed*2+hazard.phase)*25))<32;if(hit){p.alive=false;p.deathReason=hazard.kind==='thorns'?'hit the spikes':'hit a moving saw';}}
-   if(p.y>620){p.alive=false;p.deathReason='fell into the sea';}else if(p.x<s.stormX){p.alive=false;p.deathReason='was caught by the storm';}
-   p.score=Math.floor(p.x/10)+p.coins*10;
-  });
-  const lost=s.players.flatMap((p,i)=>p.alive?[]:[i]);
-  if(lost.length){s.eliminated=lost;finish(s,s.players.flatMap((p,i)=>p.alive?[i]:[]),lost.length===s.players.length?'Everyone fell on the same beat. Rematch!':`Player ${lost[0]+1} ${s.players[lost[0]].deathReason}. The survivors win!`);}
-  else extendIslands(s);
+  stepPlatformWorld(s,cs,DT,finish);
  } else if(s.game==='orbit-rescue'){
   const ship=s.ship;ship.heading+=(Number(cs[0].right)-Number(cs[0].left))*2.6*DT;
   const thrust=cs[Math.min(1,cs.length-1)];if(thrust.up&&ship.fuel>0){ship.vx+=Math.cos(ship.heading)*100*DT;ship.vy+=Math.sin(ship.heading)*100*DT;ship.fuel=Math.max(0,ship.fuel-2*DT);}if(thrust.down||cs[3]?.down){ship.vx*=.91;ship.vy*=.91;}if(cs[3]?.attack)ship.fuel=Math.min(100,ship.fuel+.3*DT);ship.vx=clamp(ship.vx*.995,-160,160);ship.vy=clamp(ship.vy*.995,-160,160);ship.x=clamp(ship.x+ship.vx*DT,30,930);ship.y=clamp(ship.y+ship.vy*DT,30,530);
@@ -184,9 +164,7 @@ export function worldBot(s,i){
  else if(s.game==='snake-arena'){const head=p.body[0],food=[...s.food].sort((a,b)=>distance(a,head)-distance(b,head))[0];const dirs=[0,1,2,3].filter(d=>(d+2)%4!==p.dir).map(dir=>({dir,x:head.x+[1,0,-1,0][dir],y:head.y+[0,1,0,-1][dir]})).filter(q=>q.x>=0&&q.y>=0&&q.x<25&&q.y<25&&!s.players.some(other=>other.alive&&other.body.some(b=>b.x===q.x&&b.y===q.y))).sort((a,b)=>distance(a,food)-distance(b,food));if(dirs[0])c[['right','down','left','up'][dirs[0].dir]]=true;}
  else if(s.game==='bomb-maze'){const dirs=[[1,0,'right'],[0,1,'down'],[-1,0,'left'],[0,-1,'up']],options=dirs.filter(([dx,dy])=>{const x=p.x+dx,y=p.y+dy;return x>0&&y>0&&x<12&&y<12&&!(x%2===0&&y%2===0)&&!s.blocks.includes(`${x},${y}`)&&!s.bombs.some(b=>b.x===x&&b.y===y);});const choice=options[Math.floor(s.tick/15+i)%Math.max(1,options.length)];if(choice)c[choice[2]]=true;c.attack=s.tick%60===i*3;}
  else if(s.game==='platform-relay'){
-  c.right=true;
-  const danger=s.hazards.find(h=>h.x>p.x&&h.x-p.x<100);
-  c.up=Boolean(p.ground&&danger&&!p.jumpHeld||!p.ground&&(p.jumpHeld&&p.vy< -30||!p.jumpHeld&&p.airJumps>0&&(p.y>480||danger&&p.vy>0&&p.y>danger.y-150)));
+  platformBotControls(s,i,c);
  }
  else if(s.game==='orbit-rescue'){const ship=s.ship,target=s.probes.find(p=>!p.rescued)||ship,d=distance(ship,target);if(i===1){c.up=d>65&&Math.hypot(ship.vx,ship.vy)<100;c.down=d<100;}if(i>=2)c.attack=d<55;}
  return c;

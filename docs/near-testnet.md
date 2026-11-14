@@ -62,3 +62,15 @@ The public testnet check requires the running app on 5188/5189 and the ignored `
 For a completely fresh testnet deployment only, `npm run setup:testnet` creates faucet-funded contract/oracle/test-player accounts and saves private keys locally with mode 0600, then updates the NEAR values in `.env`. Build/check the contract and run `npm run deploy:testnet`. The deployment command refuses to overwrite an existing contract. Never commit `.env`, `.nearfest-*-keys.json`, runtime data or deploy keys.
 
 Optional `NEAR_AI_API_KEY` is separate from wallet and escrow setup. It is not configured here; curated-bank fallback remains available. `MCP_ASSETS` is a separate server-only StudyJunior library credential and is not sent to wallets or the browser.
+
+## In-app testnet funding
+
+The account panel has **Get 10 test NEAR**. A separate faucet wallet pays the transfer and gas; an empty connected wallet does not need to approve a spending transaction or leave NearFest. Sign-in is still required, and the recipient is always the authenticated account, never an address supplied in a request body. Mainnet is rejected.
+
+Funding is available below a 10 NEAR wallet balance, once every 24 hours per wallet. Persistent limits also cap five top-ups per network address per hour, ten total per hour and twenty per day. The faucet retains at least 0.1 NEAR after a transfer. The external faucet remains a backup when this reserve is empty or the service is limited. Shared networks can hit the network-address limit; this is a bounded hackathon demo faucet, not Sybil-resistant distribution.
+
+The signer is configured through server-only `NEAR_FAUCET_ACCOUNT` and `NEAR_FAUCET_PRIVATE_KEY`; it must differ from the escrow and oracle accounts. `npm run setup:faucet` creates one fresh faucet-sponsored testnet wallet, preserves its keys in ignored `.nearfest-faucet-keys.json` with mode 0600, and writes the two runtime values to `.env`. It reuses the same account on subsequent runs; it does not mint endless replacement accounts. Refill that public testnet account when needed.
+
+Each signed transfer is persisted with its hash before broadcast. Pending requests recover or re-broadcast that exact transaction rather than signing another payment. Only final successful outcomes are shown as delivered. Unresolved transfers hold further funding so a later nonce cannot overtake them. `npm run test:faucet` verifies authenticated HTTP funding and replay handling against a disposable testnet recipient; evidence is in `evidence/nearfest-faucet.json`.
+
+Faucet grants are 10 NEAR per eligible wallet every 24 hours. Each claim stores its own amount, so pre-upgrade 1 NEAR claims and pending transfers remain accurate and recoverable; their existing cooldowns are preserved. The sponsor must have at least 10.1 NEAR before a new grant is signed.

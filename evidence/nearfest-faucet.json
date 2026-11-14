@@ -1,0 +1,20 @@
+{
+  "network": "testnet",
+  "sponsor": "nearfest-faucet-mwg8pta1-b9bb.testnet",
+  "recipient": "probe10.nearfest-faucet-mwg8pta1-b9bb.testnet",
+  "amount": "10000000000000000000000000",
+  "transaction_hash": "FRwTAjAwPExCvgMhgUzojqEooJSvmiK5m56GYCTkBen4",
+  "checks": [
+    "wallet session required",
+    "signed testnet login",
+    "fixed ten-NEAR transfer; client amount and recipient ignored",
+    "recipient receives full amount without paying gas",
+    "repeated request returns same transfer",
+    "refreshed app profile matches finalized chain balance"
+  ],
+  "completed_at": "2026-11-14T10:18:26.676Z",
+  "test_funds_returned": {
+    "amount": "10000000000000000000000000",
+    "transaction_hash": "BetxJnfzK46YxW1pMTaCc7q2GzTatEsHegKdBrpj9jLT"
+  }
+}
