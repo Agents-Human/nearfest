@@ -6,8 +6,9 @@ import type {PlatformAssets} from './platform-assets';
 import type {SceneryAssets} from './scenery-assets';
 import type {ActionAssets} from './action-assets';
 import type {GolfAssets} from './golf-assets';
+import type {FighterAssets} from './fighter-assets';
 import {golfCourses} from '../../server/arcade/golf-courses.mjs';
-type WorldAssets={racing?:RacingAssets;platform?:PlatformAssets;scenery?:SceneryAssets;action?:ActionAssets;golf?:GolfAssets};
+type WorldAssets={racing?:RacingAssets;platform?:PlatformAssets;scenery?:SceneryAssets;action?:ActionAssets;golf?:GolfAssets;fighters?:FighterAssets};
 import {car,explorer,tree,rock,crystal,coin,island,sign,palette} from './world-models';
 
 type State=any;
@@ -155,22 +156,26 @@ function tableScene(k:Kit,s:State):Step{
  const ball=hockey?k.cylinder(1.2,1.2,.55,'#131823',0,.4,0,k.dynamic):k.sphere(1.2,'#fff0c7',0,1.2,0,k.dynamic);
  return state=>{players.forEach((g:any,i:number)=>g.position.set(W(state.players[i].x),0,Z(state.players[i].y)));ball.position.set(W(state.ball.x),hockey?.5:1.2,Z(state.ball.y));};
 }
-function fighterScene(k:Kit,s:State,assets?:PlatformAssets,arena?:ActionAssets):Step{
- k.sky('#7992b1','#efd4af');k.scene.fog=new T.Fog('#c6cbbb',100,240);k.surface(260,220,'#7d9c90','water',-22);k.mountains(-170,180,-95);
- k.box(103,5,32,'#607b76',0,-3,0);k.box(101,.6,30,'#bdc0a2',0,-.35,0);
- for(let x=-45;x<=45;x+=10)for(const z of [-10,0,10]){const tile=arena?.prop('arena-floor');if(tile)k.add(tile,x,-.5,z);else k.box(9.9,.4,9.9,'#d9c9a7',x,-.2,z);}
- for(const x of [-42,-21,0,21,42]){const column=arena?.prop('arena-column');if(column)k.add(column,x,0,-14);if(x<42){const arch=arena?.prop('arena-arch');if(arch)k.add(arch,x+10.5,0,-14);}}
- for(const x of [-43,43]){const stair=arena?.prop('arena-stairs');if(stair){stair.rotation.y=x<0?Math.PI/2:-Math.PI/2;k.add(stair,x,-8,-22);}for(const z of [-9,9]){const beacon=arena?.prop('beacon');if(beacon)k.add(beacon,x,0,z);}}
- for(let i=0;i<11;i++){const x=-70+i*14;k.add(tree('broadleaf',8+random(i)*7),x,-3,-30-random(i+3)*16);}
- for(const x of [-30,30]){k.box(.3,10,.3,'#72564b',x,5,-17);k.box(5,6,.1,x<0?colors[0]:colors[1],x+2.5,7,-17);}
- k.add(sign('SKY TEMPLE  /  DUEL','#334e4c',19),0,12.2,-14);
- for(let x=-45;x<=45;x+=10)k.box(.06,.025,29,'#cfb591',x,.02,0);for(const z of [-10,0,10])k.box(100,.025,.06,'#cfb591',0,.02,z);k.ring(9,.06,'#d1b179',0,.035,0);k.ring(8.5,.03,'#d1b179',0,.035,0);
- const fighters=s.players.map((_:any,i:number)=>{const g=assets?.character(i)||explorer(colors[i]);g.scale.setScalar(2);if(g.userData.disposeAnimations)k.cleanups.push(g.userData.disposeAnimations);return k.add(g,0,0,0,k.dynamic);});
- const markers=s.players.map((_:any,i:number)=>k.ring(2,.08,colors[i],0,.08,0,k.dynamic)),fx=particles(k);let hp=s.players.map((p:any)=>p.hp),seq=s.players.map(()=>-1);
- return(state,dt,t)=>{state.players.forEach((p:any,i:number)=>{const g=fighters[i];g.position.set(W(p.x),(410-p.y)/10,0);g.rotation.y=p.facing>0?0:Math.PI;const attack=p.attack>0,changed=seq[i]!==p.attackSeq;seq[i]=p.attackSeq;
-  if(g.userData.mixer){g.userData.playAnimation(p.hp<=0?'die':p.stun>0?'emote-no':attack?p.attackKind==='kick'?'attack-kick-right':p.attackSeq%2?'attack-melee-right':'attack-melee-left':p.blocking?'holding-both':!p.ground?p.vy<0?'jump':'fall':Math.abs(p.vx)>5?'sprint':'idle',.07,attack&&changed);g.userData.mixer.timeScale=attack?2:1.2;g.userData.mixer.update(dt);}else animateExplorer(g,p,t);
-  if(p.hp<hp[i])fx.burst(g.position.x,g.position.y+4,1,p.blocking?'#a8e6ff':'#ffdc91',p.blocking?9:23);hp[i]=p.hp;markers[i].position.set(g.position.x,.08,0);markers[i].visible=p.ground&&p.hp>0;
- });fx.update(dt);};
+function fighterScene(k:Kit,s:State,assets?:FighterAssets):Step{
+ if(!assets)throw new Error('The Yokai fighter assets could not load.');
+ k.scene.background=new T.Color('#190f24');
+ const backdrop=assets.backdrop();k.dynamic.add(backdrop);
+ const fighters=s.players.map((_:any,i:number)=>{const fighter=assets.character(i,8.5);k.dynamic.add(fighter.root);k.cleanups.push(fighter.dispose);return fighter;});
+ const shadows=s.players.map(()=>{const m=new T.MeshBasicMaterial({color:'#080710',transparent:true,opacity:.3,depthWrite:false,toneMapped:false});const shadow=k.mesh(new T.CircleGeometry(1,32),m,k.dynamic);shadow.scale.set(3.2,.38,1);shadow.castShadow=shadow.receiveShadow=false;return shadow;});
+ const guards=s.players.map((_:any,i:number)=>{const guard=k.mesh(new T.RingGeometry(3.1,3.2,48,1,-Math.PI/2,Math.PI),new T.MeshBasicMaterial({color:i?'#ffe29a':'#aee6ff',transparent:true,opacity:.75,side:T.DoubleSide,depthWrite:false,toneMapped:false}),k.dynamic);guard.castShadow=guard.receiveShadow=false;return guard;});
+ const fx=particles(k);let hp=s.players.map((p:any)=>p.hp),seq=s.players.map(()=>-1),round=s.round;
+ return(state,dt)=>{
+  const reset=round!==state.round;round=state.round;
+  state.players.forEach((p:any,i:number)=>{
+   const fighter=fighters[i],g=fighter.root;g.position.set(W(p.x),(410-p.y)/10,0);fighter.face(p.facing);
+   const attacking=p.attack>0,changed=seq[i]!==p.attackSeq;seq[i]=p.attackSeq;
+   fighter.setAnimation(p.hp<=0?'death':p.stun>0?'hurt':attacking?p.attackKind==='kick'?'kick':'punch':p.blocking?'block':!p.ground?p.vy<0?'jump':'fall':Math.abs(p.vx)>5?'run':'idle',reset||attacking&&changed);
+   fighter.update(dt);
+   shadows[i].position.set(g.position.x,-.14,-.1);shadows[i].scale.set(3.2/(1+g.position.y*.06),.38,1);
+   guards[i].visible=p.blocking&&p.hp>0;guards[i].position.set(g.position.x+p.facing*.6,g.position.y+4.1,.1);guards[i].rotation.y=p.facing<0?Math.PI:0;
+   if(p.hp<hp[i])fx.burst(g.position.x,g.position.y+4.7,.5,p.blocking?'#b3e8ff':'#ffe1a0',p.blocking?7:17);hp[i]=p.hp;
+  });fx.update(dt);
+ };
 }
 function golfScene(k:Kit,s:State,assets?:SceneryAssets,golf?:GolfAssets):Step{
  garden(k);k.surface(140,90,'#91ad76','grass',-.8);const courses:T.Group[]=[];
@@ -273,12 +278,12 @@ function spaceScene(k:Kit,s:State,assets?:SceneryAssets):Step{
 
 export type WorldMetrics={fps:number;drawCalls:number;triangles:number;quality:string};
 export class WorldRenderer {
- private k=new Kit();private environment:T.WebGLRenderTarget;private renderer:T.WebGLRenderer;private camera=new T.PerspectiveCamera(42,1,.1,1000);private step:Step;
+ private k=new Kit();private environment:T.WebGLRenderTarget;private renderer:T.WebGLRenderer;private camera=new T.PerspectiveCamera(42,1,.1,1000);private fighterCamera:T.OrthographicCamera|null=null;private step:Step;
  private aim=0;private power=.65;private guide:T.Line|null=null;private frame=0;private last=0;private samples=0;private sampleAt=0;private elapsed=0;private look=new T.Vector3();private cameraReady=false;private snapshots:{s:State;at:number}[]=[];private resize:ResizeObserver;
  private mode='follow';private seat:number|null;private game:string;private sun:T.DirectionalLight;private visible=true;private observer:IntersectionObserver;private ratio=1;private framesLow=0;private disposed=false;
  constructor(private host:HTMLElement,state:State,seat:number|null,private metrics:(m:WorldMetrics)=>void,assets:WorldAssets={}){
-  this.seat=seat;this.game=state.game;this.host.dataset.assetPack=Object.keys(assets).length?'kenney':'original';this.renderer=new T.WebGLRenderer({antialias:true,alpha:false,powerPreference:'high-performance'});const environment=new RoomEnvironment(),pmrem=new T.PMREMGenerator(this.renderer);this.environment=pmrem.fromScene(environment,.04);this.k.scene.environment=this.environment.texture;this.k.scene.environmentIntensity=['air-hockey','paddle-duel','orbit-rescue'].includes(state.game)?.55:.3;environment.dispose();pmrem.dispose();this.renderer.outputColorSpace=T.SRGBColorSpace;this.renderer.toneMapping=T.ACESFilmicToneMapping;this.renderer.toneMappingExposure=.95;this.renderer.shadowMap.enabled=true;this.renderer.shadowMap.type=T.PCFShadowMap;this.ratio=Math.min(devicePixelRatio,1.6);this.renderer.setPixelRatio(this.ratio);host.appendChild(this.renderer.domElement);this.renderer.domElement.setAttribute('aria-label','3D game environment');this.sun=this.k.light(['air-hockey','paddle-duel','orbit-rescue'].includes(this.game));
-  const scenes:Record<string,(k:Kit,s:State)=>Step>={'pocket-racers':(kit,state)=>raceScene(kit,state,assets.racing,assets.scenery),'platform-relay':(kit,state)=>platformScene(kit,state,assets.platform),'stick-rivals':(kit,state)=>fighterScene(kit,state,assets.platform,assets.action),'tank-arena':(kit,state)=>tankScene(kit,state,assets.action),'marble-run':(kit,state)=>marbleRunScene(kit,state,assets.action,assets.scenery),'paddle-duel':tableScene,'air-hockey':tableScene,'snake-arena':gridScene,'bomb-maze':gridScene,'mini-golf':(kit,state)=>golfScene(kit,state,assets.scenery,assets.golf),'marble-knockout':(kit,state)=>marbleScene(kit,state,assets.scenery),'paint-tag':paintScene,'kitchen-rush':(kit,state)=>kitchenScene(kit,state,assets.scenery),'orbit-rescue':(kit,state)=>spaceScene(kit,state,assets.scenery)};
+  this.seat=seat;this.game=state.game;this.host.dataset.assetPack=state.game==='stick-rivals'?'craftpix-yokai':Object.keys(assets).length?'kenney':'original';if(state.game==='stick-rivals')this.fighterCamera=new T.OrthographicCamera(-35,35,20,-20,.1,200);this.renderer=new T.WebGLRenderer({antialias:true,alpha:false,powerPreference:'high-performance'});const environment=new RoomEnvironment(),pmrem=new T.PMREMGenerator(this.renderer);this.environment=pmrem.fromScene(environment,.04);this.k.scene.environment=this.environment.texture;this.k.scene.environmentIntensity=['air-hockey','paddle-duel','orbit-rescue'].includes(state.game)?.55:.3;environment.dispose();pmrem.dispose();this.renderer.outputColorSpace=T.SRGBColorSpace;this.renderer.toneMapping=T.ACESFilmicToneMapping;this.renderer.toneMappingExposure=.95;this.renderer.shadowMap.enabled=true;this.renderer.shadowMap.type=T.PCFShadowMap;this.ratio=Math.min(devicePixelRatio,1.6);this.renderer.setPixelRatio(this.ratio);host.appendChild(this.renderer.domElement);this.renderer.domElement.setAttribute('aria-label',state.game==='stick-rivals'?'Animated Yokai fighting arena':'3D game environment');this.sun=this.k.light(['air-hockey','paddle-duel','orbit-rescue'].includes(this.game));
+  const scenes:Record<string,(k:Kit,s:State)=>Step>={'pocket-racers':(kit,state)=>raceScene(kit,state,assets.racing,assets.scenery),'platform-relay':(kit,state)=>platformScene(kit,state,assets.platform),'stick-rivals':(kit,state)=>fighterScene(kit,state,assets.fighters),'tank-arena':(kit,state)=>tankScene(kit,state,assets.action),'marble-run':(kit,state)=>marbleRunScene(kit,state,assets.action,assets.scenery),'paddle-duel':tableScene,'air-hockey':tableScene,'snake-arena':gridScene,'bomb-maze':gridScene,'mini-golf':(kit,state)=>golfScene(kit,state,assets.scenery,assets.golf),'marble-knockout':(kit,state)=>marbleScene(kit,state,assets.scenery),'paint-tag':paintScene,'kitchen-rush':(kit,state)=>kitchenScene(kit,state,assets.scenery),'orbit-rescue':(kit,state)=>spaceScene(kit,state,assets.scenery)};
   this.step=scenes[this.game](this.k,state);this.k.batch();if(this.game==='mini-golf'){const geometry=new T.BufferGeometry().setFromPoints([new T.Vector3(),new T.Vector3()]);this.guide=new T.Line(geometry,new T.LineDashedMaterial({color:'#fff2c4',dashSize:.6,gapSize:.4}));this.k.dynamic.add(this.guide);}this.push(state,seat);
   this.resize=new ResizeObserver(()=>this.size());this.resize.observe(host);this.size();this.observer=new IntersectionObserver(entries=>{this.visible=entries[0].isIntersecting;});this.observer.observe(host);
   this.frame=requestAnimationFrame(this.draw);
@@ -287,9 +292,10 @@ export class WorldRenderer {
   const assets:WorldAssets={};
   await Promise.all([
    game==='pocket-racers'?import('./racing-assets').then(m=>m.loadRacingAssets()).then(a=>{assets.racing=a;}):undefined,
-   ['platform-relay','stick-rivals'].includes(game)?import('./platform-assets').then(m=>m.loadPlatformAssets()).then(a=>{assets.platform=a;}):undefined,
+   game==='platform-relay'?import('./platform-assets').then(m=>m.loadPlatformAssets()).then(a=>{assets.platform=a;}):undefined,
    ['pocket-racers','mini-golf','marble-knockout','marble-run','kitchen-rush','orbit-rescue'].includes(game)?import('./scenery-assets').then(m=>m.loadSceneryAssets(game==='marble-run'?'marble-knockout':game)).then(a=>{assets.scenery=a;}):undefined,
-   ['stick-rivals','marble-run','tank-arena'].includes(game)?import('./action-assets').then(m=>m.loadActionAssets(game)).then(a=>{assets.action=a;}):undefined,
+   ['marble-run','tank-arena'].includes(game)?import('./action-assets').then(m=>m.loadActionAssets(game)).then(a=>{assets.action=a;}):undefined,
+   game==='stick-rivals'?import('./fighter-assets').then(m=>m.loadFighterAssets()).then(a=>{assets.fighters=a;}):undefined,
    game==='mini-golf'?import('./golf-assets').then(m=>m.loadGolfAssets()).then(a=>{assets.golf=a;}):undefined,
   ]);return assets;
  }
@@ -312,11 +318,18 @@ export class WorldRenderer {
   else if(this.game==='platform-relay'){const x=Math.max(22,p.x/10+10),y=clamp((435-p.y)/10,0,15);target.set(x,y+3,0);eye.set(x+2,y+12,this.camera.aspect<1?65:46);this.camera.fov=43;this.sun.position.set(x-25,65,30);this.sun.target.position.set(x,0,0);}
 
   else if(this.game==='mini-golf'){const course=golfCourses[Math.min(s.hole,golfCourses.length-1)],xs=course.cells.map(c=>W(c.x)),zs=course.cells.map(c=>Z(c.y)),width=Math.max(...xs)-Math.min(...xs)+12,depth=Math.max(...zs)-Math.min(...zs)+14,rotate=this.camera.aspect<.8,distance=Math.max(35,(rotate?depth:width)/(2*Math.tan(T.MathUtils.degToRad(21.5))*this.camera.aspect)*1.12,(rotate?width:depth)*1.35);target.set((Math.min(...xs)+Math.max(...xs))/2,0,(Math.min(...zs)+Math.max(...zs))/2);eye.set(target.x+(rotate?distance*.55:0),distance*.84,target.z+(rotate?0:distance*.55));this.camera.fov=43;}
-  else if(this.game==='stick-rivals'){const a=s.players[0],b=s.players[1],mid=W((a.x+b.x)/2),gap=Math.abs(a.x-b.x)/10;target.set(mid,5,0);eye.set(mid,12,Math.max(31,gap*1.1+23)*(this.camera.aspect<1.4?1.4/this.camera.aspect:1));this.camera.fov=43;}
+  else if(this.game==='stick-rivals'){
+   const a=s.players[0],b=s.players[1],mid=W((a.x+b.x)/2),gap=Math.abs(a.x-b.x)/10,aspect=this.camera.aspect;
+   const height=Math.max(24,(gap+23)/aspect),width=height*aspect,fc=this.fighterCamera!;
+   const backdrop=this.k.scene.getObjectByName('craftpix-vampire-terrace');if(backdrop){const scale=Math.max(width/160,height/90)*1.08;backdrop.scale.setScalar(scale);backdrop.position.set(mid,90*(777.5/1080-.5)*scale,-20);}
+   const desired=new T.Vector3(mid,height*.29,80);fc.position.lerp(desired,this.cameraReady?1-Math.exp(-dt*4):1);fc.lookAt(fc.position.x,fc.position.y,0);
+   fc.left=-width/2;fc.right=width/2;fc.top=height/2;fc.bottom=-height/2;fc.updateProjectionMatrix();
+   target.set(mid,7,0);eye.set(mid,7,80);
+  }
   else{const grid=['snake-arena','bomb-maze','marble-knockout'].includes(this.game);target.set(0,0,0);eye.set(this.game==='pocket-racers'?16:0,grid?55:64,grid?36:47);this.camera.fov=43;if(this.camera.aspect<1.45)eye.multiplyScalar(1.45/this.camera.aspect);}
   const follow=this.cameraReady?1-Math.exp(-dt*(this.game==='pocket-racers'?9:5)):1;this.camera.position.lerp(eye,follow);this.look.lerp(target,follow);this.camera.lookAt(this.look);this.camera.updateProjectionMatrix();this.cameraReady=true;if(!['pocket-racers','platform-relay','marble-run'].includes(this.game)&&this.k.scene.fog instanceof T.Fog){this.k.scene.fog.near=Math.max(100,this.camera.position.distanceTo(this.look)+35);this.k.scene.fog.far=this.k.scene.fog.near+150;}this.k.skyDome?.position.copy(this.camera.position);
   if(this.guide){this.guide.visible=!s.moving&&s.turn===this.seat&&!s.finished;const pos=this.guide.geometry.getAttribute('position') as T.BufferAttribute;pos.setXYZ(0,W(p.x),.65,Z(p.y));pos.setXYZ(1,W(p.x)+Math.cos(this.aim)*this.power*24,.65,Z(p.y)+Math.sin(this.aim)*this.power*24);pos.needsUpdate=true;this.guide.computeLineDistances();}
-  this.renderer.render(this.k.scene,this.camera);this.samples++;if(now-this.sampleAt>1100){const fps=Math.round(this.samples*1000/(now-this.sampleAt));if(this.sampleAt>0){this.metrics({fps,drawCalls:this.renderer.info.render.calls,triangles:this.renderer.info.render.triangles,quality:this.ratio<1.3?'Performance':'High'});this.host.dataset.fps=String(fps);this.host.dataset.drawCalls=String(this.renderer.info.render.calls);if(fps<43)this.framesLow++;else this.framesLow=0;if(this.framesLow>=3&&this.ratio>1){this.ratio=Math.max(1,this.ratio-.25);this.renderer.setPixelRatio(this.ratio);this.framesLow=0;}}this.samples=0;this.sampleAt=now;}
+  this.renderer.render(this.k.scene,this.fighterCamera||this.camera);this.samples++;if(now-this.sampleAt>1100){const fps=Math.round(this.samples*1000/(now-this.sampleAt));if(this.sampleAt>0){this.metrics({fps,drawCalls:this.renderer.info.render.calls,triangles:this.renderer.info.render.triangles,quality:this.ratio<1.3?'Performance':'High'});this.host.dataset.fps=String(fps);this.host.dataset.drawCalls=String(this.renderer.info.render.calls);if(fps<43)this.framesLow++;else this.framesLow=0;if(this.framesLow>=3&&this.ratio>1){this.ratio=Math.max(1,this.ratio-.25);this.renderer.setPixelRatio(this.ratio);this.framesLow=0;}}this.samples=0;this.sampleAt=now;}
  };
  dispose(){this.disposed=true;cancelAnimationFrame(this.frame);this.resize.disconnect();this.observer.disconnect();this.k.dispose();this.environment.dispose();this.renderer.dispose();this.renderer.domElement.remove();}
 }

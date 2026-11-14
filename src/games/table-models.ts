@@ -7,15 +7,15 @@ import {mergeGeometries} from 'three/addons/utils/BufferGeometryUtils.js';
  * Chess/checker/disc/seed bases are y=0. A bowl's rim is y=0, its cavity below.
  * Chess IDs match the rules engine: ±1 pawn, ±2 knight, ±3 bishop, ±4 rook,
  * ±5 queen, ±6 king. Positive is ivory, negative is ink blue. */
-const IVORY = '#eddfc5', INK = '#173046', BRASS = '#bc9252';
+const IVORY = '#e8d9b9', INK = '#36271f', BRASS = '#8d6d43';
 const Y = new THREE.Vector3(0, 1, 0);
 type Finish = {body: THREE.MeshPhysicalMaterial; brass: THREE.MeshStandardMaterial; felt: THREE.MeshStandardMaterial; engraving: THREE.MeshStandardMaterial};
 function finish(light: boolean): Finish {
   return {
-    body: new THREE.MeshPhysicalMaterial({color: light ? IVORY : INK, roughness: .32, metalness: .07, clearcoat: .7, clearcoatRoughness: .24}),
+    body: new THREE.MeshPhysicalMaterial({color: light ? IVORY : INK, roughness: .4, metalness: 0, clearcoat: .22, clearcoatRoughness: .4}),
     brass: new THREE.MeshStandardMaterial({color: BRASS, roughness: .34, metalness: .72}),
     felt: new THREE.MeshStandardMaterial({color: '#263b35', roughness: .96}),
-    engraving: new THREE.MeshStandardMaterial({color: light ? '#887556' : '#081a29', roughness: .42}),
+    engraving: new THREE.MeshStandardMaterial({color: light ? '#887556' : '#17110e', roughness: .42}),
   };
 }
 function mesh(g: THREE.BufferGeometry, m: THREE.Material, x = 0, y = 0, z = 0): THREE.Mesh {
@@ -173,42 +173,42 @@ export function chessPiece(value: number): THREE.Group {
   return batch(root);
 }
 
-function checkerLayer(root: THREE.Group, m: Finish, y: number) {
-  const body = lathe([[0, 0], [.38, 0], [.416, .02], [.43, .05], [.43, .105], [.412, .135], [.395, .15], [.35, .16], [.32, .15], [0, .15]], m.body);
-  body.position.y = y;root.add(body, ring(.415, .008, y + .032, m.brass), ring(.33, .006, y + .155, m.brass));
-  root.add(ring(.24, .005, y + .151, m.engraving));
-  // Fine milled edge: subtle vertical facets catch light along the rim.
-  for (let i = 0; i < 32; i++) {
-    const a = i * Math.PI / 16;
-    const notch = mesh(new THREE.BoxGeometry(.01, .045, .008), m.engraving, Math.cos(a) * .429, y + .077, Math.sin(a) * .429);
-    notch.rotation.y = -a;root.add(notch);
-  }
-}
-/** ±1 is a man, ±2 is a stacked king. */
+/** Dedicated lacquered draughts pieces; independent of the chess materials. */
 export function checker(value: number): THREE.Group {
-  const root = new THREE.Group();if (!value) return root;
-  const m = finish(value > 0), crowned = Math.abs(value) >= 2;
-  root.name = `${value > 0 ? 'ivory' : 'ink'}-${crowned ? 'crowned-checker' : 'checker'}`;
-  checkerLayer(root, m, 0);if (crowned) checkerLayer(root, m, .16);
-  if (crowned) {
-    const crown = lathe([[.09, .315], [.16, .315], [.16, .35], [.115, .35], [.09, .315]], m.brass, 28);
-    root.add(crown);
-    for (let i = 0; i < 6; i++) {
-      const a = i * Math.PI / 3;
-      root.add(taperedRod(new THREE.Vector3(Math.cos(a) * .13, .34, Math.sin(a) * .13), new THREE.Vector3(Math.cos(a) * .16, .405, Math.sin(a) * .16), .022, .016, m.brass));
-    }
+  const root = new THREE.Group(); if (!value) return root;
+  const red = value > 0, crowned = Math.abs(value) >= 2;
+  const body = new THREE.MeshPhysicalMaterial({color: red ? '#a71625' : '#20252c', roughness: .3, clearcoat: .5, clearcoatRoughness: .28});
+  const rim = new THREE.MeshStandardMaterial({color: red ? '#d73e43' : '#596776', roughness: .4});
+  const inset = new THREE.MeshStandardMaterial({color: red ? '#7e151f' : '#10151b', roughness: .5});
+  for (let layer = 0; layer < (crowned ? 2 : 1); layer++) {
+    const y = layer * .2;
+    const disc = lathe([[0,0],[.37,0],[.43,.035],[.45,.07],[.45,.15],[.42,.195],[.35,.21],[.32,.19],[0,.19]],body);
+    disc.position.y = y; root.add(disc, ring(.42,.015,y+.16,rim), ring(.29,.014,y+.195,inset), ring(.23,.009,y+.197,inset));
+    for (let i=0;i<36;i++) {const a=i*Math.PI/18; const notch=mesh(new THREE.BoxGeometry(.015,.07,.015),rim,Math.cos(a)*.45,y+.105,Math.sin(a)*.45);notch.rotation.y=-a;root.add(notch);}
   }
-  root.userData.crowned = crowned;root.userData.height = crowned ? .42 : .16;
+  if (crowned) {
+    const star = new THREE.Shape();
+    for(let i=0;i<10;i++){const a=i*Math.PI/5,r=i%2?.095:.19,x=Math.sin(a)*r,z=Math.cos(a)*r;i?star.lineTo(x,z):star.moveTo(x,z);}star.closePath();
+    const mark=mesh(new THREE.ShapeGeometry(star),rim,0,.408,0);mark.rotation.x=-Math.PI/2;root.add(mark);
+  }
+  root.name=red?'red-draught':'charcoal-draught';root.userData.crowned=crowned;root.userData.height=crowned?.42:.21;
   return batch(root);
+}
+
+export function morrisStone(value:number):THREE.Group {
+  const root=new THREE.Group();
+  const body=new THREE.MeshPhysicalMaterial({color:value>0?'#ece1c6':'#3c322d',roughness:.38,clearcoat:.2});
+  const stone=orb(.4,body,0,.16,0,28);stone.scale.y=.4;root.add(stone);return root;
 }
 
 /** A true two-sided disc. Animate userData.flipPivot around X/Z; root stays at base y=0. */
 export function reversiDisc(value: number): THREE.Group {
   const root = new THREE.Group();if (!value) return root;
   const light = finish(true), dark = finish(false), pivot = new THREE.Group();
+  light.body.color.set('#f0eee5'); dark.body.color.set('#141a19'); light.body.clearcoat=dark.body.clearcoat=.18;
   const top = lathe([[0, 0], [.405, 0], [.427, .025], [.425, .065], [.4, .09], [.33, .1], [0, .103]], light.body, 48);
   const bottom = lathe([[0, 0], [.405, 0], [.427, .025], [.425, .065], [.4, .09], [.33, .1], [0, .103]], dark.body, 48);bottom.rotation.x = Math.PI;
-  pivot.add(top, bottom, ring(.42, .007, 0, dark.brass));batch(pivot);
+  pivot.add(top, bottom);batch(pivot);
   pivot.position.y = .103;if (value < 0) pivot.rotation.x = Math.PI;
   root.add(pivot);root.name = value > 0 ? 'ivory-reversi' : 'ink-reversi';
   root.userData.flipPivot = pivot;root.userData.height = .206;return root;

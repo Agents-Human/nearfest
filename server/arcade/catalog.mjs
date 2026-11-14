@@ -2,7 +2,7 @@ const rows=[
  ['marble-run','Marble Skyway','Racing',2,4,120,'Roll along a floating skyway. Steer for coins, hop the gaps and race your friends to the finish.'],
  ['tank-arena','Toy Tank Arena','Action',2,4,120,'Drive, find cover and fire. Your turret helps you aim. Smash crates, bounce shots and be first to five knockouts.'],
  ['pocket-racers','Pocket Racers','Racing',2,4,120,'A quick coastal sprint. Just steer left or right, dodge traffic, collect gold coins for boost and race to the finish.'],
- ['stick-rivals','Stick Rivals','Action',2,2,180,'Jump, block and land your punches. Three rounds in a shared arena.'],
+ ['stick-rivals','Yokai Duel','Action',2,2,180,'Trade quick strikes, heavy attacks and guards as two Yokai rivals. First to two round wins.'],
  ['paddle-duel','Paddle Duel','Sports',2,2,180,'Move your paddle, read the bounce. First to seven.'],
  ['air-hockey','Air Hockey','Sports',2,2,180,'Guard your goal and strike the puck. First to five.'],
  ['snake-arena','Snake Arena','Action',2,6,300,'Claim the fixed food trail. Outlast the other snakes.'],

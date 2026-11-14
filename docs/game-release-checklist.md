@@ -12,7 +12,7 @@ The catalogue currently exposes 55 original entries. All expose solo and indepen
 | Pocket Racers | pocket-racers | arcade | NEAR testnet + free |
 | Marble Skyway | marble-run | arcade | Free multiplayer + solo practice |
 | Toy Tank Arena | tank-arena | arcade | Free multiplayer + solo practice |
-| Stick Rivals | stick-rivals | arcade | NEAR testnet + free |
+| Yokai Duel | stick-rivals | arcade | NEAR testnet + free |
 | Number rush | maths | knowledge / puzzle | NEAR testnet + free |
 | Lab partners | science | knowledge / puzzle | NEAR testnet + free |
 | Know-it-all? | trivia | knowledge / puzzle | NEAR testnet + free |

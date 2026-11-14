@@ -8,7 +8,7 @@ export const controls=d=>Object.fromEntries(['left','right','up','down','attack'
 export const worldIds=new Set([...extraWorldIds,'pocket-racers','stick-rivals','paddle-duel','air-hockey','snake-arena','bomb-maze','mini-golf','marble-knockout','kitchen-rush','paint-tag','platform-relay','orbit-rescue']);
 export function finish(s,winners,reason){s.finished=true;s.winners=winners;s.reason=reason;return s;}
 export function ranked(s,values,reason,low=false){const best=(low?Math.min:Math.max)(...values);return finish(s,values.flatMap((v,i)=>Math.abs(v-best)<1e-7?[i]:[]),reason);}
-function fighter(i,round=0){const side=(i+round)%2;return {x:side?700:260,y:410,vx:0,vy:0,facing:side?-1:1,hp:100,energy:100,cooldown:0,attack:0,hit:false,blocking:false,ground:true,attackKind:'punch',attackSeq:0,stun:0};}
+function fighter(i,round=0){const side=(i+round)%2;return {x:side?640:320,y:410,vx:0,vy:0,facing:side?-1:1,hp:100,energy:100,cooldown:0,attack:0,hit:false,blocking:false,ground:true,attackKind:'punch',attackSeq:0,stun:0};}
 export function newWorld(game,n){
  const s={game,tick:0,elapsed:0,finished:false,winners:[],reason:'',players:[],round:0};
  if(game==='pocket-racers'){
@@ -100,7 +100,7 @@ export function advanceWorld(previous,input){
    if(p.attack>0&&p.attack<.16&&!p.hit){p.hit=true;s.players.forEach((other,j)=>{if(i!==j&&Math.abs(other.y-p.y)<85&&(other.x-p.x)*p.facing>=-15&&Math.abs(other.x-p.x)<(p.attackKind==='kick'?95:72))hits.push({from:i,to:j,kind:p.attackKind});});}
   });
   for(const hit of hits){const p=s.players[hit.to],attacker=s.players[hit.from],blocked=p.blocking&&(attacker.x-p.x)*p.facing>0;p.hp=Math.max(0,p.hp-(blocked?2:hit.kind==='kick'?18:10));p.x=clamp(p.x+attacker.facing*(blocked?4:hit.kind==='kick'?34:13),55,905);p.stun=blocked?0:.12;if(blocked)p.energy=Math.max(0,p.energy-9);}
-  const [left,right]=[...s.players].sort((a,b)=>a.x-b.x);if(right.x-left.x<36&&Math.abs(right.y-left.y)<70){const overlap=(36-(right.x-left.x))/2;left.x=clamp(left.x-overlap,55,905);right.x=clamp(right.x+overlap,55,905);}
+  const [left,right]=[...s.players].sort((a,b)=>a.x-b.x);if(right.x-left.x<54&&Math.abs(right.y-left.y)<70){const overlap=(54-(right.x-left.x))/2;left.x=clamp(left.x-overlap,55,905);right.x=clamp(right.x+overlap,55,905);}
   if(s.players.some(p=>p.hp<=0)||s.roundTime>=60){const max=Math.max(...s.players.map(p=>p.hp));s.players.forEach((p,i)=>{if(p.hp===max)s.scores[i]+=s.players.filter(q=>q.hp===max).length===1?1:.5;});s.reason='Round complete';if(s.round>=2||s.scores.some(n=>n>=2))ranked(s,s.scores,'Best score across three rounds.');else s.breakTime=2;}
  } else if(s.game==='paddle-duel'||s.game==='air-hockey'){
   const hockey=s.game==='air-hockey',ball=s.ball;
@@ -172,7 +172,7 @@ export function worldBot(s,i){
   const next=s.traffic.find(v=>v.distance+v.speed*s.elapsed>p.y-30&&v.distance+v.speed*s.elapsed<p.y+330);
   const target=next&&Math.abs(p.x-next.x)<48?(next.x>=480?390:570):p.x;c.left=p.x>target+12;c.right=p.x<target-12;
  }
- else if(s.game==='stick-rivals'){const q=s.players[1-i],d=q.x-p.x;c.right=d>57;c.left=d< -57;c.attack=Math.abs(d)<75;c.down=Math.abs(d)>=75&&Math.abs(d)<95&&s.tick%30<3;c.block=q.attack>.16&&Math.floor(s.tick/5)%3===0;c.up=Math.abs(d)>130&&s.tick%55<4;}
+ else if(s.game==='stick-rivals'){const q=s.players[1-i],d=q.x-p.x,beat=(s.tick+i*7)%56;c.right=d>60;c.left=d< -60;c.attack=Math.abs(d)<75&&beat>=5&&beat<7;c.down=Math.abs(d)<95&&Math.floor(s.tick/56)%3===2&&beat>=20&&beat<22;c.block=q.attack>.16&&beat<5;c.up=Math.abs(d)>160&&s.tick%110<2;}
  else if(['paddle-duel','air-hockey'].includes(s.game)){const target=s.game==='paddle-duel'?s.ball:{x:s.ball.x<(i?480:960)&&s.ball.x>(i?0:480)?i?880:80:s.ball.x,y:s.ball.y};c.up=target.y<p.y-10;c.down=target.y>p.y+10;if(s.game==='air-hockey'){c.left=target.x<p.x-10;c.right=target.x>p.x+10;}}
  else if(s.game==='marble-knockout'){c.left=p.x>480;c.right=p.x<480;c.up=p.y>280;c.down=p.y<280;}
  else if(s.game==='paint-tag'){const q=s.players[(i+1)%s.players.length];c.left=q.x<p.x-60;c.right=q.x>p.x+60;c.up=q.y<p.y-50;c.down=q.y>p.y+50;c.attack=true;}

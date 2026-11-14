@@ -1,0 +1,222 @@
+{
+  "author": "CraftPix",
+  "license": "CraftPix Freebie Products license",
+  "licenseUrl": "https://craftpix.net/file-licenses/",
+  "purpose": "Used as animated characters and backdrop within the fighting game. No asset export feature.",
+  "sourceFilesUnmodified": false,
+  "frameAnchor": {
+    "x": 64,
+    "groundY": 128,
+    "nativeFacing": "+X"
+  },
+  "fighters": [
+    {
+      "id": "tengu",
+      "name": "Yamabushi Tengu",
+      "idlePaintedBounds": [
+        18,
+        33,
+        99,
+        128
+      ],
+      "bodyHeightPixels": 95
+    },
+    {
+      "id": "kitsune",
+      "name": "Kitsune",
+      "idlePaintedBounds": [
+        24,
+        49,
+        77,
+        128
+      ],
+      "bodyHeightPixels": 79
+    }
+  ],
+  "files": [
+    {
+      "file": "tengu/idle.png",
+      "source": "assets/new/craftpix-net-605776-free-yokai-pixel-art-character-sprites/Yamabushi_tengu/Idle.png",
+      "sha256": "b2ac27409720e346780a673fc876056e10dd2fa24e9047208d8f6781cbcb9495",
+      "width": 768,
+      "height": 128,
+      "frameWidth": 128,
+      "frames": 6
+    },
+    {
+      "file": "tengu/idle_2.png",
+      "source": "assets/new/craftpix-net-605776-free-yokai-pixel-art-character-sprites/Yamabushi_tengu/Idle_2.png",
+      "sha256": "5aed46f35590831f615c6de710a8f091d73ff26863477fe8e5261b60d67a295a",
+      "width": 640,
+      "height": 128,
+      "frameWidth": 128,
+      "frames": 5
+    },
+    {
+      "file": "tengu/run.png",
+      "source": "assets/new/craftpix-net-605776-free-yokai-pixel-art-character-sprites/Yamabushi_tengu/Run.png",
+      "sha256": "02cbd39a12eb1cbc10032e6c838918291ca868cb1c06dcb3378515e4bd31547c",
+      "width": 1024,
+      "height": 128,
+      "frameWidth": 128,
+      "frames": 8
+    },
+    {
+      "file": "tengu/jump.png",
+      "source": "assets/new/craftpix-net-605776-free-yokai-pixel-art-character-sprites/Yamabushi_tengu/Jump.png",
+      "sha256": "62118c2805766c8fa66d6591bd226bca96ea148851347ce8d3d51dabe5b7f9b6",
+      "width": 1920,
+      "height": 128,
+      "frameWidth": 128,
+      "frames": 15
+    },
+    {
+      "file": "tengu/hurt.png",
+      "source": "assets/new/craftpix-net-605776-free-yokai-pixel-art-character-sprites/Yamabushi_tengu/Hurt.png",
+      "sha256": "d1973f63de8e29fcd42dc4a825e020d2429e6a6290533eb59555b4af3ef433ae",
+      "width": 384,
+      "height": 128,
+      "frameWidth": 128,
+      "frames": 3
+    },
+    {
+      "file": "tengu/dead.png",
+      "source": "assets/new/craftpix-net-605776-free-yokai-pixel-art-character-sprites/Yamabushi_tengu/Dead.png",
+      "sha256": "34e40f47b482925258c218aaaa6440bd41b60502f4b8fe54f9385e61e446609c",
+      "width": 768,
+      "height": 128,
+      "frameWidth": 128,
+      "frames": 6
+    },
+    {
+      "file": "tengu/attack_1.png",
+      "source": "assets/new/craftpix-net-605776-free-yokai-pixel-art-character-sprites/Yamabushi_tengu/Attack_1.png",
+      "sha256": "98d74ca4b92cc6f243d9809cd249848f8e6bfb997a0f7f08aa513ef68c744efb",
+      "width": 384,
+      "height": 128,
+      "frameWidth": 128,
+      "frames": 3
+    },
+    {
+      "file": "tengu/attack_2.png",
+      "source": "assets/new/craftpix-net-605776-free-yokai-pixel-art-character-sprites/Yamabushi_tengu/Attack_2.png",
+      "sha256": "9f487ec373d37bf07376f256bec372a31f6c07174a67331c17c1d96f29629904",
+      "width": 768,
+      "height": 128,
+      "frameWidth": 128,
+      "frames": 6
+    },
+    {
+      "file": "tengu/attack_3.png",
+      "source": "assets/new/craftpix-net-605776-free-yokai-pixel-art-character-sprites/Yamabushi_tengu/Attack_3.png",
+      "sha256": "002ebe4b46a597f4525c09ba882e490f220b3d9e1299ed82bef89c0f5b4244ed",
+      "width": 512,
+      "height": 128,
+      "frameWidth": 128,
+      "frames": 4
+    },
+    {
+      "file": "kitsune/idle.png",
+      "source": "assets/new/craftpix-net-605776-free-yokai-pixel-art-character-sprites/Kitsune/Idle.png",
+      "sha256": "cbea9b67070966db1aa9e7d8043279bc8146980eca5fa3ddcc18a7f34852c18c",
+      "width": 1024,
+      "height": 128,
+      "frameWidth": 128,
+      "frames": 8
+    },
+    {
+      "file": "kitsune/idle_2.png",
+      "source": "assets/new/craftpix-net-605776-free-yokai-pixel-art-character-sprites/Kitsune/Idle_2.png",
+      "sha256": "d4d4e9be2bacb67a6806b8d4f34aee490557073e9d5bf77077258de9535b665c",
+      "width": 768,
+      "height": 128,
+      "frameWidth": 128,
+      "frames": 6
+    },
+    {
+      "file": "kitsune/run.png",
+      "source": "assets/new/craftpix-net-605776-free-yokai-pixel-art-character-sprites/Kitsune/Run.png",
+      "sha256": "dde4793a7bf26f4ae0692c6b92105c49d3a34b672adbb31eab76979d12957fc6",
+      "width": 1024,
+      "height": 128,
+      "frameWidth": 128,
+      "frames": 8
+    },
+    {
+      "file": "kitsune/jump.png",
+      "source": "assets/new/craftpix-net-605776-free-yokai-pixel-art-character-sprites/Kitsune/Jump.png",
+      "sha256": "14e8fde498823d037268b412b246c14cd80a5789afaf89f24c85cb63b02a6615",
+      "width": 1280,
+      "height": 128,
+      "frameWidth": 128,
+      "frames": 10
+    },
+    {
+      "file": "kitsune/hurt.png",
+      "source": "assets/new/craftpix-net-605776-free-yokai-pixel-art-character-sprites/Kitsune/Hurt.png",
+      "sha256": "987d5362b9d5b898209c189796388fc0c30bbd5cbe8e98848dcc2f9567b2dc60",
+      "width": 256,
+      "height": 128,
+      "frameWidth": 128,
+      "frames": 2
+    },
+    {
+      "file": "kitsune/dead.png",
+      "source": "assets/new/craftpix-net-605776-free-yokai-pixel-art-character-sprites/Kitsune/Dead.png",
+      "sha256": "d616ac614fed93c8b877a841fee6bd1ac6720e5ad8716918c2a9cbc7f2475062",
+      "width": 1280,
+      "height": 128,
+      "frameWidth": 128,
+      "frames": 10
+    },
+    {
+      "file": "kitsune/attack_1.png",
+      "source": "assets/new/craftpix-net-605776-free-yokai-pixel-art-character-sprites/Kitsune/Attack_1.png",
+      "sha256": "73a6ca31652c9d5b937fa3bfeaf8ce16b9a9d8f2b94f9d7fd99b958881414e9c",
+      "width": 1280,
+      "height": 128,
+      "frameWidth": 128,
+      "frames": 10
+    },
+    {
+      "file": "kitsune/attack_2.png",
+      "source": "assets/new/craftpix-net-605776-free-yokai-pixel-art-character-sprites/Kitsune/Attack_2.png",
+      "sha256": "809778b80c9326ed100ac54174b25274db13e93543b4ffd0b0c27616cb5deffc",
+      "width": 1280,
+      "height": 128,
+      "frameWidth": 128,
+      "frames": 10
+    },
+    {
+      "file": "kitsune/attack_3.png",
+      "source": "assets/new/craftpix-net-605776-free-yokai-pixel-art-character-sprites/Kitsune/Attack_3.png",
+      "sha256": "aeeb1ca74f8001d3625f6e15e1aae1595331c0c986fc8c8d1df84d071fafd774",
+      "width": 896,
+      "height": 128,
+      "frameWidth": 128,
+      "frames": 7
+    },
+    {
+      "file": "vampire-terrace.webp",
+      "source": "assets/new/craftpix-net-889507-free-vampires-locations-battle-background-pack/PNG/1/terrace.png",
+      "sha256": "f6643e17ca47e7c4de36a0f085c65e5b80f4ee3bc4072834a4dd147efdf45bbd",
+      "width": 1920,
+      "height": 1080,
+      "sourceSha256": "c67d92ee0646cdff242e99ddd9b830ceeb9fb8db749e101d53682eaff9fb9681",
+      "sourceWidth": 3840,
+      "sourceHeight": 2160,
+      "derived": {
+        "tool": "cwebp 1.6.0",
+        "operation": "resize and WebP encoding only",
+        "quality": 88,
+        "method": 6,
+        "resize": [
+          1920,
+          1080
+        ]
+      },
+      "bytes": 127976
+    }
+  ],
+  "sourcePolicy": "Original asset packs are untouched. Character strips are copied byte-for-byte. The terrace runtime copy is resized and encoded to WebP."
+}

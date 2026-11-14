@@ -35,3 +35,14 @@ test('marble bumpers reward steering or jumping, while coins provide sustained a
  s=newWorld('marble-run',2);Object.assign(s.players[0],{x:1090,y:0,vx:205,height:35,ground:false,vz:100});s=advance(s,1);assert.equal(s.players[0].collisions,0);
  s=newWorld('marble-run',2);s.players[0].x=s.pickups[0].x-5;s.players[0].y=s.pickups[0].y;s.players[0].vx=205;s=advance(s,1);assert(s.players[0].boost>0);s=advance(s,8);assert(s.players[0].vx>220);
 });
+
+
+test('fighter practice leaves time to react and simple strikes can win',async()=>{
+ const {worldBot}=await import('../server/arcade/world.mjs');
+ let learning=newWorld('stick-rivals',2);
+ for(let tick=0;tick<160;tick++)learning=advanceWorld(learning,[{},worldBot(learning,1)]);
+ assert.equal(learning.round,0);assert(learning.players[0].hp>=50,'A new player gets at least eight seconds to learn the controls.');
+ let playing=newWorld('stick-rivals',2);
+ for(let tick=0;tick<900&&!playing.finished;tick++)playing=advanceWorld(playing,[{attack:true},worldBot(playing,1)]);
+ assert(playing.finished);assert(playing.scores[0]>playing.scores[1],'Holding the basic strike must be a viable way to learn against the practice bot.');
+});
