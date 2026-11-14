@@ -1,0 +1,14 @@
+{
+  "contract_id": "nearfest-mwg03pdw-2886.testnet",
+  "network": "testnet",
+  "previous_wasm_sha256": "81a0e978da605b1546979adc750dfbfee436738e9997723ac0cf4c5c8cee9050",
+  "wasm_sha256": "71c6748254b8be636629e1f78ef89ee3f63abfd30f6162e2c5411030a0d6901e",
+  "state_sha256": "2d72d6851f06e2dbd6ee6fd59676f66ae9e3bf41b92e8270461804408045d908",
+  "state_entries": 17,
+  "sandbox_checks": 18,
+  "initialized": false,
+  "transaction_hash": "HfH9xdqrspjXPCGatpvr62y8GkbZ53DM72pLB3LSc1Bo",
+  "backup": "/var/folders/z_/d8hkhnyd0xl31fv_4rr48xbm0000gn/T/nearfest-contract-before-ZM8Iz5",
+  "state_preserved": true,
+  "completed_at": "2026-11-14T18:14:19.054Z"
+}

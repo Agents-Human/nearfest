@@ -49,8 +49,8 @@ impl SlotVend {
   require!(!side_a.is_empty() && side_a.len()<=40 && !side_b.is_empty() && side_b.len()<=40 && side_a!=side_b,"Invalid sides");
   require!(matches!(category.as_str(),"Sports"|"Gaming"|"Life"|"Crypto"|"Facts"|"Science"|"Maths"),"Invalid category");
   require!(matches!(resolver.as_str(),"players"|"sports"|"crypto"|"maths"|"evidence") && resolver_config.len()<=512,"Invalid resolver");
-  require!(stake.0>=UNIT/100 && stake.0<=100*UNIT,"Invalid stake");
-  require!(env::attached_deposit().as_yoctonear()==stake.0+STORAGE,"Attach the exact stake plus storage");
+  require!(stake.0>0,"Stake must be greater than zero");
+  require!(env::attached_deposit().as_yoctonear()==stake.0.checked_add(STORAGE).expect("Deposit overflow"),"Attach the exact stake plus storage");
   require!(join_before>now() && ends_at>join_before && ends_at<=now()+90*24*60*60*1000,"Invalid deadlines");
   require!(invitee.as_ref()!=Some(&creator) && referee.as_ref()!=Some(&creator),"Players and referee must differ");
   if let Some(ref i)=invitee { require!(referee.as_ref()!=Some(i),"Referee cannot be opponent"); }
@@ -104,7 +104,7 @@ impl SlotVend {
  fn save(&mut self,b:Bet){self.bets.replace(b.id,&b);env::log_str(&format!("SLOTVEND:{}:{}",b.status,b.id));}
  fn player(&self,b:&Bet,a:&AccountId){require!(a==&b.creator||b.opponent.as_ref()==Some(a),"Players only");}
  fn credit(&mut self,a:&AccountId,n:u128){let old=self.credits.get(a).unwrap_or(0);self.credits.insert(a,&old.checked_add(n).expect("Credit overflow"));}
- fn finish(&mut self,mut b:Bet,result:&str){require!(active(&b.status),"Bet already settled");let opponent=b.opponent.as_ref().expect("No opponent");if result=="draw"{self.credit(&b.creator,b.stake.0);self.credit(opponent,b.stake.0);b.status="refunded".into();}else{self.credit(if result=="creator"{&b.creator}else{opponent},b.stake.0*2);b.status="settled".into();}b.outcome=Some(result.into());self.save(b);}
+ fn finish(&mut self,mut b:Bet,result:&str){require!(active(&b.status),"Bet already settled");let opponent=b.opponent.as_ref().expect("No opponent");if result=="draw"{self.credit(&b.creator,b.stake.0);self.credit(opponent,b.stake.0);b.status="refunded".into();}else{self.credit(if result=="creator"{&b.creator}else{opponent},b.stake.0.checked_mul(2).expect("Pot overflow"));b.status="settled".into();}b.outcome=Some(result.into());self.save(b);}
 }
 
 #[cfg(test)]

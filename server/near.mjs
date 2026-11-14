@@ -1,16 +1,18 @@
+import {createNearReader,availableBalance} from './near-reads.mjs';
 import { Account, JsonRpcProvider, actions } from 'near-api-js';
 export const contractId = process.env.NEAR_CONTRACT_ID || '';
 if(contractId&&!contractId.endsWith('.testnet'))throw Error('NearFest contracts must use a .testnet account.');
 export const provider = new JsonRpcProvider({ url: process.env.NEAR_RPC_URL || 'https://test.rpc.fastnear.com' });
 export const oracleReady = Boolean(process.env.NEAR_ORACLE_ACCOUNT && process.env.NEAR_ORACLE_PRIVATE_KEY && contractId);
+const read=createNearReader();
 export async function view(method, args = {}) {
-  if (!contractId) throw Error('The NEAR testnet contract is not configured yet. Free play is available.');
+  if (!contractId) throw Error('The NEAR testnet contract is not configured yet. Please try again when the connection is ready.');
   await assertTestnet();
-  return provider.callFunction({ contractId, method, args, blockQuery: { finality: 'final' } });
+  return read(method+':'+JSON.stringify(args),()=>provider.callFunction({ contractId, method, args, blockQuery: { finality: 'final' } }));
 }
-export function transaction(methodName, args, deposit = '0') {
+export function transaction(methodName, args, deposit = '0', signerId) {
   if (!contractId) throw Error('Connect a deployed NEAR testnet contract first.');
-  return { receiverId: contractId, actions: [{ type: 'FunctionCall', params: { methodName, args, deposit, gas: '150000000000000' } }] };
+  return { ...(signerId?{signerId}:{}), receiverId: contractId, actions: [{ type: 'FunctionCall', params: { methodName, args, deposit, gas: '150000000000000' } }] };
 }
 export function assertSuccess(result) {
   const outcomes = [result?.status, ...(result?.receipts_outcome || []).map(r => r.outcome?.status)];
@@ -35,4 +37,17 @@ export async function oracleCall(method,args){
  const expected=await view('get_config');if(expected.oracle!==process.env.NEAR_ORACLE_ACCOUNT)throw Error('Result signer does not match the contract.');
  const account=new Account(process.env.NEAR_ORACLE_ACCOUNT,provider,process.env.NEAR_ORACLE_PRIVATE_KEY);
  return assertSuccess(await account.signAndSendTransaction({receiverId:contractId,actions:[actions.functionCall(method,args,150_000_000_000_000n,0n)],waitUntil:'FINAL',throwOnFailure:true,retries:0}));
+}
+
+let storageCost,storageCostAt=0;
+export async function balance(accountId) {
+  await assertTestnet();
+  if(storageCost===undefined||Date.now()-storageCostAt>300000){const config=await read('protocol',()=>provider.experimental_protocolConfig({finality:'final'}));storageCost=BigInt(config.runtime_config.storage_amount_per_byte);storageCostAt=Date.now();}
+  const account=await read('account:'+accountId,()=>provider.viewAccount({accountId,blockQuery:{finality:'final'}}));
+  return availableBalance(account,storageCost);
+}
+export async function requireBalance(accountId,deposit) {
+  const available=BigInt(await balance(accountId));
+  if(BigInt(deposit)>available)throw Error('Your wallet balance cannot cover this stake and the required contract storage.');
+  return available;
 }

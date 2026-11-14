@@ -18,6 +18,10 @@ test('guest sessions remain free; NEAR stakes reject guests; origin, catalogue a
     assert.equal((await fetch(origin+'/library/does-not-exist.js')).status,404);assert.equal((await fetch(origin+'/library/%2e%2e%2f.env')).status,404);assert.equal((await fetch(origin+'/api/me',{headers:{origin:'null'}})).headers.get('access-control-allow-origin'),null);
     const alice = client(), bob = client(), carol = client(), anon = client();
     const a = await alice('/session/practice', { name: 'Alice test' }), b = await bob('/session/practice', { name: 'Bob test' }); await carol('/session/practice', { name: 'Carol test' });
+    await anon('/profile',{name:'Unauthorized'},400);
+    assert.equal((await alice('/profile',{name:'Alice plays'})).name,'Alice plays');
+    await alice('/profile',{name:'A'},400);
+    assert.deepEqual(await anon('/parties?mine=1'),[]);
     await anon('/bets', {}, 400); await alice('/session/practice', { name: 'Test' }, 403, 'https://untrusted.invalid');
     const t = Date.now(), draft = { title: 'Who wins our local chess game?', rules: 'One agreed chess game. Its winner wins both stakes; a draw refunds both.', category: 'Gaming', side_a: 'Alice', side_b: 'Bob', stake: '5', resolver: 'players', resolver_config: {}, join_before: t + 60000, ends_at: t + 120000 };
     await alice('/preview', { ...draft, title: 'A cocaine contest?' }, 400);
@@ -28,6 +32,6 @@ test('guest sessions remain free; NEAR stakes reject guests; origin, catalogue a
     await alice('/parties',{game_id:'kalah',entry:'0'},400);
     for(const game_id of ['chess','trivia','maths','science']){const restored=await alice('/parties',{game_id,entry:'0'},201);assert.equal(restored.game_id,game_id);}
     const solo=await alice('/play/chess/start',{});await bob(`/play/${solo.id}/run`,undefined,400);await alice(`/play/${solo.id}/answer`,{index:0,answer:'g6g7'});await anon(`/play/${solo.id}/proof`,undefined,400);await alice(`/play/${solo.id}/share`,{});assert.equal((await anon(`/play/${solo.id}/proof`)).score,1);
-    await stop();start();await ready();assert.equal((await bob('/me')).id,b.id);assert.equal((await alice('/me')).credit,'0');
+    await stop();start();await ready();assert.equal((await bob('/me')).id,b.id);assert.equal((await alice('/me')).credit,'0');assert.equal((await alice('/me')).name,'Alice plays');
   } finally { await stop(); await rm(dir, { recursive: true, force: true }); }
 });

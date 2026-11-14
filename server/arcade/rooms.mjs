@@ -2,7 +2,7 @@ import {RACE_SECONDS,DEFAULT_RACE_SECONDS} from './race-course.mjs';
 import {simulationIds,newSimulation,advanceSimulation,simulationAction,simulationView} from './simulations.mjs';
 import {randomUUID,randomBytes,timingSafeEqual} from 'node:crypto';
 import {amount,UNIT} from '../domain.mjs';
-import {arcadeGame,freeOnly} from './catalog.mjs';
+import {arcadeGame} from './catalog.mjs';
 import {worldIds,newWorld,advanceWorld,worldAction,worldBot,controls,finish,DT} from './world.mjs';
 import {puzzleIds,newPuzzle,advancePuzzle,puzzleAction,puzzleView,puzzleBot} from './puzzles.mjs';
 import {newParty,advanceParty,partyAction,partyView,partyBot} from './party.mjs';
@@ -43,10 +43,11 @@ export function createArcadeRooms(store){
  }
  function botCount(id){if(simulationIds.has(id))return 0;if(['tappy-plane','kitchen-rush','orbit-rescue','mini-golf','word-hunt','category-sprint','equation-forge','circuit-crew','cat-defense','bridge-builders','molecule-match','sudoku-race','codebreakers'].includes(id))return 0;return {'draw-guess':1,'clue-crew':3,'bluff-club':2,'deduction-club':4,'snake-arena':3,'marble-knockout':3,'paint-tag':2,'bomb-maze':2}[id]??1;}
  const api={
-  list:user=>[...rooms.values()].filter(r=>BigInt(r.entry)===0n||r.near).filter(r=>!r.solo&&(r.visibility==='public'||r.players.some(p=>p.id===user?.id))&&(!terminal(r)||r.players.some(p=>p.id===user?.id))).slice(-100).reverse().map(r=>view(r,user)),
+  notify:id=>{if(rooms.has(id))publish(rooms.get(id));},
+  list:(user,{mine=false}={})=>[...rooms.values()].reverse().filter(r=>BigInt(r.entry)===0n||r.near).filter(r=>!r.solo&&(mine?r.players.some(p=>p.id===user?.id):(r.visibility==='public'||r.players.some(p=>p.id===user?.id))&&(!terminal(r)||r.players.some(p=>p.id===user?.id)))).filter((_,i)=>mine||i<100).map(r=>view(r,user)),
   get:(id,user,key)=>{const r=read(id);access(r,user,key);return view(r,user);},
   create:(d,user,now=Date.now(),funding=null)=>{available(user);const g=arcadeGame(d.game_id);if(!g)throw Error('Choose an original arcade game.');const solo=d.solo===true,entry=amount(String(d.entry??'0')),max=Number(d.max_players??g.max_players);
-   if(entry<0n||entry>100n*UNIT||entry>0n&&entry<UNIT/100n)throw Error('Use free entry or 0.01–100 NEAR.');if(entry>0n&&(solo||freeOnly.has(g.id)))throw Error('This mode is free play only.');if(!Number.isInteger(max)||max<g.min_players||max>g.max_players)throw Error('Choose a supported room size.');
+   if(entry>0n&&solo)throw Error('Stakes require a multiplayer room.');if(!Number.isInteger(max)||max<g.min_players||max>g.max_players)throw Error('Choose a supported room size.');
    const raceSeconds=Number(d.race_seconds??DEFAULT_RACE_SECONDS);if(g.id==='pocket-racers'&&!RACE_SECONDS.includes(raceSeconds))throw Error('Choose a race duration of 1, 2, 3, 5 or 10 minutes.');
    const r={...(g.id==='pocket-racers'?{race_seconds:raceSeconds}:{}),id:funding?.id||'arena-'+randomUUID(),game_id:g.id,host:user.id,status:'lobby',solo,entry:entry.toString(),near:entry>0n,visibility:solo?'invite':d.visibility==='invite'?'invite':'public',invite_key:randomBytes(24).toString('hex'),max_players:max,created_at:now,expires_at:funding?.expires_at||now+1800000,starts_at:null,ends_at:null,...(g.id==='platform-relay'?{settings:platformSettings(d.settings)}:{}),players:[{id:user.id,ready:solo,bot:false,...(g.id==='platform-relay'?{character:platformCharacter(d.character)}:{})}],revision:0,receipts:[],state:null};
    if(solo){for(let i=0;i<botCount(g.id);i++)r.players.push({id:`bot:${i}`,name:`Practice bot ${i+1}`,bot:true,ready:true,...(g.id==='platform-relay'?{character:platformCharacter(undefined,i+1)}:{})});startState(r,now);}
@@ -70,7 +71,7 @@ export function createArcadeRooms(store){
    if(d.type==='cancel'){if(r.status!=='lobby'||r.host!==user.id)throw Error('Only the host can cancel the lobby.');close(r,[],'Lobby cancelled. Entries returned.',now,'cancelled');return;}
    if(d.type==='leave'){if(r.status!=='lobby'||r.host===user.id)throw Error('End your game or cancel your lobby first.');credit(r,user.id,BigInt(r.entry));r.players.splice(seat,1);r.players.forEach(p=>p.ready=false);return;}
    if(d.type==='resign'){if(terminal(r))return;if(r.status!=='playing')throw Error('No game is in progress.');p.left=true;
-    if(r.solo||freeOnly.has(r.game_id)&&!['platform-relay','bridge-builders','pocket-soccer'].includes(r.game_id))close(r,[],'Game ended by a player.',now,'cancelled');
+    if(r.solo||BigInt(r.entry)===0n&&simulationIds.has(r.game_id))close(r,[],'Game ended by a player.',now,'cancelled');
     else close(r,r.players.filter(q=>q.id!==user.id).map(q=>q.id),r.game_id==='platform-relay'?'An opponent left the survival round. The remaining players win.':'Opponent ended the game. Remaining players share the pot.',now);return;}
    if(d.type!=='play')throw Error('Unknown game action.');const receipt=d.input_id,payload=JSON.stringify(d.action);if(typeof receipt!=='string'||!/^[-a-zA-Z0-9]{8,80}$/.test(receipt))throw Error('A valid action receipt is required.');
    const prior=r.receipts.find(x=>x.id===receipt&&x.user===user.id);if(prior){if(prior.payload!==payload)throw Error('A receipt cannot be reused for another action.');return;}

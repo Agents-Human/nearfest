@@ -40,7 +40,7 @@ export function validateDraft(input, actor, now = Date.now()) {
   if (d.side_a.toLowerCase() === d.side_b.toLowerCase()) throw Error('Give the two sides different labels.');
   if (!CATEGORIES.includes(d.category) || !RESOLVERS.includes(d.resolver)) throw Error('Choose a category and settlement method.');
   const stake = amount(d.stake);
-  if (stake < UNIT / 100n || stake > 100n * UNIT) throw Error('Stake between 0.01 and 100 per player.');
+  if (stake <= 0n) throw Error('Enter a stake greater than zero.');
   if (!Number.isSafeInteger(d.join_before) || !Number.isSafeInteger(d.ends_at) || d.join_before <= now || d.ends_at <= d.join_before || d.ends_at > now + 90 * 86400_000) throw Error('Accept-by must be in the future and before the result time, within 90 days.');
   d.invitee = d.invitee || null; d.referee = d.referee || null;
   for (const a of [d.invitee, d.referee]) if (a && !validAccount(a)) throw Error('Enter a valid NEAR account ID.');

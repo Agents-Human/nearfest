@@ -1,4 +1,5 @@
 import {useId, useRef, useState, type KeyboardEvent, type ReactNode} from 'react';
+import GameControlsGuide from './GameControlsGuide';
 import './game-info-tabs.css';
 
 const tabs = [
@@ -7,7 +8,8 @@ const tabs = [
 ] as const;
 type TabId = typeof tabs[number]['id'];
 
-export default function GameInfoTabs({title, description, children}: {
+export default function GameInfoTabs({game, title, description, children}: {
+  game: {id: string; engine?: string};
   title: string;
   description: string;
   children: ReactNode;
@@ -51,6 +53,6 @@ export default function GameInfoTabs({title, description, children}: {
       aria-labelledby={`${id}-${tab.id}-tab`}
       hidden={active !== tab.id}
       tabIndex={0}
-    >{tab.id === 'description' ? <p>{description}</p> : children}</div>)}
+    >{tab.id === 'description' ? <p>{description}</p> : <><GameControlsGuide game={game}/>{children}</>}</div>)}
   </section>;
 }

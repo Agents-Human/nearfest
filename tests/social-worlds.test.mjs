@@ -43,7 +43,7 @@ test('cats shoot manually without auto-fire, move across the barrier-free street
 test('new games use real multiplayer rooms, free entry and server-owned held input',()=>{
  const store=openStore(':memory:');try{const rooms=createArcadeRooms(store),a=store.ensureUser('social-a','Alice','practice'),b=store.ensureUser('social-b','Bob','practice');
   for(const id of ['pocket-soccer','cat-defense','bridge-builders']){
-   assert.throws(()=>rooms.create({game_id:id,entry:'5'},a,1000),/free play/);
+   assert.throws(()=>rooms.create({game_id:id,entry:'5'},a,1000),/deposit/);
    let r=rooms.create({game_id:id,entry:'0'},a,1000);rooms.action(r.id,b,{type:'join'},null,1001);for(const user of [a,b])rooms.action(r.id,user,{type:'ready',ready:true},null,1002);r=rooms.start(r.id,a,null,1003);assert.equal(r.state.players.length,2);
    if(id!=='pocket-soccer')assert.equal(r.ends_at,null);
    rooms.input(r.id,a,{seq:1,controls:{attack:true},score:999},null,4004);rooms.input(r.id,a,{seq:2,controls:{}},null,4005);rooms.tick(4053);r=rooms.get(r.id,a);assert.equal(r.state.players[0].score,0);if(id==='bridge-builders')assert(r.state.players[0].length>0,'quick taps survive the network tick');if(id==='cat-defense')assert.equal(r.state.players[0].shotsFired,1);

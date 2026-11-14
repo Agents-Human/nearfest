@@ -23,11 +23,11 @@ export function createMultiplayer(store,{curate=curateQuestions}={}){
    r.winners=high>0||winners.length<r.players.length?winners.map(p=>p.id):[];r.status='finished';r.finished_at=now;save(r);return true;
  }
  return {
-   list:(user)=>db.prepare('SELECT json FROM multiplayer_rooms ORDER BY rowid DESC LIMIT 200').all().map(x=>JSON.parse(x.json)).filter(r=>BigInt(r.entry)===0n||r.near).filter(r=>r.visibility==='public'||r.players.some(p=>p.id===user?.id)).filter(r=>['lobby','playing'].includes(r.status)||r.players.some(p=>p.id===user?.id)).map(r=>publicRoom(r,user)),
+   list:(user,{mine=false}={})=>db.prepare('SELECT json FROM multiplayer_rooms ORDER BY rowid DESC').all().map(x=>JSON.parse(x.json)).filter(r=>BigInt(r.entry)===0n||r.near).filter(r=>mine?r.players.some(p=>p.id===user?.id):(r.visibility==='public'||r.players.some(p=>p.id===user?.id))&&(['lobby','playing'].includes(r.status)||r.players.some(p=>p.id===user?.id))).filter((_,i)=>mine||i<200).map(r=>publicRoom(r,user)),
    get:(id,user,now=Date.now())=>publicRoom(read(id),user,now),
    create:(data,user,now=Date.now(),funding=null)=>store.transaction(()=>{
      const game=games.find(g=>g.id===data.game_id);if(!game||game.engine)throw Error('Choose a multiplayer challenge pack.');
-     const entry=amount(String(data.entry??'0')),max=Number(data.max_players||8);if(entry<0n||entry>100n*UNIT||entry>0n&&entry<UNIT/100n)throw Error('Use free entry or 0.01–100 NEAR.');if(!Number.isInteger(max)||max<2||max>16)throw Error('Choose 2–16 players.');
+     const entry=amount(String(data.entry??'0')),max=Number(data.max_players||8);if(!Number.isInteger(max)||max<2||max>16)throw Error('Choose 2–16 players.');
      const r={id:funding?.id||'party-'+randomUUID(),game_id:game.id,host:user.id,status:'lobby',entry:entry.toString(),near:entry>0n,max_players:max,visibility:data.visibility==='invite'?'invite':'public',created_at:now,expires_at:funding?.expires_at||now+1800000,questions:[],players:[{id:user.id,ready:false,index:0,score:0}],starts_at:null,ends_at:null,difficulty:data.difficulty==='brainy'?'brainy':'mixed'};debit(r,user.id,entry);save(r);return publicRoom(r,user,now);
    }),
    action:(id,user,data,now=Date.now())=>store.transaction(()=>{

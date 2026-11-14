@@ -1,0 +1,13 @@
+{
+  "network": "testnet",
+  "source": "nearfest-faucet-mwg8pta1-b9bb.testnet",
+  "purpose": "Disposable end-to-end test wallets",
+  "transfers": [
+    {
+      "recipient": "alice.nearfest-mwg03pdw-2886.testnet",
+      "amount": "578424423001315500000000",
+      "transaction_hash": "HRqscvatdMD2fUW9QeuMXoR3JAdXee6CPjuuwtWf7KgA"
+    }
+  ],
+  "completed_at": "2026-11-14T18:22:49.754Z"
+}

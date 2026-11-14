@@ -1,6 +1,6 @@
 # NearFest on NEAR testnet
 
-NearFest's demo starts with **Play for stakes**. Players connect independent NEAR testnet wallets, fund the same prize pot, play an authoritative multiplayer match, and collect the result. Free multiplayer and solo are secondary options. There is no FUN currency, fungible-token mint or mainnet mode.
+Choose **Play with friends**, enter a stake, and connect a NEAR testnet wallet. Players fund the same prize pot, play an authoritative multiplayer match, and collect the result. A zero stake opens a room without a deposit; **Play solo** starts individual practice. There is no FUN currency, fungible-token mint or mainnet mode.
 
 ## Current deployment
 
@@ -13,18 +13,18 @@ The deployed WASM was downloaded through NEAR RPC and its SHA-256 compared to th
 
 ## Demo flow
 
-1. Open a competitive title such as Connect Four, Mancala or Paddle Duel and choose **Play for stakes**.
+1. Open a competitive title such as Connect Four, Mancala or Paddle Duel and choose **Play with friends**.
 2. Connect a testnet wallet and sign the NEP-413 sign-in message. The signature does not authorize spending.
 3. Choose the entry amount, create the room, and approve its deposit transaction. Share the room link with a second independent wallet.
 4. The other player deposits the same entry; both mark ready. The host confirms the on-chain participant list and starts.
 5. Play the match. The game server validates inputs, computes the result and submits the result hash and winner set through the separate oracle.
 6. Wait for **Rewards confirmed on NEAR**, then open the account panel and **Collect**. A finished local match does not itself mean settlement has confirmed.
 
-Board matches play two legs with starting sides swapped. Competitive action games use the game's published concession/tie rules. Subjective/cooperative titles remain free; a separately reviewed group activity can use a group pot.
+Board matches play two legs with starting sides swapped. Every published multiplayer game supports optional stakes selected during room setup. Arcade rooms use the game's server-owned win/tie rules; resigning a staked game awards the pot to the remaining players. Solo practice has no stake.
 
 ## Money and storage
 
-All amounts use native NEAR and integer yoctoNEAR. Testnet NEAR has no monetary value. Stakes are 0.01–100 NEAR per contribution.
+All amounts use native NEAR and integer yoctoNEAR. Testnet NEAR has no monetary value. There is no application-defined minimum or maximum for positive stakes. Decimal amounts support all 24 yoctoNEAR places. A fresh available-wallet-balance check covers the stake plus required contract storage before a new deposit is prepared; the wallet also enforces its transaction costs.
 
 | Action | Attached deposit |
 | --- | --- |
@@ -37,13 +37,13 @@ Storage reserves are nonrefundable. There is no platform percentage fee. Prize p
 
 ## Authority, approvals and recovery
 
-`contract/src/rooms.rs` owns funding, membership, start, claim revision, independent votes, refunds and credits. `server/near-economy.mjs` prepares wallet transactions, verifies finalized chain state, then changes local game state. It never treats a client request or local balance as proof of a deposit. Contribution receipts prevent replay. Confirmed actions are recoverable after browser/API interruption.
+`contract/src/rooms.rs` owns funding, membership, start, claim revision, independent votes, refunds and credits. `server/near-economy.mjs` prepares wallet transactions, verifies finalized chain state, then changes local game state. It never treats a client request or local balance as proof of a deposit. Contribution receipts prevent replay. The app checks finalized contract state while the wallet popup is open: a missing popup callback does not block entry into a confirmed room. Concurrent requests reuse the same intent and room ID, confirmations share one in-flight operation, and a retry of an already-funded creation opens that room without another deposit. Prepared transactions bind the authenticated signer. Confirmed actions remain recoverable after browser/API interruption.
 
 The server oracle is trusted for game outcomes; the contract does not execute all game logic or prove a result hash true. AI can curate answer-checked questions and suggest evidence, but does not directly release game pots. Group pots and bounties require a majority of eligible contributors other than the named winner to approve the current claim. Revision-bound votes cannot silently approve replaced evidence. Bounty funding freezes after the first claim.
 
 Waiting game rooms accept deposits for 30 minutes. The host can cancel a waiting game; a non-host can leave. An on-chain deposit missing from the local participant list blocks starting, and the host can refund that unconfirmed player. If the server is unavailable, anyone can call `refund_room` after the stored `refund_at` deadline (90 minutes after game creation; group/bounty deadline plus 48 hours). Mainnet checks reject non-testnet RPC chains and contract account IDs.
 
-The account panel lists interrupted wallet actions. Recover confirmed deposits without sending them again, or cancel/refund eligible waiting deposits. Game-server failures retry settlement; an expired pot remains refundable on chain.
+The account panel lists interrupted wallet actions; they are not inserted into the game setup form. Recover confirmed deposits without sending them again, or cancel/refund eligible waiting deposits. Game-server failures retry settlement; an expired pot remains refundable on chain.
 
 ## Local setup and checks
 
@@ -57,7 +57,7 @@ DOCKER_CONTEXT=colima-humandemo npm run test:contract
 npm run test:testnet
 ```
 
-The public testnet check requires the running app on 5188/5189 and the ignored `.nearfest-testnet-keys.json` test accounts. It signs as those disposable test accounts, uses actual wallet transactions and writes public transaction hashes. It funds new test rooms each run; it is not a unit test and must never be pointed at mainnet. `TEST_API_URL` and `APP_ORIGIN` can override the local addresses.
+The public testnet check requires the running app on 5188/5189 and the ignored `.nearfest-testnet-keys.json` test accounts. It signs as those disposable test accounts, uses actual wallet transactions and writes public transaction hashes. The suite requires at least 0.8 test NEAR available in each disposable test wallet. Refill only from a separate funding wallet, never escrow or oracle funds. It funds new test rooms each run; it is not a unit test and must never be pointed at mainnet. `TEST_API_URL` and `APP_ORIGIN` can override the local addresses.
 
 For a completely fresh testnet deployment only, `npm run setup:testnet` creates faucet-funded contract/oracle/test-player accounts and saves private keys locally with mode 0600, then updates the NEAR values in `.env`. Build/check the contract and run `npm run deploy:testnet`. The deployment command refuses to overwrite an existing contract. Never commit `.env`, `.nearfest-*-keys.json`, runtime data or deploy keys.
 
@@ -65,7 +65,7 @@ Optional `NEAR_AI_API_KEY` is separate from wallet and escrow setup. It is not c
 
 ## In-app testnet funding
 
-The account panel has **Get 10 test NEAR**. A separate faucet wallet pays the transfer and gas; an empty connected wallet does not need to approve a spending transaction or leave NearFest. Sign-in is still required, and the recipient is always the authenticated account, never an address supplied in a request body. Mainnet is rejected.
+Onboarding and the account panel offer **Add test NEAR**, showing the currently available grant before submission. A separate faucet wallet pays the transfer and gas; an empty connected wallet does not need to approve a spending transaction or leave NearFest. Sign-in is still required, and the recipient is always the authenticated account, never an address supplied in a request body. Mainnet is rejected.
 
 Funding is available below a 10 NEAR wallet balance, once every 24 hours per wallet. Persistent limits also cap five top-ups per network address per hour, ten total per hour and twenty per day. The faucet retains at least 0.1 NEAR after a transfer. The external faucet remains a backup when this reserve is empty or the service is limited. Shared networks can hit the network-address limit; this is a bounded hackathon demo faucet, not Sybil-resistant distribution.
 
@@ -73,4 +73,14 @@ The signer is configured through server-only `NEAR_FAUCET_ACCOUNT` and `NEAR_FAU
 
 Each signed transfer is persisted with its hash before broadcast. Pending requests recover or re-broadcast that exact transaction rather than signing another payment. Only final successful outcomes are shown as delivered. Unresolved transfers hold further funding so a later nonce cannot overtake them. `npm run test:faucet` verifies authenticated HTTP funding and replay handling against a disposable testnet recipient; evidence is in `evidence/nearfest-faucet.json`.
 
-Faucet grants are 10 NEAR per eligible wallet every 24 hours. Each claim stores its own amount, so pre-upgrade 1 NEAR claims and pending transfers remain accurate and recoverable; their existing cooldowns are preserved. The sponsor must have at least 10.1 NEAR before a new grant is signed.
+Faucet grants are up to 10 NEAR per eligible wallet every 24 hours, capped by the amount needed to reach a 10 NEAR balance and the sponsor’s spendable funds after its gas reserve. Smaller grants are rounded down to 0.01 NEAR, with a minimum useful grant of 0.25 NEAR. Each claim stores its own amount, so pre-upgrade 1 NEAR claims and pending transfers remain accurate and recoverable; their existing cooldowns are preserved. The sponsor retains at least 0.1 NEAR; it can offer a smaller grant rather than rejecting every request below 10.1 NEAR. Availability distinguishes a depleted reserve, cooldown and RPC failure. Pending transfers reconcile automatically in the funding panel. Operators must replenish the dedicated faucet for continued use; no escrow or oracle funds are used for top-ups.
+
+## Verified wallet-flow fix (2026-11-14)
+
+The contract artifact in `evidence/contract-report.json` passed 18 sandbox scenarios plus the native withdrawal tests. `evidence/nearfest-upgrade.json` records the state-preserving testnet upgrade and the SHA-256 of the code downloaded after deployment; no initializer or migration ran, and all stored key/value pairs were unchanged. The public testnet suite includes an Astro Dash payment whose wallet callback intentionally never resolves, duplicate-create retries, final-state ownership checks, joins, cancellation, settlement and collection. Use `npm run test:testnet -- --resume` to continue only unfinished checks from its report.
+
+Future upgrades use `scripts/upgrade-testnet.mjs` with explicit `--expected-current-sha256` and `--expected-wasm-sha256` values. The default is a read-only verification; `--apply` backs up code and state, deploys only the tested artifact, and verifies code and storage afterward. Fresh deployment remains a separate command that refuses to overwrite a contract.
+
+Development-server shutdown now closes both lobby and arcade event streams, with a bounded drain for remaining HTTP connections. An integration test keeps both streams open during shutdown so a code reload cannot silently leave the API unavailable.
+
+Finalized reads share in-flight requests and use bounded backoff for HTTP 429 responses. Unchanged escrow ticks no longer trigger balance refreshes in every open tab. Arcade subscribers receive finalized settlement changes directly. Public testnet checks are paced to respect the public RPC; application-level confirmations never retry a deposit merely because an RPC read failed.

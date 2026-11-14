@@ -1,3 +1,4 @@
+import {confirmWalletAction} from './near-confirmation.mjs';
 export type NearEscrow={unconfirmed_members?:string[];network:string;contract_id:string;status:string;error?:string|null;refund_at:number;explorer:string};
 export type Config = { room_storage_fee:string; network: string; contract_id: string; oracle_ready: boolean; ai_ready: boolean; semantic_moderation: boolean; storage_fee: string; review_ms: number; resolution_ms: number };
 export type User = { id: string; name: string; kind: 'practice' | 'wallet'; balance: string; credit: string; pending: string; chain_error?: string };
@@ -8,13 +9,26 @@ export type Message = { id: number; user_id: string; name: string; text: string;
 export type Fixture = { id: string; name: string; date: string; status: string; state: 'live'|'upcoming'|'finished'|'unavailable'; completed: boolean; league: string; league_name?:string; sport?:string; teams: { id: string; name: string; abbreviation: string; score: string; winner: boolean; logo?:string }[] };
 export type Price = { symbol: string; price: string; source: string; observed_at: number };
 export type Leader = { id: string; name: string; wins: number; volume: string };
+const walletActions=new Map<string,Promise<unknown>>();
 export async function api<T>(path: string, data?: unknown): Promise<T> {
   const res = await fetch('/api' + path, { method: data === undefined ? 'GET' : 'POST', credentials: 'same-origin', headers: data === undefined ? {} : { 'content-type': 'application/json' }, body: data === undefined ? undefined : JSON.stringify(data), signal: AbortSignal.timeout(60000) });
   let result;try{result=await res.json();}catch{throw Error('The connection paused. Please try again.');} if (!res.ok){if(/Connect your NEAR testnet wallet/.test(result.error||''))window.dispatchEvent(new Event('nearfest:wallet-required'));throw Error(result.error || 'Could not complete that request.');}
-  if(result?.transaction&&result.intent_id){if(result.resume){try{return await api<T>('/near/confirm',{intent_id:result.intent_id});}catch{}}localStorage.setItem('nearfest-pending',result.intent_id);const {sendTransaction}=await import('./wallet');await sendTransaction(result.transaction);const confirmed=await api<T>('/near/confirm',{intent_id:result.intent_id});localStorage.removeItem('nearfest-pending');return confirmed;}
+  if(result?.transaction&&result.intent_id){
+    const existing=walletActions.get(result.intent_id);if(existing)return existing as Promise<T>;
+    const task=(async()=>{
+      localStorage.setItem('nearfest-pending',result.intent_id);
+      window.dispatchEvent(new Event('nearfest:pending-payment'));
+      const {sendTransaction}=await import('./wallet');
+      const confirmed=await confirmWalletAction({confirm:()=>api<T>('/near/confirm',{intent_id:result.intent_id}),onStatus:status=>window.dispatchEvent(new CustomEvent('nearfest:wallet-status',{detail:{intent_id:result.intent_id,status}})),...(result.resume?{}:{send:()=>sendTransaction(result.transaction)})});
+      if(localStorage.getItem('nearfest-pending')===result.intent_id)localStorage.removeItem('nearfest-pending');
+      window.dispatchEvent(new Event('nearfest:pending-payment'));
+      return confirmed;
+    })().finally(()=>walletActions.delete(result.intent_id));
+    walletActions.set(result.intent_id,task);return task;
+  }
   return result;
 }
-export function money(s: string | bigint) { const n = BigInt(s), unit = 10n ** 24n; const f = (n % unit).toString().padStart(24, '0').slice(0, 4).replace(/0+$/, ''); return (n / unit).toString() + (f ? '.' + f : ''); }
+export {formatNear as money} from '../shared/near-amount.mjs';
 export function remaining(time: number) { const n = time - Date.now(); if (n <= 0) return 'Time’s up'; if (n < 60000) return '< 1 min'; if (n < 3600000) return `${Math.ceil(n / 60000)} min`; if (n < 86400000) return `${Math.ceil(n / 3600000)} hr`; return `${Math.ceil(n / 86400000)} days`; }
 export const cats = ['All bets', 'Sports', 'Gaming', 'Life', 'Crypto', 'Facts', 'Science', 'Maths'];
 export const icons: Record<string, string> = { 'All bets': '✳', Sports: '⚽', Gaming: '👾', Life: '✌', Crypto: '₿', Facts: '🔎', Science: '🧪', Maths: '∑' };

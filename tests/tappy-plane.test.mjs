@@ -8,8 +8,8 @@ import {openStore} from '../server/store.mjs';
 import {discoveryGames} from '../server/game-catalog.mjs';
 const step=(state,n,input=[])=>{for(let i=0;i<n&&!state.finished;i++)state=advanceWorld(state,input);return state;};
 
-test('Tappy Plane is published for solo and free 2–4-player rooms with licensed, unchanged artwork',()=>{
- const game=discoveryGames.find(g=>g.id==='tappy-plane');assert(game.solo&&game.multiplayer);assert.equal(game.bettable,false);assert.equal(game.min_players,2);assert.equal(game.max_players,4);
+test('Tappy Plane is published for solo and optional-stake 2–4-player rooms with licensed, unchanged artwork',()=>{
+ const game=discoveryGames.find(g=>g.id==='tappy-plane');assert(game.solo&&game.multiplayer);assert.equal(game.bettable,true);assert.equal(game.min_players,2);assert.equal(game.max_players,4);
  const root=new URL('../public/games/tappy-plane/',import.meta.url),manifest=JSON.parse(readFileSync(new URL('provenance.json',root)));
  assert.equal(manifest.license,'CC0-1.0');assert.match(readFileSync(new URL('License.txt',root),'utf8'),/Creative Commons Zero/);
  for(const file of manifest.files)assert.equal(createHash('sha256').update(readFileSync(new URL(file.file,root))).digest('hex'),file.sha256,file.file);
@@ -54,7 +54,7 @@ test('shared course and identical controls stay deterministic; long flights keep
 test('rooms enforce readiness, countdown, invitations, replay protection and free solo without bots',()=>{
  const store=openStore(':memory:');try{
   const rooms=createArcadeRooms(store),a=store.ensureUser('tappy-a','Pilot A','practice'),b=store.ensureUser('tappy-b','Pilot B','practice'),outsider=store.ensureUser('tappy-c','Spectator','practice');
-  assert.throws(()=>rooms.create({game_id:'tappy-plane',entry:'0.1'},a),/free play/);
+  assert.throws(()=>rooms.create({game_id:'tappy-plane',entry:'0.1'},a),/deposit/);
   let r=rooms.create({game_id:'tappy-plane',entry:'0',visibility:'invite'},a,1000);
   assert.throws(()=>rooms.get(r.id,b),/invitation/);rooms.action(r.id,b,{type:'join'},r.invite_key,1001);assert.throws(()=>rooms.start(r.id,a,null,1002),/ready/);
   for(const user of [a,b])rooms.action(r.id,user,{type:'ready',ready:true},null,1003);r=rooms.start(r.id,a,null,1004);assert.equal(r.ends_at,null);

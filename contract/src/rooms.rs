@@ -19,16 +19,16 @@ impl SlotVend {
  #[payable]
  pub fn create_room(&mut self,id:String,kind:String,entry:U128,max_members:u8,join_until:u64,refund_at:u64,terms_hash:String){
   require!(id.len()>=12&&id.len()<=80&&id.bytes().all(|c|c.is_ascii_alphanumeric()||c==b'-'),"Invalid room ID");require!(self.rooms.get(&id).is_none(),"Room already exists");
-  require!(matches!(kind.as_str(),"game"|"pot"|"bounty"),"Invalid room kind");require!(entry.0>=UNIT/100&&entry.0<=100*UNIT,"Entry must be 0.01 to 100 NEAR");require!((2..=30).contains(&max_members),"Choose 2 to 30 members");
+  require!(matches!(kind.as_str(),"game"|"pot"|"bounty"),"Invalid room kind");require!(entry.0>0,"Entry must be greater than zero");require!((2..=30).contains(&max_members),"Choose 2 to 30 members");
   require!(join_until>now()&&join_until<=now()+30*24*60*60*1000&&refund_at>join_until&&refund_at<=join_until+WINDOW,"Invalid room deadlines");digest(&terms_hash);
-  require!(env::attached_deposit().as_yoctonear()==entry.0+ROOM_STORAGE,"Attach entry plus 0.1 NEAR storage reserve");let host=env::predecessor_account_id();
+  require!(env::attached_deposit().as_yoctonear()==entry.0.checked_add(ROOM_STORAGE).expect("Deposit overflow"),"Attach entry plus 0.1 NEAR storage reserve");let host=env::predecessor_account_id();
   self.rooms.insert(&id,&Room{claim_revision:0,id:id.clone(),host:host.clone(),kind,entry,max_members,join_until,refund_at,terms_hash,status:"open".into(),members:vec![Member{account_id:host,amount:entry}],claim:None,evidence_hash:None,winners:vec![],payouts:vec![]});
   env::log_str(&format!("NEARFEST:room_created:{}",id));
  }
  #[payable]
  pub fn contribute_room(&mut self,id:String,request_id:String,amount:U128){
-  let mut r=self.room(&id);require!(r.status=="open"&&r.claim.is_none()&&now()<r.join_until,"Funding is closed");let actor=env::predecessor_account_id();require!(request_id.len()>=8&&request_id.len()<=64,"Invalid funding receipt");let receipt=format!("{}:{}:{}",id,actor,request_id);require!(self.funding_receipts.get(&receipt).is_none(),"Contribution already confirmed");let n=amount.0;require!(env::attached_deposit().as_yoctonear()==n+UNIT/100,"Attach contribution plus 0.01 NEAR storage");
-  require!(n>=UNIT/100&&n<=100*UNIT,"Contribution must be 0.01 to 100 NEAR");if r.kind!="bounty"{require!(n==r.entry.0,"Match the exact entry");require!(!r.members.iter().any(|m|m.account_id==actor),"Already funded");}
+  let mut r=self.room(&id);require!(r.status=="open"&&r.claim.is_none()&&now()<r.join_until,"Funding is closed");let actor=env::predecessor_account_id();require!(request_id.len()>=8&&request_id.len()<=64,"Invalid funding receipt");let receipt=format!("{}:{}:{}",id,actor,request_id);require!(self.funding_receipts.get(&receipt).is_none(),"Contribution already confirmed");let n=amount.0;require!(env::attached_deposit().as_yoctonear()==n.checked_add(UNIT/100).expect("Deposit overflow"),"Attach contribution plus 0.01 NEAR storage");
+  require!(n>0,"Contribution must be greater than zero");if r.kind!="bounty"{require!(n==r.entry.0,"Match the exact entry");require!(!r.members.iter().any(|m|m.account_id==actor),"Already funded");}
   if let Some(m)=r.members.iter_mut().find(|m|m.account_id==actor){m.amount=U128(m.amount.0.checked_add(n).expect("Contribution overflow"));}else{require!(r.members.len()<(r.max_members as usize),"Room is full");r.members.push(Member{account_id:actor,amount:U128(n)});}
   self.funding_receipts.insert(&receipt,&true);self.save_room(r);
  }

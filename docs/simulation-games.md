@@ -1,6 +1,6 @@
 # Multiplayer simulations
 
-Town Council and Castaway Crew are free cooperative games for 2–4 people, with a one-player practice mode. Find them in the game catalogue or open `/?game=town-council` and `/?game=castaway-crew`. Each player joins the room on their own device; all players ready up before the host starts.
+Town Council and Castaway Crew are cooperative games for 2–4 people, with optional NEAR testnet stakes and a one-player practice mode. Find them in the game catalogue or open `/?game=town-council` and `/?game=castaway-crew`. Each player joins the room on their own device; all players ready up before the host starts.
 
 ## Playing in the world
 

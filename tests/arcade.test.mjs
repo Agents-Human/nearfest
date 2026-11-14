@@ -2,7 +2,7 @@ import {simulationIds,newSimulation,advanceSimulation} from '../server/arcade/si
 import {createPlay} from '../server/play.mjs';
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {arcadeGames,freeOnly} from '../server/arcade/catalog.mjs';
+import {arcadeGames} from '../server/arcade/catalog.mjs';
 import {worldIds,newWorld,advanceWorld,worldAction,worldBot} from '../server/arcade/world.mjs';
 import {newPuzzle,puzzleIds,puzzleAction,advancePuzzle,puzzleView,evaluateExpression,codePuzzle,circuitStatus} from '../server/arcade/puzzles.mjs';
 import {newParty,partyAction,partyView,advanceParty} from '../server/arcade/party.mjs';
@@ -14,7 +14,7 @@ import {initialState,applyMove,legalMoves,ended} from '../server/skill/engines.m
 import {sowingFrames} from '../src/games/sowing-frames.mjs';
 const step=(s,count,advance=advancePuzzle)=>{for(let i=0;i<count;i++)s=advance(s);return s;};
 test('every new title has a unique original simulation and reaches a bounded finish without input',()=>{
- assert.equal(arcadeGames.length,33);assert.equal(freeOnly.size,17);
+ assert.equal(arcadeGames.length,33);assert(arcadeGames.every(game=>game.bettable));
  for(const g of arcadeGames){let s=simulationIds.has(g.id)?newSimulation(g.id,g.min_players):worldIds.has(g.id)?newWorld(g.id,g.min_players):puzzleIds.has(g.id)?newPuzzle(g.id,g.min_players):newParty(g.id,g.min_players);
   const advance=simulationIds.has(g.id)?advanceSimulation:worldIds.has(g.id)?s=>advanceWorld(s,[]):puzzleIds.has(g.id)?advancePuzzle:advanceParty;
   for(let i=0;i<19000&&!s.finished;i++)s=advance(s);assert(s.finished,g.id);assert(s.players.length>=g.min_players);assert.doesNotThrow(()=>JSON.stringify(s));
@@ -71,7 +71,7 @@ test('rooms enforce invitation, private seats, receipts, free balances, stale in
   for(const u of [a,b])rooms.action(r.id,u,{type:'ready',ready:true},null,1002);r=rooms.start(r.id,a,null,1003);rooms.input(r.id,a,{seq:2,controls:{up:true},x:99999},null,4004);rooms.input(r.id,a,{seq:1,controls:{down:true}},null,4005);assert.equal(rooms.get(r.id,a).input_seq,2);
   for(let t=4053;t<=5003;t+=50)rooms.tick(t);assert(rooms.get(r.id,a).state.players[0].speed>0);const before=rooms.get(r.id,a).state.tick;rooms.input(r.id,a,{seq:3,controls:{}},null,5004);assert.equal(rooms.get(r.id,a).state.tick,before);
   r=rooms.action(r.id,a,{type:'resign'},null,5005);assert.equal(store.user(b.id).credit,'0');rooms.action(r.id,a,{type:'resign'},null,5006);assert.equal(store.user(b.id).credit,'0');
-  assert.throws(()=>rooms.create({game_id:'draw-guess',entry:'5'},c),/free play/);
+  assert.throws(()=>rooms.create({game_id:'draw-guess',entry:'5'},c),/deposit/);
   r=rooms.create({game_id:'word-hunt',entry:'0'},a,6000);rooms.action(r.id,b,{type:'join'},null,6001);for(const u of [a,b])rooms.action(r.id,u,{type:'ready',ready:true},null,6002);r=rooms.start(r.id,a,null,6003);const receipt={type:'play',input_id:'word-receipt-001',action:{path:[0,1,2]}};rooms.action(r.id,a,receipt,null,10000);rooms.action(r.id,a,receipt,null,10001);assert.equal(rooms.get(r.id,a).state.me.score,1);assert.throws(()=>rooms.action(r.id,a,{...receipt,action:{path:[4,5,6]}},null,10002),/reused/);
   rooms=createArcadeRooms(store);assert.equal(rooms.get(r.id,a).status,'cancelled');assert.equal(store.user(a.id).credit,'0');assert.equal(store.user(b.id).credit,'0');
  }finally{store.db.close();}

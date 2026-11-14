@@ -1,6 +1,6 @@
 {
   "network": "isolated NEAR sandbox",
-  "wasm_sha256": "81a0e978da605b1546979adc750dfbfee436738e9997723ac0cf4c5c8cee9050",
+  "wasm_sha256": "71c6748254b8be636629e1f78ef89ee3f63abfd30f6162e2c5411030a0d6901e",
   "checks": [
     {
       "name": "exact funding, unique creation and immutable terms",
@@ -47,6 +47,14 @@
       "passed": true
     },
     {
+      "name": "arbitrary positive stakes preserve exact deposits, refunds and withdrawal amounts",
+      "passed": true
+    },
+    {
+      "name": "small and large contributions keep receipts and exact settlement totals",
+      "passed": true
+    },
+    {
       "name": "multiplayer escrow requires exact deposits, unique membership and confirmed participant list",
       "passed": true
     },
@@ -67,5 +75,5 @@
       "passed": true
     }
   ],
-  "completed_at": "2026-11-14T06:15:23.713Z"
+  "completed_at": "2026-11-14T18:11:56.609Z"
 }

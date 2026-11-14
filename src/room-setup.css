@@ -1,0 +1,43 @@
+/* Keep form flows over the current page, with only the active dialog interactive. */
+body:has(#machine-overlays .modal){overflow:hidden}
+.modal{overscroll-behavior:contain}
+.modal[inert]{filter:brightness(.75);pointer-events:none}
+.modal.wide.room-setup-modal{width:min(720px,calc(100% - 40px))}
+.room-setup-modal .room-setup{display:block;min-height:0;padding:24px 28px 28px;margin:0;max-width:none}
+.room-setup-heading{display:flex;align-items:center;gap:18px;margin-bottom:24px}
+.room-setup-heading>img{width:96px;height:80px;flex-shrink:0;object-fit:cover;border:1px solid #29282030;border-radius:14px}
+.room-setup-heading>div{min-width:0}
+.room-setup-heading span{display:block;font-size:10px;font-weight:700;color:var(--muted);letter-spacing:.8px}
+.room-setup-heading h3{font:28px/1.15 var(--heading);margin:5px 0 8px}
+.room-setup .room-setup-heading p{font-size:12px;line-height:1.5;color:var(--muted);margin:0}
+.room-setup .platform-menu{max-width:none;margin:0 0 6px;padding:16px}
+.room-setup .platform-menu-heading{margin-bottom:12px}
+.room-setup .platform-character img{width:40px;height:40px}
+.room-setup .platform-character>span{padding:7px 3px}
+.room-setup .platform-menu .platform-lives{margin-top:14px;padding-top:12px}
+.room-setup form>.primary{justify-self:end}
+.room-setup .form-grid{margin:0;gap:18px}
+.room-setup .form-grid>label{min-width:0}
+.room-setup .fine-print{margin:0}
+.room-setup .skill-rules{margin-bottom:18px}
+@media(max-width:600px){
+  .modal.wide.room-setup-modal{width:calc(100% - 24px);max-height:calc(100dvh - 24px);margin:12px auto}
+  .room-setup-modal .room-setup{padding:20px 16px 24px}
+  .room-setup-heading{gap:12px;margin-bottom:20px}
+  .room-setup-heading>img{width:68px;height:68px;border-radius:11px}
+  .room-setup-heading h3{font-size:25px;margin-bottom:5px}
+  .room-setup .room-setup-heading p{font-size:11px}
+  .room-setup .form-grid{grid-template-columns:1fr;gap:16px}
+  .room-setup .platform-menu{padding:12px}
+  .room-setup .platform-character img{width:35px;height:35px}
+  .room-setup .platform-character b{font-size:10px}
+  .room-setup form>.primary{width:100%}
+}
+
+.solo-game-setup form{display:grid;gap:20px}
+.solo-game-setup .race-duration-field{margin:0}
+
+.stake-amount-input{position:relative;width:100%}
+.stake-amount-input>input{display:block;width:100%;padding-right:76px!important;appearance:textfield;font-variant-numeric:tabular-nums}
+.stake-amount-input>input::-webkit-inner-spin-button,.stake-amount-input>input::-webkit-outer-spin-button{-webkit-appearance:none;margin:0}
+.stake-amount-input>span{position:absolute;right:15px;top:50%;transform:translateY(-50%);font-size:11px;font-weight:800;color:var(--muted);pointer-events:none}

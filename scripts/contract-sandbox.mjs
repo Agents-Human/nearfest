@@ -33,7 +33,7 @@ async function create(extra = {}, deposit) {
 }
 async function check(name, fn) { await fn(); checks.push({ name, passed: true }); console.log('PASS:', name); }
 try {
-  for (const name of ['contract', 'alice', 'bob', 'carol', 'referee', 'oracle']) { const key = KeyPair.fromRandom('ed25519'), id = name + '.sandbox'; await root.createAccount({ newAccountId: id, publicKey: key.getPublicKey(), nearToTransfer: 100n * UNIT }); users[name] = new Account(id, rpc, key.toString()); }
+  for (const name of ['contract', 'alice', 'bob', 'carol', 'referee', 'oracle']) { const key = KeyPair.fromRandom('ed25519'), id = name + '.sandbox'; await root.createAccount({ newAccountId: id, publicKey: key.getPublicKey(), nearToTransfer: 1000n * UNIT }); users[name] = new Account(id, rpc, key.toString()); }
   await users.contract.deployContract(wasm); await call('contract', 'new', { oracle: users.oracle.accountId });
   let main;
   await check('exact funding, unique creation and immutable terms', async () => { main = await create(); await call('alice', 'create_bet', main.args, UNIT + STORAGE, false); assert.equal((await view('get_bets')).length, 1); const bad = { ...main.args, request_id: randomUUID() }; await call('alice', 'create_bet', bad, UNIT, false); assert.equal((await view('get_bet', { id: main.id })).stake, UNIT.toString()); });
@@ -54,6 +54,30 @@ try {
   await check('all remaining obligations can be collected and no callback is externally callable', async () => { const a = BigInt(await view('get_credit', { account_id: users.alice.accountId })), b = BigInt(await view('get_credit', { account_id: users.bob.accountId })); assert.equal(a + b, 11n * UNIT); await call('alice', 'on_withdraw', { account_id: users.alice.accountId }, 0n, false); for (const who of ['alice', 'bob']) { await call(who, 'withdraw'); assert.equal(await view('get_credit', { account_id: users[who].accountId }), '0'); assert.equal(await view('get_pending', { account_id: users[who].accountId }), '0'); } });
 
   async function createRoom(kind='game',extra={}){const t=await now(),id='room-'+randomUUID();const args={id,kind,entry:(UNIT/10n).toString(),max_members:4,join_until:t+300000,refund_at:t+600000,terms_hash:'f'.repeat(64),...extra};await call('alice','create_room',args,BigInt(args.entry)+UNIT/10n);return args;}
+  await check('arbitrary positive stakes preserve exact deposits, refunds and withdrawal amounts',async()=>{
+    for(const entry of [1n,UNIT/1000n,101n*UNIT]){
+      const creditBefore=BigInt(await view('get_credit',{account_id:users.alice.accountId}));
+      const r=await createRoom('game',{entry:entry.toString()});
+      await call('carol','cancel_room',{id:r.id},0n,false);
+      await call('alice','cancel_room',{id:r.id});
+      assert.equal(BigInt(await view('get_credit',{account_id:users.alice.accountId})),creditBefore+entry);
+      await call('alice','cancel_room',{id:r.id},0n,false);
+      await call('alice','withdraw');
+      assert.equal(await view('get_pending',{account_id:users.alice.accountId}),'0');
+      const bet=await create({stake:entry.toString()},entry+STORAGE);await call('alice','cancel_bet',{id:bet.id});await call('alice','withdraw');
+    }
+    const t=await now();await call('alice','create_room',{id:'zero-'+randomUUID(),kind:'game',entry:'0',max_members:2,join_until:t+300000,refund_at:t+600000,terms_hash:'a'.repeat(64)},UNIT/10n,false);
+  });
+  await check('small and large contributions keep receipts and exact settlement totals',async()=>{
+    for(const entry of [1n,101n*UNIT]){
+      const r=await createRoom('game',{entry:entry.toString()});const request_id=randomUUID();
+      await call('bob','contribute_room',{id:r.id,request_id},entry);
+      await call('bob','contribute_room',{id:r.id,request_id},entry,false);
+      await call('alice','start_room',{id:r.id,participants:[users.alice.accountId,users.bob.accountId]});
+      await call('oracle','settle_game',{id:r.id,winners:[users.bob.accountId],evidence_hash:'b'.repeat(64)});
+      assert.equal((await view('get_room',{id:r.id})).payouts[0].amount,(2n*entry).toString());await call('bob','withdraw');
+    }
+  });
   await check('multiplayer escrow requires exact deposits, unique membership and confirmed participant list',async()=>{const r=await createRoom();await call('alice','create_room',r,UNIT/5n,false);await call('bob','contribute_room',{id:r.id},UNIT/10n-1n,false);await call('bob','contribute_room',{id:r.id},UNIT/10n);await call('bob','contribute_room',{id:r.id},UNIT/10n,false);await call('carol','start_room',{id:r.id,participants:[users.alice.accountId,users.bob.accountId]},0n,false);await call('alice','start_room',{id:r.id,participants:[users.alice.accountId]},0n,false);await call('alice','start_room',{id:r.id,participants:[users.alice.accountId,users.bob.accountId]});await call('carol','contribute_room',{id:r.id},UNIT/10n,false);await call('alice','settle_game',{id:r.id,winners:[users.alice.accountId],evidence_hash:'a'.repeat(64)},0n,false);await call('oracle','settle_game',{id:r.id,winners:[users.carol.accountId],evidence_hash:'a'.repeat(64)},0n,false);await call('oracle','settle_game',{id:r.id,winners:[users.bob.accountId],evidence_hash:'a'.repeat(64)});assert.equal((await view('get_room',{id:r.id})).payouts[0].amount,(UNIT/5n).toString());await call('oracle','settle_game',{id:r.id,winners:[users.bob.accountId],evidence_hash:'a'.repeat(64)},0n,false);await call('bob','withdraw');});
   await check('multiplayer split retains every yoctoNEAR and cannot repeat',async()=>{const r=await createRoom('game',{entry:(UNIT/100n+1n).toString()});for(const who of ['bob','carol'])await call(who,'contribute_room',{id:r.id},BigInt(r.entry));await call('alice','start_room',{id:r.id,participants:['alice','bob','carol'].map(n=>users[n].accountId)});await call('oracle','settle_game',{id:r.id,winners:[users.bob.accountId,users.carol.accountId],evidence_hash:'b'.repeat(64)});const result=await view('get_room',{id:r.id});assert.equal(result.payouts.reduce((n,p)=>n+BigInt(p.amount),0n),3n*BigInt(r.entry));assert.equal(BigInt(result.payouts[0].amount)-BigInt(result.payouts[1].amount),1n);await call('oracle','cancel_room',{id:r.id},0n,false);for(const who of ['bob','carol'])await call(who,'withdraw');});
   await check('leaving and server interruption refunds preserve original contributions',async()=>{const r=await createRoom();await call('bob','contribute_room',{id:r.id},UNIT/10n);await call('bob','leave_room',{id:r.id});assert.equal((await view('get_room',{id:r.id})).members.length,1);await call('bob','withdraw');await call('bob','contribute_room',{id:r.id},UNIT/10n);await call('alice','start_room',{id:r.id,participants:[users.alice.accountId,users.bob.accountId]});await call('oracle','cancel_room',{id:r.id});assert.equal((await view('get_room',{id:r.id})).status,'refunded');for(const who of ['alice','bob'])await call(who,'withdraw');});

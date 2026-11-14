@@ -1,5 +1,5 @@
 const rows=[
- ['platform-relay','Astro Climb','Action',2,4,0,'An endless island adventure with a storm on your heels. Bounce between floating platforms, face mischievous monsters, and outlast your rivals.'],
+ ['platform-relay','Astro Dash','Action',2,4,0,'Race across floating islands with a storm at your heels. A colourful survival adventure where one more jump can keep you in the game.'],
  ['tappy-plane','Tappy Plane','Action',2,4,0,'A tiny plane, a winding canyon, and a sky full of stars. Find your rhythm and see how long you can keep flying.'],
  ['town-council','Town Council','Simulation',2,4,840,'A small town with big plans. Get to know its residents, shape its future, and bring everyone together for the festival.'],
  ['castaway-crew','Castaway Crew','Simulation',2,4,900,'An island, a stranded crew, and a storm on the horizon. Build a new community while working towards a way home.'],
@@ -33,6 +33,5 @@ const rows=[
  ['sudoku-race','Sudoku Race','Puzzles',2,4,300,'One puzzle, several sharp minds, and a quiet race to the final square. Find the logic before your rivals do.'],
  ['codebreakers','Codebreakers','Puzzles',2,4,180,'A hidden code and a handful of carefully chosen clues. Piece together the one answer that fits them all.'],
 ];
-export const freeOnly=new Set(['tappy-plane','town-council','castaway-crew','pocket-soccer','cat-defense','marble-run','tank-arena','draw-guess','category-sprint','clue-crew','bluff-club','deduction-club','kitchen-rush','platform-relay','circuit-crew','orbit-rescue','bridge-builders']);
-export const arcadeGames=rows.map(([id,title,genre,min,max,seconds,description])=>({id,title,label:genre,genre,category:['Maths','Science'].includes(genre)?genre:'Gaming',min_players:min,max_players:max,seconds,description,engine:'arcade',kind:'game',solo:true,multiplayer:true,standalone:true,bettable:!freeOnly.has(id),rounds:1,art:id,rules_version:'slotvend-original-1'}));
+export const arcadeGames=rows.map(([id,title,genre,min,max,seconds,description])=>({id,title,label:genre,genre,category:['Maths','Science'].includes(genre)?genre:'Gaming',min_players:min,max_players:max,seconds,description,engine:'arcade',kind:'game',solo:true,multiplayer:true,standalone:true,bettable:true,rounds:1,art:id,rules_version:'slotvend-original-1'}));
 export const arcadeGame=id=>arcadeGames.find(g=>g.id===id);

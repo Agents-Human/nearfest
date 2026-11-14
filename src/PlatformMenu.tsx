@@ -17,7 +17,7 @@ export function PlatformPortrait({character, className}: {character: PlatformCha
   return <img className={className} src="/models/platform/icons/character-pink.png" style={{filter: portraitFilters[character]}} alt=""/>;
 }
 
-function readPreferences(): Preferences {
+export function readPlatformPreferences(): Preferences {
   try {
     const saved = JSON.parse(localStorage.getItem(storageKey) || '{}');
     return {character: platformCharacter(saved.character), lives: platformLives(saved.lives)};
@@ -25,7 +25,7 @@ function readPreferences(): Preferences {
 }
 
 export function usePlatformPreferences() {
-  const [preferences, setPreferences] = useState(readPreferences);
+  const [preferences, setPreferences] = useState(readPlatformPreferences);
   function change(patch: Partial<Preferences>) {
     setPreferences(previous => {
       const next = {...previous, ...patch};
@@ -45,7 +45,7 @@ export default function PlatformMenu({character, lives, onCharacter, onLives, di
   online?: boolean;
 }) {
   const id = useId();
-  return <section className="platform-menu" aria-label="Astro Climb game menu">
+  return <section className="platform-menu" aria-label="Astro Dash game menu">
     <div className="platform-menu-heading"><span>YOUR ADVENTURE</span><b>Make it your run.</b></div>
     <fieldset disabled={disabled}>
       <legend>Choose your color</legend>

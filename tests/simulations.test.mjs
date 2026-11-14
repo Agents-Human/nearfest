@@ -13,8 +13,8 @@ const meet=(s,seat,npc)=>place(s,seat,s.npcs[npc]);
 const site=(s,seat,id)=>place(s,seat,s.locations.find(l=>l.id===id));
 const dusk=s=>{const day=s.day;for(let i=0;i<s.players.length;i++)site(s,i,s.game==='town-council'?'council':'camp');for(let i=0;i<s.players.length&&s.day===day&&!s.finished;i++)act(s,i,{type:'ready',ready:true});return s;};
 
-test('both simulations are free, independently playable by 1–4 people and finish when idle',()=>{
- for(const game of simulationIds){assert.equal(arcadeGame(game).bettable,false);assert.throws(()=>newSimulation(game,5));for(const n of [1,2,4]){let s=newSimulation(game,n);s=step(s,19000);assert(s.finished);assert.deepEqual(s.winners,[]);assert.equal(s.day,s.totalDays);}}
+test('both simulations support stakes, are independently playable by 1–4 people and finish when idle',()=>{
+ for(const game of simulationIds){assert.equal(arcadeGame(game).bettable,true);assert.throws(()=>newSimulation(game,5));for(const n of [1,2,4]){let s=newSimulation(game,n);s=step(s,19000);assert(s.finished);assert.deepEqual(s.winners,[]);assert.equal(s.day,s.totalDays);}}
 });
 test('travel takes server time, tasks reserve supplies and cannot be duplicated or awarded early',()=>{
  let s=newSimulation('castaway-crew',2);const original=structuredClone(s);assert.throws(()=>act(s,0,{type:'task',task:'radio'}),/Walk/);s=advanceSimulation(s,[{right:true}]);assert(s.players[0].x>original.players[0].x);site(s,0,'radio');act(s,0,{type:'task',task:'radio'});
@@ -84,7 +84,7 @@ test('solo, two and four players can complete both games through authored decisi
 });
 test('room sessions preserve shared state, redact personal memories, deduplicate receipts and cancel on restart',()=>{
  const store=openStore(':memory:');try{let rooms=createArcadeRooms(store);const a=store.ensureUser('sim-a','Ari','practice'),b=store.ensureUser('sim-b','Bea','practice'),c=store.ensureUser('sim-c','Cai','practice');
-  assert.throws(()=>rooms.create({game_id:'town-council',entry:'0.1'},a,1000),/free/);
+  assert.throws(()=>rooms.create({game_id:'town-council',entry:'0.1'},a,1000),/deposit/);
   let r=rooms.create({game_id:'castaway-crew',visibility:'invite'},a,1000);assert.throws(()=>rooms.get(r.id,c),/invitation/);rooms.action(r.id,b,{type:'join'},r.invite_key,1001);
   for(const u of [a,b])rooms.action(r.id,u,{type:'ready',ready:true},null,1002);r=rooms.start(r.id,a,null,1003);
   let now=4003;for(let i=0;i<40;i++){now+=50;rooms.input(r.id,a,{seq:i,controls:i<20?{right:true}:{right:true,up:true}},null,now);rooms.tick(now);}

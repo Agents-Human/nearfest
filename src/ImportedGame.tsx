@@ -18,7 +18,7 @@ export default function ImportedGame({game,createGroup,embedded=false}:{game:Gam
    <div className="library-art"><img src={gameCover(game)} alt=""/><span className="library-art-stamp">ONE MORE GO.</span></div>
    <div className="library-intro-copy">
     <span className="library-genre">{game.genre}</span>
-    <h2>{gameTitle(game)}</h2><GameInfoTabs title={gameTitle(game)} description={description}><p>{controls}</p></GameInfoTabs>
+    <h2>{gameTitle(game)}</h2><GameInfoTabs game={game} title={gameTitle(game)} description={description}><p>{controls}</p></GameInfoTabs>
     <div className="library-facts"><span><svg width="17" height="17" viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth="1.5" aria-hidden="true"><circle cx="10" cy="6" r="3"/><path d="M3 18v-3a7 7 0 0 1 14 0v3"/></svg>{people}</span><span>Free to play</span></div>
     <button className="primary library-play" onClick={()=>setStarted(true)}><span>Let’s play</span><svg width="20" height="20" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path d="M5 3.8c0-.8.9-1.3 1.6-.9l10 6.2c.7.4.7 1.4 0 1.8l-10 6.2c-.7.4-1.6-.1-1.6-.9z"/></svg></button>
     {createGroup&&<button className="library-challenge" onClick={createGroup}>Challenge your group <span aria-hidden="true">↗</span></button>}
