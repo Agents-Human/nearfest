@@ -3,9 +3,10 @@ import { games,discoveryGames } from './game-catalog.mjs';
 import { banks } from './question-bank.mjs';
 import { recipeQuestions } from './recipe-questions.mjs';
 import { curateQuestions } from './curator.mjs';
+import { withQuestionArt } from './question-art.mjs';
 export {games};
 const shuffle=values=>{const a=[...values];for(let i=a.length-1;i>0;i--){const j=randomInt(i+1);[a[i],a[j]]=[a[j],a[i]];}return a;};
-function choice(prompt,answer,wrong){const choices=shuffle([String(answer),...wrong.map(String)]);return {type:'choice',prompt,choices,answer:choices.indexOf(String(answer))};}
+function choice(prompt,answer,wrong){const choices=shuffle([String(answer),...wrong.map(String)]);return withQuestionArt({type:'choice',prompt,choices,answer:choices.indexOf(String(answer))});}
 export function candidatesFor(id,difficulty='mixed') {
  const game=games.find(g=>g.id===id);if(game?.recipe)return recipeQuestions(game,choice);
  if(id==='chess')return [{type:'chess',prompt:'White to move. Find checkmate in one.',pieces:{f6:'K',g6:'Q',h8:'k'},answer:'g6g7',hint:'Select a white piece, then its destination.'}];
@@ -25,7 +26,7 @@ export function createPlay(store,{curate=curateQuestions}={}) {
  db.exec('CREATE TABLE IF NOT EXISTS play_runs(id TEXT PRIMARY KEY,user_id TEXT NOT NULL,game_id TEXT NOT NULL,json TEXT NOT NULL)');
  const read=id=>{const r=db.prepare('SELECT json FROM play_runs WHERE id=?').get(id);if(!r)throw Error('Game not found.');return JSON.parse(r.json);};
  const save=r=>db.prepare('INSERT INTO play_runs VALUES(?,?,?,?) ON CONFLICT(id) DO UPDATE SET json=excluded.json').run(r.id,r.user_id,r.game_id,JSON.stringify(r));
- function publicRun(r,now=Date.now()){const done=r.index>=r.questions.length||now>=r.ends_at;let question=null;if(!done){const {answer,...q}=r.questions[r.index];question=q;}return {id:r.id,game_id:r.game_id,index:r.index,total:r.questions.length,score:r.score,ends_at:r.ends_at,done,question,curation:r.curation||'bank',difficulty:r.difficulty||'mixed',completed_at:r.completed_at||null,shared:r.shared===true};}
+ function publicRun(r,now=Date.now()){const done=r.abandoned||r.index>=r.questions.length||now>=r.ends_at;let question=null;if(!done){const {answer,...q}=r.questions[r.index];question=q;}return {id:r.id,game_id:r.game_id,index:r.index,total:r.questions.length,score:r.score,ends_at:r.ends_at,abandoned:Boolean(r.abandoned),done,question,curation:r.curation||'bank',difficulty:r.difficulty||'mixed',completed_at:r.completed_at||null,shared:r.shared===true};}
  function finishExpired(r,now=Date.now()){if(now>=r.ends_at&&!r.completed_at){r.completed_at=r.ends_at;save(r);}return r;}
  async function start(id,user,options={}){
    const game=games.find(g=>g.id===id);if(!game||game.engine)throw Error('Choose a timed challenge.');
@@ -39,11 +40,12 @@ export function createPlay(store,{curate=curateQuestions}={}) {
    })();starting.set(key,task);try{return await task;}finally{starting.delete(key);}
  }
  return {
-   catalog:()=>{const counts=new Map(db.prepare('SELECT game_id,count(*) AS n FROM play_runs GROUP BY game_id').all().map(r=>[r.game_id,r.n]));return discoveryGames.map(g=>({...g,ai_available:Boolean(process.env.NEAR_AI_API_KEY)&&g.rounds>1,plays:counts.get(g.id)||0}));},start,
+   catalog:()=>{const counts=new Map(db.prepare('SELECT game_id,count(*) AS n FROM play_runs GROUP BY game_id').all().map(r=>[r.game_id,r.n]));return discoveryGames.map(g=>({...g,ai_available:g.engine!=='skill'&&Boolean(process.env.NEAR_AI_API_KEY)&&g.rounds>1,plays:counts.get(g.id)||0}));},start,
    get:(id,user)=>{const r=read(id);if(r.user_id!==user.id)throw Error('This run belongs to another player.');return publicRun(finishExpired(r));},
+   end:(id,user)=>{const r=read(id);if(r.user_id!==user.id)throw Error('This run belongs to another player.');if(!publicRun(r).done){r.abandoned=true;r.completed_at=Date.now();save(r);}return publicRun(r);},
    answer:(id,user,data,now=Date.now())=>store.transaction(()=>{const r=read(id);if(r.user_id!==user.id)throw Error('This run belongs to another player.');if(publicRun(r,now).done)return publicRun(finishExpired(r,now),now);if(data.index!==r.index)throw Error('That question was already answered.');const q=r.questions[r.index];if(q.type==='choice'&&(!Number.isInteger(data.answer)||data.answer<0||data.answer>=q.choices.length))throw Error('Choose one answer.');if(q.type==='chess'&&(typeof data.answer!=='string'||!/^[a-h][1-8][a-h][1-8]$/.test(data.answer)))throw Error('Choose a move.');const correct=data.answer===q.answer;r.score+=correct?1:0;r.index++;if(r.index===r.questions.length)r.completed_at=now;save(r);return {...publicRun(r,now),feedback:{correct,answer:q.type==='choice'?q.choices[q.answer]:'Qg7#'}};}),
-   share:(id,user)=>{const r=read(id);if(r.user_id!==user.id)throw Error('Only the player can share this run.');finishExpired(r);if(!r.completed_at)throw Error('Finish your run before sharing it.');r.shared=true;save(r);return {id:r.id};},
+   share:(id,user)=>{const r=read(id);if(r.user_id!==user.id)throw Error('Only the player can share this run.');finishExpired(r);if(!r.completed_at||r.abandoned)throw Error('Finish your run before sharing it.');r.shared=true;save(r);return {id:r.id};},
    proof:id=>{const r=read(id);if(!r.shared||!r.completed_at)throw Error('This result has not been shared.');return {id:r.id,game_id:r.game_id,title:games.find(g=>g.id===r.game_id)?.title,name:store.user(r.user_id)?.name||'Player',score:r.score,total:r.questions.length,completed_at:r.completed_at,curation:r.curation};},
-   scores:()=>{const best=new Map();for(const row of db.prepare('SELECT json FROM play_runs').all()){const r=JSON.parse(row.json);if(!r.completed_at)continue;const old=best.get(r.user_id)||{id:r.user_id,name:store.user(r.user_id)?.name||r.user_id,points:0,plays:0};old.points+=r.score;old.plays++;best.set(r.user_id,old);}return [...best.values()].sort((a,b)=>b.points-a.points).slice(0,20);}
+   scores:()=>{const best=new Map();for(const row of db.prepare('SELECT json FROM play_runs').all()){const r=JSON.parse(row.json);if(!r.completed_at||r.abandoned)continue;const old=best.get(r.user_id)||{id:r.user_id,name:store.user(r.user_id)?.name||r.user_id,points:0,plays:0};old.points+=r.score;old.plays++;best.set(r.user_id,old);}return [...best.values()].sort((a,b)=>b.points-a.points).slice(0,20);}
  };
 }

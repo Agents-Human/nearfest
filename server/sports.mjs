@@ -44,7 +44,7 @@ export function verifySportsEntry(d,event,{now=Date.now(),practice=true,acceptin
  if(!team||!Number.isFinite(kickoff)||!['live','upcoming'].includes(phase))throw Error('This match is finished, unavailable or no longer accepting predictions.');
  if(!accepting){
   if(phase==='upcoming'&&(kickoff<=d.join_before||kickoff>=d.ends_at))throw Error('Set joining to close before kickoff, and the result time after the match.');
-  if(phase==='live'&&(!practice||d.join_before>now+5*60000||d.ends_at<=now))throw Error('In-play challenges use FUN and must close to new players within five minutes.');
+  if(phase==='live'&&(d.join_before>now+5*60000||d.ends_at<=now))throw Error('In-play NEAR testnet challenges must close to new players within five minutes.');
  }else if(phase==='live'&&!d.resolver_config.in_play)throw Error('Kickoff has passed. This pre-match challenge is no longer accepting entries.');
  return {team,phase,kickoff};
 }

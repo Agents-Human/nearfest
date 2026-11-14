@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 48" role="img" aria-labelledby="title">
+  <title id="title">Ivory Oware seed</title>
+  <path d="M3 26C3 14 16 5 31 5c16 0 29 8 30 20S49 43 33 43 3 38 3 26Z" fill="#d1ad77" stroke="#725036" stroke-width="1.7"/>
+  <path d="M4 23C5 12 18 5 31 5c14 0 26 7 28 17-3 9-14 14-27 14S9 32 4 23Z" fill="#fae7bc"/>
+  <path d="M11 20c3-5 10-9 18-10" fill="none" stroke="#fff9e9" stroke-width="5" stroke-linecap="round"/>
+  <path d="M52 23q-3 3 0 6" fill="none" stroke="#ba9160" stroke-width="2.2" stroke-linecap="round"/>
+</svg>

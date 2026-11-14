@@ -1,6 +1,6 @@
 {
   "network": "isolated NEAR sandbox",
-  "wasm_sha256": "81f76634014a928d3750d655bc443cc06efd91986bd1eedff5838fa09310eff0",
+  "wasm_sha256": "81a0e978da605b1546979adc750dfbfee436738e9997723ac0cf4c5c8cee9050",
   "checks": [
     {
       "name": "exact funding, unique creation and immutable terms",
@@ -45,7 +45,27 @@
     {
       "name": "all remaining obligations can be collected and no callback is externally callable",
       "passed": true
+    },
+    {
+      "name": "multiplayer escrow requires exact deposits, unique membership and confirmed participant list",
+      "passed": true
+    },
+    {
+      "name": "multiplayer split retains every yoctoNEAR and cannot repeat",
+      "passed": true
+    },
+    {
+      "name": "leaving and server interruption refunds preserve original contributions",
+      "passed": true
+    },
+    {
+      "name": "group pots require independent majority votes on chain",
+      "passed": true
+    },
+    {
+      "name": "bounty evidence freezes funding and rejected claims never release money",
+      "passed": true
     }
   ],
-  "completed_at": "2026-11-13T15:01:03.944Z"
+  "completed_at": "2026-11-14T06:15:23.713Z"
 }

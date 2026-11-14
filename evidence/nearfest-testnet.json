@@ -1,0 +1,159 @@
+{
+  "network": "testnet",
+  "contract": "nearfest-mwg03pdw-2886.testnet",
+  "transactions": [
+    {
+      "actor": "alice.nearfest-mwg03pdw-2886.testnet",
+      "method": "create_room",
+      "hash": "322ofYrKf7PKTwo5pSnGRng5jJXREGMP6AQP4XRUzfWE"
+    },
+    {
+      "actor": "bob.nearfest-mwg03pdw-2886.testnet",
+      "method": "contribute_room",
+      "hash": "2LtTntNQGCA7GkgzLstRMKEKGsWWx2DoXJMkYHBsyCij"
+    },
+    {
+      "actor": "alice.nearfest-mwg03pdw-2886.testnet",
+      "method": "start_room",
+      "hash": "7bz5MDBnh1oNp31dZR8L73QLLhrkFqgv8P77HKEeBn8C"
+    },
+    {
+      "actor": "alice.nearfest-mwg03pdw-2886.testnet",
+      "method": "withdraw",
+      "hash": "BaD8YW7jYQsxLZXwGgcnWADYEzqrynAg12EVG89tkyNX"
+    },
+    {
+      "actor": "alice.nearfest-mwg03pdw-2886.testnet",
+      "method": "create_room",
+      "hash": "CadxwJBxqAdFrKp7t8voyECDzWJfEj75NNwF8fyD62d8"
+    },
+    {
+      "actor": "bob.nearfest-mwg03pdw-2886.testnet",
+      "method": "contribute_room",
+      "hash": "Gt9i6Hfdt8N43jjjRAQ2769K1Ef8wb8P1RrYfKXCP1Nu"
+    },
+    {
+      "actor": "alice.nearfest-mwg03pdw-2886.testnet",
+      "method": "start_room",
+      "hash": "HtGqF84EEQ2W7dZMsYL6KX5DMnHqThiA9RwfDz6mi5wM"
+    },
+    {
+      "actor": "alice.nearfest-mwg03pdw-2886.testnet",
+      "method": "withdraw",
+      "hash": "CzT23ec8SKGc5rdNwjKYB8N9Ei55u3wuk5jt8k8PP9AW"
+    },
+    {
+      "actor": "alice.nearfest-mwg03pdw-2886.testnet",
+      "method": "create_room",
+      "hash": "4YHm6a6emy4Fc9qJt6KXr3jhbRE6SfypKwRWUTaMbL6j"
+    },
+    {
+      "actor": "bob.nearfest-mwg03pdw-2886.testnet",
+      "method": "contribute_room",
+      "hash": "8s8h843SZBJcr4tMtrfRTQkzYuJnqbCMJ4fPVB8s1CV3"
+    },
+    {
+      "actor": "alice.nearfest-mwg03pdw-2886.testnet",
+      "method": "start_room",
+      "hash": "E8UE35YfbicBQCHFXpm2nTTiZbMgtGw3SQCrKCvzmp8f"
+    },
+    {
+      "actor": "alice.nearfest-mwg03pdw-2886.testnet",
+      "method": "withdraw",
+      "hash": "Dr8kjWaKSiKVqEhAxJGQERgNm7AWJcLHjwUKDwCFnQiy"
+    },
+    {
+      "actor": "alice.nearfest-mwg03pdw-2886.testnet",
+      "method": "create_room",
+      "hash": "xM7vDzruimz7JrDHgrMZmmT9kwTaZhGANxMccJowaHS"
+    },
+    {
+      "actor": "bob.nearfest-mwg03pdw-2886.testnet",
+      "method": "contribute_room",
+      "hash": "Gc3JUxbpFHYeUGPj3NbBL8UnaJAtk3dwkAJFCQKPkhrH"
+    },
+    {
+      "actor": "carol.nearfest-mwg03pdw-2886.testnet",
+      "method": "contribute_room",
+      "hash": "BPjmbRkSWxbnFrkR759qAW8nwRjQ9SzTiwUv4c3zaE93"
+    },
+    {
+      "actor": "alice.nearfest-mwg03pdw-2886.testnet",
+      "method": "start_room",
+      "hash": "Dm14neJLxAfmKTXmJ4DFzMpuqJmDeCiC7t6TaXXjnsW8"
+    },
+    {
+      "actor": "bob.nearfest-mwg03pdw-2886.testnet",
+      "method": "claim_room",
+      "hash": "BE1fhFmhcegYg4eQcfrt3Upgp46pex5UZ24yR5qTFrAM"
+    },
+    {
+      "actor": "alice.nearfest-mwg03pdw-2886.testnet",
+      "method": "vote_room",
+      "hash": "BYALR7Zm2QS65RwGFrCkjxCLL8ERbYMkCXX2NsrfeFJ7"
+    },
+    {
+      "actor": "carol.nearfest-mwg03pdw-2886.testnet",
+      "method": "vote_room",
+      "hash": "4yCfmoyjyGD4aoc3RQWJowdZgt3nGkGc4QbbkFYuzJs"
+    },
+    {
+      "actor": "bob.nearfest-mwg03pdw-2886.testnet",
+      "method": "withdraw",
+      "hash": "7XT2L3qG7cbuQSoArzDuh5Pc6nVgpduQYD6AKiG6C4AG"
+    },
+    {
+      "actor": "alice.nearfest-mwg03pdw-2886.testnet",
+      "method": "create_room",
+      "hash": "744Y3xXde84TfFsa1KCsxZTzXxrHYY4j7R3eJ2upCFc6"
+    },
+    {
+      "actor": "bob.nearfest-mwg03pdw-2886.testnet",
+      "method": "contribute_room",
+      "hash": "GE23abg9gPoZfAe6Rpa3Aq3wotWsAQ5Z2D1ByQAV3pcB"
+    },
+    {
+      "actor": "carol.nearfest-mwg03pdw-2886.testnet",
+      "method": "claim_room",
+      "hash": "7C2qkQacZAvr6kCzrzbozRTcCSiZsL84AZSkfKK5nvJS"
+    },
+    {
+      "actor": "alice.nearfest-mwg03pdw-2886.testnet",
+      "method": "vote_room",
+      "hash": "6Ae8ukQwTPNYPg4jkzK5GP5ZJiRnHhniGFq3XLWZEvn2"
+    },
+    {
+      "actor": "bob.nearfest-mwg03pdw-2886.testnet",
+      "method": "vote_room",
+      "hash": "E8awqT6QFogjF83Z8C2LE3mDaVc9HAPrDWNqQJCn7DfS"
+    },
+    {
+      "actor": "carol.nearfest-mwg03pdw-2886.testnet",
+      "method": "withdraw",
+      "hash": "6Y3WgqmNF6mMsR95yk12nDdrFaDfasDVficbNUVa2KAn"
+    }
+  ],
+  "checks": [
+    {
+      "name": "two testnet wallets fund and play both Connect Four legs, then collect the exact NEAR pot",
+      "passed": true
+    },
+    {
+      "name": "arcade results settle NEAR to the other player after concession",
+      "passed": true
+    },
+    {
+      "name": "knowledge rooms settle their server-scored result through the same NEAR escrow",
+      "passed": true
+    },
+    {
+      "name": "group contributions, independent approvals and reward collection execute on public testnet",
+      "passed": true
+    },
+    {
+      "name": "bounties pay the claimant only after contributors approve on chain",
+      "passed": true
+    }
+  ],
+  "completed_at": "2026-11-14T06:26:00.652Z"
+}

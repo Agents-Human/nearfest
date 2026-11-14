@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 240" role="img" aria-labelledby="title">
+  <title id="title">Warm illustrated paper surface</title>
+  <rect width="240" height="240" fill="#fff9ed"/>
+  <g fill="none" stroke="#dacdb2" stroke-width=".8" stroke-linecap="round" opacity=".55">
+    <path d="m16 28 4-1m56 41 3 1m104-45 4 1m-55 79 3-1m64 59 3 1m-161 12 4-1m84 40 3 1m-103-104 3 1m181-28 3 1m-129 119 4-1"/>
+  </g>
+</svg>

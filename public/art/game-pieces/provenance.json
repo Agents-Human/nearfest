@@ -1,0 +1,58 @@
+{
+  "date": "2026-11-14",
+  "use": "Interactive gameplay artwork; shape geometry and rules are controlled by game components.",
+  "origin": "ImageGen references generated in this project; SVG paths drawn in code. No third-party assets used.",
+  "raster_embedded": false,
+  "assets": [
+    {
+      "file": "counter-coral.svg",
+      "viewBox": "0 0 112 112",
+      "sha256": "08e31d88c3fd0c13f1114548bdd7d2d3bfdf9b6e782fd4ebe113f9c256fa432c",
+      "reference": "assets/source/skill-games/counter-coral.png",
+      "reference_sha256": "0e2816ebca4f5f4076037898507f827b1916d3f77af96db405d3cae05250e5ae",
+      "method": "Manual SVG redraw from ImageGen visual reference"
+    },
+    {
+      "file": "counter-lilac.svg",
+      "viewBox": "0 0 112 112",
+      "sha256": "a304f9bae8bf32cf8a86bfb33b6953155efd1568ae2c1a402c71346ef61d582f",
+      "reference": "assets/source/skill-games/counter-lilac.png",
+      "reference_sha256": "14fab399fcd6dd39288795cfc5478e64a742c6d6851953fd822bb7d72ac162b3",
+      "method": "Manual SVG redraw from ImageGen visual reference"
+    },
+    {
+      "file": "paper.svg",
+      "viewBox": "0 0 240 240",
+      "sha256": "f85a28b3a8ad5a6500e5e69d4a7e06410ef9188a5d7df0fa7e3e9a2a9c8b3f7a",
+      "reference": null,
+      "reference_sha256": null,
+      "method": "Original code-drawn companion illustration"
+    },
+    {
+      "file": "seed.svg",
+      "viewBox": "0 0 64 48",
+      "sha256": "6206b5df9a23034303c1b30be76cf6cc7ea760d0f647a07ccb18abe38d55fa00",
+      "reference": "assets/source/skill-games/ivory-seed.png",
+      "reference_sha256": "8d9ce99e41e5b3f89715f7fefbbc5be24bc81ec49f3c2c76368d0cae690c9314",
+      "method": "Manual SVG redraw from ImageGen visual reference"
+    },
+    {
+      "file": "wood-board.svg",
+      "viewBox": "0 0 640 320",
+      "sha256": "152478f90b5a3cc4f2ccee4d3a0f7f9564b7c465c8074cec878149c6e15ffd77",
+      "reference": "assets/source/skill-games/honey-wood.png",
+      "reference_sha256": "2aee32720267bdc99bc1a0a99e907bd677547441eecf1e5d52dad10c664a417b",
+      "method": "Manual SVG redraw from ImageGen visual reference"
+    }
+  ],
+  "generationPrompts": [
+    {
+      "id": "counter-coral",
+      "prompt": "Use case: illustration-story. Asset type: a reference for a hand-drawn SVG game piece in slotVend. Create exactly one perfectly round game counter viewed straight from above, truly transparent background. TWO-DIMENSIONAL editorial vector illustration, bold dark charcoal outer outline, slightly irregular hand-drawn charm, solid flat colours, one inset circular engraved ring, one small curved cream highlight, a simple offset dark lower rim for a little thickness. Like a beautifully printed board-game illustration, mature playful design. No photography, no realistic material texture, no wood grain, no rendering, no glossy 3D, no scene, no text, no faces, no sparkles. Centered and filling 80% of the canvas. Colour: warm coral orange, pale peach ring, dark terracotta lower rim."
+    },
+    {
+      "id": "counter-lilac",
+      "prompt": "Use case: illustration-story. Asset type: a reference for a hand-drawn SVG game piece in slotVend. Create exactly one perfectly round game counter viewed straight from above, truly transparent background. TWO-DIMENSIONAL editorial vector illustration, bold dark charcoal outer outline, slightly irregular hand-drawn charm, solid flat colours, one inset circular engraved ring, one small curved cream highlight, a simple offset dark lower rim for a little thickness. Like a beautifully printed board-game illustration, mature playful design. No photography, no realistic material texture, no wood grain, no rendering, no glossy 3D, no scene, no text, no faces, no sparkles. Centered and filling 80% of the canvas. Colour: soft lavender purple, pale lilac ring, plum lower rim."
+    }
+  ]
+}

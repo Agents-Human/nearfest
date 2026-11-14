@@ -21,8 +21,9 @@ export function openStore(path) {
   const save = b => db.prepare('INSERT INTO bets VALUES(?,?,?) ON CONFLICT(id) DO UPDATE SET json=excluded.json').run(b.id, b.mode, JSON.stringify(b));
   const all = () => db.prepare('SELECT json FROM bets ORDER BY rowid DESC LIMIT 1000').all().map(r => JSON.parse(r.json));
   const transaction = fn => { db.exec('BEGIN IMMEDIATE'); try { const r = fn(); db.exec('COMMIT'); return r; } catch (e) { db.exec('ROLLBACK'); throw e; } };
-  function ensureUser(id, name, kind) { db.prepare('INSERT OR IGNORE INTO users VALUES(?,?,?,?,?)').run(id, name, kind === 'practice' ? (1000n * UNIT).toString() : '0', '0', kind); return user(id); }
-  function debit(id, value) { const u = user(id); if (!u || BigInt(u.balance) < BigInt(value)) throw Error('Not enough FUN in your practice balance. Collect any available winnings first.'); db.prepare('UPDATE users SET balance=? WHERE id=?').run((BigInt(u.balance) - BigInt(value)).toString(), id); }
+  function ensureUser(id, name, kind) { db.prepare('INSERT OR IGNORE INTO users VALUES(?,?,?,?,?)').run(id, name, '0', '0', kind); return user(id); }
+  function debit(id,value){if(BigInt(value)>0n)throw Error('Stakes require a NEAR testnet wallet deposit.');}
+
   function move(id, actor, action, now) {
     return transaction(() => {
       const original = bet(id); if (!original || original.mode !== 'practice') throw Error('Practice room not found.');
@@ -33,6 +34,7 @@ export function openStore(path) {
     });
   }
   function create(b) { return transaction(() => { debit(b.creator, b.stake); save(b); return b; }); }
-  function collect(id) { return transaction(() => { const u = user(id); if (!u || BigInt(u.credit) <= 0n) throw Error('No winnings to collect yet.'); db.prepare('UPDATE users SET balance=?,credit=? WHERE id=?').run((BigInt(u.balance) + BigInt(u.credit)).toString(), '0', id); return user(id); }); }
-  return { db, user, bet, save, all, transaction, ensureUser, move, create, collect };
+  function collect(){throw Error('Collect NEAR testnet rewards through your wallet.');}
+
+  return { db, user, bet, save, all, transaction, ensureUser, move, create, collect, reserveNear:()=>{throw Error('Confirm a NEAR testnet deposit first.');} };
 }

@@ -12,7 +12,7 @@ import {createMultiplayer} from '../server/multiplayer.mjs';
 import {createPlay} from '../server/play.mjs';
 
 test('1000+ separately sourced titles have unique identities, real entry files, covers and licence notices',()=>{
- assert(library.length>=1000);assert.equal(discoveryGames.length,19);assert(discoveryGames.every(g=>g.multiplayer&&!g.engine&&!g.pack));
+ assert(library.length>=1000);assert.equal(discoveryGames.length,53);assert(discoveryGames.every(g=>g.multiplayer&&g.solo&&!g.pack&&g.engine!=='imported'));assert(!discoveryGames.some(g=>g.id==='kalah'||g.id==='ludo'));assert.equal(discoveryGames.find(g=>g.id==='oware').title,'Mancala');
  assert.equal(new Set(library.map(g=>g.id)).size,library.length);
  const normalized=s=>s.toLowerCase().replace(/[^a-z0-9]/g,'');
  assert.equal(new Set(library.map(g=>normalized(g.title))).size,library.length);
@@ -43,17 +43,4 @@ test('local preview assets use the requested loopback alias without broadening t
  assert(!proxied.includes('http://localhost:5189/'));
 });
 
-test('parked imports cannot create new rooms or use automatic payout; group pots still require review',async()=>{
- const s=openStore(':memory:');try{
-  const a=s.ensureUser('a','Alice','practice'),b=s.ensureUser('b','Bob','practice');const c=createCommunity(s),p=createPlay(s),m=createMultiplayer(s);
-  const draft={kind:'pot',title:'A friendly Sudoku race',rules:'Complete one medium puzzle. Share the finish time. Other contributors approve the winner.',category:'Gaming',amount:'5',max_members:8,hours:24,game_id:discoveryGames[0].id};
-  assert.throws(()=>c.create({...draft,game_id:'https://untrusted.example'},a));assert.throws(()=>c.create({...draft,game_id:library[0].id},a),/library/);assert.equal(s.user(a.id).balance,a.balance);
-  const r=c.create(draft,a);assert.equal(r.game_id,discoveryGames[0].id);assert.equal(c.get(r.id).game_title,discoveryGames[0].title);
-  c.action(r.id,b,{type:'join'});c.action(r.id,a,{type:'start'});
-  await assert.rejects(()=>p.start(library[0].id,a),/timed challenge/);assert.throws(()=>m.create({game_id:library[0].id,entry:'1'},a));
-  assert.equal(s.user(a.id).credit,'0');assert.equal(s.user(b.id).credit,'0');
-  const claim=c.action(r.id,a,{type:'claim',winner:a.id,evidence:'Finished in 90 seconds. The group reviewed the recording.'}).claims[0];
-  assert.throws(()=>c.action(r.id,a,{type:'vote',claim_id:claim.id,approve:true}));assert.equal(s.user(a.id).credit,'0');
-  assert.equal(c.action(r.id,b,{type:'vote',claim_id:claim.id,approve:true}).status,'settled');
- }finally{s.db.close();}
-});
+test('parked imports cannot create games or local money pots',async()=>{const s=openStore(':memory:');try{const a=s.ensureUser('a','Alice','practice'),p=createPlay(s),m=createMultiplayer(s),c=createCommunity(s);await assert.rejects(()=>p.start(library[0].id,a),/timed challenge/);assert.throws(()=>m.create({game_id:library[0].id,entry:'0'},a));assert.throws(()=>c.create({kind:'pot',game_id:library[0].id},a),/NEAR/);assert.equal(s.user(a.id).balance,'0');}finally{s.db.close();}});

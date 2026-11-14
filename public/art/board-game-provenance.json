@@ -1,0 +1,66 @@
+{
+  "collection": "slotVend original skill-game covers",
+  "created_at": "2026-11-14",
+  "format": "SVG, viewBox 0 0 640 440",
+  "origin": "Original vector illustration code authored for this project. Existing slotVend palette and linework used as art direction; no external artwork, raster images, logos or traced images.",
+  "studyjunior_production_assets_used": false,
+  "production_asset_note": "No StudyJunior MCP asset query or production provenance is claimed.",
+  "files": [
+    {
+      "id": "oware",
+      "title": "Oware",
+      "file": "game-covers/oware.svg",
+      "sha256": "99a06253ec73fc6e4df19ccd3625c67d332372fd259809e0f737c6645ce720b0",
+      "bytes": 19399
+    },
+    {
+      "id": "checkers",
+      "title": "Checkers",
+      "file": "game-covers/checkers.svg",
+      "sha256": "2097b3f21e0a874730b7b4091c13221049ee19c7c45658236dcb56f7aa7e5e69",
+      "bytes": 12924
+    },
+    {
+      "id": "connect-four",
+      "title": "Connect Four",
+      "file": "game-covers/connect-four.svg",
+      "sha256": "67b0ffe4d281913c7a61f961a9813ae075399fd21700d7f85ccd1f139f9709b8",
+      "bytes": 7217
+    },
+    {
+      "id": "dots-boxes",
+      "title": "Dots and Boxes",
+      "file": "game-covers/dots-boxes.svg",
+      "sha256": "f540295e515f8127c909190bdfefc0a581682ec7e4e7e9e1b6f5dc309fe581bd",
+      "bytes": 6097
+    },
+    {
+      "id": "reversi",
+      "title": "Reversi",
+      "file": "game-covers/reversi.svg",
+      "sha256": "007ac2d3ca5a3e8fc3295341eddf9c0331a3438b9f4115f9b96fc13887db17ef",
+      "bytes": 11346
+    },
+    {
+      "id": "kalah",
+      "title": "Kalah",
+      "file": "game-covers/kalah.svg",
+      "sha256": "d408a3ef6eb684f2d5a983b3d518cd32d84596c4d7c87ce105cf17812b87053a",
+      "bytes": 18607
+    },
+    {
+      "id": "hex",
+      "title": "Hex",
+      "file": "game-covers/hex.svg",
+      "sha256": "e2786efbb2d5e52dd53bf0357e674c6b24c84cf756cb302c9a49e5a54d8bb5d4",
+      "bytes": 9920
+    },
+    {
+      "id": "nine-mens-morris",
+      "title": "Nine Men's Morris",
+      "file": "game-covers/nine-mens-morris.svg",
+      "sha256": "035e637ae7f014f09ca55fb76ff5b090ef0562fed8d691b8e2431af00a72e1f2",
+      "bytes": 7441
+    }
+  ]
+}

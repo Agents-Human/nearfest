@@ -1,0 +1,299 @@
+{
+  "schema_version": 1,
+  "author": "Kenney",
+  "license": "CC0-1.0",
+  "license_url": "https://creativecommons.org/publicdomain/zero/1.0/",
+  "origin": "User-provided Platformer Kit 4.1 and New Platformer Pack 1.1 in this checkout. Selected source files copied without byte changes. Runtime normalization and skeleton-safe cloning live in src/games/platform-assets.ts.",
+  "files": [
+    {
+      "path": "public/models/platform/character-pink.glb",
+      "source_path": "assets/new/kenney_platformer-kit/Models/GLB format/character-oodi.glb",
+      "package": "Platformer Kit 4.1",
+      "source_url": "https://kenney.nl/assets/platformer-kit",
+      "bytes": 202604,
+      "sha256": "3790919a738ed907ebb57dd474174043af843f9571d1856042715ec3ecdb04eb",
+      "copied_without_changes": true
+    },
+    {
+      "path": "public/models/platform/character-purple.glb",
+      "source_path": "assets/new/kenney_platformer-kit/Models/GLB format/character-oobi.glb",
+      "package": "Platformer Kit 4.1",
+      "source_url": "https://kenney.nl/assets/platformer-kit",
+      "bytes": 236392,
+      "sha256": "42cb1889e1ef6404f3d6b5d5ac6b79c9d9a60bc54fd82df83c63c664705873e4",
+      "copied_without_changes": true
+    },
+    {
+      "path": "public/models/platform/character-teal.glb",
+      "source_path": "assets/new/kenney_platformer-kit/Models/GLB format/character-oopi.glb",
+      "package": "Platformer Kit 4.1",
+      "source_url": "https://kenney.nl/assets/platformer-kit",
+      "bytes": 211344,
+      "sha256": "faaecd9c4a9648c8c51115cf09e3b3895685f30edaf57a298a768471f5355e2e",
+      "copied_without_changes": true
+    },
+    {
+      "path": "public/models/platform/character-gold.glb",
+      "source_path": "assets/new/kenney_platformer-kit/Models/GLB format/character-ooli.glb",
+      "package": "Platformer Kit 4.1",
+      "source_url": "https://kenney.nl/assets/platformer-kit",
+      "bytes": 206704,
+      "sha256": "fa500369104ed72b784f7acecb3cece397cb9198d3530606e8833ae84a639ba5",
+      "copied_without_changes": true
+    },
+    {
+      "path": "public/models/platform/ground-grass.glb",
+      "source_path": "assets/new/kenney_platformer-kit/Models/GLB format/block-grass-large.glb",
+      "package": "Platformer Kit 4.1",
+      "source_url": "https://kenney.nl/assets/platformer-kit",
+      "bytes": 10188,
+      "sha256": "606f077c30f6943ef4caa45e440578992cb99f0b7fb8762850303a422ed9cafa",
+      "copied_without_changes": true
+    },
+    {
+      "path": "public/models/platform/ground-snow.glb",
+      "source_path": "assets/new/kenney_platformer-kit/Models/GLB format/block-snow-large.glb",
+      "package": "Platformer Kit 4.1",
+      "source_url": "https://kenney.nl/assets/platformer-kit",
+      "bytes": 10208,
+      "sha256": "771c47dd1c405597e86a2842a6be73bc450ade898ebec6872459beb5a1593691",
+      "copied_without_changes": true
+    },
+    {
+      "path": "public/models/platform/coin.glb",
+      "source_path": "assets/new/kenney_platformer-kit/Models/GLB format/coin-gold.glb",
+      "package": "Platformer Kit 4.1",
+      "source_url": "https://kenney.nl/assets/platformer-kit",
+      "bytes": 10608,
+      "sha256": "cf2179e57721b943d88283d38678c4b1b8422e9a4dd44f631acfb35007c223a8",
+      "copied_without_changes": true
+    },
+    {
+      "path": "public/models/platform/spikes.glb",
+      "source_path": "assets/new/kenney_platformer-kit/Models/GLB format/trap-spikes-large.glb",
+      "package": "Platformer Kit 4.1",
+      "source_url": "https://kenney.nl/assets/platformer-kit",
+      "bytes": 28996,
+      "sha256": "eb0eb736c04a5a8f8ae00486e9879f9441256f6db2ea2f53970578b29d87b027",
+      "copied_without_changes": true
+    },
+    {
+      "path": "public/models/platform/saw.glb",
+      "source_path": "assets/new/kenney_platformer-kit/Models/GLB format/saw.glb",
+      "package": "Platformer Kit 4.1",
+      "source_url": "https://kenney.nl/assets/platformer-kit",
+      "bytes": 14036,
+      "sha256": "1ad078d8154ff90cc3e57175d971ddbdfc839fcc158f4aa6b26d28e7e0b1839d",
+      "copied_without_changes": true
+    },
+    {
+      "path": "public/models/platform/tree.glb",
+      "source_path": "assets/new/kenney_platformer-kit/Models/GLB format/tree.glb",
+      "package": "Platformer Kit 4.1",
+      "source_url": "https://kenney.nl/assets/platformer-kit",
+      "bytes": 42680,
+      "sha256": "632eb83a4359afd110594ea6f69db4db0c9512c79ae2c88741cf68e527253e41",
+      "copied_without_changes": true
+    },
+    {
+      "path": "public/models/platform/tree-snow.glb",
+      "source_path": "assets/new/kenney_platformer-kit/Models/GLB format/tree-snow.glb",
+      "package": "Platformer Kit 4.1",
+      "source_url": "https://kenney.nl/assets/platformer-kit",
+      "bytes": 42696,
+      "sha256": "e5084e7a95d881e35f7c0debbd9d4e62dbf5af19bf6f218ae65fb7cb4b97c5eb",
+      "copied_without_changes": true
+    },
+    {
+      "path": "public/models/platform/pine.glb",
+      "source_path": "assets/new/kenney_platformer-kit/Models/GLB format/tree-pine.glb",
+      "package": "Platformer Kit 4.1",
+      "source_url": "https://kenney.nl/assets/platformer-kit",
+      "bytes": 22396,
+      "sha256": "520ddf910ae7904871fc906169d5e76364d5ff643a92cb983563c1a24d995ebb",
+      "copied_without_changes": true
+    },
+    {
+      "path": "public/models/platform/plant.glb",
+      "source_path": "assets/new/kenney_platformer-kit/Models/GLB format/plant.glb",
+      "package": "Platformer Kit 4.1",
+      "source_url": "https://kenney.nl/assets/platformer-kit",
+      "bytes": 13124,
+      "sha256": "0881669528fcc01038a104a89c5290d1cbe0cb4aa90c4f78e78ebe1de2281d7a",
+      "copied_without_changes": true
+    },
+    {
+      "path": "public/models/platform/mushrooms.glb",
+      "source_path": "assets/new/kenney_platformer-kit/Models/GLB format/mushrooms.glb",
+      "package": "Platformer Kit 4.1",
+      "source_url": "https://kenney.nl/assets/platformer-kit",
+      "bytes": 13728,
+      "sha256": "81971dad14f9947d70897f1f76d7b3e723b7ee3737a32274ed8cc0355ea55c66",
+      "copied_without_changes": true
+    },
+    {
+      "path": "public/models/platform/flowers.glb",
+      "source_path": "assets/new/kenney_platformer-kit/Models/GLB format/flowers.glb",
+      "package": "Platformer Kit 4.1",
+      "source_url": "https://kenney.nl/assets/platformer-kit",
+      "bytes": 25928,
+      "sha256": "c4d459bf014a534a79a6763e59d9c548902600fe0e0e025654bd58a979139be6",
+      "copied_without_changes": true
+    },
+    {
+      "path": "public/models/platform/grass.glb",
+      "source_path": "assets/new/kenney_platformer-kit/Models/GLB format/grass.glb",
+      "package": "Platformer Kit 4.1",
+      "source_url": "https://kenney.nl/assets/platformer-kit",
+      "bytes": 8964,
+      "sha256": "601ae2a507f4bccbe93c08433479c07ccaea0fcd8a3769264505a9cfeec4baa5",
+      "copied_without_changes": true
+    },
+    {
+      "path": "public/models/platform/crate.glb",
+      "source_path": "assets/new/kenney_platformer-kit/Models/GLB format/crate.glb",
+      "package": "Platformer Kit 4.1",
+      "source_url": "https://kenney.nl/assets/platformer-kit",
+      "bytes": 14336,
+      "sha256": "5eb6b633b71d7459c7ef9b0bf6e138a719175e107d4d52faca8fc7d0a059a45a",
+      "copied_without_changes": true
+    },
+    {
+      "path": "public/models/platform/flag.glb",
+      "source_path": "assets/new/kenney_platformer-kit/Models/GLB format/flag.glb",
+      "package": "Platformer Kit 4.1",
+      "source_url": "https://kenney.nl/assets/platformer-kit",
+      "bytes": 11396,
+      "sha256": "41dc8355080ed9f73adeefa7befaec44b6956ba1353c23bc9ff73d97a53fc143",
+      "copied_without_changes": true
+    },
+    {
+      "path": "public/models/platform/Textures/colormap.png",
+      "source_path": "assets/new/kenney_platformer-kit/Models/GLB format/Textures/colormap.png",
+      "package": "Platformer Kit 4.1",
+      "source_url": "https://kenney.nl/assets/platformer-kit",
+      "bytes": 11140,
+      "sha256": "439dfcac935cfd75dc16f28333a4c8284fffcc4b24f857c61cfb4c8a964a15bd",
+      "copied_without_changes": true
+    },
+    {
+      "path": "public/models/platform/licenses/platformer-kit.txt",
+      "source_path": "assets/new/kenney_platformer-kit/License.txt",
+      "package": "Platformer Kit 4.1",
+      "source_url": "https://kenney.nl/assets/platformer-kit",
+      "bytes": 703,
+      "sha256": "e1185354d8f0f055c325c7204602326c8cf0c47ee5ae1db7ed16f0465b91bb9a",
+      "copied_without_changes": true
+    },
+    {
+      "path": "public/models/platform/icons/character-pink.png",
+      "source_path": "assets/new/kenney_new-platformer-pack-1.1/Sprites/Tiles/Double/hud_player_pink.png",
+      "package": "New Platformer Pack 1.1",
+      "source_url": "https://kenney.nl/assets/new-platformer-pack",
+      "bytes": 2551,
+      "sha256": "c7efafb83573bb610580a11a02cd183a9b3966a6049e2d38a04f3525e9370903",
+      "copied_without_changes": true
+    },
+    {
+      "path": "public/models/platform/icons/character-purple.png",
+      "source_path": "assets/new/kenney_new-platformer-pack-1.1/Sprites/Tiles/Double/hud_player_purple.png",
+      "package": "New Platformer Pack 1.1",
+      "source_url": "https://kenney.nl/assets/new-platformer-pack",
+      "bytes": 2545,
+      "sha256": "f3d84cdf2ab63ec26d9e80b28be2db4f998f67ed2b0e93d0075281d010849f1f",
+      "copied_without_changes": true
+    },
+    {
+      "path": "public/models/platform/icons/character-teal.png",
+      "source_path": "assets/new/kenney_new-platformer-pack-1.1/Sprites/Tiles/Double/hud_player_green.png",
+      "package": "New Platformer Pack 1.1",
+      "source_url": "https://kenney.nl/assets/new-platformer-pack",
+      "bytes": 2499,
+      "sha256": "45306f01b4eb29a277afcd34dc3dc5760eb4bfc6948c34165ad843304d85c4bc",
+      "copied_without_changes": true
+    },
+    {
+      "path": "public/models/platform/icons/character-gold.png",
+      "source_path": "assets/new/kenney_new-platformer-pack-1.1/Sprites/Tiles/Double/hud_player_yellow.png",
+      "package": "New Platformer Pack 1.1",
+      "source_url": "https://kenney.nl/assets/new-platformer-pack",
+      "bytes": 2453,
+      "sha256": "34fd42ebc782cc571ed60157a8f441f376d55ad27b551625dfdb4dbe18bfd4ac",
+      "copied_without_changes": true
+    },
+    {
+      "path": "public/audio/games/platform-coin.ogg",
+      "source_path": "assets/new/kenney_new-platformer-pack-1.1/Sounds/sfx_coin.ogg",
+      "package": "New Platformer Pack 1.1",
+      "source_url": "https://kenney.nl/assets/new-platformer-pack",
+      "bytes": 5572,
+      "sha256": "38c897c7a0f056e8cda892ca4a31639e1397ef9c70490351ecb0c4df0cc95e45",
+      "copied_without_changes": true
+    },
+    {
+      "path": "public/audio/games/platform-jump.ogg",
+      "source_path": "assets/new/kenney_new-platformer-pack-1.1/Sounds/sfx_jump.ogg",
+      "package": "New Platformer Pack 1.1",
+      "source_url": "https://kenney.nl/assets/new-platformer-pack",
+      "bytes": 5926,
+      "sha256": "7a0e42879c60350c6866976e8f6013943d9cb78a5ff1d126107ae3322566ee8f",
+      "copied_without_changes": true
+    },
+    {
+      "path": "public/audio/games/platform-jump-high.ogg",
+      "source_path": "assets/new/kenney_new-platformer-pack-1.1/Sounds/sfx_jump-high.ogg",
+      "package": "New Platformer Pack 1.1",
+      "source_url": "https://kenney.nl/assets/new-platformer-pack",
+      "bytes": 8396,
+      "sha256": "39a049350321dc8cd9e2e19df746d18f56135dadd7aa239498fa25f9f8b4c5f5",
+      "copied_without_changes": true
+    },
+    {
+      "path": "public/audio/games/platform-hurt.ogg",
+      "source_path": "assets/new/kenney_new-platformer-pack-1.1/Sounds/sfx_hurt.ogg",
+      "package": "New Platformer Pack 1.1",
+      "source_url": "https://kenney.nl/assets/new-platformer-pack",
+      "bytes": 5804,
+      "sha256": "ee126f78cfd70e665c37d7afe7e1dc0fa84d6b2ab25ce27d797738d54d082ec6",
+      "copied_without_changes": true
+    },
+    {
+      "path": "public/audio/games/platform-bump.ogg",
+      "source_path": "assets/new/kenney_new-platformer-pack-1.1/Sounds/sfx_bump.ogg",
+      "package": "New Platformer Pack 1.1",
+      "source_url": "https://kenney.nl/assets/new-platformer-pack",
+      "bytes": 5454,
+      "sha256": "165ad7337553e88ca9bc1c267980c090875b3ba0c6f2066387cbd28dfa0ac682",
+      "copied_without_changes": true
+    },
+    {
+      "path": "public/audio/games/platform-disappear.ogg",
+      "source_path": "assets/new/kenney_new-platformer-pack-1.1/Sounds/sfx_disappear.ogg",
+      "package": "New Platformer Pack 1.1",
+      "source_url": "https://kenney.nl/assets/new-platformer-pack",
+      "bytes": 9939,
+      "sha256": "83d034a1bf133745f9772b11f31537d231ae7c3ca8b150468fe5ffff19baabbb",
+      "copied_without_changes": true
+    },
+    {
+      "path": "public/models/platform/licenses/new-platformer-pack.txt",
+      "source_path": "assets/new/kenney_new-platformer-pack-1.1/License.txt",
+      "package": "New Platformer Pack 1.1",
+      "source_url": "https://kenney.nl/assets/new-platformer-pack",
+      "bytes": 703,
+      "sha256": "f0bc5a99a4710f75a2d507e2ab153025af203d9a6b5a698df737a47684316077",
+      "copied_without_changes": true
+    },
+    {
+      "path": "public/audio/games/platform-sfx-license.txt",
+      "source_path": "assets/new/kenney_new-platformer-pack-1.1/License.txt",
+      "package": "New Platformer Pack 1.1",
+      "source_url": "https://kenney.nl/assets/new-platformer-pack",
+      "bytes": 703,
+      "sha256": "f0bc5a99a4710f75a2d507e2ab153025af203d9a6b5a698df737a47684316077",
+      "copied_without_changes": true
+    }
+  ],
+  "total_files": 32,
+  "total_bytes": 1190716
+}

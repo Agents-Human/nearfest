@@ -1,0 +1,87 @@
+{
+  "tool": "Built-in ImageGen",
+  "date": "2026-11-14",
+  "purpose": "Generated promotional covers plus playable board material and sprite; rules and hit areas are drawn in code.",
+  "assets": [
+    {
+      "id": "oware",
+      "prompt": "Use case: stylized-concept. Asset type: game cover illustration for slotVend, a bright, sophisticated social board-game website. Create ONE landscape 3:2 artwork of OWARE: a beautiful sculpted honey-brown wooden board with exactly TWO rows of SIX round carved pits, no large end stores, warm cream oval seeds resting inside several pits, a few seeds beside the board. Three-quarter elevated camera, entire board visible with generous 12% breathing room. Art direction: tactile handmade miniature, satin painted wood and subtle fine grain, cheerful editorial still life, grown-up playful design, clean graphic silhouette, soft daylight, crisp soft contact shadow. Mint-green seamless backdrop with a small restrained warm-yellow graphic circle behind, coral and lilac accents only on the table edge. Rich natural carved details, charming polished product illustration, no plastic video-game gloss. No words, letters, numbers, logos, people, faces, dice, cards, UI, gradients or extra boards. Keep subject centered and readable at thumbnail size. This is promotional art, game cells will be drawn separately in code.",
+      "original": "assets/source/skill-games/oware.png",
+      "web": "public/art/skill-games/oware.webp",
+      "sha256": "d49e4e9dd6a9eed209b349f7fe84d378b034d7792e377f0cc3bab349f059e2e9",
+      "bytes": 76978
+    },
+    {
+      "id": "checkers",
+      "prompt": "Use case: stylized-concept. Asset type: individual landscape 3:2 game cover for slotVend, a bright sophisticated social board-game website. Art direction: tactile handmade miniature in satin painted wood, subtle fine grain, cheerful editorial still life, grown-up playful design. Three-quarter elevated camera, centered entire board visible with generous 12% breathing room. Soft daylight, crisp soft contact shadow, clean silhouette readable at thumbnail size. Mint, warm yellow, coral, cream, lavender palette. No text, numbers, letters, logos, faces, people, dice, cards, UI or extra boards. This is promotional art; functional board is drawn separately in code. Subject: one beautiful 8-by-8 CHECKERS board, alternating warm ivory and muted lavender squares in a cream wooden frame. Coral and deep lilac round carved wooden checkers resting on the dark squares in a sparse midgame, two stacked king pieces. A few loose checkers near its foot. Solid soft lavender studio backdrop with a restrained warm yellow disk behind. Elegant polished wooden game, not chess pieces.",
+      "original": "assets/source/skill-games/checkers.png",
+      "web": "public/art/skill-games/checkers.webp",
+      "sha256": "af8915f8606e5188f8174d1a21c770504bb208177dfb3a9a30c97e57c3a975e9",
+      "bytes": 29380
+    },
+    {
+      "id": "connect-four",
+      "prompt": "Use case: stylized-concept. Asset type: individual landscape 3:2 game cover for slotVend, a bright sophisticated social board-game website. Art direction: tactile handmade miniature in satin painted wood, subtle fine grain, cheerful editorial still life, grown-up playful design. Three-quarter elevated camera, centered entire board visible with generous 12% breathing room. Soft daylight, crisp soft contact shadow, clean silhouette readable at thumbnail size. Mint, warm yellow, coral, cream, lavender palette. No text, numbers, letters, logos, faces, people, dice, cards, UI or extra boards. This is promotional art; functional board is drawn separately in code. Subject: a charming upright CONNECT FOUR rack, buttery yellow wood with exactly SEVEN vertical columns and SIX horizontal rows of round holes. Coral and deep lilac discs fill some of the lower holes, upper holes mostly empty. A few loose round counters lie beside it. Stable rounded feet, cream rim. Solid pale peach-pink studio background with restrained lavender graphic circle behind. Confident clean handmade sculptural toy.",
+      "original": "assets/source/skill-games/connect-four.png",
+      "web": "public/art/skill-games/connect-four.webp",
+      "sha256": "4b234fd5f5830da4f5a2af427e1d5c1746d34b2eed1a760cb14f98701bc0e562",
+      "bytes": 52608
+    },
+    {
+      "id": "dots-boxes",
+      "prompt": "Use case: stylized-concept. Asset type: individual landscape 3:2 game cover for slotVend, a bright sophisticated social board-game website. Art direction: tactile handmade miniature in satin painted wood, subtle fine grain, cheerful editorial still life, grown-up playful design. Three-quarter elevated camera, centered entire board visible with generous 12% breathing room. Soft daylight, crisp soft contact shadow, clean silhouette readable at thumbnail size. Mint, warm yellow, coral, cream, lavender palette. No text, numbers, letters, logos, faces, people, dice, cards, UI or extra boards. This is promotional art; functional board is drawn separately in code. Subject: DOTS AND BOXES expressed as a cream thick paper game pad at a slight tilt, exactly FIVE by FIVE dark dots forming FOUR by FOUR possible boxes. Coral and lilac pencil lines join several neighbouring dots, three completed boxes softly shaded coral or lilac, many edges empty. A chunky warm-yellow pencil and one lilac pencil lie alongside, no writing anywhere. Solid sky blue backdrop with subtle warm yellow circle behind. Paper texture and lovely tactile real pencil lines.",
+      "original": "assets/source/skill-games/dots-boxes.png",
+      "web": "public/art/skill-games/dots-boxes.webp",
+      "sha256": "d4549bbefa89941866c8709abb5195e2dcf1dc34a150d0e7338f364876fbbf0b",
+      "bytes": 48340
+    },
+    {
+      "id": "reversi",
+      "prompt": "Use case: stylized-concept. Asset type: individual landscape 3:2 game cover for slotVend, a bright sophisticated social board-game website. Art direction: tactile handmade miniature in satin painted wood, subtle fine grain, cheerful editorial still life, grown-up playful design. Three-quarter elevated camera, centered entire board visible with generous 12% breathing room. Soft daylight, crisp soft contact shadow, clean silhouette readable at thumbnail size. Mint, warm yellow, coral, cream, lavender palette. No text, numbers, letters, logos, faces, people, dice, cards, UI or extra boards. This is promotional art; functional board is drawn separately in code. Subject: REVERSI, one sage-green square board with exactly eight-by-eight evenly sized cells engraved in a cream wooden frame. A sparse midgame with round coral and lilac reversible wooden discs clustered around the center, black shallow ring in each disc for beautiful tactility. Two discs tilted to show their two-coloured faces next to the board. Warm pale-yellow backdrop, subtle mint graphic circle behind.",
+      "original": "assets/source/skill-games/reversi.png",
+      "web": "public/art/skill-games/reversi.webp",
+      "sha256": "45b61db1646a0b7f749a609acf2e3c38205f53447dc5622d20bc42639a7a6293",
+      "bytes": 42690
+    },
+    {
+      "id": "kalah",
+      "prompt": "Use case: stylized-concept. Asset type: individual landscape 3:2 game cover for slotVend, a bright sophisticated social board-game website. Art direction: tactile handmade miniature in satin painted wood, subtle fine grain, cheerful editorial still life, grown-up playful design. Three-quarter elevated camera, centered entire board visible with generous 12% breathing room. Soft daylight, crisp soft contact shadow, clean silhouette readable at thumbnail size. Mint, warm yellow, coral, cream, lavender palette. No text, numbers, letters, logos, faces, people, dice, cards, UI or extra boards. This is promotional art; functional board is drawn separately in code. Subject: KALAH MANCALA. A single warm light honey wooden board has exactly two rows of SIX small round scooped pits AND a separate large elongated oval store at EACH short end, 14 cavities total. Ivory seeds inside several small pits and both end stores. Entire horizontal board visible. Lovely fine natural carved wood grain, rounded polished edge. Solid peach studio backdrop with restrained mint graphic circle behind. Clearly distinguish the large end stores from the twelve small play pits.",
+      "original": "assets/source/skill-games/kalah.png",
+      "web": "public/art/skill-games/kalah.webp",
+      "sha256": "6aa38a79ae4e5c8545060a13251dc75d2c82175a268834a35bd5dd5e7f0a0a96",
+      "bytes": 45236
+    },
+    {
+      "id": "hex",
+      "prompt": "Use case: stylized-concept. Asset type: individual landscape 3:2 game cover for slotVend, a bright sophisticated social board-game website. Art direction: tactile handmade miniature in satin painted wood, subtle fine grain, cheerful editorial still life, grown-up playful design. Three-quarter elevated camera, centered entire board visible with generous 12% breathing room. Soft daylight, crisp soft contact shadow, clean silhouette readable at thumbnail size. Mint, warm yellow, coral, cream, lavender palette. No text, numbers, letters, logos, faces, people, dice, cards, UI or extra boards. This is promotional art; functional board is drawn separately in code. Subject: HEX strategy connection board. One cream rhombus-shaped wood board, tiled with small regular hexagonal cells in a SEVEN by SEVEN rhombus grid. Some cells filled with coral counters, others with lilac counters, many empty cream cells. Coral-coloured opposing top and bottom edges, lilac other opposing edges. A few loose hexagonal counters beside the board. Solid powder-blue background with restrained yellow circle behind. Clean correct interlocking honeycomb, warm toy-like wooden tactility.",
+      "original": "assets/source/skill-games/hex.png",
+      "web": "public/art/skill-games/hex.webp",
+      "sha256": "93b4f022ffe551122007e575662fd016c5d5d7b38b941befad6e9c8fb09ab171",
+      "bytes": 52552
+    },
+    {
+      "id": "nine-mens-morris",
+      "prompt": "Use case: stylized-concept. Asset type: individual landscape 3:2 game cover for slotVend, a bright sophisticated social board-game website. Art direction: tactile handmade miniature in satin painted wood, subtle fine grain, cheerful editorial still life, grown-up playful design. Three-quarter elevated camera, centered entire board visible with generous 12% breathing room. Soft daylight, crisp soft contact shadow, clean silhouette readable at thumbnail size. Mint, warm yellow, coral, cream, lavender palette. No text, numbers, letters, logos, faces, people, dice, cards, UI or extra boards. This is promotional art; functional board is drawn separately in code. Subject: NINE MEN'S MORRIS. One light honey wooden square board, black engraved diagram of exactly THREE concentric SQUARES connected ONLY at the four side midpoints, empty center. The diagram has exactly 24 circular playing points: each square's four corners and four side midpoints. Sparse coral and lilac round wooden counters on some of these points, few loose counters alongside board. No checker grid. Solid mint studio backdrop with a restrained lavender circle behind. Delightful beautiful wooden travel board.",
+      "original": "assets/source/skill-games/nine-mens-morris.png",
+      "web": "public/art/skill-games/nine-mens-morris.webp",
+      "sha256": "ec2649b5400239d7e11cde19046a3131db346eeab81c279f5e9db3116b6e62d1",
+      "bytes": 54976
+    },
+    {
+      "id": "honey-wood",
+      "prompt": "Use case: stylized-concept. Asset type: reusable square wood surface texture for the actual playable boards in a colourful online board-game app. Flat orthographic top-down close-up of uninterrupted warm honey maple wood, fine horizontal organic grain, subtle tiny pores, softly polished satin tactile finish, low contrast so engraved lines and game pieces remain clear over it. Entire square filled edge to edge. Even diffuse lighting, no shadows, no objects, no pits, no game board, no border, no perspective, no words, no labels, no knots, no highlights. Seamless-looking continuous material, golden warm tan rather than orange. High quality natural tactile texture.",
+      "original": "assets/source/skill-games/honey-wood.png",
+      "web": "public/art/skill-games/honey-wood.webp",
+      "sha256": "e109cb6ca959eff360f7d85632b7bb1a5a6abd27a6369bdca23875f198f33d21",
+      "bytes": 43568
+    },
+    {
+      "id": "ivory-seed",
+      "prompt": "Use case: stylized-concept. Asset type: one reusable game-piece sprite for Oware and Kalah boards. Exactly ONE beautiful small warm-ivory oval seed, like a polished bone-coloured smooth bean, centered on a genuinely transparent background. Top-down orthographic view. Satin material, subtle warm pale-gold underside, soft lit highlight upper left, tiny natural dimple at one end, organic oval shape. Object fills 80% of square canvas. No ground plane or cast shadow, no other objects, no outlines, no text. Clean transparent cutout edges. A single discrete game piece, not a whole board.",
+      "original": "assets/source/skill-games/ivory-seed.png",
+      "web": "public/art/skill-games/ivory-seed.webp",
+      "sha256": "2f90506b15040f322c1723dd650acc02deab31ecf8cbb07149dd73df49780414",
+      "bytes": 3952
+    }
+  ]
+}

@@ -1,0 +1,95 @@
+{
+  "retrievedAt": "2026-11-14",
+  "sourceCatalog": "https://incompetech.com/music/royalty-free/pieces.json",
+  "tracks": [
+    {
+      "id": "racing",
+      "title": "Funk Game Loop",
+      "artist": "Kevin MacLeod",
+      "artistUrl": "https://incompetech.com/",
+      "file": "/audio/games/racing-funk-loop.mp3",
+      "sourceUrl": "https://incompetech.com/music/royalty-free/index.html?isrc=USUAN1100839",
+      "downloadUrl": "https://incompetech.com/music/royalty-free/mp3-royaltyfree/Funk%20Game%20Loop.mp3",
+      "license": "CC-BY-4.0",
+      "licenseUrl": "https://creativecommons.org/licenses/by/4.0/",
+      "isrc": "USUAN1100839",
+      "durationSeconds": 56.47092970521542,
+      "sampleRate": 44100,
+      "channels": 2,
+      "bitrate": 320000,
+      "bytes": 2263379,
+      "sha256": "77ee6c6263db62f5a14ecfdf9e8f758c61683a9d139e611a64790800bd9ea24f",
+      "modifications": "None. Original artist MP3 renamed for the application.",
+      "recommendedVolume": 0.3,
+      "looping": "Composer labels this a game loop. The original MP3 has a short ending tail; Web Audio with an overlapping crossfade can avoid a pause when repeating.",
+      "games": [
+        "paddle-duel",
+        "air-hockey",
+        "snake-arena",
+        "kitchen-rush"
+      ]
+    },
+    {
+      "id": "platformer",
+      "title": "Bassa Island Game Loop",
+      "artist": "Kevin MacLeod",
+      "artistUrl": "https://incompetech.com/",
+      "file": "/audio/games/platformer-island-loop.mp3",
+      "sourceUrl": "https://incompetech.com/music/royalty-free/index.html?isrc=USUAN1100840",
+      "downloadUrl": "https://incompetech.com/music/royalty-free/mp3-royaltyfree/Bassa%20Island%20Game%20Loop.mp3",
+      "license": "CC-BY-4.0",
+      "licenseUrl": "https://creativecommons.org/licenses/by/4.0/",
+      "isrc": "USUAN1100840",
+      "durationSeconds": 32.69369614512472,
+      "sampleRate": 44100,
+      "channels": 2,
+      "bitrate": 320000,
+      "bytes": 1312530,
+      "sha256": "b33590971b03689711c0b47c230b72c613211d5df07ae10c4e7c165019d6db39",
+      "modifications": "None. Original artist MP3 renamed for the application.",
+      "recommendedVolume": 0.24,
+      "looping": "Composer labels this a game loop. The original MP3 has a short ending tail; Web Audio with an overlapping crossfade can avoid a pause when repeating.",
+      "games": [
+        "platform-relay",
+        "mini-golf",
+        "marble-knockout",
+        "orbit-rescue"
+      ]
+    },
+    {
+      "id": "action",
+      "title": "Exhilarate",
+      "artist": "Kevin MacLeod",
+      "artistUrl": "https://incompetech.com/",
+      "file": "/audio/games/racing-exhilarate.mp3",
+      "sourceUrl": "https://incompetech.com/music/royalty-free/index.html?isrc=USUAN1300028",
+      "downloadUrl": "https://incompetech.com/music/royalty-free/mp3-royaltyfree/Exhilarate.mp3",
+      "license": "CC-BY-4.0",
+      "licenseUrl": "https://creativecommons.org/licenses/by/4.0/",
+      "isrc": "USUAN1300028",
+      "durationSeconds": 145.41174603174602,
+      "sampleRate": 44100,
+      "channels": 2,
+      "bitrate": 320000,
+      "bytes": 5821253,
+      "sha256": "3e50c832e0739479c6f0306661c9601e081738eef939630bb121e66195691b64",
+      "modifications": "None. Original artist MP3 renamed for the application. Playback applies volume adjustment and a short overlap when repeating.",
+      "bpm": 170,
+      "games": [
+        "pocket-racers",
+        "stick-rivals",
+        "paint-tag",
+        "bomb-maze"
+      ],
+      "recommendedVolume": 0.2,
+      "looping": "Complete track streams through HTMLAudioElement. A 750 ms overlap smooths repeats; the racing round ends before the original 145-second track does."
+    }
+  ],
+  "verification": {
+    "method": "macOS afinfo plus complete afconvert decode to stereo 16-bit PCM WAV",
+    "decodedDurationSeconds": 234.57637188208616,
+    "subjectiveListening": "Not performed; this tool session has no audio listening capability.",
+    "combinedBytes": 9397162,
+    "runtime": "src/games/arcade-audio.ts: gesture-unlocked local streams, crossfades, mute/volume, hidden-tab suspension, state-driven Web Audio SFX."
+  }
+}

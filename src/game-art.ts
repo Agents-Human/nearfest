@@ -1,6 +1,11 @@
 import type {Game} from './PlayRoom';
 
-export const gameCover = (game: Game) => `/art/game-covers/${game.art || game.id}.svg`;
+const paintedBoards = new Set(['oware', 'checkers', 'connect-four', 'dots-boxes', 'reversi', 'kalah', 'hex', 'nine-mens-morris']);
+const arcadeCovers=new Set(['chess-online','pocket-racers','stick-rivals','paddle-duel','air-hockey','snake-arena','bomb-maze','mini-golf','marble-knockout','kitchen-rush','paint-tag','platform-relay','draw-guess','word-hunt','word-relay','category-sprint','clue-crew','bluff-club','deduction-club','maths-tug','equation-forge','circuit-crew','orbit-rescue','bridge-builders','molecule-match','sudoku-race','codebreakers']);
+export const gameCoverById = (id: string) => arcadeCovers.has(id)?`/art/action-games/${id}.svg`:paintedBoards.has(id)
+  ? `/art/skill-games/${id}.webp`
+  : `/art/game-covers/${id}.svg`;
+export const gameCover = (game: Game) => gameCoverById(game.art || game.id);
 export const gameTitle = (game: Game) => game.title === game.title.toUpperCase()
   ? game.title.toLowerCase().replace(/\b[a-z]/g, letter => letter.toUpperCase())
   : game.title;

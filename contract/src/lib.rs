@@ -1,3 +1,4 @@
+mod rooms;
 use near_sdk::{env, near, require, AccountId, Gas, NearToken, PanicOnDefault, Promise, PromiseResult};
 use near_sdk::collections::{LookupMap, Vector};
 use near_sdk::json_types::U128;
@@ -23,13 +24,13 @@ pub struct Bet {
 }
 #[near(contract_state)]
 #[derive(PanicOnDefault)]
-pub struct SlotVend { bets: Vector<Bet>, credits: LookupMap<AccountId, u128>, pending: LookupMap<AccountId, u128>, requests: LookupMap<String, u64>, oracle: AccountId }
+pub struct SlotVend { bets: Vector<Bet>, credits: LookupMap<AccountId, u128>, pending: LookupMap<AccountId, u128>, requests: LookupMap<String, u64>, oracle: AccountId, rooms: LookupMap<String, rooms::Room>, funding_receipts: LookupMap<String,bool> }
 
 #[near]
 impl SlotVend {
  #[init]
- pub fn new(oracle: AccountId) -> Self { Self { bets: Vector::new(b"b"), credits: LookupMap::new(b"c"), pending: LookupMap::new(b"p"), requests: LookupMap::new(b"r"), oracle } }
- pub fn get_config(&self) -> near_sdk::serde_json::Value { near_sdk::serde_json::json!({"oracle":self.oracle,"storage_fee":STORAGE.to_string(),"review_ms":REVIEW,"resolution_ms":WINDOW,"network":"testnet"}) }
+ pub fn new(oracle: AccountId) -> Self { Self { bets: Vector::new(b"b"), credits: LookupMap::new(b"c"), pending: LookupMap::new(b"p"), requests: LookupMap::new(b"r"), rooms: LookupMap::new(b"g"), funding_receipts: LookupMap::new(b"f"), oracle } }
+ pub fn get_config(&self) -> near_sdk::serde_json::Value { near_sdk::serde_json::json!({"oracle":self.oracle,"storage_fee":STORAGE.to_string(),"room_storage_fee":"100000000000000000000000","version":2,"review_ms":REVIEW,"resolution_ms":WINDOW,"network":"testnet"}) }
  pub fn get_bet(&self, id: u64) -> Option<Bet> { self.bets.get(id) }
  pub fn get_bets(&self, from: Option<u64>, limit: Option<u64>) -> Vec<Bet> {
   let end = self.bets.len().saturating_sub(from.unwrap_or(0));

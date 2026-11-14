@@ -1,0 +1,40 @@
+{
+  "name": "NearFest",
+  "symbol": "Rally ribbon: two folded festival wristbands cross into an N, representing players meeting in one festival of games.",
+  "palette": {
+    "ink": "#292820",
+    "cream": "#f7f4e8",
+    "coral": "#fa8264",
+    "lilac": "#c6b5ef",
+    "yellow": "#f8df58"
+  },
+  "assets": {
+    "nearfest-logo.svg": {
+      "sha256": "d678848164750a4294e6340508d648a0ff7b01e7d24101bc46da4f92db939c9f"
+    },
+    "nearfest-logo-dark.svg": {
+      "sha256": "eb7e8817aeb0220c5e0d18b0e3fab34f8d68cd806e304260ab21cc0cc1da6d6d"
+    },
+    "nearfest-logo-light.svg": {
+      "sha256": "8b19ba107016ce84fea378155eca9ec8edaee5f3af8323b2c716261606207a53"
+    },
+    "nearfest-wordmark.svg": {
+      "sha256": "59f8e71667a55ea5ae5349bbf4982ea5d8afd36af76d4decc2953ddb2b9e87b8"
+    },
+    "nearfest-mark.svg": {
+      "sha256": "07dc308f925a381a2dd06a29676592a32057ce93a636e63709d6cb252c2894cd"
+    },
+    "nearfest-icon.svg": {
+      "sha256": "226e568af5a98f1d1a26fc0a398991d5ed00771e39c276217eefd25312f1b24b"
+    },
+    "favicon.svg": {
+      "sha256": "5692393ab8c9a85e412e96cdcd966a236c7926aed955f4e2e7e13e85f8170df1"
+    }
+  },
+  "lettering": {
+    "family": "Caprasimo Regular",
+    "source": "https://github.com/google/fonts/tree/main/ofl/caprasimo",
+    "license": "SIL Open Font License 1.1",
+    "treatment": "Outlined to paths, optical tracking adjusted. No font dependency in public logos."
+  }
+}

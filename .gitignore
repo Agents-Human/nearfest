@@ -8,3 +8,6 @@ contract/target/
 contract/*.wasm
 .DS_Store
 evidence/*.png
+
+.nearfest-testnet-keys.json
+.nearfest-*-keys.json

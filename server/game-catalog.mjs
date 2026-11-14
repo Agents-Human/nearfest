@@ -1,3 +1,5 @@
+import {arcadeGames} from './arcade/catalog.mjs';
+import {skillGames} from './skill/engines.mjs';
 import library from './library-catalog.json' with {type:'json'};
 import {packs} from './pack-recipes.mjs';
 const quiz=(id,title,category,label,description,seconds=75)=>({id,title,category,label,description,rounds:5,seconds,kind:'quiz'});
@@ -29,13 +31,13 @@ const originals = [
  {...quiz('words','Word shuffle','Facts','Word puzzle','Untangle the letters. Beat the clock.',90),kind:'puzzle'},
 ];
 
-export const games=[...library,...originals.map(g=>({...g,kind:['lights','slide','codebreaker'].includes(g.id)?'puzzle':g.kind,art:g.id,multiplayer:g.engine!=='local'})),...Array.from({length:50},(_,i)=>Array.from({length:20},(_,j)=>packs[j*50+i])).flat()];
+export const games=[...arcadeGames,...skillGames,...library,...originals.map(g=>({...g,kind:['lights','slide','codebreaker'].includes(g.id)?'puzzle':g.kind,art:g.id,multiplayer:g.engine!=='local'})),...Array.from({length:50},(_,i)=>Array.from({length:20},(_,j)=>packs[j*50+i])).flat()];
 
-// Archive configurations remain resolvable for existing saved runs, but are not standalone titles.
-const firstPicks=['chogan-sudoku','aba-sum-ten','chogan-dots','chogan-mancala','js13k-xx142-b2exe','littlejs-astroblast','aba-draft-line'];
-const imported=library.slice().sort((a,b)=>{const ai=firstPicks.indexOf(a.id),bi=firstPicks.indexOf(b.id);return (ai<0?100:ai)-(bi<0?100:bi);});
-const classic=games.filter(game=>!game.pack&&game.engine!=='imported');
-const fullDiscoveryGames=[...imported.slice(0,7),...classic.slice(0,6),...imported.slice(7,18),...classic.slice(6),...imported.slice(18)];
-
-// Solo and same-device imports are parked, not deleted. Re-enable individually after multiplayer integration.
-export const discoveryGames=fullDiscoveryGames.filter(game=>game.multiplayer===true);
+// Published games are our own implementations with both solo and online play.
+// Imported sources, older solo prototypes and generated configurations stay archived.
+const featuredIds=['oware','checkers','chess-online','pocket-racers','stick-rivals','maths','science','trivia','chess','connect-four','dots-boxes','reversi','hex','nine-mens-morris'];
+const published=games.filter(g=>!g.pack&&(g.engine==='arcade'||g.engine==='skill'&&g.id!=='kalah'||!g.engine));
+const byId=new Map(published.map(g=>[g.id,g]));
+export const discoveryGames=[...featuredIds.map(id=>byId.get(id)),...published.filter(g=>!featuredIds.includes(g.id))]
+ .filter(Boolean).map(g=>({...g,solo:true,bettable:g.bettable!==false}));
+export const publishedGame=id=>discoveryGames.find(g=>g.id===id);

@@ -1,0 +1,96 @@
+import {finish,ranked,DT} from './world.mjs';
+export const puzzleIds=new Set(['word-hunt','word-relay','category-sprint','maths-tug','equation-forge','circuit-crew','bridge-builders','molecule-match','sudoku-race','codebreakers']);
+export const WORDS=('cat cats dog dogs rat rats rate rates late later line lines tire tires tile tiles lie lies tie ties sat sit sits seat seats sea seas seal seals sale sales star stars stare stares tar art arts at as ate eat eats tea teas ten tent tents net nets nest nests tin tins ant ants tan tans ran run runs sun sand sad set sets red reds read reads road roads rose roses stone stones tone tones toe toes note notes tree trees toy toys yard yes sky kite egg goat tiger rabbit lion newt turtle eagle earth horse elephant table energy yellow water robot train nose orange elbow window rain night torch heart top pen needle engine eye east town nest team meat test time map plant toast tent tap plane earn neat next tank keep power rope pair right apple angle grape end dance each hold door round dear river room moon nail long game garden desk kind deep pond date edge enter rest turn tune green root tooth trail leaf fire ring rock owl land dream milk key year road lemon nut tap rose star sun yard fish home red blue gold snow wind ball car bird boat book coin cup drum flag frog hand hat house key lamp leaf lock moon mouse nose pear pen pig rain ring rock rose ship shoe star sun tent tree vase wave wheel wing wood zebra').split(' ');
+export const dictionary=new Set(WORDS);
+const normal=t=>String(t??'').trim().toLowerCase().replace(/[^a-z]/g,'');
+const grid='CATSDOGSRATELINE'.split('');
+const sudokuPuzzle='530070000600195000098000060800060003400803001700020006060000280000419005000080079'.split('').map(Number);
+const sudokuAnswer='534678912672195348198342567859761423426853791713924856961537284287419635345286179'.split('').map(Number);
+const forgeRounds=[{numbers:[2,3,4,5,10,25],target:100},{numbers:[1,3,5,7,20,50],target:175},{numbers:[2,4,6,8,10,25],target:212},{numbers:[3,4,7,9,15,50],target:150},{numbers:[1,2,5,6,10,75],target:450}];
+const molecules=[{name:'Water',atoms:['O','H','H'],valence:{O:2,H:1}},{name:'Carbon dioxide',atoms:['O','C','O'],valence:{O:2,C:4}},{name:'Ammonia',atoms:['N','H','H','H'],valence:{N:3,H:1}},{name:'Methane',atoms:['C','H','H','H','H'],valence:{C:4,H:1}},{name:'Oxygen',atoms:['O','O'],valence:{O:2}}];
+const categories=['Animal','Food','Place','Object','Sport'];
+const taxonomy={
+ A:[['ant','ape','alligator','alpaca','antelope'],['apple','avocado','apricot','almond','artichoke'],['accra','argentina','australia','africa','athens','amsterdam','angola'],['axe','anchor','alarm','apron','arrow'],['archery','athletics','aikido']],
+ B:[['bear','beaver','bat','buffalo','bird','badger'],['banana','bread','beans','broccoli','butter','beef','biscuit'],['brazil','berlin','belgium','barcelona','boston','botswana'],['ball','book','bottle','box','bag','bed','brush'],['basketball','badminton','baseball','boxing','bowling']],
+ C:[['cat','cow','camel','crocodile','cheetah','chicken','crab'],['carrot','cheese','cake','corn','chicken','cabbage','coconut'],['canada','china','cairo','chile','cuba','cameroon'],['car','cup','chair','clock','coat','comb','camera'],['cricket','cycling','curling','canoeing','climbing']],
+ D:[['dog','deer','dolphin','donkey','duck','dragonfly'],['date','doughnut','dumpling','donut','durian'],['denmark','dubai','dakar','delhi','dublin','djibouti'],['desk','drum','door','dress','dice','dish'],['diving','darts','dressage','discus','decathlon']],
+};
+const mathQuestion=index=>{const a=3+index%13,b=2+(index*3)%11;return {prompt:index%2?`${a} + ${b} × 2 = ?`:`${a} × ${b} = ?`,answer:index%2?a+b*2:a*b};};
+export function codePuzzle(round=0){const c=1+round%5,b=c+1,a=6-c,d=a+c;return {clues:[`C is ${c}.`,`B is one more than C.`,`A + B = ${a+b}.`,'D = A + C.'],answer:[a,b,c,d]};}
+const ports=[1,2,4,8]; // north, east, south, west
+const rotate=(mask,r)=>{for(let i=0;i<r;i++)mask=((mask<<1)&15)|((mask>>3)&1);return mask;};
+function newCircuit(level){const masks=[6,12,0,4,3,11,10,13,1,0,0,5,0,0,0,1];return masks.map((mask,i)=>({mask,rotation:[0,3,8,15].includes(i)?0:[0,3,1,2,1,0,2,1,0,1,2,1,3,0,2,0][(i+level)%16],kind:i===0?'source':i===5?'and':i===6?'switch':i===8?'ground':[3,15].includes(i)?'lamp':'wire',on:i!==6}));}
+export function circuitStatus(cells){const powered=new Set([0]),mask=i=>rotate(cells[i].mask,cells[i].rotation),connected=(i,d)=>{const x=i%4,y=Math.floor(i/4),nx=x+[0,1,0,-1][d],ny=y+[-1,0,1,0][d];if(nx<0||nx>3||ny<0||ny>3)return -1;const j=ny*4+nx;return mask(i)&ports[d]&&mask(j)&ports[(d+2)%4]?j:-1;};for(let pass=0;pass<32;pass++)for(let i=1;i<16;i++){const cell=cells[i];if(cell.kind==='switch'&&!cell.on)continue;const r=cell.rotation,inputs=cell.kind==='and'?[r%4,(r+3)%4]:[0,1,2,3];const energy=inputs.map(d=>{const j=connected(i,d);if(j<0||!powered.has(j))return false;return cells[j].kind!=='and'||(d+2)%4===(cells[j].rotation+1)%4;});if(cell.kind==='and'?energy.every(Boolean):energy.some(Boolean))powered.add(i);}
+ return {powered:[...powered],short:powered.has(8),complete:powered.has(3)&&powered.has(15)&&!powered.has(8)};
+}
+function bridge(level){const shift=level*15;return {anchors:[{x:100,y:300},{x:350,y:300},{x:600,y:300},{x:850,y:300},{x:225,y:430-shift},{x:475,y:420+shift/2},{x:725,y:430-shift}],beams:[],budget:9,testing:0,result:null};}
+function stableBridge(b){return [[0,1,4],[1,2,5],[2,3,6]].every(([a,c,p])=>[[a,c],[a,p],[c,p]].every(([x,y])=>b.beams.some(e=>e[0]===Math.min(x,y)&&e[1]===Math.max(x,y))));}
+export function newPuzzle(game,n){const s={game,tick:0,elapsed:0,finished:false,winners:[],reason:'',round:0,players:Array.from({length:n},()=>({score:0,index:0,feedback:'',cooldown:0}))};
+ if(game==='word-hunt'){s.grid=grid;s.players.forEach(p=>p.words=[]);}
+ if(game==='word-relay'){s.turn=0;s.word='cat';s.used=['cat'];s.deadline=10;s.players.forEach(p=>p.lives=3);}
+ if(game==='category-sprint'){s.letter='A';s.categories=categories;s.players.forEach(p=>p.answers=Array(5).fill(''));s.reveal=false;s.roundAt=0;s.reviews=[];}
+ if(game==='maths-tug'){s.rope=0;s.players.forEach((p,i)=>p.team=i%2);}
+ if(game==='equation-forge'){s.roundAt=0;s.reveal=false;s.players.forEach(p=>{p.expression='';p.best=null;});}
+ if(game==='circuit-crew'){s.cells=newCircuit(0);s.circuit=circuitStatus(s.cells);s.level=0;s.advanceAt=null;}
+ if(game==='bridge-builders'){s.level=0;s.bridge=bridge(0);}
+ if(game==='molecule-match')s.players.forEach(p=>p.bonds=[]);
+ if(game==='sudoku-race'){s.givens=sudokuPuzzle;s.players.forEach(p=>p.cells=[...sudokuPuzzle]);}
+ if(game==='codebreakers')s.players.forEach(p=>{p.code=Array(4).fill(1);});
+ return s;
+}
+// Small exact rational parser: only supplied integers and + - * / () are allowed.
+export function evaluateExpression(text,numbers){
+ if(typeof text!=='string'||text.length>120||!/^[\d\s+*/()−×÷-]+$/.test(text))throw Error('Use the six numbers and arithmetic symbols.');
+ const tokens=text.replaceAll('×','*').replaceAll('÷','/').replaceAll('−','-').match(/\d+|[()+*/-]/g)||[],available=[...numbers];let at=0,ops=0;
+ const fraction=(n,d=1n)=>{if(d===0n)throw Error('Division by zero is not allowed.');if(d<0n){n=-n;d=-d;}if(n>10n**20n||n<-(10n**20n)||d>10n**20n)throw Error('Expression is too large.');return {n,d};};
+ const atom=()=>{if(tokens[at]==='('){at++;const value=sum();if(tokens[at++]!==')')throw Error('Close each bracket.');return value;}const token=tokens[at++];if(!token||!/^\d+$/.test(token))throw Error('Expected a number.');const i=available.indexOf(Number(token));if(i<0)throw Error('Use each supplied number at most once.');available.splice(i,1);return fraction(BigInt(token));};
+ const product=()=>{let a=atom();while(['*','/'].includes(tokens[at])){const op=tokens[at++],b=atom();ops++;a=op==='*'?fraction(a.n*b.n,a.d*b.d):fraction(a.n*b.d,a.d*b.n);}return a;};
+ const sum=()=>{let a=product();while(['+','-'].includes(tokens[at])){const op=tokens[at++],b=product();ops++;a=fraction(a.n*b.d+(op==='+'?1n:-1n)*b.n*a.d,a.d*b.d);}return a;};
+ const result=sum();if(at!==tokens.length)throw Error('Check the expression.');return {...result,ops};
+}
+function relayNext(s){const alive=s.players.flatMap((p,i)=>p.lives>0?[i]:[]);if(alive.length<=1){finish(s,alive,'Last player with a life wins.');return;}do{s.turn=(s.turn+1)%s.players.length;}while(s.players[s.turn].lives===0);s.deadline=s.elapsed+10;}
+function scoreCategories(s){s.reveal=true;const table=taxonomy[s.letter];s.results=s.players.map(p=>p.answers.map((a,i)=>{const answer=normal(a),valid=table[i].includes(answer),shared=s.players.filter(other=>normal(other.answers[i])===answer).length;return {answer:a,valid,points:valid?(shared>1?5:10):0};}));s.players.forEach((p,i)=>p.score+=s.results[i].reduce((n,r)=>n+r.points,0));s.roundAt=s.elapsed;}
+export function puzzleAction(s,i,d){const p=s.players[i];if(s.finished)throw Error('This game has ended.');if(!p)throw Error('Join this game first.');
+ if(s.game==='word-hunt'){
+  const path=d.path;if(!Array.isArray(path)||path.length<3||path.length>16||new Set(path).size!==path.length||path.some(n=>!Number.isInteger(n)||n<0||n>15))throw Error('Trace at least three different neighbouring letters.');for(let k=1;k<path.length;k++)if(Math.max(Math.abs(path[k]%4-path[k-1]%4),Math.abs(Math.floor(path[k]/4)-Math.floor(path[k-1]/4)))!==1)throw Error('Letters must touch.');
+  const word=path.map(n=>s.grid[n]).join('').toLowerCase();if(!dictionary.has(word))throw Error('That word is not in the published game dictionary.');if(p.words.includes(word))throw Error('You already found that word.');p.words.push(word);p.score+=[0,0,0,1,2,3,5,8][Math.min(word.length,7)];p.feedback=word;return;
+ }
+ if(s.game==='word-relay'){if(s.turn!==i)throw Error('Wait for your turn.');const word=normal(d.word);if(word[0]!==s.word.at(-1)||!dictionary.has(word)||s.used.includes(word)){p.lives--;p.feedback='Lost one life: use a new dictionary word starting with '+s.word.at(-1).toUpperCase()+'.';}else{s.word=word;s.used.push(word);p.score++;p.feedback='Good word.';}relayNext(s);return;}
+ if(s.game==='category-sprint'){
+  if(d.type==='review'){if(!s.reveal||!Number.isInteger(d.player)||!Number.isInteger(d.category)||d.player<0||d.player>=s.players.length||d.category<0||d.category>4)throw Error('Choose an answer in the reveal.');let review=s.reviews.find(r=>r.player===d.player&&r.category===d.category&&r.round===s.round);if(!review){review={player:d.player,category:d.category,round:s.round,votes:[],accepted:false};s.reviews.push(review);}if(i!==d.player&&!review.votes.includes(i))review.votes.push(i);if(!review.accepted&&review.votes.length>(s.players.length-1)/2&&review.votes.length>0){const result=s.results[d.player][d.category];if(!result.valid){result.valid=true;result.points=5;s.players[d.player].score+=5;}review.accepted=true;}return;}
+  if(s.reveal)throw Error('Answers are locked for review.');if(!Array.isArray(d.answers)||d.answers.length!==5||d.answers.some(a=>typeof a!=='string'||a.length>40))throw Error('Enter five short answers.');p.answers=d.answers;return;
+ }
+ if(s.game==='maths-tug'){if(s.elapsed<p.cooldown)throw Error('Wait for the two-second cooldown.');if(d.index!==p.index)throw Error('This question has already changed.');const q=mathQuestion(p.index);const correct=String(d.answer).trim()===String(q.answer);p.index++;p.feedback=correct?'Correct! Pull!':'Not quite. Wait two seconds.';if(correct){p.score++;s.rope+=p.team===0?1:-1;}else p.cooldown=s.elapsed+2;if(Math.abs(s.rope)>=10)finish(s,s.players.flatMap((q,j)=>q.team===(s.rope>0?0:1)?[j]:[]),'Your team pulled the rope across the line.');return;}
+ if(s.game==='equation-forge'){if(s.reveal)throw Error('This round is being scored.');const round=forgeRounds[s.round],result=evaluateExpression(d.expression,round.numbers),delta=result.n-BigInt(round.target)*result.d,entry={n:result.n.toString(),d:result.d.toString(),distance:(delta<0n?-delta:delta).toString(),ops:result.ops};const better=!p.best||BigInt(entry.distance)*BigInt(p.best.d)<BigInt(p.best.distance)*BigInt(entry.d)||BigInt(entry.distance)*BigInt(p.best.d)===BigInt(p.best.distance)*BigInt(entry.d)&&entry.ops<p.best.ops;if(better){p.best=entry;p.expression=d.expression;}p.feedback=`Value: ${result.n}/${result.d}`;return;}
+ if(s.game==='circuit-crew'){if(s.advanceAt!==null)throw Error('Next circuit is loading.');if(!Number.isInteger(d.cell)||d.cell<0||d.cell>15)throw Error('Choose a tile.');const cell=s.cells[d.cell];if(['source','ground','lamp'].includes(cell.kind))throw Error('This tile stays fixed.');if(d.type==='switch'&&cell.kind==='switch')cell.on=!cell.on;else cell.rotation=(cell.rotation+1)%4;s.circuit=circuitStatus(s.cells);if(s.circuit.complete){s.level++;if(s.level===3)finish(s,s.players.map((_,j)=>j),'All three circuits are powered.');else s.advanceAt=s.elapsed+1;}return;}
+ if(s.game==='bridge-builders'){const b=s.bridge;if(d.type==='test'){if(b.testing>0)throw Error('The bridge is already being tested.');b.result=stableBridge(b);b.testing=3;return;}if(b.testing>0)throw Error('Wait for the load test.');const [a,z]=[d.from,d.to].sort((a,b)=>a-b);if(!Number.isInteger(a)||!Number.isInteger(z)||a<0||z>6||a===z||Math.hypot(b.anchors[a].x-b.anchors[z].x,b.anchors[a].y-b.anchors[z].y)>350)throw Error('Connect two nearby anchors.');const found=b.beams.findIndex(e=>e[0]===a&&e[1]===z);if(found>=0)b.beams.splice(found,1);else{if(b.beams.length>=b.budget)throw Error('Beam budget reached. Remove a beam first.');b.beams.push([a,z]);}return;}
+ if(s.game==='molecule-match'){const target=molecules[p.index];if(!target)throw Error('You finished all molecules.');const [a,b]=[d.from,d.to].sort((a,b)=>a-b);if(!Number.isInteger(a)||!Number.isInteger(b)||a<0||b>=target.atoms.length||a===b)throw Error('Select two different atoms.');const index=p.bonds.findIndex(e=>e[0]===a&&e[1]===b),old=index<0?0:p.bonds[index][2],order=d.remove?0:(old+1)%4,next=p.bonds.filter((_,j)=>j!==index);if(order)next.push([a,b,order]);const valences=target.atoms.map((_,j)=>next.reduce((n,e)=>n+(e[0]===j||e[1]===j?e[2]:0),0));if(valences.some((v,j)=>v>target.valence[target.atoms[j]]))throw Error('That atom has no spare bonds. Remove a bond first.');p.bonds=next;if(valences.every((v,j)=>v===target.valence[target.atoms[j]])){const seen=new Set([0]);for(let step=0;step<target.atoms.length;step++)for(const e of next)if(seen.has(e[0])||seen.has(e[1])){seen.add(e[0]);seen.add(e[1]);}if(seen.size===target.atoms.length){p.index++;p.score++;p.bonds=[];if(p.index===molecules.length)finish(s,[i],'All five molecules built correctly.');}}return;}
+ if(s.game==='sudoku-race'){if(d.type==='submit'){if(p.cells.every((v,j)=>v===sudokuAnswer[j]))finish(s,[i],'Correct complete Sudoku.');else p.feedback='Some cells still need work.';return;}if(!Number.isInteger(d.cell)||d.cell<0||d.cell>80||s.givens[d.cell]||!Number.isInteger(d.value)||d.value<0||d.value>9)throw Error('Choose an editable cell and a digit.');p.cells[d.cell]=d.value;return;}
+ if(s.game==='codebreakers'){if(s.elapsed<p.cooldown)throw Error('Wait two seconds before another guess.');const q=codePuzzle(p.index);if(!Array.isArray(d.code)||d.code.length!==4||d.code.some(n=>!Number.isInteger(n)||n<1||n>6))throw Error('Use four digits from one to six.');p.code=d.code;if(d.type==='submit'){if(d.code.every((n,j)=>n===q.answer[j])){p.index++;p.score++;p.feedback='Cracked it!';if(p.index===5)finish(s,[i],'All five codes deduced.');}else{p.feedback='Your code must satisfy every clue.';p.cooldown=s.elapsed+2;}}return;}
+ throw Error('Unknown puzzle action.');
+}
+export function advancePuzzle(previous){const s=structuredClone(previous);if(s.finished)return s;s.elapsed+=DT;s.tick++;
+ if(s.game==='word-relay'&&s.elapsed>=s.deadline){s.players[s.turn].lives--;relayNext(s);}
+ if(s.game==='category-sprint'){if(!s.reveal&&s.elapsed-s.roundAt>=60)scoreCategories(s);else if(s.reveal&&s.elapsed-s.roundAt>=15){s.round++;if(s.round===4)ranked(s,s.players.map(p=>p.score),'Most category points wins.');else{s.reveal=false;s.letter='ABCD'[s.round];s.roundAt=s.elapsed;s.players.forEach(p=>p.answers=Array(5).fill(''));}}}
+ if(s.game==='equation-forge'){if(!s.reveal&&s.elapsed-s.roundAt>=40){s.reveal=true;s.roundAt=s.elapsed;const entries=s.players.map((p,i)=>({i,b:p.best})).filter(p=>p.b).sort((a,b)=>{const diff=BigInt(a.b.distance)*BigInt(b.b.d)-BigInt(b.b.distance)*BigInt(a.b.d);return diff<0n?-1:diff>0n?1:a.b.ops-b.b.ops;});s.roundWinners=[];if(entries[0])for(const entry of entries)if(BigInt(entry.b.distance)*BigInt(entries[0].b.d)===BigInt(entries[0].b.distance)*BigInt(entry.b.d)&&entry.b.ops===entries[0].b.ops){s.players[entry.i].score+=10;s.roundWinners.push(entry.i);}}
+  else if(s.reveal&&s.elapsed-s.roundAt>=6){s.round++;if(s.round===5)ranked(s,s.players.map(p=>p.score),'Five rounds complete.');else{s.reveal=false;s.roundAt=s.elapsed;s.players.forEach(p=>{p.best=null;p.expression='';p.feedback='';});}}}
+ if(s.game==='circuit-crew'&&s.advanceAt!==null&&s.elapsed>=s.advanceAt){s.advanceAt=null;s.cells=newCircuit(s.level);s.circuit=circuitStatus(s.cells);}
+ if(s.game==='bridge-builders'&&s.bridge.testing>0){s.bridge.testing-=DT;if(s.bridge.testing<=0&&s.bridge.result){s.level++;if(s.level===3)finish(s,s.players.map((_,i)=>i),'All three bridges passed the load test.');else s.bridge=bridge(s.level);}}
+ const limit={ 'word-hunt':90,'word-relay':180,'maths-tug':90,'circuit-crew':180,'bridge-builders':240,'molecule-match':180,'sudoku-race':300,'codebreakers':180 }[s.game];
+ if(limit&&s.elapsed>=limit&&!s.finished){if(['circuit-crew','bridge-builders'].includes(s.game))finish(s,[],'Time is up. Try the puzzle again.');else if(s.game==='maths-tug')finish(s,s.rope===0?s.players.map((_,i)=>i):s.players.flatMap((p,i)=>p.team===(s.rope>0?0:1)?[i]:[]),'Time limit: rope position decides.');else if(s.game==='sudoku-race')ranked(s,s.players.map(p=>p.cells.filter((v,j)=>v===sudokuAnswer[j]&&!s.givens[j]).length),'Time limit: correct filled cells decide.');else ranked(s,s.players.map(p=>s.game==='word-relay'?p.lives*100+p.score:p.score),'Time limit: highest score wins.');}
+ return s;
+}
+export function puzzleView(s,i){
+ const p=s.players[i],out={...s,players:s.players.map((q,j)=>({score:q.score,index:q.index,team:q.team,lives:q.lives,filled:q.cells?.filter(Boolean).length,found:q.words?.length,submitted:Boolean(q.best),name:q.name})),me:p?{...p}:null};
+ if(s.game==='category-sprint'&&!s.reveal){delete out.results;delete out.reviews;}
+ if(s.game==='equation-forge'){out.challenge=forgeRounds[Math.min(s.round,4)];if(s.reveal)out.results=s.players.map(q=>({expression:q.expression,best:q.best}));}
+ if(s.game==='maths-tug'&&p)out.challenge={prompt:mathQuestion(p.index).prompt,index:p.index};
+ if(s.game==='molecule-match'&&p)out.challenge=molecules[p.index]||null;
+ if(s.game==='codebreakers'&&p)out.challenge={clues:codePuzzle(p.index).clues};
+ return out;
+}
+export function puzzleBot(s,i){const p=s.players[i];if(s.finished||s.tick%60!==i%5)return null;
+ if(s.game==='word-relay'&&s.turn===i)return {word:WORDS.find(w=>w[0]===s.word.at(-1)&&!s.used.includes(w))||'pass'};
+ if(s.game==='maths-tug'&&s.elapsed>=p.cooldown)return {index:p.index,answer:mathQuestion(p.index).answer};
+ return null;
+}

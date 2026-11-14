@@ -1,0 +1,431 @@
+{
+  "preparedAt": "2026-11-14",
+  "author": "Kenney",
+  "authorUrl": "https://kenney.nl/",
+  "license": "CC0-1.0",
+  "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+  "source": "User-supplied original asset packs in assets/new; no new external downloads.",
+  "modifications": "Original GLB and PNG bytes retained. Runtime uniformly normalizes scale and pivot; ball instances can change material color.",
+  "assets": [
+    {
+      "id": "windmill",
+      "group": "minigolf",
+      "original": "assets/new/kenney_minigolf-kit/Models/GLB format/windmill.glb",
+      "file": "/models/scenery/minigolf/windmill.glb",
+      "bytes": 27096,
+      "sha256": "26481a9811ad5aba42a46dc1848ec6021c22b6f70d6b2109039a8c176d32ab10",
+      "nodes": [
+        "windmill",
+        "blades"
+      ]
+    },
+    {
+      "id": "castle",
+      "group": "minigolf",
+      "original": "assets/new/kenney_minigolf-kit/Models/GLB format/castle.glb",
+      "file": "/models/scenery/minigolf/castle.glb",
+      "bytes": 16760,
+      "sha256": "3dbbaeab03f4e82cbd4f04a845c8553092a5b86318f0e5bdfb6423a5afe3a470",
+      "nodes": [
+        "castle"
+      ]
+    },
+    {
+      "id": "golf-ball",
+      "group": "minigolf",
+      "original": "assets/new/kenney_minigolf-kit/Models/GLB format/ball-red.glb",
+      "file": "/models/scenery/minigolf/golf-ball.glb",
+      "bytes": 58356,
+      "sha256": "37f1d03972f29dcba708f6fcf2fbc186292200fd8774ca1fee85ffbb266a53be",
+      "nodes": [
+        "ball-red"
+      ]
+    },
+    {
+      "id": "flag",
+      "group": "minigolf",
+      "original": "assets/new/kenney_minigolf-kit/Models/GLB format/flag-red.glb",
+      "file": "/models/scenery/minigolf/flag.glb",
+      "bytes": 9384,
+      "sha256": "8ecd3bda0bf3908b1e4cad753a79be815083ef1c2cf2bec0856ab59e89542167",
+      "nodes": [
+        "flag-red"
+      ]
+    },
+    {
+      "id": "tomato",
+      "group": "food",
+      "original": "assets/new/kenney_food-kit/Models/GLB format/tomato.glb",
+      "file": "/models/scenery/food/tomato.glb",
+      "bytes": 14084,
+      "sha256": "c2179712b2fd4f5832f79f09f7188c4bc92f05798229d0e58264e1ca2558f4cc",
+      "nodes": [
+        "tomato"
+      ]
+    },
+    {
+      "id": "cabbage",
+      "group": "food",
+      "original": "assets/new/kenney_food-kit/Models/GLB format/cabbage.glb",
+      "file": "/models/scenery/food/cabbage.glb",
+      "bytes": 15360,
+      "sha256": "6ec1db20d0d1900ed72ff66cb836fe0b0b6bcf63387fb0ff1c15ff80b7647a5c",
+      "nodes": [
+        "cabbage"
+      ]
+    },
+    {
+      "id": "cheese",
+      "group": "food",
+      "original": "assets/new/kenney_food-kit/Models/GLB format/cheese.glb",
+      "file": "/models/scenery/food/cheese.glb",
+      "bytes": 60976,
+      "sha256": "092c9326a27fc51edfaa0353c411875993ac109ee5e8923b681cc39fbb6312d1",
+      "nodes": [
+        "wedge",
+        "wedge",
+        "wedge",
+        "wedge",
+        "wedge",
+        "wedge",
+        "wedge",
+        "wedge",
+        "wedge",
+        "wedge",
+        "wedge",
+        "wedge"
+      ]
+    },
+    {
+      "id": "loaf",
+      "group": "food",
+      "original": "assets/new/kenney_food-kit/Models/GLB format/loaf.glb",
+      "file": "/models/scenery/food/loaf.glb",
+      "bytes": 9464,
+      "sha256": "d2e490046b919e8b793b1f479b9b3ee941c8fb9e657163d073223f2a39c5f563",
+      "nodes": [
+        "loaf"
+      ]
+    },
+    {
+      "id": "burger",
+      "group": "food",
+      "original": "assets/new/kenney_food-kit/Models/GLB format/burger.glb",
+      "file": "/models/scenery/food/burger.glb",
+      "bytes": 34536,
+      "sha256": "b982f15d980ef49f3aa295fda03b1926b0b9a29d3d000d139e111d734474c99b",
+      "nodes": [
+        "burger",
+        "bun-bottom",
+        "bun-top",
+        "cheese",
+        "patty",
+        "salad",
+        "tomato"
+      ]
+    },
+    {
+      "id": "pan",
+      "group": "food",
+      "original": "assets/new/kenney_food-kit/Models/GLB format/pan.glb",
+      "file": "/models/scenery/food/pan.glb",
+      "bytes": 19956,
+      "sha256": "71abfe3ec45a852b51d8bced9afb997b796996a5ef6cd4beae4d489eea93895c",
+      "nodes": [
+        "pan"
+      ]
+    },
+    {
+      "id": "pot",
+      "group": "food",
+      "original": "assets/new/kenney_food-kit/Models/GLB format/pot.glb",
+      "file": "/models/scenery/food/pot.glb",
+      "bytes": 18900,
+      "sha256": "ba84c5ebd769849b7cb0365adf1f6044680e024ba29e0bc1bec93d54100f72b3",
+      "nodes": [
+        "pot"
+      ]
+    },
+    {
+      "id": "cutting-board",
+      "group": "food",
+      "original": "assets/new/kenney_food-kit/Models/GLB format/cutting-board.glb",
+      "file": "/models/scenery/food/cutting-board.glb",
+      "bytes": 10652,
+      "sha256": "067f8a9331d16c65487a748747de2cddab2a77826f23bd7379e4f5da186c78ea",
+      "nodes": [
+        "cutting-board"
+      ]
+    },
+    {
+      "id": "plate",
+      "group": "food",
+      "original": "assets/new/kenney_food-kit/Models/GLB format/plate.glb",
+      "file": "/models/scenery/food/plate.glb",
+      "bytes": 8480,
+      "sha256": "4c1de567b854264b2a9407ec221d33dfd13c7fc18563ea1f33cb8abe3a3d11be",
+      "nodes": [
+        "plate"
+      ]
+    },
+    {
+      "id": "salad",
+      "group": "food",
+      "original": "assets/new/kenney_food-kit/Models/GLB format/salad.glb",
+      "file": "/models/scenery/food/salad.glb",
+      "bytes": 17200,
+      "sha256": "efed57fb8b4263057e27137daf92171879f71a12036d18de58b357ccbac25aa6",
+      "nodes": [
+        "salad"
+      ]
+    },
+    {
+      "id": "soup",
+      "group": "food",
+      "original": "assets/new/kenney_food-kit/Models/GLB format/bowl-soup.glb",
+      "file": "/models/scenery/food/soup.glb",
+      "bytes": 11188,
+      "sha256": "0ff11d6a54ed9b0592ff24e02ca1dd4d12f47762dd7f571e985b48f3d1467e58",
+      "nodes": [
+        "bowl-soup"
+      ]
+    },
+    {
+      "id": "marble",
+      "group": "marble",
+      "original": "assets/new/kenney_marble-kit/Models/GLB format/marble-high.glb",
+      "file": "/models/scenery/marble/marble.glb",
+      "bytes": 29424,
+      "sha256": "d969b903a1a882a2339e6e6c5530b52fe1d41fa62846dfa4f571cb7d5694019b",
+      "nodes": [
+        "(%ignore)"
+      ]
+    },
+    {
+      "id": "fan",
+      "group": "marble",
+      "original": "assets/new/kenney_marble-kit/Models/GLB format/fan-standing-four.glb",
+      "file": "/models/scenery/marble/fan.glb",
+      "bytes": 20104,
+      "sha256": "52ff576494131f8c16c396f5302b690070defed4d41a92e15eb13070de825c02",
+      "nodes": [
+        "fan-standing-four",
+        "fan"
+      ]
+    },
+    {
+      "id": "tree",
+      "group": "marble",
+      "original": "assets/new/kenney_marble-kit/Models/GLB format/tree.glb",
+      "file": "/models/scenery/marble/tree.glb",
+      "bytes": 9296,
+      "sha256": "80737b6ad061c6ef210eef8c7ca1b3999dc97c7eb5fd7f3a350d4ef3fde27532",
+      "nodes": [
+        "tree"
+      ]
+    },
+    {
+      "id": "tree-tall",
+      "group": "marble",
+      "original": "assets/new/kenney_marble-kit/Models/GLB format/tree-tall.glb",
+      "file": "/models/scenery/marble/tree-tall.glb",
+      "bytes": 9312,
+      "sha256": "0f36b203e1fbf23601a3cd1ca168753c75bd95c680a39a9b103193870a44ad37",
+      "nodes": [
+        "tree-tall"
+      ]
+    },
+    {
+      "id": "banner",
+      "group": "marble",
+      "original": "assets/new/kenney_marble-kit/Models/GLB format/banner.glb",
+      "file": "/models/scenery/marble/banner.glb",
+      "bytes": 7092,
+      "sha256": "a60389a8f1e335de792e7384327b5751a083777b96b6377266ebb4aa7405834d",
+      "nodes": [
+        "banner"
+      ]
+    },
+    {
+      "id": "house-a",
+      "group": "city",
+      "original": "assets/new/kenney_city-kit-suburban_20/Models/GLB format/building-type-a.glb",
+      "file": "/models/scenery/city/house-a.glb",
+      "bytes": 98604,
+      "sha256": "49f32e20b9dcd24b1c8f6d6488807b8c8cb684cbb595bfb0bb36ad903e470faa",
+      "nodes": [
+        "building-type-a"
+      ]
+    },
+    {
+      "id": "house-h",
+      "group": "city",
+      "original": "assets/new/kenney_city-kit-suburban_20/Models/GLB format/building-type-h.glb",
+      "file": "/models/scenery/city/house-h.glb",
+      "bytes": 65364,
+      "sha256": "b8b8eb7a50f85fa20b4862723e133157f553d69a0daad39b850ddbd2099ebb84",
+      "nodes": [
+        "building-type-h"
+      ]
+    },
+    {
+      "id": "house-q",
+      "group": "city",
+      "original": "assets/new/kenney_city-kit-suburban_20/Models/GLB format/building-type-q.glb",
+      "file": "/models/scenery/city/house-q.glb",
+      "bytes": 98632,
+      "sha256": "9b56037cab0de804e308766cc5e69b95b3576ffb444084c9016a0748cbcaca04",
+      "nodes": [
+        "building-type-q"
+      ]
+    },
+    {
+      "id": "city-tree",
+      "group": "city",
+      "original": "assets/new/kenney_city-kit-suburban_20/Models/GLB format/tree-large.glb",
+      "file": "/models/scenery/city/city-tree.glb",
+      "bytes": 5812,
+      "sha256": "16d1f95c149bc727a953a473cf20bf21de9bf1a88747c4f9d2eeb4ac7d43e291",
+      "nodes": [
+        "tree-large"
+      ]
+    },
+    {
+      "id": "planter",
+      "group": "city",
+      "original": "assets/new/kenney_city-kit-suburban_20/Models/GLB format/planter.glb",
+      "file": "/models/scenery/city/planter.glb",
+      "bytes": 20368,
+      "sha256": "a876e87d908f0397dcaf94b7705835447825c4c5b39195319535415386542c17",
+      "nodes": [
+        "planter"
+      ]
+    },
+    {
+      "id": "pipe",
+      "group": "factory",
+      "original": "assets/new/kenney_factory-kit_3.0/Models/GLB format/pipe-large-bend.glb",
+      "file": "/models/scenery/factory/pipe.glb",
+      "bytes": 44512,
+      "sha256": "e234cba2e29bd825b9acdab56c0ff36504a6ceea4c74b21dafbbd98e84bb793b",
+      "nodes": [
+        "pipe-large-bend"
+      ]
+    },
+    {
+      "id": "machine",
+      "group": "factory",
+      "original": "assets/new/kenney_factory-kit_3.0/Models/GLB format/machine.glb",
+      "file": "/models/scenery/factory/machine.glb",
+      "bytes": 25620,
+      "sha256": "a39e3042bcb7789274428357383317d70e1c31906e5301c99e7d9e90ac584863",
+      "nodes": [
+        "machine"
+      ]
+    },
+    {
+      "id": "crane",
+      "group": "factory",
+      "original": "assets/new/kenney_factory-kit_3.0/Models/GLB format/crane.glb",
+      "file": "/models/scenery/factory/crane.glb",
+      "bytes": 53396,
+      "sha256": "ceaf20fb976ce0415d2b3d40e723b6ad377845818fa4fa68b55434108b1a6880",
+      "nodes": [
+        "crane",
+        "arm"
+      ]
+    },
+    {
+      "id": "screen",
+      "group": "factory",
+      "original": "assets/new/kenney_factory-kit_3.0/Models/GLB format/screen-wide.glb",
+      "file": "/models/scenery/factory/screen.glb",
+      "bytes": 13904,
+      "sha256": "220211ee38d51a521475caec06bb27aa231f5b1d43fd74cb93393cca47edfda3",
+      "nodes": [
+        "screen-wide"
+      ]
+    },
+    {
+      "id": "robot-arm",
+      "group": "factory",
+      "original": "assets/new/kenney_factory-kit_3.0/Models/GLB format/robot-arm-a.glb",
+      "file": "/models/scenery/factory/robot-arm.glb",
+      "bytes": 50592,
+      "sha256": "ad3f766791adadd1cfb5ccc27d2b2ac8787848282f2a15b3c407f350dc281b68",
+      "nodes": [
+        "robot-arm-a",
+        "element-a",
+        "element-b",
+        "element-c",
+        "element-d",
+        "element-e",
+        "element-f",
+        "claw-a",
+        "claw-b"
+      ]
+    },
+    {
+      "id": "fox",
+      "group": "pets",
+      "original": "assets/new/kenney_cube-pets_1.0/Models/GLB format/animal-fox.glb",
+      "file": "/models/scenery/pets/fox.glb",
+      "bytes": 141880,
+      "sha256": "ac1ae804da301371509cff84206e3c6b78ff9c7d02411ef0cd004731090d6b82",
+      "nodes": [
+        "animal-fox",
+        "root",
+        "body",
+        "tail",
+        "leg-back-left",
+        "leg-back-right",
+        "leg-front-left",
+        "leg-front-right"
+      ]
+    }
+  ],
+  "textures": [
+    {
+      "group": "minigolf",
+      "original": "assets/new/kenney_minigolf-kit/Models/GLB format/Textures/colormap.png",
+      "file": "/models/scenery/minigolf/Textures/colormap.png",
+      "bytes": 8706,
+      "sha256": "0d4947d34ff32acf4a359c7f22ca784e057e7e72f622170a9a77b6fc88fdb70e"
+    },
+    {
+      "group": "food",
+      "original": "assets/new/kenney_food-kit/Models/GLB format/Textures/colormap.png",
+      "file": "/models/scenery/food/Textures/colormap.png",
+      "bytes": 10715,
+      "sha256": "75baf74d9483a0fc56ac21ceba346fbe16fc24a2a1bf0524c53e6bbe802e1153"
+    },
+    {
+      "group": "marble",
+      "original": "assets/new/kenney_marble-kit/Models/GLB format/Textures/colormap.png",
+      "file": "/models/scenery/marble/Textures/colormap.png",
+      "bytes": 8534,
+      "sha256": "a802b8c02c0b0cc07654cd8edca30439a9e9d505b10088502169ab3b9cf5e94f"
+    },
+    {
+      "group": "city",
+      "original": "assets/new/kenney_city-kit-suburban_20/Models/GLB format/Textures/colormap.png",
+      "file": "/models/scenery/city/Textures/colormap.png",
+      "bytes": 11784,
+      "sha256": "9b5de86078c25ef02351a80d35ff3c978693a1044565b73eedd9ae9b5b80665d"
+    },
+    {
+      "group": "factory",
+      "original": "assets/new/kenney_factory-kit_3.0/Models/GLB format/Textures/colormap.png",
+      "file": "/models/scenery/factory/Textures/colormap.png",
+      "bytes": 11813,
+      "sha256": "35d7bd6900dde0208429eeaec87fa17fbf024ed59f3f4eab54bc92802eba9dd7"
+    },
+    {
+      "group": "pets",
+      "original": "assets/new/kenney_cube-pets_1.0/Models/GLB format/Textures/colormap.png",
+      "file": "/models/scenery/pets/Textures/colormap.png",
+      "bytes": 10915,
+      "sha256": "2f6d0032e51c2d49b13b8e689d59eb39aa3ee6c32f2a1851213e11fc7593177d"
+    }
+  ]
+}

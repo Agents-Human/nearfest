@@ -1,3 +1,8 @@
+import {createNearEconomy} from './near-economy.mjs';
+import {createArcadeRooms} from './arcade/rooms.mjs';
+import {arcadeGame} from './arcade/catalog.mjs';
+import {WORDS} from './arcade/puzzles.mjs';
+import {publishedGame} from './game-catalog.mjs';
 import { createServer } from 'node:http';
 import { randomBytes, randomUUID, createHash } from 'node:crypto';
 import { readFile, stat } from 'node:fs/promises';
@@ -7,35 +12,49 @@ import { openStore } from './store.mjs';
 import { UNIT, STORAGE, validateDraft, createBet, shortText, validAccount, moderate } from './domain.mjs';
 import { resolveBet, fixtures, fixture, scoreboard, prices, hasAI, semanticModerate } from './resolvers.mjs';
 import {createMultiplayer} from './multiplayer.mjs';
+import {createBoardRooms} from './skill/rooms.mjs';
+import {getSkillGame} from './skill/engines.mjs';
 import {SPORT_LEAGUES,verifySportsEntry,validSportsDate,leagueSchedule} from './sports.mjs';
 import {createPlay} from './play.mjs';
 import {serveLibrary} from './library.mjs';
 import {createCommunity} from './community.mjs';
 import { coverKey, streamLink } from './media.mjs';
-import { contractId, oracleReady, view, provider, transaction as nearTransaction, propose } from './near.mjs';
+import { contractId, oracleReady, view, provider, transaction as nearTransaction, propose, assertTestnet } from './near.mjs';
 
 const port = Number(process.env.PORT || 5189), origin = process.env.APP_ORIGIN || 'http://127.0.0.1:5188';
 const store = openStore(process.env.DATABASE_PATH || resolve('data/slotvend.sqlite'));
-const play=createPlay(store),community=createCommunity(store),multiplayer=createMultiplayer(store);
+const play=createPlay(store),community=createCommunity(store),quizRooms=createMultiplayer(store),boardRooms=createBoardRooms(store),arcadeRooms=createArcadeRooms(store);
+const roomService=id=>id.startsWith('arena-')?arcadeRooms:id.startsWith('board-')?boardRooms:quizRooms;
+const multiplayer={
+ list:user=>[...arcadeRooms.list(user),...boardRooms.list(user),...quizRooms.list(user)],
+ get:(id,user)=>roomService(id).get(id,user),
+ create:(data,user,funding)=>{if(!publishedGame(data.game_id))throw Error('Choose an available NearFest game.');return arcadeGame(data.game_id)?arcadeRooms.create(data,user,Date.now(),funding):getSkillGame(data.game_id)?boardRooms.create(data,user,Date.now(),funding):quizRooms.create(data,user,Date.now(),funding);},
+ action:(id,user,data)=>roomService(id).action(id,user,data),
+ start:(id,user)=>roomService(id).start(id,user),
+ answer:(id,user,data)=>{if(id.startsWith('board-'))throw Error('Use legal board moves.');return quizRooms.answer(id,user,data);},
+ tick:()=>{const board=boardRooms.tick(),quiz=quizRooms.tick();return board||quiz;}
+};
+const economy=createNearEconomy(store,{services:{...multiplayer,community,get:(id,u,key)=>id.startsWith('arena-')?arcadeRooms.get(id,u,key):multiplayer.get(id,u),action:(id,u,d,key)=>id.startsWith('arena-')?arcadeRooms.action(id,u,d,key):multiplayer.action(id,u,d),start:(id,u,key)=>id.startsWith('arena-')?arcadeRooms.start(id,u,key):multiplayer.start(id,u)}});
+setInterval(()=>{void economy.tick().then(broadcast).catch(()=>{});},5000).unref();
 const { db } = store, streams = new Set(), challenges = new Map(), limits = new Map(), resolving = new Set(), cache = new Map();
 const hash = x => createHash('sha256').update(x).digest('hex');
-const config = { network: 'testnet', contract_id: contractId, oracle_ready: oracleReady, ai_ready: hasAI, semantic_moderation: hasAI, storage_fee: STORAGE.toString(), review_ms: 900000, resolution_ms: 172800000 };
+const config = { network: 'testnet', contract_id: contractId, oracle_ready: oracleReady, ai_ready: hasAI, semantic_moderation: hasAI, room_storage_fee:'100000000000000000000000',currency:'NEAR',storage_fee: STORAGE.toString(), review_ms: 900000, resolution_ms: 172800000 };
 function broadcast() { for (const s of streams) s.write(`event: update\ndata: ${JSON.stringify({ at: Date.now() })}\n\n`); }
 function rate(key, max, ms = 60000) { const t = Date.now(); let v = limits.get(key); if (!v || v.until < t) { v = { count: 0, until: t + ms }; limits.set(key, v); } if (++v.count > max) throw Error('A little too fast. Please try again shortly.'); }
-function json(res, data, status = 200) { res.writeHead(status, { 'content-type': 'application/json', 'cache-control': 'no-store', 'x-content-type-options': 'nosniff' }); res.end(JSON.stringify(data)); }
+function json(res, data, status = 200) { const serialized=JSON.stringify(data); res.writeHead(status, { 'content-type': 'application/json', 'cache-control': 'no-store', 'x-content-type-options': 'nosniff' }); res.end(serialized); }
 async function body(req) { let data = ''; for await (const chunk of req) { data += chunk; if (Buffer.byteLength(data) > 16000) throw Error('Request is too large.'); } try { return JSON.parse(data || '{}'); } catch { throw Error('Invalid request body.'); } }
 function current(req) { const token = /(?:^|;\s*)slotvend=([^;]+)/.exec(req.headers.cookie || '')?.[1]; if (!token) return null; const s = db.prepare('SELECT user_id FROM sessions WHERE token=? AND expires>?').get(hash(token), Date.now()); return s ? store.user(s.user_id) : null; }
 function login(res, user) { const token = randomBytes(32).toString('hex'); db.prepare('INSERT INTO sessions VALUES(?,?,?)').run(hash(token), user.id, Date.now() + 7 * 86400000); res.setHeader('set-cookie', `slotvend=${token}; Path=/; HttpOnly; SameSite=Strict; Max-Age=604800${origin.startsWith('https:') ? '; Secure' : ''}`); }
 async function review(text) { moderate(text); if (process.env.REQUIRE_SEMANTIC_MODERATION === 'true' && !hasAI) throw Error('Content creation is paused until the moderation service is configured.'); await semanticModerate(text); }
 function required(req) { const u = current(req); if (!u) throw Error('Choose a practice name or connect your NEAR wallet first.'); return u; }
-async function profile(u) { if (!u) return null; let credit = u.credit, pending = '0', chain_error = null; if (u.kind === 'wallet' && contractId) { try { [credit, pending] = await Promise.all([view('get_credit', { account_id: u.id }), view('get_pending', { account_id: u.id })]); } catch { chain_error = 'NEAR balance unavailable. Try refreshing.'; } } return { ...u, credit, pending, chain_error }; }
+async function profile(u) { if (!u) return null; let credit = '0', pending = '0', chain_error = null, balance='0'; if(u.kind==='wallet'){try{await assertTestnet();const account=await provider.viewAccount({accountId:u.id});balance=String(account.amount);}catch{chain_error='NEAR wallet balance unavailable.';}} if (u.kind === 'wallet' && contractId) { try { [credit, pending] = await Promise.all([view('get_credit', { account_id: u.id }), view('get_pending', { account_id: u.id })]); } catch { chain_error = 'NEAR balance unavailable. Try refreshing.'; } } return { ...u, balance, credit, pending, chain_error }; }
 function decorated(b) { const media = db.prepare('SELECT cover,stream_json FROM room_media WHERE bet_id=?').get(b.id); const reactions = {}; for (const r of db.prepare('SELECT emoji,count(*) AS n FROM reactions WHERE bet_id=? GROUP BY emoji').all(b.id)) reactions[r.emoji] = r.n; return { ...b, cover: media?.cover || null, stream: media?.stream_json ? JSON.parse(media.stream_json) : null, creator_name: store.user(b.creator)?.name || b.creator, opponent_name: b.opponent ? store.user(b.opponent)?.name || b.opponent : null, reactions, chat_count: db.prepare('SELECT count(*) AS n FROM messages WHERE bet_id=?').get(b.id).n }; }
 function room(id) { const b = store.bet(id); if (!b) throw Error('This room was not found.'); return b; }
 async function sync(id) {
   const raw = await view('get_bet', { id: Number(id.replace(/^n/, '')) }); if (!raw) throw Error('This bet was not found on NEAR.');
   // Only surface creations prepared through this moderated application. Other chain writes remain directly accessible via RPC.
   const prior = store.bet('n' + raw.id), prep = db.prepare('SELECT * FROM prepared WHERE request_id=? AND user_id=?').get(raw.request_id, raw.creator);
-  if (!prior && !prep) throw Error('This room has not passed slotVend content review.');
+  if (!prior && !prep) throw Error('This room has not passed NearFest content review.');
   const terms = prep ? JSON.parse(prep.json) : prior;
   for (const key of ['title', 'rules', 'category', 'side_a', 'side_b', 'stake', 'join_before', 'ends_at', 'invitee', 'referee', 'resolver']) if (raw[key] !== terms[key]) throw Error('The on-chain terms differ from the reviewed room.');
   const rc = JSON.parse(raw.resolver_config); if (JSON.stringify(rc) !== JSON.stringify(terms.resolver_config)) throw Error('The result source differs from the reviewed room.');
@@ -58,7 +77,10 @@ async function cached(key, fn) { const old = cache.get(key); if (old && Date.now
 const server = createServer(async (req, res) => {
   const url = new URL(req.url, origin), path = url.pathname;
   try {
-    if (req.method === 'POST') { if (req.headers.origin !== origin) { json(res, { error: 'This request must come from the slotVend application.' }, 403); return; } rate('ip:' + req.socket.remoteAddress, current(req)?1000:120); }
+    if (req.method === 'POST') { if (req.headers.origin !== origin) { json(res, { error: 'This request must come from the NearFest application.' }, 403); return; } if(!/^\/api\/arcade\/[^/]+\/input$/.test(path))rate('ip:' + req.socket.remoteAddress, current(req)?1000:120); }
+    if(path==='/api/near/pending'&&req.method==='GET')return json(res,economy.pending(required(req)));
+    if(path==='/api/near/abandon'&&req.method==='POST'){const u=required(req),d=await body(req);return json(res,await economy.abandon(d.intent_id,u));}
+    if(path==='/api/near/confirm'&&req.method==='POST'){const u=required(req),d=await body(req);const result=await economy.confirm(d.intent_id,u);broadcast();return json(res,result);}
     if (path === '/api/config') return json(res, config);
     if (path === '/api/me') return json(res, await profile(current(req)));
     if (path === '/api/events' && req.method === 'GET') {
@@ -66,35 +88,57 @@ const server = createServer(async (req, res) => {
       res.writeHead(200, { 'content-type': 'text/event-stream', 'cache-control': 'no-cache', connection: 'keep-alive', 'x-accel-buffering': 'no' }); streams.add(res); res.write('event: ready\ndata: {}\n\n');
       const timer = setInterval(() => res.write(': heartbeat\n\n'), 20000); req.on('close', () => { clearInterval(timer); streams.delete(res); }); return;
     }
-    if (path === '/api/session/practice' && req.method === 'POST') { rate('guest:' + req.socket.remoteAddress, 30, 3600000); const d = await body(req), name = shortText(d.name, 2, 24, 'Display name'); await review(name); const old = current(req); const u = old?.kind === 'practice' ? old : store.ensureUser(randomBytes(8).toString('hex') + '.practice', name, 'practice'); db.prepare('UPDATE users SET name=? WHERE id=?').run(name, u.id); login(res, u); return json(res, await profile(store.user(u.id))); }
+    if ((path === '/api/session/guest'||path==='/api/session/practice') && req.method === 'POST') { rate('guest:' + req.socket.remoteAddress, 30, 3600000); const d = await body(req), name = shortText(d.name, 2, 24, 'Display name'); await review(name); const old = current(req); const u = old?.kind === 'practice' ? old : store.ensureUser(randomBytes(8).toString('hex') + '.practice', name, 'practice'); db.prepare('UPDATE users SET name=? WHERE id=?').run(name, u.id); login(res, u); return json(res, await profile(store.user(u.id))); }
     if (path === '/api/session/logout' && req.method === 'POST') { const token = /(?:^|;\s*)slotvend=([^;]+)/.exec(req.headers.cookie || '')?.[1]; if (token) db.prepare('DELETE FROM sessions WHERE token=?').run(hash(token)); res.setHeader('set-cookie', 'slotvend=; Path=/; HttpOnly; SameSite=Strict; Max-Age=0'); return json(res, { ok: true }); }
     if (path === '/api/auth/challenge' && req.method === 'POST') {
       rate('auth:' + req.socket.remoteAddress, 15); const { account_id } = await body(req); if (!validAccount(account_id)) throw Error('Invalid NEAR account.');
-      const id = randomUUID(), challenge = { id, account_id, nonce: randomBytes(32).toString('base64'), message: `Sign in to slotVend on NEAR testnet. No transaction or spending permission. Request: ${id}`, recipient: origin, expires: Date.now() + 300000 };
+      const id = randomUUID(), challenge = { id, account_id, nonce: randomBytes(32).toString('base64'), message: `Sign in to NearFest on NEAR testnet. No transaction or spending permission. Request: ${id}`, recipient: origin, expires: Date.now() + 300000 };
       challenges.set(id, challenge); return json(res, challenge);
     }
     if (path === '/api/auth/verify' && req.method === 'POST') {
       const d = await body(req), c = challenges.get(d.id); challenges.delete(d.id);
       if (!c || c.expires < Date.now() || c.account_id !== d.accountId) throw Error('Sign-in expired. Please reconnect.');
-      await verifyMessage({ signerAccountId: d.accountId, signerPublicKey: d.publicKey, signature: new Uint8Array(Buffer.from(d.signature, 'base64')), payload: { message: c.message, recipient: c.recipient, nonce: new Uint8Array(Buffer.from(c.nonce, 'base64')) }, provider });
+      await assertTestnet();await verifyMessage({ signerAccountId: d.accountId, signerPublicKey: d.publicKey, signature: new Uint8Array(Buffer.from(d.signature, 'base64')), payload: { message: c.message, recipient: c.recipient, nonce: new Uint8Array(Buffer.from(c.nonce, 'base64')) }, provider });
       const u = store.ensureUser(d.accountId, d.accountId, 'wallet'); login(res, u); return json(res, await profile(u));
     }
+    if(path==='/api/arcade-dictionary'&&req.method==='GET')return json(res,{language:'English',minimum_length:3,words:[...new Set(WORDS)].filter(w=>w.length>=3).sort()});
+    const arenaMatch=/^\/api\/arcade\/([^/]+)(?:\/(input|events|action|start|messages))?$/.exec(path);
+    if(arenaMatch){
+      const [,id,action]=arenaMatch,u=current(req),key=url.searchParams.get('invite');
+      if(req.method==='GET'&&!action)return json(res,arcadeRooms.get(id,u,key));
+      if(req.method==='GET'&&action==='events'){
+        arcadeRooms.get(id,u,key);rate('arena-stream:'+ (u?.id||req.socket.remoteAddress),30);
+        res.writeHead(200,{'content-type':'text/event-stream','cache-control':'no-cache',connection:'keep-alive','x-accel-buffering':'no'});
+        const unsubscribe=arcadeRooms.subscribe(id,u,key,data=>{if(!res.destroyed&&res.writableLength<1000000)res.write(`event: snapshot\ndata: ${JSON.stringify(data)}\n\n`);});
+        const heartbeat=setInterval(()=>res.write(': heartbeat\n\n'),15000);req.on('close',()=>{unsubscribe();clearInterval(heartbeat);});return;
+      }
+      if(req.method==='GET'&&action==='messages')return json(res,arcadeRooms.messages(id,u,key));
+      if(req.method==='POST'){
+        const user=required(req),d=await body(req);rate('arena-'+(action==='input'?'input':'action')+':'+user.id,action==='input'?2400:600);
+        if(action==='input')return json(res,arcadeRooms.input(id,user,d,key));
+        if(action==='messages'){rate('arena-chat:'+user.id,30);const text=shortText(d.text,1,500,'Message');await review(text);return json(res,arcadeRooms.chat(id,user,text,key));}
+        if(action==='action'&&d.type==='play'&&d.action){for(const field of ['text','word','guess'])if(typeof d.action[field]==='string')moderate(d.action[field]);if(Array.isArray(d.action.answers))for(const answer of d.action.answers)if(typeof answer==='string')moderate(answer);}
+        const paid=await economy.action('game',id,action,d,user,key);if(paid)return json(res,paid);
+        const r=action==='start'?arcadeRooms.start(id,user,key):action==='action'?arcadeRooms.action(id,user,d,key):null;if(r){broadcast();return json(res,r);}
+      }
+      throw Error('Unknown arcade operation.');
+    }
     if(path==='/api/parties'&&req.method==='GET')return json(res,multiplayer.list(current(req)));
-    if(path==='/api/parties'&&req.method==='POST'){const u=required(req);rate('party-create:'+u.id,10);const r=multiplayer.create(await body(req),u);broadcast();return json(res,r,201);}
+    if(path==='/api/parties'&&req.method==='POST'){const u=required(req);rate('party-create:'+u.id,10);const d=await body(req);if(Number(d.entry)>0)return json(res,economy.create('game',d,u));const r=multiplayer.create(d,u);broadcast();return json(res,r,201);}
     const partyMatch=/^\/api\/parties\/([^/]+)(?:\/(action|start|answer|messages))?$/.exec(path);
-    if(partyMatch){const [,id,action]=partyMatch;if(req.method==='GET'&&!action)return json(res,multiplayer.get(id,current(req)));if(action==='messages'&&req.method==='GET'){multiplayer.get(id,current(req));return json(res,db.prepare('SELECT m.*,u.name FROM messages m LEFT JOIN users u ON u.id=m.user_id WHERE bet_id=? ORDER BY id DESC LIMIT 100').all(id).reverse());}const u=required(req);rate('party:'+u.id,60);if(req.method==='POST'){const d=await body(req);if(action==='messages'){multiplayer.get(id,u);const message=shortText(d.text,1,500,'Message');await review(message);db.prepare('INSERT INTO messages(bet_id,user_id,text,created_at) VALUES(?,?,?,?)').run(id,u.id,message,Date.now());broadcast();return json(res,{ok:true});}const r=action==='start'?await multiplayer.start(id,u):action==='answer'?multiplayer.answer(id,u,d):action==='action'?multiplayer.action(id,u,d):null;if(!r)throw Error('Unknown room action.');broadcast();return json(res,r);}}
+    if(partyMatch){const [,id,action]=partyMatch;if(req.method==='GET'&&!action)return json(res,multiplayer.get(id,current(req)));if(action==='messages'&&req.method==='GET'){multiplayer.get(id,current(req));return json(res,db.prepare('SELECT m.*,u.name FROM messages m LEFT JOIN users u ON u.id=m.user_id WHERE bet_id=? ORDER BY id DESC LIMIT 100').all(id).reverse());}const u=required(req);rate('party:'+u.id,60);if(req.method==='POST'){const d=await body(req);if(action==='messages'){const room=multiplayer.get(id,u);if(id.startsWith('board-')&&!room.players.some(p=>p.id===u.id))throw Error('Join the room before chatting.');const message=shortText(d.text,1,500,'Message');await review(message);db.prepare('INSERT INTO messages(bet_id,user_id,text,created_at) VALUES(?,?,?,?)').run(id,u.id,message,Date.now());broadcast();return json(res,{ok:true});}const paid=await economy.action('game',id,action,d,u);if(paid)return json(res,paid);const r=action==='start'?await multiplayer.start(id,u):action==='answer'?multiplayer.answer(id,u,d):action==='action'?multiplayer.action(id,u,d):null;if(!r)throw Error('Unknown room action.');broadcast();return json(res,r);}}
     if(path==='/api/play'&&req.method==='GET')return json(res,play.catalog());
     if(path==='/api/play/scores'&&req.method==='GET')return json(res,play.scores());
-    const gameMatch=/^\/api\/play\/([^/]+)\/(start|run|answer|share|proof)$/.exec(path);
+    const gameMatch=/^\/api\/play\/([^/]+)\/(start|run|answer|share|proof|end)$/.exec(path);
     if(gameMatch&&gameMatch[2]==='proof'&&req.method==='GET')return json(res,play.proof(gameMatch[1]));
-    if(gameMatch){const u=required(req),[,id,action]=gameMatch;rate('play:'+u.id,60);if(action==='start'&&req.method==='POST')return json(res,await play.start(id,u,await body(req)));if(action==='share'&&req.method==='POST')return json(res,play.share(id,u));if(action==='run'&&req.method==='GET')return json(res,play.get(id,u));if(action==='answer'&&req.method==='POST')return json(res,play.answer(id,u,await body(req)));}
+    if(gameMatch){const u=required(req),[,id,action]=gameMatch;rate('play:'+u.id,60);if(action==='start'&&req.method==='POST')return json(res,await play.start(id,u,await body(req)));if(action==='end'&&req.method==='POST')return json(res,play.end(id,u));if(action==='share'&&req.method==='POST')return json(res,play.share(id,u));if(action==='run'&&req.method==='GET')return json(res,play.get(id,u));if(action==='answer'&&req.method==='POST')return json(res,play.answer(id,u,await body(req)));}
     if(path==='/api/community'&&req.method==='GET'){const u=current(req);return json(res,community.all().filter(r=>r.visibility==='public'||r.members.some(m=>m.id===u?.id)));}
-    if(path==='/api/community'&&req.method==='POST'){const u=required(req),d=await body(req);rate('club-create:'+u.id,10);await review(`${d.title} ${d.rules}`);const r=community.create(d,u);broadcast();return json(res,r,201);}
+    if(path==='/api/community'&&req.method==='POST'){const u=required(req),d=await body(req);rate('club-create:'+u.id,10);await review(`${d.title} ${d.rules}`);const r=economy.create(d.kind,d,u);broadcast();return json(res,r,201);}
     const clubMatch=/^\/api\/community\/([^/]+)(?:\/(action|messages|stream))?$/.exec(path);
-    if(clubMatch){const [,id,action]=clubMatch,r=community.get(id);if(req.method==='GET'&&!action)return json(res,r);if(req.method==='GET'&&action==='messages')return json(res,db.prepare('SELECT m.*,u.name FROM messages m LEFT JOIN users u ON u.id=m.user_id WHERE bet_id=? ORDER BY id DESC LIMIT 100').all(id).reverse());const u=required(req);if(req.method==='POST'&&action==='action'){rate('club:'+u.id,30);const d=await body(req);if(d.evidence)await review(d.evidence);const next=community.action(id,u,d);broadcast();return json(res,next);}if(req.method==='POST'&&action==='messages'){rate('chat:'+u.id,20);const d=await body(req),message=shortText(d.text,1,500,'Message');await review(message);db.prepare('INSERT INTO messages(bet_id,user_id,text,created_at) VALUES(?,?,?,?)').run(id,u.id,message,Date.now());broadcast();return json(res,{ok:true});}}
-    if (path === '/api/bets' && req.method === 'GET') return json(res, store.all().filter(b => !(b.creator==='house.practice'&&b.resolver==='maths')).filter(b => !url.searchParams.get('mode') || b.mode === url.searchParams.get('mode')).map(decorated));
+    if(clubMatch){const [,id,action]=clubMatch,r=community.get(id);if(req.method==='GET'&&!action)return json(res,r);if(req.method==='GET'&&action==='messages')return json(res,db.prepare('SELECT m.*,u.name FROM messages m LEFT JOIN users u ON u.id=m.user_id WHERE bet_id=? ORDER BY id DESC LIMIT 100').all(id).reverse());const u=required(req);if(req.method==='POST'&&action==='action'){rate('club:'+u.id,30);const d=await body(req);if(d.evidence)await review(d.evidence);const next=await economy.action(r.kind,id,d.type==='start'?'start':'action',d,u);if(!next)throw Error('Choose an on-chain community action.');broadcast();return json(res,next);}if(req.method==='POST'&&action==='messages'){rate('chat:'+u.id,20);const d=await body(req),message=shortText(d.text,1,500,'Message');await review(message);db.prepare('INSERT INTO messages(bet_id,user_id,text,created_at) VALUES(?,?,?,?)').run(id,u.id,message,Date.now());broadcast();return json(res,{ok:true});}}
+    if (path === '/api/bets' && req.method === 'GET') return json(res, store.all().filter(b=>b.mode==='live').filter(b => !(b.creator==='house.practice'&&b.resolver==='maths')).filter(b => !url.searchParams.get('mode') || b.mode === url.searchParams.get('mode')).map(decorated));
     if (path === '/api/leaderboard') {
-      const wins = new Map(); for (const b of store.all().filter(b => b.mode === (url.searchParams.get('mode') || 'practice') && b.status === 'settled')) { const id = b.outcome === 'creator' ? b.creator : b.opponent; const row = wins.get(id) || { id, name: store.user(id)?.name || id, wins: 0, volume: 0n }; row.wins++; row.volume += BigInt(b.stake) * 2n; wins.set(id, row); }
+      const wins = new Map(); for (const b of store.all().filter(b => b.mode === (url.searchParams.get('mode') || 'live') && b.status === 'settled')) { const id = b.outcome === 'creator' ? b.creator : b.opponent; const row = wins.get(id) || { id, name: store.user(id)?.name || id, wins: 0, volume: 0n }; row.wins++; row.volume += BigInt(b.stake) * 2n; wins.set(id, row); }
       return json(res, [...wins.values()].sort((a, b) => b.wins - a.wins).slice(0, 20).map(r => ({ ...r, volume: r.volume.toString() })));
     }
     if (path === '/api/prices') return json(res, await cached('prices', prices));
@@ -112,7 +156,7 @@ const server = createServer(async (req, res) => {
     }
     if (path === '/api/fixtures') { const league = url.searchParams.get('league') || 'eng.1', date = url.searchParams.get('date') || ''; return json(res, await cached(`fixtures:${league}:${date}`, () => fixtures(league, date))); }
     if ((path === '/api/bets' || path === '/api/bets/prepare' || path === '/api/preview') && req.method === 'POST') {
-      const u = required(req); rate('create:' + u.id, 10); const d = validateDraft(await body(req), u.id);
+      const u = required(req); rate('create:' + u.id, 10); const d = validateDraft(await body(req), u.id);if(u.kind!=='wallet')throw Error('Connect your NEAR testnet wallet to create a staked challenge.');
       await review(`${d.title}\n${d.rules}\n${d.side_a}\n${d.side_b}\n${JSON.stringify(d.resolver_config)}`);
       if (d.resolver === 'sports') { const {event}=await fixture(d.resolver_config.league,d.resolver_config.event_id);const {team,phase}=verifySportsEntry(d,event,{practice:u.kind==='practice'});d.resolver_config.in_play=phase==='live';d.title=`Will ${team.team.displayName} win ${new Date(event.date).toLocaleDateString('en-GB',{timeZone:'UTC'})}?`; }
       if (path === '/api/preview') return json(res, d);
@@ -146,7 +190,7 @@ const server = createServer(async (req, res) => {
       if (req.method === 'POST' && endpoint === 'resolve') { rate('resolve:' + u.id, 5); if (u.id !== b.creator && u.id !== b.opponent) throw Error('A player must request the result check.'); return json(res, await getEvidence(id)); }
       if (req.method === 'POST' && endpoint === 'action') {
         const d = await body(req); if (!['accept', 'cancel', 'concede', 'vote', 'referee', 'challenge', 'finalize', 'timeout'].includes(d.type)) throw Error('Unknown action.');
-        if ((b.mode === 'practice') !== (u.kind === 'practice')) throw Error('Switch to the matching practice or NEAR account for this room.');
+        if(b.mode!=='live'||u.kind!=='wallet')throw Error('Connect your NEAR testnet wallet for this challenge.');
         if(d.type==='accept'&&b.resolver==='sports'){const {event}=await fixture(b.resolver_config.league,b.resolver_config.event_id);verifySportsEntry(b,event,{accepting:true,practice:b.mode==='practice'});}
         if (b.mode === 'practice') { const updated = store.move(id, u.id, d); broadcast(); return json(res, decorated(updated)); }
         if (d.outcome !== undefined && !['creator', 'opponent', 'draw'].includes(d.outcome)) throw Error('Invalid result.');
@@ -164,6 +208,7 @@ const server = createServer(async (req, res) => {
     res.writeHead(200, { 'content-type': types[extname(file)] || 'application/octet-stream', 'x-content-type-options': 'nosniff', 'referrer-policy': 'strict-origin-when-cross-origin' }); res.end(await readFile(file));
   } catch (e) { if (!res.headersSent) json(res, { error: e.message || 'Something went wrong. Please try again.' }, 400); else res.end(); }
 });
+const arcadeTimer=setInterval(()=>{try{if(arcadeRooms.tick())broadcast();}catch(e){console.error('Arcade tick failed:',e.message);}},50);arcadeTimer.unref();
 let processing = false;
 async function tick() {
   if (processing) return; processing = true;
@@ -184,6 +229,6 @@ async function tick() {
 }
 const interval = setInterval(tick, 30000);
 const partyInterval=setInterval(()=>{try{if(multiplayer.tick())broadcast();}catch(e){console.error('Multiplayer settlement failed:',e.message);}},1000);
-server.listen(port, process.env.HOST || '127.0.0.1', () => console.log(`slotVend API http://127.0.0.1:${port}`));
+server.listen(port, process.env.HOST || '127.0.0.1', () => console.log(`NearFest API http://127.0.0.1:${port}`));
 function close() { clearInterval(interval); clearInterval(partyInterval); for (const s of streams) s.end(); server.close(() => { db.close(); process.exit(0); }); }
 process.on('SIGINT', close); process.on('SIGTERM', close);

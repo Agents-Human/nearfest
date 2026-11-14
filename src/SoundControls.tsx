@@ -2,6 +2,7 @@ import {useEffect,useRef,useState} from 'react';
 export default function SoundControls({effects,toggleEffects}:{effects:boolean;toggleEffects:()=>void}){
  const [open,setOpen]=useState(false),[playing,setPlaying]=useState(false),[volume,setVolume]=useState(()=>Number(localStorage.getItem('slotvend-music-volume')||'0.2')),[error,setError]=useState('');
  const audio=useRef<HTMLAudioElement>(null),synth=useRef<AudioContext|null>(null),last=useRef(0);
+ useEffect(()=>{const pause=()=>{audio.current?.pause();setPlaying(false);};window.addEventListener('slotvend:arcade-audio',pause);return()=>window.removeEventListener('slotvend:arcade-audio',pause);},[]);
  useEffect(()=>{if(audio.current)audio.current.volume=volume;localStorage.setItem('slotvend-music-volume',String(volume));},[volume]);
  useEffect(()=>{function hide(){if(document.hidden){audio.current?.pause();setPlaying(false);}}document.addEventListener('visibilitychange',hide);return()=>document.removeEventListener('visibilitychange',hide);},[]);
  useEffect(()=>{if(!effects)return;

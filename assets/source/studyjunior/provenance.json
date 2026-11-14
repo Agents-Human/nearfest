@@ -1,0 +1,282 @@
+{
+  "endpoint": "https://bc.studyjunior.com/api/mcp/primer",
+  "asset_origin_observed_in": "StudyJunior admin VITE_S3_URL; src/lib/utils.ts assetUrl",
+  "authorization": "User-owned production library; selected through authorized MCP token. Token is not stored here.",
+  "assets": [
+    {
+      "query": "frog",
+      "id": "01a160b0-e0aa-7267-bb01-06c618cdd680",
+      "hash": "1c055b70d6039e9cf20c330eb4fb4d223b039c0948df39c8dbd2c85fb9c90ffe",
+      "original_name": "frog.svg",
+      "s3_key": "assets/1c055b70d6039e9cf20c330eb4fb4d223b039c0948df39c8dbd2c85fb9c90ffe.svg",
+      "source_url": "https://clever-hall.fra1.digitaloceanspaces.com/assets/1c055b70d6039e9cf20c330eb4fb4d223b039c0948df39c8dbd2c85fb9c90ffe.svg",
+      "retrieved_at": "2026-11-14",
+      "source": "StudyJunior production Primer MCP",
+      "source_sha256": "1c055b70d6039e9cf20c330eb4fb4d223b039c0948df39c8dbd2c85fb9c90ffe",
+      "published_sha256": "a91898cd9e7ef3868f81616094fa3d04e3995b991f1c9a5c817a4e8e1821d418",
+      "sanitization_removed": [],
+      "viewBox": "0 0 304.197 255.465",
+      "width": "304.197",
+      "height": "255.465",
+      "visible_text": [],
+      "published_width": 640,
+      "published_height": 537,
+      "presentation_changes": "Normalized root viewport dimensions and removed root inline pixel sizing; preserved original viewBox and all vector geometry.",
+      "used_for": [
+        {
+          "prompt": "Which group do frogs belong to?",
+          "alt": "A green frog.",
+          "review": "Shows only a subject already identified in the question; no correct choice, explanatory label or answer-bearing diagram."
+        }
+      ]
+    },
+    {
+      "query": "caterpillar",
+      "id": "01a160c6-7ce6-73f1-b155-b021f79d9f47",
+      "hash": "59e46f8c86f743ccc8e8c13a1e494dc6349bbdf7c744a4c0583cf3e6ed649523",
+      "original_name": "caterpillar (1).svg",
+      "s3_key": "assets/59e46f8c86f743ccc8e8c13a1e494dc6349bbdf7c744a4c0583cf3e6ed649523.svg",
+      "source_url": "https://clever-hall.fra1.digitaloceanspaces.com/assets/59e46f8c86f743ccc8e8c13a1e494dc6349bbdf7c744a4c0583cf3e6ed649523.svg",
+      "retrieved_at": "2026-11-14",
+      "source": "StudyJunior production Primer MCP",
+      "source_sha256": "59e46f8c86f743ccc8e8c13a1e494dc6349bbdf7c744a4c0583cf3e6ed649523",
+      "published_sha256": "81a4abaa27288cebda96527d19eebc25118350d0e7301536792689535751ae90",
+      "sanitization_removed": [],
+      "viewBox": "4.5 51.753 45.672 24.247",
+      "width": "45.672",
+      "height": "24.247",
+      "visible_text": [],
+      "published_width": 640,
+      "published_height": 340,
+      "presentation_changes": "Normalized root viewport dimensions and removed root inline pixel sizing; preserved original viewBox and all vector geometry.",
+      "used_for": [
+        {
+          "prompt": "What does a caterpillar become after metamorphosis?",
+          "alt": "A green caterpillar.",
+          "review": "Shows only a subject already identified in the question; no correct choice, explanatory label or answer-bearing diagram."
+        }
+      ]
+    },
+    {
+      "query": "plant",
+      "id": "01a17644-c042-721e-b306-768c6822e490",
+      "hash": "bdea35da668e4b5a4a9881ccf7f5c71351adf07084cf1fc3bfd649225f99cb4e",
+      "original_name": "long-leaved-green-plant.svg",
+      "s3_key": "assets/bdea35da668e4b5a4a9881ccf7f5c71351adf07084cf1fc3bfd649225f99cb4e.svg",
+      "source_url": "https://clever-hall.fra1.digitaloceanspaces.com/assets/bdea35da668e4b5a4a9881ccf7f5c71351adf07084cf1fc3bfd649225f99cb4e.svg",
+      "retrieved_at": "2026-11-14",
+      "source": "StudyJunior production Primer MCP",
+      "source_sha256": "bdea35da668e4b5a4a9881ccf7f5c71351adf07084cf1fc3bfd649225f99cb4e",
+      "published_sha256": "ce0e37e4396a9cb17a2c19cd974f8959d5026ced78a4f3568fd8aacded364d9b",
+      "sanitization_removed": [
+        "title",
+        "desc",
+        "embedded-image-or-reference",
+        "embedded-image-or-reference",
+        "embedded-image-or-reference",
+        "embedded-image-or-reference",
+        "embedded-image-or-reference",
+        "embedded-image-or-reference",
+        "embedded-image-or-reference",
+        "embedded-image-or-reference",
+        "embedded-image-or-reference",
+        "embedded-image-or-reference",
+        "embedded-image-or-reference",
+        "embedded-image-or-reference",
+        "embedded-image-or-reference",
+        "embedded-image-or-reference",
+        "embedded-image-or-reference",
+        "embedded-image-or-reference",
+        "embedded-image-or-reference",
+        "embedded-image-or-reference",
+        "embedded-image-or-reference",
+        "embedded-image-or-reference",
+        "embedded-image-or-reference",
+        "embedded-image-or-reference",
+        "embedded-image-or-reference",
+        "embedded-image-or-reference",
+        "embedded-image-or-reference",
+        "embedded-image-or-reference",
+        "embedded-image-or-reference",
+        "embedded-image-or-reference",
+        "embedded-image-or-reference",
+        "embedded-image-or-reference",
+        "embedded-image-or-reference",
+        "embedded-image-or-reference",
+        "embedded-image-or-reference",
+        "embedded-image-or-reference",
+        "embedded-image-or-reference",
+        "embedded-image-or-reference",
+        "embedded-image-or-reference",
+        "embedded-image-or-reference",
+        "embedded-image-or-reference",
+        "embedded-image-or-reference"
+      ],
+      "viewBox": "152.2 109.6 36.6 40.8",
+      "width": "358.82",
+      "height": "400",
+      "visible_text": [],
+      "published_width": 640,
+      "published_height": 713,
+      "presentation_changes": "Normalized root viewport dimensions and removed root inline pixel sizing; preserved original viewBox and all vector geometry.",
+      "used_for": [
+        {
+          "prompt": "Which gas do plants absorb during photosynthesis?",
+          "alt": "A leafy green plant.",
+          "review": "Shows only a subject already identified in the question; no correct choice, explanatory label or answer-bearing diagram."
+        }
+      ]
+    },
+    {
+      "query": "football",
+      "id": "01a1760a-20cb-7043-a5c5-52866b341353",
+      "hash": "966e5928256616515932c4afa649a0ec3a5346849dfbec5793e77f0bb6869430",
+      "original_name": "black-and-white-football.svg",
+      "s3_key": "assets/966e5928256616515932c4afa649a0ec3a5346849dfbec5793e77f0bb6869430.svg",
+      "source_url": "https://clever-hall.fra1.digitaloceanspaces.com/assets/966e5928256616515932c4afa649a0ec3a5346849dfbec5793e77f0bb6869430.svg",
+      "retrieved_at": "2026-11-14",
+      "source": "StudyJunior production Primer MCP",
+      "source_sha256": "966e5928256616515932c4afa649a0ec3a5346849dfbec5793e77f0bb6869430",
+      "published_sha256": "bb6d93b41b240818112cbf11720a37186f437824d096396ff471824612fbb804",
+      "sanitization_removed": [
+        "title",
+        "desc",
+        "embedded-image-or-reference"
+      ],
+      "viewBox": "0 0 240 240",
+      "width": "240",
+      "height": "240",
+      "visible_text": [],
+      "published_width": 640,
+      "published_height": 640,
+      "presentation_changes": "Normalized root viewport dimensions and removed root inline pixel sizing; preserved original viewBox and all vector geometry.",
+      "used_for": [
+        {
+          "prompt": "How many players does a football team normally have on the pitch?",
+          "alt": "A black and white football.",
+          "review": "Shows only a subject already identified in the question; no correct choice, explanatory label or answer-bearing diagram."
+        }
+      ]
+    },
+    {
+      "query": "tennis ball",
+      "id": "01a173fb-1346-72a8-bbaa-736925c7a75c",
+      "hash": "24e5f936f10b9115abb6194db6d6904a3d3a76c7ecee1ae9e40725777268dd53",
+      "original_name": "green-tennis-ball.svg",
+      "s3_key": "assets/24e5f936f10b9115abb6194db6d6904a3d3a76c7ecee1ae9e40725777268dd53.svg",
+      "source_url": "https://clever-hall.fra1.digitaloceanspaces.com/assets/24e5f936f10b9115abb6194db6d6904a3d3a76c7ecee1ae9e40725777268dd53.svg",
+      "retrieved_at": "2026-11-14",
+      "source": "StudyJunior production Primer MCP",
+      "source_sha256": "24e5f936f10b9115abb6194db6d6904a3d3a76c7ecee1ae9e40725777268dd53",
+      "published_sha256": "f2b415712daeeb7d4ecd60415fb4a2de4bc5e87d61ec1ef7fb20692d69898065",
+      "sanitization_removed": [
+        "title",
+        "desc"
+      ],
+      "viewBox": "2543.91670 758.11813 132.99960 131.65874",
+      "width": "1000.0",
+      "height": "989.92",
+      "visible_text": [],
+      "published_width": 640,
+      "published_height": 634,
+      "presentation_changes": "Normalized root viewport dimensions and removed root inline pixel sizing; preserved original viewBox and all vector geometry.",
+      "used_for": [
+        {
+          "prompt": "What is a score of zero called in tennis?",
+          "alt": "A green tennis ball.",
+          "review": "Shows only a subject already identified in the question; no correct choice, explanatory label or answer-bearing diagram."
+        }
+      ]
+    },
+    {
+      "query": "basketball",
+      "id": "01a1760a-2bfc-7114-a456-4ff83b9767d8",
+      "hash": "d308349829c8f6c7d7dee65df088f77e69fddfe71717fbd1636be2e7d4895c0c",
+      "original_name": "orange-basketball.svg",
+      "s3_key": "assets/d308349829c8f6c7d7dee65df088f77e69fddfe71717fbd1636be2e7d4895c0c.svg",
+      "source_url": "https://clever-hall.fra1.digitaloceanspaces.com/assets/d308349829c8f6c7d7dee65df088f77e69fddfe71717fbd1636be2e7d4895c0c.svg",
+      "retrieved_at": "2026-11-14",
+      "source": "StudyJunior production Primer MCP",
+      "source_sha256": "d308349829c8f6c7d7dee65df088f77e69fddfe71717fbd1636be2e7d4895c0c",
+      "published_sha256": "1a93fcf447db69437284c066c5bd100eea14f1a87633e18c51153eee0d3d9a36",
+      "sanitization_removed": [
+        "title",
+        "desc"
+      ],
+      "viewBox": "0 0 240 240",
+      "width": "240",
+      "height": "240",
+      "visible_text": [],
+      "published_width": 640,
+      "published_height": 640,
+      "presentation_changes": "Normalized root viewport dimensions and removed root inline pixel sizing; preserved original viewBox and all vector geometry.",
+      "used_for": [
+        {
+          "prompt": "In basketball, how many points is a free throw worth?",
+          "alt": "An orange basketball.",
+          "review": "Shows only a subject already identified in the question; no correct choice, explanatory label or answer-bearing diagram."
+        }
+      ]
+    },
+    {
+      "query": "sun complete",
+      "id": "01a17197-56b3-72cb-9d01-d5392827900d",
+      "hash": "47222857941c161ac0ba86d1dad9dc98ff552c363d7baf711929e130aa2dc5b1",
+      "original_name": "sun-complete.svg",
+      "s3_key": "assets/47222857941c161ac0ba86d1dad9dc98ff552c363d7baf711929e130aa2dc5b1.svg",
+      "source_url": "https://clever-hall.fra1.digitaloceanspaces.com/assets/47222857941c161ac0ba86d1dad9dc98ff552c363d7baf711929e130aa2dc5b1.svg",
+      "retrieved_at": "2026-11-14",
+      "source": "StudyJunior production Primer MCP",
+      "source_sha256": "47222857941c161ac0ba86d1dad9dc98ff552c363d7baf711929e130aa2dc5b1",
+      "published_sha256": "d47140227bd1e35799dc9d4ae835bdd2400979546ccd409539c5c96b77934cbe",
+      "sanitization_removed": [],
+      "viewBox": "348.361 336.591 107.779 108.382",
+      "width": "994.4",
+      "height": "1000.0",
+      "visible_text": [],
+      "published_width": 640,
+      "published_height": 644,
+      "presentation_changes": "Normalized root viewport dimensions and removed root inline pixel sizing; preserved original viewBox and all vector geometry.",
+      "used_for": [
+        {
+          "prompt": "What is the Sun?",
+          "alt": "A stylised illustration of the Sun.",
+          "review": "Shows only a subject already identified in the question; no correct choice, explanatory label or answer-bearing diagram."
+        }
+      ]
+    },
+    {
+      "query": "moon complete",
+      "id": "01a17194-1505-7380-b0ab-324c0cadc045",
+      "hash": "cdf74d5e6add297d7238056e047ff7dd5dd13ab74b394b7d82fc782aeaafb1ce",
+      "original_name": "moon-complete.svg",
+      "s3_key": "assets/cdf74d5e6add297d7238056e047ff7dd5dd13ab74b394b7d82fc782aeaafb1ce.svg",
+      "source_url": "https://clever-hall.fra1.digitaloceanspaces.com/assets/cdf74d5e6add297d7238056e047ff7dd5dd13ab74b394b7d82fc782aeaafb1ce.svg",
+      "retrieved_at": "2026-11-14",
+      "source": "StudyJunior production Primer MCP",
+      "source_sha256": "cdf74d5e6add297d7238056e047ff7dd5dd13ab74b394b7d82fc782aeaafb1ce",
+      "published_sha256": "1a450744dd83af0f68e0e763a30e5dcfb025b0e4da7916c16764d7d8dfa7fac6",
+      "sanitization_removed": [],
+      "viewBox": "204.117 343.283 91.0901 94.2674",
+      "width": "966.3",
+      "height": "1000.0",
+      "visible_text": [],
+      "published_width": 640,
+      "published_height": 662,
+      "presentation_changes": "Normalized root viewport dimensions and removed root inline pixel sizing; preserved original viewBox and all vector geometry.",
+      "used_for": [
+        {
+          "prompt": "What keeps the Moon in orbit around Earth?",
+          "alt": "A stylised crescent Moon.",
+          "review": "Shows only a subject already identified in the question; no correct choice, explanatory label or answer-bearing diagram."
+        },
+        {
+          "prompt": "In which year did humans first land on the Moon?",
+          "alt": "A stylised crescent Moon.",
+          "review": "Shows only a subject already identified in the question; no correct choice, explanatory label or answer-bearing diagram."
+        }
+      ]
+    }
+  ],
+  "visual_review": "All eight published SVGs rendered with macOS Quick Look and visually inspected. Published exports contain no answer labels, raster images, scripts or external resources; embedded raster decoration in two sources was omitted."
+}

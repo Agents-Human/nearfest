@@ -1,0 +1,61 @@
+<svg xmlns="http://www.w3.org/2000/svg" version="1.1" viewBox="2543.91670 758.11813 132.99960 131.65874" width="1000.0" height="989.92" role="img" aria-label="Tennis ball. The ball bounces, squashes and spins" data-action="The ball bounces, squashes and spins" data-duration="3.2"><style>.ra7ac9-ball-spin{transform-box:view-box;transform-origin:0px 0px;animation:kra7ac9-ball-spin 6.4000s linear 0.0000s infinite}
+@keyframes kra7ac9-ball-spin{0.00%{transform:translate(2610.416px,823.947px) rotate(0.000deg) scale(1.0000,1.0000) translate(-2610.416px,-823.947px);animation-timing-function:linear}100.00%{transform:translate(2610.416px,823.947px) rotate(360.000deg) scale(1.0000,1.0000) translate(-2610.416px,-823.947px);animation-timing-function:linear}}
+.ra7ac9-body{transform-box:view-box;transform-origin:0px 0px;animation:kra7ac9-body 3.2000s linear 0.0000s infinite}
+@keyframes kra7ac9-body{0.00%{transform:translate(2610.416px,875.748px) rotate(0.000deg) scale(1.0000,1.0000) translate(-2610.416px,-875.748px);animation-timing-function:ease-in-out}10.00%{transform:translate(2610.416px,875.748px) rotate(0.000deg) scale(1.0500,0.9500) translate(-2610.416px,-875.748px);animation-timing-function:ease-in-out}40.00%{transform:translate(2610.416px,860.639px) rotate(0.000deg) scale(1.0000,1.0000) translate(-2610.416px,-875.748px);animation-timing-function:ease-in-out}67.00%{transform:translate(2610.416px,875.748px) rotate(0.000deg) scale(1.0000,1.0000) translate(-2610.416px,-875.748px);animation-timing-function:ease-in-out}76.00%{transform:translate(2610.416px,875.748px) rotate(0.000deg) scale(1.0600,0.9400) translate(-2610.416px,-875.748px);animation-timing-function:ease-in-out}90.00%{transform:translate(2610.416px,875.748px) rotate(0.000deg) scale(1.0000,1.0000) translate(-2610.416px,-875.748px);animation-timing-function:ease-in-out}100.00%{transform:translate(2610.416px,875.748px) rotate(0.000deg) scale(1.0000,1.0000) translate(-2610.416px,-875.748px);animation-timing-function:ease-in-out}}
+@media(prefers-reduced-motion:reduce){[class^="ra7ac9-"],[class^="fxra7ac9"]{animation:none!important;transform:none!important}[class^="fxra7ac9"],[data-part="turning-page"],[data-part="chalk-tip"]{display:none!important}}</style><title>Tennis ball</title><desc>The ball bounces, squashes and spins. Seamless loop; reduced motion supported.</desc><defs><clipPath id="ra7ac9-source-viewport" clipPathUnits="userSpaceOnUse"><rect x="2555.0" y="769.989" width="110.833" height="107.917"/></clipPath></defs><g class="ra7ac9-body" data-part="body"><g><defs>
+    <clipPath id="ra7ac9-clippath">
+      <path d="M2327.216,449.093l-3.321-.437c-.399-.052-.793-.089-1.18-.11-.388-.021-.77-.026-1.143-.015l3.321.437c.373-.011.755-.006,1.143.015.387.021.78.058,1.18.11Z" style="fill: #f57622;"/>
+    </clipPath>
+    <clipPath id="ra7ac9-clippath-1">
+      <path d="M2340.166,488.591l3.321.437c-5.103-.671-11.206-3.912-16.647-9.309-4.573-4.534-7.841-9.764-9.475-14.622l-3.321-.437c1.634,4.858,4.902,10.088,9.475,14.622,5.441,5.397,11.544,8.638,16.647,9.309Z" style="fill: #f57622;"/>
+    </clipPath>
+    <clipPath id="ra7ac9-clippath-2">
+      <path d="M2322.241,400.346l-3.321-.437c-.156-.021-.313-.035-.471-.044l3.321.437c.158.009.315.023.471.044Z" style="fill: #f57622;"/>
+    </clipPath>
+    <clipPath id="ra7ac9-clippath-3">
+      <path d="M2321.769,400.303l-3.321-.437c-6.93-.375-13.367,10.981-14.374,25.358-.665,9.503,1.208,17.941,4.553,22.688l3.321.437c-3.345-4.747-5.218-13.184-4.553-22.688,1.006-14.378,7.443-25.733,14.374-25.358Z" style="fill: #f57622;"/>
+    </clipPath>
+    <clipPath id="ra7ac9-clippath-4">
+      <path d="M2282.472,485.422l3.321.437c-2.839-.374-5.098-1.634-6.409-3.829-3.805-6.377,1.838-18.231,12.609-26.472,6.617-5.064,13.635-7.588,18.944-7.301.344.019.681.049,1.011.091l-3.321-.437c-.329-.042-.666-.073-1.011-.091-5.309-.287-12.327,2.237-18.944,7.301-10.771,8.241-16.414,20.095-12.609,26.472,1.311,2.195,3.57,3.455,6.409,3.829Z" style="fill: #f57622;"/>
+    </clipPath>
+  </defs>
+  
+  <g>
+    <g id="ra7ac9-Layer_1">
+      
+      <g>
+        
+        
+        <g>
+          <g>
+            <g><g class="ra7ac9-ball-spin" data-part="ball-spin"><path d="M2661.734,823.44c0,19.933-11.527,37.172-28.273,45.419-6.733,3.322-14.315,5.187-22.332,5.187-1.406,0-2.797-.056-4.175-.173-25.996-2.118-46.431-23.888-46.431-50.432,0-.347.005-.689.014-1.035.033-1.921.183-3.814.431-5.674,3.28-24.773,24.488-43.896,50.16-43.896,9.315,0,18.04,2.516,25.537,6.912,6.11,3.575,11.4,8.397,15.524,14.118,6.007,8.317,9.545,18.537,9.545,29.576Z" style="fill: #57ab7d;"/>
+            </g></g><g><g class="ra7ac9-ball-spin" data-part="ball-spin"><path d="M2661.734,823.44c0,19.933-11.527,37.172-28.273,45.419-6.733,3.322-14.315,5.187-22.332,5.187-1.406,0-2.797-.056-4.175-.173,7.329-1.467,18.959-4.823,30.204-15.444,17.584-16.609,18.327-45.607,15.032-64.564,6.007,8.317,9.545,18.537,9.545,29.576Z" style="fill: #3b805e;"/>
+          </g></g></g>
+          <g><g class="ra7ac9-ball-spin" data-part="ball-spin"><path d="M2598.721,862.121c-3.378,0-6.916-.554-10.609-1.662-8.199-2.462-14.346-7.852-18.271-16.019-6.871-14.303-4.883-33.338-1.276-42.285,5.574-13.824,11.831-18.627,12.095-18.824.583-.44,1.41-.319,1.848.264.438.583.32,1.411-.264,1.848-.055.043-5.965,4.645-11.229,17.7-3.427,8.498-5.317,26.576,1.207,40.154,3.589,7.47,9.192,12.394,16.651,14.634,8.6,2.583,16.27,1.923,22.794-1.963,8.364-4.98,14.522-15.182,17.337-28.725,4.672-22.466,20.319-33.986,20.982-34.465.593-.427,1.416-.295,1.842.297.428.591.295,1.415-.295,1.843-.154.112-15.488,11.438-19.943,32.863-2.969,14.277-9.565,25.094-18.572,30.457-4.347,2.587-9.13,3.884-14.297,3.884Z" style="fill: #fff;"/>
+        </g></g></g>
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+      </g>
+    </g>
+  </g>
+</g></g></svg>

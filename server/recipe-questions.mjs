@@ -23,7 +23,7 @@ export function recipeQuestions(game,choice){
    case 'temperature':prompt=`Convert ${a*5}°C to °F. Use °F = (°C × 9/5) + 32.`;answer=a*9+32;break;
    case 'moles':prompt=`A substance has molar mass ${a} g/mol. What mass is ${b} mol, in grams?`;answer=a*b;break;
    case 'scoreboard':prompt=`A basketball player makes ${b} three-pointers and ${c} free throws. How many points?`;answer=b*3+c;break;
-   case 'budget':{const spent=Math.min(c,a*b-1);prompt=`${b} people each put ${a} FUN into a pot. They spend ${spent} FUN. How much remains?`;answer=a*b-spent;break;}
+   case 'budget':{const spent=Math.min(c,a*b-1);prompt=`${b} people each put ${a} NEAR into a pot. They spend ${spent} NEAR. How much remains?`;answer=a*b-spent;break;}
    default:throw Error('Unknown challenge recipe.');
   }
   // Four distinct choices; exact integer arithmetic is the scoring authority.

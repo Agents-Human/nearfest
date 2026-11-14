@@ -1,0 +1,31 @@
+const rows=[
+ ['pocket-racers','Pocket Racers','Racing',2,4,120,'A quick coastal sprint. Just steer left or right, dodge traffic, collect turbo and race to the finish.'],
+ ['stick-rivals','Stick Rivals','Action',2,2,180,'Jump, block and land your punches. Three rounds in a shared arena.'],
+ ['paddle-duel','Paddle Duel','Sports',2,2,180,'Move your paddle, read the bounce. First to seven.'],
+ ['air-hockey','Air Hockey','Sports',2,2,180,'Guard your goal and strike the puck. First to five.'],
+ ['snake-arena','Snake Arena','Action',2,6,300,'Claim the fixed food trail. Outlast the other snakes.'],
+ ['bomb-maze','Foam Frenzy','Action',2,4,180,'Place foam bombs, dodge the blast and survive three rounds.'],
+ ['mini-golf','Mini Golf','Sports',2,4,240,'Aim, choose your power and sink the ball. Three original holes.'],
+ ['marble-knockout','Marble Knockout','Action',2,6,120,'Keep your marble on the shrinking platform.'],
+ ['kitchen-rush','Kitchen Rush','Co-op',2,4,180,'Pick, chop, cook and serve. Beat the kitchen clock together.'],
+ ['paint-tag','Paint Tag','Action',2,4,120,'Dodge, aim and tag your rivals with colourful paint.'],
+ ['platform-relay','Platform Relay','Action',2,4,0,'An endless island survival race. Grab gold coins, jump hazards and outrun the storm. One life each: the first death ends the round.'],
+ ['draw-guess','Draw & Guess','Party games',3,8,480,'Draw the secret word. Guess your friends’ sketches.'],
+ ['word-hunt','Word Hunt','Word games',2,8,90,'Trace neighbouring letters to find words on a shared grid.'],
+ ['word-relay','Word Relay','Word games',2,8,180,'Start with the last letter. Keep the chain alive.'],
+ ['category-sprint','Category Sprint','Word games',2,8,240,'One letter. Five categories. Your answers stay private until reveal.'],
+ ['clue-crew','Clue Crew','Party games',4,8,600,'Give clever clues without using the forbidden words.'],
+ ['bluff-club','Bluff Club','Party games',3,8,300,'Write a convincing bluff. Spot the real answer.'],
+ ['deduction-club','Deduction Club','Party games',5,10,600,'Read the evidence, discuss the clues and find the saboteur.'],
+ ['maths-tug','Maths Tug-of-War','Maths',2,8,90,'Correct answers pull the rope. Get your team across the line.'],
+ ['equation-forge','Equation Forge','Maths',2,8,240,'Six numbers. One target. Build your best equation.'],
+ ['circuit-crew','Circuit Crew','Co-op',2,4,180,'Rotate wires and power every lamp together.'],
+ ['orbit-rescue','Orbit Rescue','Co-op',2,4,180,'Share the ship controls. Rescue three stranded probes.'],
+ ['bridge-builders','Bridge Builders','Co-op',2,4,240,'Build with a beam budget, then test your bridge.'],
+ ['molecule-match','Molecule Match','Science',2,4,180,'Connect atoms with the right bonds to build each target.'],
+ ['sudoku-race','Sudoku Race','Puzzles',2,4,300,'One shared puzzle. Private answers. Race to a correct solution.'],
+ ['codebreakers','Codebreakers','Puzzles',2,4,180,'Use every clue to deduce a unique four-symbol code.'],
+];
+export const freeOnly=new Set(['draw-guess','category-sprint','clue-crew','bluff-club','deduction-club','kitchen-rush','platform-relay','circuit-crew','orbit-rescue','bridge-builders']);
+export const arcadeGames=rows.map(([id,title,genre,min,max,seconds,description])=>({id,title,label:genre,genre,category:['Maths','Science'].includes(genre)?genre:'Gaming',min_players:min,max_players:max,seconds,description,engine:'arcade',kind:'game',solo:true,multiplayer:true,standalone:true,bettable:!freeOnly.has(id),rounds:1,art:id,rules_version:'slotvend-original-1'}));
+export const arcadeGame=id=>arcadeGames.find(g=>g.id===id);

@@ -1,0 +1,225 @@
+{
+  "schema_version": 1,
+  "author": "Kenney",
+  "license": "CC0-1.0",
+  "license_url": "https://creativecommons.org/publicdomain/zero/1.0/",
+  "origin": "User-provided source archives extracted under assets/new in this checkout. Selected bytes copied without modification. Runtime transforms and body-atlas recolouring are described in src/games/racing-assets.ts.",
+  "packages": [
+    {
+      "id": "car-kit",
+      "version": "3.1",
+      "url": "https://kenney.nl/assets/car-kit"
+    },
+    {
+      "id": "racing-kit",
+      "version": "2.0 (local license)",
+      "url": "https://kenney.nl/assets/racing-kit"
+    },
+    {
+      "id": "racing-pack",
+      "url": "https://kenney.nl/assets/racing-pack"
+    }
+  ],
+  "files": [
+    {
+      "path": "public/models/racing/vehicles/race.glb",
+      "source_path": "assets/new/kenney_car-kit/Models/GLB format/race.glb",
+      "package": "car-kit",
+      "source_url": "https://kenney.nl/assets/car-kit",
+      "bytes": 167272,
+      "sha256": "e1408c4c6e135f5a39c5f34cbfbcac9ae21c5c491e793fdee74bccac8334d942",
+      "copied_without_changes": true
+    },
+    {
+      "path": "public/models/racing/vehicles/sedan.glb",
+      "source_path": "assets/new/kenney_car-kit/Models/GLB format/sedan.glb",
+      "package": "car-kit",
+      "source_url": "https://kenney.nl/assets/car-kit",
+      "bytes": 172216,
+      "sha256": "b532ea7d2c59f7f6b22b138cf1955218a2c1898f1cea932af4d3fd563c3959b7",
+      "copied_without_changes": true
+    },
+    {
+      "path": "public/models/racing/vehicles/truck.glb",
+      "source_path": "assets/new/kenney_car-kit/Models/GLB format/truck.glb",
+      "package": "car-kit",
+      "source_url": "https://kenney.nl/assets/car-kit",
+      "bytes": 176360,
+      "sha256": "5e1bc66c343501dd7d5734b57e672dd949bf95d7abdce680c6508cef99d374f8",
+      "copied_without_changes": true
+    },
+    {
+      "path": "public/models/racing/vehicles/van.glb",
+      "source_path": "assets/new/kenney_car-kit/Models/GLB format/van.glb",
+      "package": "car-kit",
+      "source_url": "https://kenney.nl/assets/car-kit",
+      "bytes": 175664,
+      "sha256": "ed4ed56e8e5ed98db050af09ed2062b3b6bb7b93eab1e563cb6774b387b233a1",
+      "copied_without_changes": true
+    },
+    {
+      "path": "public/models/racing/props/cone.glb",
+      "source_path": "assets/new/kenney_car-kit/Models/GLB format/cone.glb",
+      "package": "car-kit",
+      "source_url": "https://kenney.nl/assets/car-kit",
+      "bytes": 16696,
+      "sha256": "d6659fc365de47c5d056b14f3d3fb3e191d3a5b869c43171753621dcf14b76bd",
+      "copied_without_changes": true
+    },
+    {
+      "path": "public/models/racing/vehicles/Textures/colormap.png",
+      "source_path": "assets/new/kenney_car-kit/Models/GLB format/Textures/colormap.png",
+      "package": "car-kit",
+      "source_url": "https://kenney.nl/assets/car-kit",
+      "bytes": 12371,
+      "sha256": "f3622a03a20c6696065cae9cbe391351be873508af190c2ebd1d420c055787a5",
+      "copied_without_changes": true
+    },
+    {
+      "path": "public/models/racing/props/Textures/colormap.png",
+      "source_path": "assets/new/kenney_car-kit/Models/GLB format/Textures/colormap.png",
+      "package": "car-kit",
+      "source_url": "https://kenney.nl/assets/car-kit",
+      "bytes": 12371,
+      "sha256": "f3622a03a20c6696065cae9cbe391351be873508af190c2ebd1d420c055787a5",
+      "copied_without_changes": true
+    },
+    {
+      "path": "public/models/racing/licenses/car-kit.txt",
+      "source_path": "assets/new/kenney_car-kit/License.txt",
+      "package": "car-kit",
+      "source_url": "https://kenney.nl/assets/car-kit",
+      "bytes": 696,
+      "sha256": "c33b7f6453d134deae7b1b8493717d9ccfa754c25ab97f6de89b88f8fda19b00",
+      "copied_without_changes": true
+    },
+    {
+      "path": "public/models/racing/props/barrier.glb",
+      "source_path": "assets/new/kenney_racing-kit/Models/GLTF format/barrierRed.glb",
+      "package": "racing-kit",
+      "source_url": "https://kenney.nl/assets/racing-kit",
+      "bytes": 3244,
+      "sha256": "6d7de595a92507af6fcb40fe5a62730925ea23f1f8c727b8ecdec9eba9b98156",
+      "copied_without_changes": true
+    },
+    {
+      "path": "public/models/racing/props/rail.glb",
+      "source_path": "assets/new/kenney_racing-kit/Models/GLTF format/rail.glb",
+      "package": "racing-kit",
+      "source_url": "https://kenney.nl/assets/racing-kit",
+      "bytes": 5940,
+      "sha256": "c60d60e34b675d5d832d91c6f5d7c125a1020953c2e22dbcd1215397990aaaf4",
+      "copied_without_changes": true
+    },
+    {
+      "path": "public/models/racing/props/grandstand.glb",
+      "source_path": "assets/new/kenney_racing-kit/Models/GLTF format/grandStandCovered.glb",
+      "package": "racing-kit",
+      "source_url": "https://kenney.nl/assets/racing-kit",
+      "bytes": 15200,
+      "sha256": "48fc8e7eace9969a849805bddd5dce2bf1244129f46ae18f7dc8499fe1792b50",
+      "copied_without_changes": true
+    },
+    {
+      "path": "public/models/racing/props/garage.glb",
+      "source_path": "assets/new/kenney_racing-kit/Models/GLTF format/pitsGarage.glb",
+      "package": "racing-kit",
+      "source_url": "https://kenney.nl/assets/racing-kit",
+      "bytes": 13028,
+      "sha256": "db73d2ebd70763380ef872ffd2a399eb72c979f96c5a3c1ab377d93670204a23",
+      "copied_without_changes": true
+    },
+    {
+      "path": "public/models/racing/props/gantry.glb",
+      "source_path": "assets/new/kenney_racing-kit/Models/GLTF format/overheadLights.glb",
+      "package": "racing-kit",
+      "source_url": "https://kenney.nl/assets/racing-kit",
+      "bytes": 26068,
+      "sha256": "8239fa98d2c950d7aba67ecf49dc92af18ee0da92ed96736a711b22e90e795cd",
+      "copied_without_changes": true
+    },
+    {
+      "path": "public/models/racing/props/flag.glb",
+      "source_path": "assets/new/kenney_racing-kit/Models/GLTF format/flagCheckers.glb",
+      "package": "racing-kit",
+      "source_url": "https://kenney.nl/assets/racing-kit",
+      "bytes": 15188,
+      "sha256": "2feb99a4974fc82f90b43436421feb0874c074d4ea685d9673c6803429fd32ba",
+      "copied_without_changes": true
+    },
+    {
+      "path": "public/models/racing/props/billboard.glb",
+      "source_path": "assets/new/kenney_racing-kit/Models/GLTF format/billboard.glb",
+      "package": "racing-kit",
+      "source_url": "https://kenney.nl/assets/racing-kit",
+      "bytes": 14520,
+      "sha256": "2c95fe71e6b31430b8379febf31b4b6118a21b55a6bb1e197a4e4fabfd026c20",
+      "copied_without_changes": true
+    },
+    {
+      "path": "public/models/racing/props/lamp.glb",
+      "source_path": "assets/new/kenney_racing-kit/Models/GLTF format/lightPostModern.glb",
+      "package": "racing-kit",
+      "source_url": "https://kenney.nl/assets/racing-kit",
+      "bytes": 16584,
+      "sha256": "8fd8fccc65f53cf54efff81546b90be23d8c32a4ea85b5bbc79c6c9d123cb925",
+      "copied_without_changes": true
+    },
+    {
+      "path": "public/models/racing/licenses/racing-kit.txt",
+      "source_path": "assets/new/kenney_racing-kit/License.txt",
+      "package": "racing-kit",
+      "source_url": "https://kenney.nl/assets/racing-kit",
+      "bytes": 611,
+      "sha256": "905627df4313a9eb7fa9337129e572979ef51cc3857c8d2942e57ae84736096c",
+      "copied_without_changes": true
+    },
+    {
+      "path": "public/models/racing/icons/racer-red.png",
+      "source_path": "assets/new/kenney_racing-pack/PNG/Characters/racer_red.png",
+      "package": "racing-pack",
+      "source_url": "https://kenney.nl/assets/racing-pack",
+      "bytes": 1515,
+      "sha256": "0f713cc1995781912bcf437888b53ce0a683386a5425d365e365aef42f2bad0a",
+      "copied_without_changes": true
+    },
+    {
+      "path": "public/models/racing/icons/racer-blue.png",
+      "source_path": "assets/new/kenney_racing-pack/PNG/Characters/racer_blue.png",
+      "package": "racing-pack",
+      "source_url": "https://kenney.nl/assets/racing-pack",
+      "bytes": 1464,
+      "sha256": "5e8b29e99f2c4055d7a5a2c4ad883f50a3e40c7883a7da1be3e47557f3ba371b",
+      "copied_without_changes": true
+    },
+    {
+      "path": "public/models/racing/icons/racer-green.png",
+      "source_path": "assets/new/kenney_racing-pack/PNG/Characters/racer_green.png",
+      "package": "racing-pack",
+      "source_url": "https://kenney.nl/assets/racing-pack",
+      "bytes": 1464,
+      "sha256": "17a7f5d8a25587ba2fec0b953d7c1b95a60116da3be581691a22d244e8ce0987",
+      "copied_without_changes": true
+    },
+    {
+      "path": "public/models/racing/icons/racer-yellow.png",
+      "source_path": "assets/new/kenney_racing-pack/PNG/Characters/racer_yellow.png",
+      "package": "racing-pack",
+      "source_url": "https://kenney.nl/assets/racing-pack",
+      "bytes": 1458,
+      "sha256": "f037549193005003724b6fdc2eb9cab19ff9042c8ec289037c8e7ba82c4bdc6b",
+      "copied_without_changes": true
+    },
+    {
+      "path": "public/models/racing/licenses/racing-pack.txt",
+      "source_path": "assets/new/kenney_racing-pack/License.txt",
+      "package": "racing-pack",
+      "source_url": "https://kenney.nl/assets/racing-pack",
+      "bytes": 572,
+      "sha256": "eb4d367a2b5024535fcfc3e65615d63d9ed9c9fa8d63bfbeb67ac907dc421683",
+      "copied_without_changes": true
+    }
+  ],
+  "total_files": 22,
+  "total_bytes": 850502
+}
