@@ -2,8 +2,7 @@ const clamp=(n,a,b)=>Math.max(a,Math.min(b,n));
 
 // The original vampire terrace is a single, readable fighting lane.
 export const stickPlatforms=[];
-const weaponKinds=['sword','hammer','staff'];
-const terraceWeapons=(round=0)=>[235,480,725].map((x,id)=>({id,x,y:410,kind:weaponKinds[(id+round)%3],active:true,respawn:0}));
+
 
 export function createStickFighter(i,round=0){
  const side=(i+round)%2;
@@ -25,7 +24,7 @@ export function initStickWorld(s,n){
  s.scores=Array(n).fill(0);
  s.roundTime=0;s.breakTime=0;
  s.platforms=stickPlatforms.map(p=>({...p}));
- s.weapons=terraceWeapons(s.round||0);
+ s.weapons=[];
  s.nextWeapon=1;
  s.beams=[];s.nextBeam=0;
  s.impacts=[];s.nextImpact=0;
@@ -39,7 +38,7 @@ function addImpact(s,x,y,kind,dir=1,power=1,label='',owner=-1){
 
 export function stepStickWorld(s,cs,DT,ranked){
  s.platforms=s.platforms||stickPlatforms.map(p=>({...p}));
- s.weapons=s.weapons||[];
+ s.weapons=[];
  s.beams=s.beams||[];
  s.impacts=s.impacts||[];
  for(const imp of s.impacts)imp.age+=DT;
@@ -51,23 +50,13 @@ export function stepStickWorld(s,cs,DT,ranked){
   if(s.breakTime<=0){
    s.round++;s.roundTime=0;
    s.players=s.players.map((_,i)=>createStickFighter(i,s.round));
-   s.weapons=terraceWeapons(s.round||0);s.impacts=[];
+   s.weapons=[];s.impacts=[];
    s.beams=[];
   }
   return s;
  }
 
  s.roundTime+=DT;
- for(const w of s.weapons){
-  if(!w.active&&(w.respawn||0)>0){
-   w.respawn-=DT;
-   if(w.respawn<=0){
-    const pad=s.platforms[(w.id+Math.floor(s.roundTime))%s.platforms.length];
-    w.x=pad?pad.x+pad.w/2:[235,480,725][w.id%3];w.y=pad?.y??410;w.kind=weaponKinds[(w.id+Math.floor(s.roundTime))%weaponKinds.length];
-    w.active=true;
-   }
-  }
- }
 
  const hits=[];
  s.players.forEach((p,i)=>{
@@ -87,9 +76,9 @@ export function stepStickWorld(s,cs,DT,ranked){
   p.dashTimer=Math.max(0,(p.dashTimer||0)-DT);
   p.dashCooldown=Math.max(0,(p.dashCooldown||0)-DT);
   p.tumble=Math.max(0,(p.tumble||0)-DT);p.airFlip=Math.max(0,(p.airFlip||0)-DT);
-  if((p.weaponTimer||0)>0){p.weaponTimer=Math.max(0,p.weaponTimer-DT);if(p.weaponTimer===0)p.weapon=null;}
+  // Clear equipment carried by older saved rounds. The duel is unarmed.
+  p.weapon=null;p.weaponTimer=0;p.weaponUses=0;
 
-  if(p.weapon&&(p.weaponUses??6)<=0&&p.attack<=0)p.weapon=null;
   const dx=Number(Boolean(c.right))-Number(Boolean(c.left)),rival=s.players[1-i]||p;
   if(dx&&p.stun<=0)p.facing=dx;
   else if(p.attack<=0)p.facing=rival.x>=p.x?1:-1;
@@ -104,7 +93,7 @@ export function stepStickWorld(s,cs,DT,ranked){
   if(p.blocking&&!stationaryCharge)p.energy=Math.max(0,p.energy-5*DT);
   p.stun=Math.max(0,(p.stun||0)-DT);
 
-  // Ninja Dash when pressing block + direction
+  // A quick defensive step when pressing guard + direction
   if(c.block&&dx&&p.dashCooldown<=0&&p.stun<=0&&p.attack<=0&&p.guardBroken<=0&&p.energy>=14){
    p.dashTimer=.16;p.dashCooldown=.65;p.energy-=14;
    p.vx=dx*480;
@@ -169,16 +158,6 @@ export function stepStickWorld(s,cs,DT,ranked){
   p.leanVel=((p.leanVel||0)+(targetLean-(p.lean||0))*38*DT)*Math.exp(-9*DT);
   p.lean=clamp((p.lean||0)+p.leanVel*DT,-1.6,1.6);
 
-  // Collect arena weapon orbs
-  for(const w of s.weapons){
-   if(w.active&&Math.hypot(p.x-w.x,(p.y-25)-w.y)<46){
-    w.active=false;w.respawn=13;
-    p.weapon=w.kind;p.weaponTimer=12;p.weaponUses=6;
-    p.moveCallout=`${w.kind.toUpperCase()} EQUIPPED!`;p.calloutTimer=.8;
-    addImpact(s,w.x,w.y,'pickup',p.facing,.9,w.kind.toUpperCase());
-   }
-  }
-
   // Special Move (F / c.fire): Close-Range Judo Overhead Throw OR Ranged Ki Energy Blast!
   if(c.fire&&!p.blocking&&p.cooldown===0&&p.stun===0){
    const dist=Math.abs(rival.x-p.x),vDist=Math.abs(rival.y-p.y);
@@ -187,7 +166,7 @@ export function stepStickWorld(s,cs,DT,ranked){
     p.attack=.32;p.cooldown=.62;p.energy-=18;
     p.attackSeq=(p.attackSeq||0)+1;p.attackDuration=p.attack;p.hit=true;
     p.moveCallout='OVERHEAD THROW';p.calloutTimer=.8;p.bufferTime=0;
-    hits.push({from:i,to:1-i,kind:'throw',weapon:p.weapon});
+    hits.push({from:i,to:1-i,kind:'throw'});
    }else if(p.energy>=26){
     p.attackKind='blast';
     p.attack=.32;p.cooldown=.65;p.energy-=26;
@@ -208,7 +187,7 @@ export function stepStickWorld(s,cs,DT,ranked){
   }
 
   // Standard Martial Arts Combat Moves:
-  // - Space (c.attack): 4-Hit Martial Chain (Jab -> Chin Cross -> Flying Knee -> Crescent KO Kick)
+  // - Space (c.attack): Karate chain (lead punch -> reverse punch -> front kick -> roundhouse)
   // - W + Space (c.up + c.attack): Rising Dragon Uppercut
   // - S (c.down) in Air: Horizontal Two-Foot Dropkick
   // - S (c.down) on Ground: High Roundhouse Kick / Low Leg Sweep
@@ -224,11 +203,11 @@ export function stepStickWorld(s,cs,DT,ranked){
      p.moveCallout='FLYING DROPKICK!';
     }else if(isHeavy){
      p.heavyAlt=((p.heavyAlt||0)+1)%2;
-     p.attackKind=p.weapon==='hammer'?'smash':p.weapon==='sword'?'slash':p.weapon==='staff'?'staff':p.heavyAlt===0?'sweep':'kick';
+     p.attackKind=p.heavyAlt===0?'sweep':'kick';
      p.attack=.30;p.cooldown=.46;
      if(dx)p.vx+=p.facing*115;
      p.leanVel=-p.facing*6;
-     p.moveCallout=p.attackKind==='smash'?'HAMMER SLAM':p.attackKind==='slash'?'KATANA SLASH':p.attackKind==='staff'?'STAFF THRUST':p.attackKind==='sweep'?'LOW SWEEP':'ROUNDHOUSE';
+     p.moveCallout=p.attackKind==='sweep'?'LOW SWEEP':'ROUNDHOUSE';
     }else if(c.up){
      p.attackKind='uppercut';
      p.attack=.26;p.cooldown=.36;
@@ -238,13 +217,12 @@ export function stepStickWorld(s,cs,DT,ranked){
     }else{
      const nextCombo=((p.combo||0)%4)+1;
      p.combo=nextCombo;p.comboTimer=1.25;
-     p.attackKind=nextCombo===4?'crescent':nextCombo===3?'knee':nextCombo===2?'cross':'punch';
+     p.attackKind=nextCombo===4?'roundhouse':nextCombo===3?'frontkick':nextCombo===2?'cross':'punch';
      p.attack=nextCombo===4?.30:.22;
      p.cooldown=nextCombo===4?.40:.26;
      if(dx||Math.abs(rival.x-p.x)<112)p.vx+=p.facing*(nextCombo>=3?175:95);
-     if(nextCombo===3&&p.ground){p.vy=-90;p.ground=false;}
      p.leanVel=p.facing*(nextCombo===4?-8:5);
-     p.moveCallout=nextCombo===4?'CRESCENT KO KICK!':nextCombo===3?'FLYING KNEE!':nextCombo===2?'CHIN CROSS!':'STRAIGHT JAB';
+     p.moveCallout=nextCombo===4?'ROUNDHOUSE FINISH':nextCombo===3?'FRONT KICK':nextCombo===2?'REVERSE PUNCH':'LEAD PUNCH';
     }
     p.energy-=cost;p.bufferTime=0;p.calloutTimer=.7;
     p.attackSeq=(p.attackSeq||0)+1;p.attackDuration=p.attack;
@@ -253,16 +231,14 @@ export function stepStickWorld(s,cs,DT,ranked){
   }
 
   p.attack=Math.max(0,p.attack-DT);
-  const isLongMove=['kick','sweep','divekick','crescent','slash','smash','staff'].includes(p.attackKind);
+  const isLongMove=['kick','sweep','divekick','crescent','roundhouse','frontkick'].includes(p.attackKind);
   const strikeWindow=isLongMove?.23:.18;
   if(p.attack>0&&p.attack<strikeWindow&&!p.hit&&!['blast','throw'].includes(p.attackKind)){
-   const armed=!['kick','sweep','divekick','crescent','knee'].includes(p.attackKind)?p.weapon:null;
-   const wepBonus=armed==='staff'?28:armed==='sword'?22:armed==='hammer'?18:0;
-   const reach=(['kick','sweep','divekick','slash','smash','staff'].includes(p.attackKind)?95:p.attackKind==='crescent'?84:p.attackKind==='uppercut'||p.attackKind==='knee'?78:72)+wepBonus;
+   const reach=(['kick','sweep','divekick','frontkick','roundhouse'].includes(p.attackKind)?95:p.attackKind==='crescent'?84:p.attackKind==='uppercut'||p.attackKind==='knee'?78:72);
    s.players.forEach((other,j)=>{
     if(i!==j&&Math.abs(other.y-p.y)<88&&(other.x-p.x)*p.facing>=-15&&Math.abs(other.x-p.x)<reach){
      p.hit=true;
-     hits.push({from:i,to:j,kind:p.attackKind,weapon:armed});
+     hits.push({from:i,to:j,kind:p.attackKind});
     }
    });
   }
@@ -276,7 +252,7 @@ export function stepStickWorld(s,cs,DT,ranked){
    s.players.forEach((target,j)=>{
     if(j!==b.owner&&Math.abs(target.x-b.x)<42&&Math.abs((target.y-51)-b.y)<52){
      b.hit=true;b.life=Math.min(b.life,.08);
-     hits.push({from:b.owner,to:j,kind:'blast',weapon:null});
+     hits.push({from:b.owner,to:j,kind:'blast'});
     }
    });
   }
@@ -287,25 +263,23 @@ export function stepStickWorld(s,cs,DT,ranked){
  for(const hit of hits){
   const p=s.players[hit.to],attacker=s.players[hit.from];
   const isThrow=hit.kind==='throw';
-  const contactX=p.x-attacker.facing*10,contactY=p.y-(hit.kind==='sweep'?18:['kick','crescent','uppercut','cross','smash'].includes(hit.kind)?69:55);
+  const contactX=p.x-attacker.facing*10,contactY=p.y-(hit.kind==='sweep'?18:['kick','crescent','uppercut','cross'].includes(hit.kind)?69:55);
   if((p.dashTimer||0)>.06){addImpact(s,contactX,contactY,'dodge',p.facing,.8,'DODGE!',hit.to);continue;}
-  if(hit.weapon){attacker.weaponUses=Math.max(0,(attacker.weaponUses??6)-1);}
   const blocked=!isThrow&&p.blocking&&(attacker.x-p.x)*p.facing>0;
   const parried=blocked&&(p.parryTimer||0)>0;
-  const isHeavy=['kick','sweep','divekick','uppercut','crescent','throw','blast','slash','smash','staff'].includes(hit.kind);
-  const wepDmg=hit.weapon==='hammer'?5:hit.weapon==='sword'?3:hit.weapon==='staff'?2:0;
-  const baseDmg=hit.kind==='throw'?13:['smash','slash','staff','kick','sweep','divekick'].includes(hit.kind)?11:hit.kind==='blast'||hit.kind==='crescent'?10:hit.kind==='uppercut'||hit.kind==='knee'?8:hit.kind==='cross'?6:5;
-  const dmg=parried?0:blocked?2:baseDmg+wepDmg;
+  const isHeavy=['kick','sweep','divekick','uppercut','crescent','roundhouse','frontkick','throw','blast'].includes(hit.kind);
+  const baseDmg=hit.kind==='throw'?13:['kick','sweep','divekick'].includes(hit.kind)?11:hit.kind==='blast'||hit.kind==='crescent'||hit.kind==='roundhouse'?10:hit.kind==='uppercut'||hit.kind==='knee'||hit.kind==='frontkick'?8:hit.kind==='cross'?6:5;
+  const dmg=parried?0:blocked?2:baseDmg;
   p.hp=Math.max(0,p.hp-dmg);
   if(!blocked){attacker.hitCombo=(attacker.hitComboTimer>0?attacker.hitCombo:0)+1;attacker.hitComboTimer=1.1;p.hitCombo=0;p.hitComboTimer=0;p.hurtKind=hit.kind;p.hurtTimer=.24;p.hitFlash=.09;}
 
-  const knockX=blocked?(parried?2:4):isThrow?72:hit.weapon==='hammer'?68:hit.kind==='kick'||hit.kind==='divekick'||hit.kind==='crescent'?42:hit.kind==='blast'?36:hit.kind==='uppercut'||hit.kind==='sweep'?26:4;
+  const knockX=blocked?(parried?2:4):isThrow?72:hit.kind==='kick'||hit.kind==='divekick'||hit.kind==='crescent'||hit.kind==='roundhouse'?42:hit.kind==='blast'?36:hit.kind==='uppercut'||hit.kind==='sweep'?26:hit.kind==='frontkick'?6:4;
   const dir=isThrow?-attacker.facing:attacker.facing;
   p.x=clamp(p.x+dir*knockX,55,905);
-  p.vx=dir*(blocked?60:isThrow?340:hit.weapon==='hammer'?380:isHeavy?275:65);
+  p.vx=dir*(blocked?60:isThrow?340:isHeavy?275:65);
 
-  if(!blocked&&(isThrow||hit.kind==='uppercut'||hit.kind==='crescent'||hit.kind==='sweep'||hit.weapon==='hammer'||p.hp<=0)){
-   p.vy=isThrow?-410:p.hp<=0?-350:hit.weapon==='hammer'?-310:hit.kind==='sweep'?-225:-275;
+  if(!blocked&&(isThrow||hit.kind==='uppercut'||hit.kind==='crescent'||hit.kind==='sweep'||p.hp<=0)){
+   p.vy=isThrow?-410:p.hp<=0?-350:hit.kind==='sweep'?-225:-275;
    p.ground=false;
    p.tumble=isThrow?.68:hit.kind==='sweep'?.48:.52;
   }
@@ -318,7 +292,7 @@ export function stepStickWorld(s,cs,DT,ranked){
    p.parryPose=.3;p.moveCallout='PERFECT PARRY';p.calloutTimer=.8;attacker.attack=0;attacker.hit=true;attacker.combo=0;
    addImpact(s,(p.x+attacker.x)/2,p.y-55,'parry',p.facing,1.4,'PARRY!',hit.to);
   }else if(blocked){
-   p.guardHit=.22;p.energy=Math.max(0,p.energy-(hit.kind==='smash'?30:18));
+   p.guardHit=.22;p.energy=Math.max(0,p.energy-18);
    if(p.energy<=1){p.blocking=false;p.guardBroken=.65;p.stun=.5;p.moveCallout='GUARD BREAK';p.calloutTimer=.8;addImpact(s,contactX,contactY,'break',attacker.facing,1.2,'BREAK!',hit.from);}
    addImpact(s,(p.x+attacker.x)/2,p.y-55,'block',attacker.facing,.8,'GUARD',hit.from);
   }else{
@@ -352,15 +326,15 @@ export function stickBotControls(s,i,c){
  const toward=()=>{c.right=d>0;c.left=d<0;};
  const away=()=>{c.right=d<0;c.left=d>0;};
  if(s.roundTime<1.1){if(dist>125)toward();return c;}
- const threat=q.attack>0&&dist<140&&Math.abs(q.y-p.y)<90;
- if(p.stun<=0&&p.cooldown<.14&&threat&&(q.attackSeq+i*3)%5!==0&&p.energy>12){
+ const threat=(q.attack>0||(q.comboTimer>0&&q.combo>=2&&q.cooldown<.18))&&dist<140&&Math.abs(q.y-p.y)<90;
+ if(p.stun<=0&&p.attack<=0&&threat&&(q.attackSeq+i*3)%5!==0&&p.energy>12){
   c.block=true;
-  if(phase===3||q.attackKind==='smash'){away();} // A short defensive dash, never a teleport.
+  if(phase===3){away();} // A short defensive dash, never a teleport.
   return c;
  }
  if(p.energy<24&&dist<155&&phase<6){c.block=true;if(dist<68&&p.dashCooldown<=0)away();return c;}
  if(p.guardBroken>0||p.stun>0)return c;
- const reach=p.weapon==='staff'?95:p.weapon?83:64;
+ const reach=q.comboTimer>0?88:64;
  if(dist>reach)toward();
  if(dist<48&&phase===2){away();c.block=true;return c;}
  if(dist>185&&p.energy>42&&s.tick%75<3){c.fire=true;return c;}
@@ -369,13 +343,8 @@ export function stickBotControls(s,i,c){
   // Alternate pressure, guard reads, a throw, and the longer heavy strike.
   if(phase===0&&q.cooldown<.12&&p.energy>20){c.left=false;c.right=false;c.block=true;}
   else if(q.blocking&&dist<82&&p.energy>=18)c.fire=true;
-  else if((!p.ground||phase===4||phase===6)&&dist<110)c.down=true;
+  else if((!p.ground||phase===4||phase===6||(dist>76&&q.comboTimer>0))&&dist<110)c.down=true;
   else if(dist<85&&s.tick%7<5){c.attack=true;if(phase===8)c.up=true;}
- }
- // Grab a nearby weapon when it does not require abandoning the fight.
- if(!p.weapon&&dist>130&&!threat){
-  const pickup=s.weapons.filter(w=>w.active&&Math.abs(w.x-p.x)<110).sort((a,b)=>Math.abs(a.x-p.x)-Math.abs(b.x-p.x))[0];
-  if(pickup){c.right=pickup.x>p.x;c.left=pickup.x<p.x;}
  }
  return c;
 }

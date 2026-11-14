@@ -7,9 +7,9 @@ const step=(s,n,c=[])=>{for(let i=0;i<n;i++)s=advanceWorld(s,c);return s;};
 const close=()=>{const s=newWorld('stick-rivals',2);s.weapons=[];s.players[0].x=435;s.players[1].x=495;return s;};
 
 test('terrace fights stay on one floor; a held attack lands all four moves in one second',()=>{
- let s=close();assert.deepEqual(s.platforms,[]);assert.equal(newWorld('stick-rivals',2).weapons.length,3);
+ let s=close();assert.deepEqual(s.platforms,[]);assert.equal(newWorld('stick-rivals',2).weapons.length,0);
  const before=structuredClone(s),kinds=new Set();for(let i=0;i<21;i++){s=advanceWorld(s,[{attack:true},{}]);kinds.add(s.players[0].attackKind);}
- assert.deepEqual([...kinds],['punch','cross','knee','crescent']);assert.equal(s.players[0].hitCombo,4);assert.equal(s.players[1].hp,71);assert.equal(before.players[1].hp,100);assert(s.players[1].y<410,'finisher launches the defender');
+ assert.deepEqual([...kinds],['punch','cross','frontkick','roundhouse']);assert.equal(s.players[0].hitCombo,4);assert.equal(s.players[1].hp,71);assert.equal(before.players[1].hp,100);assert(s.players[1].vx>0,'roundhouse drives the defender backwards');
  const whiff=step(newWorld('stick-rivals',2),20,[{attack:true},{}]);assert.equal(whiff.players[0].hitCombo,0);
 });
 test('a quick attack during recovery is buffered without requiring the button to stay held',()=>{
@@ -44,12 +44,17 @@ test('quick kick, blast and guard taps survive release between server ticks',()=
  }
 });
 
-test('terrace pickups equip finite-use weapons with distinct heavy moves and respawn',()=>{
- for(const [index,kind,move] of [[0,'sword','slash'],[1,'hammer','smash'],[2,'staff','staff']]){
-  let s=newWorld('stick-rivals',2);s.players[0].x=s.weapons[index].x;s.players[1].x=s.players[0].x+80;s=advanceWorld(s,[{},{}]);assert.equal(s.players[0].weapon,kind);assert.equal(s.players[0].weaponUses,6);assert.equal(s.weapons[index].active,false);s=step(s,5,[{down:true},{}]);assert.equal(s.players[0].attackKind,move);assert(s.players[1].hp<100);assert.equal(s.players[0].weaponUses,5);
-  s.players[0].x=350;s.players[1].x=610;s=step(s,270);assert(s.weapons[index].active);assert.equal(s.players[0].weapon,null);
- }
-});
+test('unarmed duels clear equipment from older room snapshots',()=>{const s=close();Object.assign(s.players[0],{weapon:'sword',weaponTimer:10,weaponUses:6});const next=advanceWorld(s,[{},{}]);assert.equal(next.players[0].weapon,null);assert.equal(next.players[0].weaponUses,0);});
 test('a well-timed defensive dash evades a strike, but spends spirit and has a cooldown',()=>{
  let s=close();s=advanceWorld(s,[{attack:true},{left:true,block:true}]);assert.equal(s.players[1].hp,100);assert(s.players[1].dashCooldown>0);assert(s.players[1].energy<100);assert(s.impacts.some(i=>i.kind==='dodge'));
+});
+
+test('leg articulation keeps both support feet planted through stance and weight shifts',async()=>{
+ const {solveStickLeg}=await import('../src/games/stick-kinematics.ts');
+ for(const hipX of [-.35,0,.55])for(const hipY of [2.25,2.48,2.55])for(const footX of [-1.85,1.65]){
+  const dx=footX-hipX,dy=.16-hipY;
+  if(Math.hypot(dx,dy)>3.2)continue;
+  const leg=solveStickLeg(dx,dy),x=1.58*Math.sin(leg.hip)+1.65*Math.sin(leg.hip+leg.knee),y=-1.58*Math.cos(leg.hip)-1.65*Math.cos(leg.hip+leg.knee);
+  assert(Math.abs(x-dx)<1e-8&&Math.abs(y-dy)<1e-8,'moving the pelvis must not drag the support foot');assert(leg.knee<-.3,'the knee stays flexed rather than locking straight');assert(Math.abs(leg.hip+leg.knee+leg.ankle)<1e-8,'the planted sole stays flat');
+ }
 });

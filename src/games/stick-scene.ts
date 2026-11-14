@@ -1,6 +1,7 @@
 import * as T from 'three';
 import {Kit} from './world-kit';
 import {stickEffects} from './stick-effects';
+import {solveStickLeg} from './stick-kinematics';
 
 let terrace:Promise<T.Texture>|undefined;
 export function loadStickTerrace(){
@@ -33,8 +34,6 @@ interface StickRig {
  hipR:T.Group;knR:T.Group;footR:T.Mesh;
  headband:T.Mesh;
  headbandTail:T.Mesh;
- weaponGroup:T.Group;
- weaponMeshes:Record<string,T.Object3D>;
  slashArc:T.Group;
  speedLines:T.Group;
  kiAura:T.Group;
@@ -66,44 +65,11 @@ function makeLimbSegment(rTop:number,rBot:number,len:number,mat:T.Material):T.Gr
  return g;
 }
 
-function buildWeaponMeshes():Record<string,T.Object3D>{
- const sword=new T.Group();
- const hiltMat=new T.MeshStandardMaterial({color:'#1d2436',roughness:.35,metalness:.75});
- const bladeMat=new T.MeshStandardMaterial({color:'#e0ffff',emissive:'#00e5ff',emissiveIntensity:1.25,roughness:.12});
- const hilt=new T.Mesh(new T.CylinderGeometry(.09,.09,.95,8),hiltMat);
- sword.add(hilt);
- const guard=new T.Mesh(new T.BoxGeometry(.7,.15,.24),hiltMat);
- guard.position.y=.44;sword.add(guard);
- const blade=new T.Mesh(new T.BoxGeometry(.18,3.45,.06),bladeMat);
- blade.position.y=2.2;sword.add(blade);
- sword.rotation.z=-Math.PI/2;
- sword.visible=false;
-
- const hammer=new T.Group();
- const shaftMat=new T.MeshStandardMaterial({color:'#3b2d26',roughness:.65});
- const headMat=new T.MeshStandardMaterial({color:'#ff853b',emissive:'#ff3b00',emissiveIntensity:.85,roughness:.25,metalness:.55});
- const shaft=new T.Mesh(new T.CylinderGeometry(.095,.1,3.0,8),shaftMat);
- shaft.position.y=1.15;hammer.add(shaft);
- const mal=new T.Mesh(new T.CylinderGeometry(.6,.6,1.55,12),headMat);
- mal.rotation.z=Math.PI/2;mal.position.y=2.65;hammer.add(mal);
- hammer.rotation.z=-Math.PI/2;
- hammer.visible=false;
-
- const staff=new T.Group();
- const staffMat=new T.MeshStandardMaterial({color:'#ffe866',emissive:'#ffa200',emissiveIntensity:.95,roughness:.2});
- const rod=new T.Mesh(new T.CylinderGeometry(.1,.1,4.6,10),staffMat);
- rod.position.y=.95;staff.add(rod);
- staff.rotation.z=-Math.PI/2+.22;
- staff.visible=false;
-
- return {sword,hammer,staff};
-}
-
 function createStickFighterRig(seat:number,k:Kit):StickRig{
  const pal=STICK_PALETTE[seat%STICK_PALETTE.length];
- const mat=new T.MeshStandardMaterial({color:pal.main,emissive:pal.glow,emissiveIntensity:.48,roughness:.24,metalness:.14});
- const limbMat=new T.MeshStandardMaterial({color:pal.main,emissive:pal.glow,emissiveIntensity:.38,roughness:.28,metalness:.14});
- const cuffMat=new T.MeshStandardMaterial({color:pal.main,emissive:pal.glow,emissiveIntensity:.58,roughness:.22,metalness:.18});
+ const mat=new T.MeshStandardMaterial({color:pal.main,emissive:pal.glow,emissiveIntensity:.16,roughness:.75,metalness:0});
+ const limbMat=new T.MeshStandardMaterial({color:pal.main,emissive:pal.glow,emissiveIntensity:.13,roughness:.75,metalness:0});
+ const cuffMat=new T.MeshStandardMaterial({color:pal.main,emissive:pal.glow,emissiveIntensity:.18,roughness:.7,metalness:0});
  const fistMat=new T.MeshStandardMaterial({color:'#ffffff',emissive:pal.main,emissiveIntensity:.8,roughness:.18});
 
  const root=new T.Group();
@@ -121,6 +87,8 @@ function createStickFighterRig(seat:number,k:Kit):StickRig{
  const torsoMesh=new T.Mesh(torsoGeo,mat);
  torsoMesh.castShadow=true;
  spine.add(torsoMesh);
+ const belt=new T.Mesh(new T.CylinderGeometry(.3,.3,.22,12),new T.MeshStandardMaterial({color:'#161323',roughness:.85}));belt.position.y=.35;spine.add(belt);
+ const beltEnd=new T.Mesh(new T.BoxGeometry(.12,.65,.1),belt.material);beltEnd.position.set(.22,.06,.3);beltEnd.rotation.z=.2;spine.add(beltEnd);
  const chest=new T.Group();chest.position.y=1.1;spine.add(chest);
  const upperTorsoGeo=new T.CylinderGeometry(.32,.27,1.25,12);upperTorsoGeo.translate(0,.625,0);
  const upperTorso=new T.Mesh(upperTorsoGeo,mat);upperTorso.castShadow=true;chest.add(upperTorso);
@@ -132,7 +100,7 @@ function createStickFighterRig(seat:number,k:Kit):StickRig{
  const neck=new T.Group();neck.position.set(0,1.35,0);chest.add(neck);
  const neckBone=new T.Mesh(new T.CapsuleGeometry(.14,.25,4,8),mat);neckBone.position.y=.1;neck.add(neckBone);
  const head=new T.Group();head.position.set(0,.17,0);neck.add(head);
- const headBall=new T.Mesh(new T.SphereGeometry(.86,22,18),mat);
+ const headBall=new T.Mesh(new T.SphereGeometry(.64,22,18),mat);
  headBall.castShadow=true;
  head.add(headBall);
 
@@ -140,21 +108,21 @@ function createStickFighterRig(seat:number,k:Kit):StickRig{
  const eyeMat=new T.MeshBasicMaterial({color:'#ffffff'});
  for(const ez of [-.27,.27]){
   const eye=new T.Mesh(new T.BoxGeometry(.18,.12,.22),eyeMat);
-  eye.position.set(.78,.14,ez);
+  eye.position.set(.56,.12,ez*.7);
   eye.rotation.x=ez>0?-.22:.22;
   head.add(eye);
  }
 
  // Flowing 2-segment ninja headband
- const bandGeo=new T.BoxGeometry(1.45,.22,.2);
- bandGeo.translate(-.72,0,0);
+ const bandGeo=new T.BoxGeometry(.65,.17,.15);
+ bandGeo.translate(-.32,0,0);
  const headband=new T.Mesh(bandGeo,fistMat);
  headband.position.set(-.6,.26,0);
- head.add(headband);
- const tailGeo=new T.BoxGeometry(1.15,.16,.14);
- tailGeo.translate(-.57,0,0);
+ head.add(headband);headband.visible=false;
+ const tailGeo=new T.BoxGeometry(.4,.12,.1);
+ tailGeo.translate(-.2,0,0);
  const headbandTail=new T.Mesh(tailGeo,fistMat);
- headbandTail.position.set(-1.35,0,0);
+ headbandTail.position.set(-.6,0,0);
  headband.add(headbandTail);
 
  // Rear Arm (shL -> elL -> fistL)
@@ -162,7 +130,7 @@ function createStickFighterRig(seat:number,k:Kit):StickRig{
  shL.add(makeLimbSegment(.21,.19,1.28,limbMat));
  const elL=new T.Group();elL.position.set(0,-1.28,0);shL.add(elL);
  elL.add(makeLimbSegment(.19,.26,1.25,cuffMat));
- const fistL=new T.Mesh(new T.SphereGeometry(.35,12,10),fistMat);
+ const fistL=new T.Mesh(new T.SphereGeometry(.25,12,10),mat);
  const wristL=new T.Group();wristL.position.set(0,-1.28,0);elL.add(wristL);wristL.add(fistL);
 
  // Lead Arm (shR -> elR -> fistR)
@@ -170,30 +138,24 @@ function createStickFighterRig(seat:number,k:Kit):StickRig{
  shR.add(makeLimbSegment(.21,.19,1.28,limbMat));
  const elR=new T.Group();elR.position.set(0,-1.28,0);shR.add(elR);
  elR.add(makeLimbSegment(.19,.26,1.25,cuffMat));
- const fistR=new T.Mesh(new T.SphereGeometry(.36,12,10),fistMat);
+ const fistR=new T.Mesh(new T.SphereGeometry(.26,12,10),mat);
  const wristR=new T.Group();wristR.position.set(0,-1.28,0);elR.add(wristR);wristR.add(fistR);
-
- // Weapon socket on lead hand
- const weaponGroup=new T.Group();
- wristR.add(weaponGroup);
- const weaponMeshes=buildWeaponMeshes();
- Object.values(weaponMeshes).forEach(w=>weaponGroup.add(w));
 
  // Rear Leg (hipL -> knL -> footL) with flared martial arts shin cuff (like @draww.master)
  const hipL=new T.Group();hipL.position.set(0,0,-.3);hip.add(hipL);
  hipL.add(makeLimbSegment(.24,.21,1.58,limbMat));
  const knL=new T.Group();knL.position.set(0,-1.58,0);hipL.add(knL);
  knL.add(makeLimbSegment(.21,.36,1.62,cuffMat));
- const footL=new T.Mesh(new T.BoxGeometry(.75,.28,.44),fistMat);
- const ankleL=new T.Group();ankleL.position.set(0,-1.65,0);knL.add(ankleL);footL.position.set(.18,0,0);ankleL.add(footL);
+ const footL=new T.Mesh(new T.CapsuleGeometry(.15,.32,4,8),mat);
+ const ankleL=new T.Group();ankleL.position.set(0,-1.65,0);knL.add(ankleL);footL.position.set(.18,0,0);ankleL.add(footL);footL.rotation.z=Math.PI/2;
 
  // Lead Leg (hipR -> knR -> footR) with flared martial arts shin cuff
  const hipR=new T.Group();hipR.position.set(0,0,.3);hip.add(hipR);
  hipR.add(makeLimbSegment(.24,.21,1.58,limbMat));
  const knR=new T.Group();knR.position.set(0,-1.58,0);hipR.add(knR);
  knR.add(makeLimbSegment(.21,.36,1.62,cuffMat));
- const footR=new T.Mesh(new T.BoxGeometry(.75,.28,.44),fistMat);
- const ankleR=new T.Group();ankleR.position.set(0,-1.65,0);knR.add(ankleR);footR.position.set(.18,0,0);ankleR.add(footR);
+ const footR=new T.Mesh(new T.CapsuleGeometry(.15,.32,4,8),mat);
+ const ankleR=new T.Group();ankleR.position.set(0,-1.65,0);knR.add(ankleR);footR.position.set(.18,0,0);ankleR.add(footR);footR.rotation.z=Math.PI/2;
 
  // Calligraphic Martial Arts Smear Arc (Outer Neon + Inner White Crescent)
  const slashArc=new T.Group();
@@ -253,7 +215,7 @@ function createStickFighterRig(seat:number,k:Kit):StickRig{
 
  return {
   root,hip,spine,chest,neck,wristL,wristR,ankleL,ankleR,head,shL,elL,fistL,shR,elR,fistR,hipL,knL,footL,hipR,knR,footR,
-  headband,headbandTail,weaponGroup,weaponMeshes,slashArc,speedLines,kiAura,
+  headband,headbandTail,slashArc,speedLines,kiAura,
   ghosts,ghostHistory:[],joints,
   lastSeq:0,poseKind:'punch',poseTimer:0,poseDuration:.36,tumbleAngle:0,
   prevVx:0,prevVy:0,koAge:0,stride:0,flipTimer:0,wasFlipping:false
@@ -330,18 +292,7 @@ function stepRigPhysics(rig:StickRig,p:any,dt:number,t:number){
   // A tiny wind-up, fast extension, then an elastic follow-through and return.
   const snap=rawU<.10?-.16*Math.sin(rawU/.10*Math.PI):rawU<.30?Math.sin((rawU-.10)/.20*Math.PI/2):Math.pow(1-(rawU-.30)/.70,.65);
 
-  if(kind==='smash'){
-   const swing=rawU<.25?0:Math.min(1,(rawU-.25)/.25);
-   J.spine.target=-.25+1.1*swing;J.head.target=-.25;
-   J.shR.target=2.9-1.8*swing;J.elR.target=.25;J.shL.target=2.6-1.5*swing;J.elL.target=.5;
-   J.hipR.target=.72;J.knR.target=-.7;J.hipL.target=-.6;J.knL.target=-.2;targetHipY=3.15-.45*swing;
-  }else if(kind==='slash'){
-   J.spine.target=.5*snap;J.head.target=-.2;J.shR.target=2.6-1.7*rawU;J.elR.target=.1;
-   J.shL.target=-.5;J.elL.target=1.4;J.hipR.target=.8;J.knR.target=-.65;J.hipL.target=-.75;J.knL.target=-.12;targetHipY=2.85;
-  }else if(kind==='staff'){
-   J.spine.target=.44*snap;J.head.target=-.18;J.shR.target=1.6*snap;J.elR.target=.05;J.shL.target=1.25*snap;J.elL.target=.5;
-   J.hipR.target=.85;J.knR.target=-.75;J.hipL.target=-.8;J.knL.target=-.1;targetHipY=2.8;
-  }else if(kind==='punch'){
+  if(kind==='punch'){
    // 1. Lunging Straight Body/Face Jab (Image 1 #1 & Image 3 #1-2)
    J.spine.target=.42*snap;
    J.head.target=-.18*snap;
@@ -361,16 +312,13 @@ function stepRigPhysics(rig:StickRig,p:any,dt:number,t:number){
    J.hipL.target=-.72*snap-.25;J.knL.target=-.12;
    targetHipY=3.28-.38*snap;
    targetHipX=.62*snap;
-  }else if(kind==='knee'){
-   // 5. Flying Chambered Knee Strike (Image 1 #5)
-   J.spine.target=-.18*snap;
-   J.head.target=.15*snap;
-   J.shR.target=-.65*snap;J.elR.target=1.15;
-   J.shL.target=-.88*snap;J.elL.target=1.05;
-   J.hipR.target=2.22*snap;J.knR.target=-2.08*snap;
-   J.hipL.target=-.55*snap;J.knL.target=-.65*snap;
-   targetHipY=3.65;
-   targetHipX=.45*snap;
+  }else if(kind==='frontkick'||kind==='knee'){
+   // Chamber the knee, snap the lower leg out, then pull it back before landing.
+   const extension=Math.sin(clamp((rawU-.12)/.68,0,1)*Math.PI);
+   J.spine.target=-.2*extension;J.head.target=.16;
+   J.shR.target=.95;J.elR.target=1.45;J.shL.target=-.35;J.elL.target=1.8;
+   J.hipR.target=2.15-extension*.55;J.knR.target=-2.35*(1-extension);
+   J.hipL.target=-.05;J.knL.target=-.1;targetHipY=3.25;targetHipX=.2*extension;
   }else if(kind==='crescent'){
    // 8. Vertical 180° Crescent Split KO Kick (Image 1 bottom-right "KO" & Image 3 Kick #4)
    J.spine.target=-.46*snap;
@@ -465,15 +413,15 @@ function stepRigPhysics(rig:StickRig,p:any,dt:number,t:number){
   J.hipL.target=rising?-.65:-.35;J.knL.target=rising?-.75:-.45;
   targetHipY=3.35;
  }else if(speed>12){
-  // Anime Ninja Forward Sprint (Image 2 Panels 5, 16, 28, 46)
+  // Guarded shuffle: foot placement drives the knees, while the hands stay ready.
   const isDash=(p.dashTimer||0)>0;
   const s1=Math.sin(runCycle),c1=Math.cos(runCycle);
-  J.spine.target=(isDash?.64:.42)+Math.abs(s1)*.08;
+  J.spine.target=(isDash?.38:.15)+Math.abs(s1)*.04;
   J.head.target=isDash?-.32:-.18;
-  J.shR.target=isDash?-.95:(-s1*1.05+.25);J.elR.target=isDash?.35:(1.2+c1*.25);
-  J.shL.target=isDash?-1.1:(s1*1.05+.25);J.elL.target=isDash?.35:(1.2-c1*.25);
-  J.hipR.target=s1*1.08;J.knR.target=s1<0?s1*1.25:-.22;
-  J.hipL.target=-s1*1.08;J.knL.target=-s1<0?-s1*1.25:-.22;
+  J.shR.target=1.0+s1*.14;J.elR.target=1.38+c1*.12;
+  J.shL.target=-.38-s1*.12;J.elL.target=1.75-c1*.1;
+  J.hipR.target=s1*.78;J.knR.target=s1<0?s1*1.25:-.22;
+  J.hipL.target=-s1*.78;J.knL.target=-s1<0?-s1*1.25:-.22;
   targetHipY=3.12+Math.abs(c1)*.28;
  }else{
   // Iconic Wide-Stance Martial Arts Guard Idle (Image 1 top-left "VS")
@@ -482,12 +430,17 @@ function stepRigPhysics(rig:StickRig,p:any,dt:number,t:number){
   J.spine.target=.16+b*.05;
   J.head.target=-.08-b*.04;
   J.shR.target=.92+b*.12;J.elR.target=1.38;
-  J.shL.target=.52-b*.12;J.elL.target=1.68;
+  J.shL.target=-.42-b*.08;J.elL.target=1.9;
   J.hipR.target=.56+Math.sin(t*1.9)*.06;J.knR.target=-.4-b*.08;
   J.hipL.target=-.52+Math.sin(t*1.9)*.05;J.knL.target=-.22+b*.06;
   targetHipY=3.15+b*.12;
  }
 
+ const hurtNow=(p.hurtTimer||0)>0;
+ if(p.ground&&p.hp>0){
+  targetHipY=p.blocking?2.25-(p.guardHit||0)*.5:hurtNow?2.25:inPose?Math.min(targetHipY,2.55):2.48+Math.sin(t*3.8)*.045;
+  if(speed>12&&!inPose&&!p.blocking)targetHipY=2.48+Math.abs(Math.sin(runCycle))*.12;
+ }
  // Secondary joints distribute a strike through the whole body instead of one rigid torso.
  const hurt=(p.hurtTimer||0)>0,breath=Math.sin(t*3.8)*.035;
  J.chest.target=J.spine.target*(hurt?-.45:inPose?.28:-.18)+breath;
@@ -495,7 +448,7 @@ function stepRigPhysics(rig:StickRig,p:any,dt:number,t:number){
  J.wristL.target=-(J.shL.target+J.elL.target)*.10+Math.sin(t*4)*.06;
  J.wristR.target=-(J.shR.target+J.elR.target)*.10+(inPose?Math.sin((1-rig.poseTimer/rig.poseDuration)*Math.PI*2)*.22:Math.sin(t*4+.7)*.06);
  J.ankleL.target=-(J.hipL.target+J.knL.target)*.85;
- J.ankleR.target=inPose&&['kick','crescent','divekick'].includes(kind)?.28:-(J.hipR.target+J.knR.target)*.85;
+ J.ankleR.target=inPose&&['kick','crescent','roundhouse','frontkick','divekick'].includes(kind)?.28:-(J.hipR.target+J.knR.target)*.85;
  if(p.hp<=0){J.chest.target=-.08;J.neck.target=.2;J.wristL.target=.45;J.wristR.target=-.35;J.ankleL.target=.18;J.ankleR.target=-.2;}
  rig.hip.position.y=T.MathUtils.lerp(rig.hip.position.y,targetHipY,Math.min(1,dt*18));
  rig.hip.position.x=T.MathUtils.lerp(rig.hip.position.x,targetHipX,Math.min(1,dt*18));
@@ -514,6 +467,26 @@ function stepRigPhysics(rig:StickRig,p:any,dt:number,t:number){
   else{j.vel+=(j.target-j.angle)*(secondary?330:stiffness)*dt;j.vel*=Math.exp(-(secondary?14:damping)*dt);j.angle+=j.vel*dt;}
  }
 
+ // Plant each support foot, then solve its thigh, knee and ankle around the moving pelvis.
+ // During a step the rear foot lifts and folds; during a kick only the support leg is planted.
+ if(p.ground&&p.hp>0){
+  const moving=speed>12&&!inPose&&!hurtNow&&(!p.blocking||(p.dashTimer||0)>0);
+  const foot=(offset:number)=>{
+   if(!moving)return {x:offset===0?1.65:-1.85,y:.16};
+   const phase=((rig.stride/(Math.PI*2)+offset)%1+1)%1;
+   if(phase<.62)return {x:2.15-phase/.62*4.3,y:.16};
+   const u=(phase-.62)/.38,e=u*u*(3-2*u);
+   return {x:-2.15+e*4.3,y:.16+Math.sin(u*Math.PI)*1.05};
+  };
+  const plant=(side:'L'|'R',offset:number)=>{
+   const f=foot(offset),leg=solveStickLeg(f.x-rig.hip.position.x,f.y-rig.hip.position.y,1.58,1.65,side==='L'&&!moving?-1:1);
+   J[side==='L'?'hipL':'hipR'].angle=leg.hip;
+   J[side==='L'?'knL':'knR'].angle=leg.knee;
+   J[side==='L'?'ankleL':'ankleR'].angle=leg.ankle;
+  };
+  plant('L',.5);
+  if(!inPose||!['kick','roundhouse','frontkick','sweep','crescent'].includes(kind))plant('R',0);
+ }
  // Apply rotations (note: positive J.spine.angle = forward lean -> negative rotation.z in local space)
  rig.spine.rotation.z=-J.spine.angle-(p.lean||0)*.35;
  rig.chest.rotation.z=-J.chest.angle;rig.neck.rotation.z=-J.neck.angle;
@@ -527,7 +500,7 @@ function stepRigPhysics(rig:StickRig,p:any,dt:number,t:number){
 
  // Cartoon Impact Scaling on Striking Limb (Fist or Foot)
  const punchStrike=inPose&&(kind==='punch'||kind==='cross'||kind==='uppercut');
- const kickStrike=inPose&&['kick','sweep','divekick','crescent'].includes(kind);
+ const kickStrike=inPose&&['kick','sweep','divekick','crescent','frontkick','roundhouse'].includes(kind);
  rig.fistR.scale.setScalar(punchStrike&&kind!=='cross'?1.65:1);
  rig.fistL.scale.setScalar(punchStrike&&kind==='cross'?1.65:1);
  rig.footR.scale.setScalar(kickStrike?1.55:1);
@@ -536,11 +509,6 @@ function stepRigPhysics(rig:StickRig,p:any,dt:number,t:number){
  // Flowing 2-stage ninja headband physics
  rig.headband.rotation.z=Math.sin(t*15)*.24+clamp(vy*.002,-.5,.5);
  rig.headbandTail.rotation.z=Math.cos(t*15-.8)*.32;
-
- // Weapon visibility
- for(const [kName,mesh] of Object.entries(rig.weaponMeshes)){
-  mesh.visible=p.weapon===kName&&p.hp>0;
- }
 
  // Calligraphic Smear Arc (Image 1, 3, 4)
  const outerMat=(rig.slashArc.children[0] as T.Mesh).material as T.MeshBasicMaterial;
@@ -557,14 +525,14 @@ function stepRigPhysics(rig:StickRig,p:any,dt:number,t:number){
    rig.slashArc.position.set(1.45,4.4,.55);
    rig.slashArc.rotation.set(0,0,.45);
    rig.slashArc.scale.set(1.45,1.55,1);
-  }else if(kind==='kick'||kind==='divekick'){
+  }else if(kind==='kick'||kind==='divekick'||kind==='frontkick'||kind==='roundhouse'){
    rig.slashArc.position.set(1.65,4.1,.55);
    rig.slashArc.rotation.set(0,0,-.25);
    rig.slashArc.scale.set(1.3,1.25,1);
   }else{
    rig.slashArc.position.set(1.85,4.4,.55);
    rig.slashArc.rotation.set(0,0,0);
-   rig.slashArc.scale.set(p.weapon?1.35:1,.38,1);
+   rig.slashArc.scale.set(1,.38,1);
   }
  }else{
   outerMat.opacity=0;
@@ -573,7 +541,7 @@ function stepRigPhysics(rig:StickRig,p:any,dt:number,t:number){
 
  // Speed lines & Ki Aura visibility
  rig.speedLines.visible=Boolean((p.dashTimer||0)>0||(inPose&&(kind==='divekick'||kind==='knee')));
- rig.kiAura.visible=Boolean(p.hp>0&&p.charging);
+ rig.kiAura.visible=Boolean(p.hp>0&&inPose&&kind==='blast');
  if(rig.kiAura.visible){
   rig.kiAura.scale.set(1+Math.sin(t*28)*.12,1+Math.cos(t*24)*.15,1);
  }
@@ -583,7 +551,7 @@ function stepRigPhysics(rig:StickRig,p:any,dt:number,t:number){
  const transforms:{rotation:number;x:number;y:number}[]=[];rig.hip.traverse(node=>transforms.push({rotation:node.rotation.z,x:node.position.x,y:node.position.y}));
  rig.ghostHistory.unshift({x:wx,y:wy,facing,transforms});
  if(rig.ghostHistory.length>12)rig.ghostHistory.pop();
- const showGhosts=Boolean(p.hp>0&&((p.dashTimer||0)>0||inPose&&['divekick','knee','crescent','throw','slash','smash'].includes(kind)));
+ const showGhosts=Boolean(p.hp>0&&((p.dashTimer||0)>0||inPose&&['divekick','frontkick','roundhouse','throw'].includes(kind)));
  rig.ghosts.forEach((g,idx)=>{
   const sample=rig.ghostHistory[(idx+1)*3];
   g.visible=Boolean(showGhosts&&sample);
@@ -603,11 +571,12 @@ export function stickScene(k:Kit,s:any,terraceTexture:T.Texture):((state:any,dt:
  k.scene.userData.stickBlood=true;
  k.scene.userData.reducedMotion=matchMedia('(prefers-reduced-motion: reduce)').matches;
  const effects=stickEffects(k);
- const weaponPickups=new Map<number,T.Group>();
  const beamMeshes=new Map<number,T.Group>();
 
  const rigs=s.players.map((_:any,i:number)=>{
   const r=createStickFighterRig(i,k);
+  r.root.position.set(W(s.players[i].x),FY(s.players[i].y),0);
+  for(let frame=0;frame<18;frame++)stepRigPhysics(r,s.players[i],1/60,0);
   k.dynamic.add(r.root);
   return r;
  });
@@ -655,36 +624,6 @@ export function stickScene(k:Kit,s:any,terraceTexture:T.Texture):((state:any,dt:
   const state=freeze>0?heldState:input,poseDt=freeze>0?0:dt;
   freeze=Math.max(0,freeze-dt);
   k.scene.userData.stickShake=Math.max(0,(k.scene.userData.stickShake||0)-dt);
-  // Update Weapon Pickups
-  weaponPickups.forEach((m,id)=>{if(!(state.weapons||[]).some((w:any)=>w.id===id)){m.removeFromParent();m.traverse(n=>{if(n instanceof T.Mesh){n.geometry.dispose();(Array.isArray(n.material)?n.material:[n.material]).forEach(mat=>mat.dispose());}});weaponPickups.delete(id);}else m.visible=false;});
-  for(const w of state.weapons||[]){
-   if(!w.active)continue;
-   let m=weaponPickups.get(w.id);
-   if(!m){
-    m=new T.Group();
-    const ring=new T.Mesh(
-     new T.RingGeometry(1.4,1.65,28),
-     new T.MeshBasicMaterial({color:'#ffe45e',side:T.DoubleSide,transparent:true,opacity:.85})
-    );
-    m.add(ring);
-    const meshes=buildWeaponMeshes();
-    Object.entries(meshes).forEach(([kName,obj])=>{
-     obj.visible=true;obj.scale.setScalar(.85);
-     obj.position.set(0,-.4,0);obj.rotation.z=-Math.PI/4;
-     m!.userData[kName]=obj;
-     m!.add(obj);
-    });
-    k.dynamic.add(m);
-    weaponPickups.set(w.id,m);
-   }
-   m.visible=true;
-   m.position.set(W(w.x),FY(w.y)+2.1+Math.sin(t*4+w.id)*.28,.4);
-   m.rotation.z=Math.sin(t*2+w.id)*.10;
-   for(const kName of ['sword','hammer','staff']){
-    if(m.userData[kName])m.userData[kName].visible=w.kind===kName;
-   }
-  }
-
   // Update Ki Energy Beams (s.beams — Image 2 Panels 14-15, 34-35, 44-45)
   beamMeshes.forEach((m,id)=>{if(!(state.beams||[]).some((b:any)=>b.id===id)){m.removeFromParent();m.traverse(n=>{if(n instanceof T.Mesh){n.geometry.dispose();(Array.isArray(n.material)?n.material:[n.material]).forEach(mat=>mat.dispose());}});beamMeshes.delete(id);}else m.visible=false;});
   for(const b of state.beams||[]){
@@ -744,7 +683,7 @@ export function stickScene(k:Kit,s:any,terraceTexture:T.Texture):((state:any,dt:
    shadows[i].scale.set((p.hp<=0?8:6)*spread,.8*spread,1);
    shadows[i].material.opacity=.68/(1+altitude*.17);
 
-   guards[i].visible=Boolean(p.blocking&&p.hp>0);
+   guards[i].visible=Boolean(((p.guardHit||0)>0||(p.parryPose||0)>0)&&p.hp>0);
    guards[i].position.set(wx+p.facing*.25,wy+4.35,.5);
    const guardScale=1+Math.sin(t*18)*.015+(p.guardHit||0)*.4;
    guards[i].scale.set(p.facing*guardScale,guardScale,1);

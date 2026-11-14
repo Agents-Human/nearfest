@@ -33,7 +33,6 @@ test('fighter kicks spend more energy and reach farther than punches',()=>{
  const s=newWorld('stick-rivals',2);s.players[0].x=410;s.players[1].x=495;const punch=advance(s,7,[{attack:true},{}]),kick=advance(s,7,[{down:true},{}]);assert.equal(punch.players[1].hp,100);assert(kick.players[1].hp<100);assert(kick.players[0].energy<punch.players[0].energy);
  const upper=newWorld('stick-rivals',2);upper.players[0].x=435;upper.players[1].x=495;const launched=advance(upper,6,[{up:true,attack:true},{}]);assert(launched.players[1].hp<100);assert(launched.players[1].y<410,'rising uppercut launches rival into the air');
  const dive=newWorld('stick-rivals',2);Object.assign(dive.players[0],{x:410,y:320,ground:false,vy:-60});dive.players[1].x=485;const slammed=advance(dive,8,[{down:true},{}]);assert(slammed.players[1].hp<100,'airborne meteor divekick connects on descent');
- const armory=newWorld('stick-rivals',2);armory.weapons=[{id:0,x:480,y:410,kind:'sword',active:true}];Object.assign(armory.players[0],{x:armory.weapons[0].x,y:armory.weapons[0].y});const armed=advance(armory,2,[{},{}]);assert(armed.players[0].weapon,'stepping onto an arena weapon equips it');
  const judo=newWorld('stick-rivals',2);judo.players[0].x=435;judo.players[1].x=495;const thrown=advance(judo,4,[{fire:true},{}]);assert.equal(thrown.players[0].attackKind,'throw');assert(thrown.players[1].hp<100&&thrown.players[1].y<410,'close-range F performs a judo overhead throw');
  const beam=newWorld('stick-rivals',2);beam.players[0].x=320;beam.players[1].x=520;const blasted=advance(beam,12,[{fire:true},{}]);assert.equal(blasted.players[0].attackKind,'blast');assert(blasted.players[1].hp<100,'ranged F fires a Ki energy beam across the stage');
 });
@@ -49,7 +48,7 @@ test('marble bumpers reward steering or jumping, while coins provide sustained a
 test('fighter practice rewards movement, defense and counterattacks over standing and mashing',()=>{
  const duel=smart=>{let s=newWorld('stick-rivals',2);for(let t=0;t<1200&&!s.finished;t++){
   const p=s.players[0],q=s.players[1],d=q.x-p.x,dist=Math.abs(d);
-  const c=smart?{right:d>62,left:d< -62,attack:dist<86,down:dist<110&&q.cooldown>.16,fire:(q.blocking&&dist<85)||(dist>140&&p.energy>45),block:q.attack>0&&q.attackKind!=='punch'&&p.cooldown<=0}:{attack:true};
+  const c=smart?{right:d>62,left:d< -62,attack:dist<82&&!q.blocking,down:dist>76&&dist<110,fire:(q.blocking&&dist<85)||(dist>140&&p.energy>45),block:q.attack>0&&p.attack<=0&&dist<135}:{attack:true};
   if(c.block)c.left=c.right=false;s=advanceWorld(s,[c,worldBot(s,1)]);
  }return s;};
  const mash=duel(false),tactics=duel(true);assert(mash.finished&&tactics.finished);assert(mash.scores[0]<mash.scores[1],'stationary button mashing should be punishable');assert(tactics.scores[0]>tactics.scores[1],'simple movement, guard and counters can win');
