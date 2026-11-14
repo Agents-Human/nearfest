@@ -2,13 +2,14 @@ import './stick-fight.css';
 
 export function StickFightBanner({player,seat}:{player:any;rival?:any;seat:number|null}){
  return <div className="stick-status-bar">
-  <span><i className={`stick-dot ${seat===1?'is-crimson':''}`}/>{seat===null?'WATCHING THE DUEL':seat===1?'YOU ARE CRIMSON':'YOU ARE CYAN'}</span>
+  <span><i className={`stick-dot ${seat===1?'is-shadow':''}`}/>{seat===null?'WATCHING THE DUEL':seat===1?'YOU ARE SHADOW':'YOU ARE BLUE'}</span>
   <b>{player?.guardBroken>0?'GUARD BROKEN':player?.charging?'RECHARGING SPIRIT':player?.calloutTimer>0?player.moveCallout:'CLOSE THE GAP. MAKE IT COUNT.'}</b>
   <span className="stick-energy-label">SPIRIT <strong>{Math.round(player?.energy??100)}%</strong></span>
  </div>;
 }
 
 export function StickFightFeedback({state,seat}:{state:any;seat:number|null}){
+ if(state.finished)return null;
  const p=state.players[seat??0],combo=p?.hitCombo||0;
  const last=(state.impacts||[]).filter((i:any)=>i.kind==='parry'&&i.owner===(seat??0)).at(-1);
  return <div className="stick-feedback" aria-live="polite" aria-atomic="true">

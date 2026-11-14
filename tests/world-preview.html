@@ -14,6 +14,7 @@ body{margin:0;background:#142b32;color:#e8f0e0;font:13px system-ui}header{displa
 <script type="module">
 // Local-only harness: production rendering and simulation, no account or wallet calls.
 import {WorldRenderer} from '/src/games/world-renderer.ts';
+import {StickRenderer} from '/src/games/stick-renderer.ts';
 import {newWorld,advanceWorld,worldBot,worldAction,worldIds} from '/server/arcade/world.mjs';
 import {PLATFORM_CHARACTERS} from '/shared/platform-options.mjs';
 import {resetGolfHole,golfCourses} from '/server/arcade/golf-courses.mjs';
@@ -36,8 +37,9 @@ async function start(){
    {id:901,kind:'slime',label:'slime',platformId:0,offsetX:390,minOffset:200,maxOffset:420,baseOffsetY:-20,x:390,y:440,vx:-46,vy:0,speed:46,flying:false,phase:0,facing:-1,alive:true}];
  }
  if(controlMode.value==='storm')for(let i=0;i<6;i++)state=advanceWorld(state,state.players.map(()=>({attack:true})));
- const assets=await WorldRenderer.prepare(select.value);if(current!==generation)return;
- engine=new WorldRenderer(host,state,0,m=>{metric.textContent=`${m.fps} FPS · ${m.drawCalls} draws · p95 ${m.frameP95.toFixed(1)} ms`;document.querySelector('#resources').textContent=`GPU resources: ${m.geometries} geometries · ${m.textures} textures · ${m.triangles.toLocaleString()} triangles`;},assets);
+ const Renderer=select.value==='stick-rivals'?StickRenderer:WorldRenderer;
+ const assets=await Renderer.prepare(select.value);if(current!==generation)return;
+ engine=new Renderer(host,state,0,m=>{metric.textContent=`${m.fps} FPS · ${m.drawCalls} draws · p95 ${m.frameP95.toFixed(1)} ms`;document.querySelector('#resources').textContent=`GPU resources: ${m.geometries} geometries · ${m.textures} textures · ${m.triangles.toLocaleString()} triangles`;},assets);
  engine.setAim(0,.65);paused=controlMode.value==='storm';document.querySelector('#pause').textContent=paused?'Resume simulation':'Pause simulation';
  status.textContent=`${state.game} · ${state.elapsed.toFixed(1)}s · ${paused?'Storm preview · resume to play':'Playing'}`;
 }

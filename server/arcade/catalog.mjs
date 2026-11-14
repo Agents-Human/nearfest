@@ -8,7 +8,7 @@ const rows=[
  ['marble-run','Marble Skyway','Racing',2,4,120,'Roll along a floating skyway. Steer for coins, hop the gaps and race your friends to the finish.'],
  ['tank-arena','Toy Tank Arena','Action',2,4,120,'Drive, find cover and fire. Your turret helps you aim. Smash crates, bounce shots and be first to five knockouts.'],
  ['pocket-racers','Pocket Racers','Racing',2,4,120,'An endless arcade road trip through the coast, red-rock canyons, alpine passes and a neon city. Launch off ramps, climb hills, cross river bridges and battle through traffic with drift boosts and pulse shots. Your crew sets the timer; whoever leads at zero wins.'],
- ['stick-rivals','Yokai Duel','Action',2,2,180,'Unarmed karate stick fighting on the original vampire terrace. Chain punches and kicks, read your rival, block, parry and counter. Flexible fighters, heavy impacts and a tougher opponent. First to two rounds.'],
+ ['stick-rivals','Yokai Duel','Action',2,2,180,'2D unarmed karate stick fighting on the original vampire terrace. Chain punches and kicks, read your rival, block, parry and counter. Flexible fighters, heavy impacts and a tougher opponent. First to two rounds.'],
  ['paddle-duel','Paddle Duel','Sports',2,2,180,'Move your paddle, read the bounce. First to seven.'],
  ['air-hockey','Air Hockey','Sports',2,2,180,'Guard your goal and strike the puck. First to five.'],
  ['snake-arena','Snake Arena','Action',2,6,300,'Claim the fixed food trail. Outlast the other snakes.'],

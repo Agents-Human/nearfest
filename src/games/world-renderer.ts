@@ -11,14 +11,13 @@ import type {RacingAssets} from './racing-assets';
 import type {RaceSceneryAssets} from './race-scenery';
 import {raceScene} from './race-scene';
 import {tankScene} from './tank-scene';
-import {stickScene,loadStickTerrace} from './stick-scene';
 import {roadCenter,roadHeight,roadSlope} from '../../server/arcade/race-course.mjs';
 import type {PlatformAssets} from './platform-assets';
 import type {SceneryAssets} from './scenery-assets';
 import type {ActionAssets} from './action-assets';
 import type {GolfAssets} from './golf-assets';
 import {golfCourses} from '../../server/arcade/golf-courses.mjs';
-type WorldAssets={terrace?:T.Texture;soccer?:SoccerAssets;cats?:CatAssets;racing?:RacingAssets;raceScenery?:RaceSceneryAssets;platform?:PlatformAssets;scenery?:SceneryAssets;action?:ActionAssets;golf?:GolfAssets};
+type WorldAssets={soccer?:SoccerAssets;cats?:CatAssets;racing?:RacingAssets;raceScenery?:RaceSceneryAssets;platform?:PlatformAssets;scenery?:SceneryAssets;action?:ActionAssets;golf?:GolfAssets};
 import {car,explorer,tree,rock,crystal,coin,island,sign,palette} from './world-models';
 
 type State=any;
@@ -270,8 +269,8 @@ export class WorldRenderer {
  private shadowOffset=new T.Vector3(-25,65,30);private shadowRight=new T.Vector3(30,0,25).normalize();private shadowUp=new T.Vector3().crossVectors(this.shadowOffset,this.shadowRight).normalize();
  private mode='follow';private seat:number|null;private game:string;private sun:T.DirectionalLight;private visible=true;private observer:IntersectionObserver;private ratio=1;private framesLow=0;private disposed=false;
  constructor(private host:HTMLElement,state:State,seat:number|null,private metrics:(m:WorldMetrics)=>void,assets:WorldAssets={}){
-  this.seat=seat;this.game=state.game;this.host.dataset.assetPack=state.game==='stick-rivals'?'craftpix-yokai':state.game==='cat-defense'?'craftpix-cat-defense':Object.keys(assets).length?'kenney':'original';if(['stick-rivals','cat-defense','bridge-builders','pocket-soccer','tank-arena'].includes(state.game))this.fighterCamera=new T.OrthographicCamera(-35,35,20,-20,.1,200);this.renderer=new T.WebGLRenderer({antialias:true,alpha:false,powerPreference:'high-performance'});const environment=new RoomEnvironment(),pmrem=new T.PMREMGenerator(this.renderer);this.environment=pmrem.fromScene(environment,.04);this.k.scene.environment=this.environment.texture;this.k.scene.environmentIntensity=['air-hockey','paddle-duel','orbit-rescue'].includes(state.game)?.55:.3;environment.dispose();pmrem.dispose();this.renderer.outputColorSpace=T.SRGBColorSpace;this.renderer.toneMapping=T.ACESFilmicToneMapping;this.renderer.toneMappingExposure=.95;this.renderer.shadowMap.enabled=true;this.renderer.shadowMap.type=T.PCFShadowMap;this.ratio=Math.min(devicePixelRatio,1.6);this.renderer.setPixelRatio(this.ratio);host.appendChild(this.renderer.domElement);this.renderer.domElement.setAttribute('aria-label',state.game==='stick-rivals'?'Animated Yokai fighting arena':state.game==='cat-defense'?'Cat Defense street battle':state.game==='pocket-soccer'?'3D soccer stadium':state.game==='bridge-builders'?'3D bridge ravine':state.game==='tank-arena'?'Toy tank tabletop arena':'3D game environment');this.sun=this.k.light(['pocket-soccer','air-hockey','paddle-duel','orbit-rescue'].includes(this.game));
-  const scenes:Record<string,(k:Kit,s:State)=>Step>={'bridge-builders':bridgeScene,'pocket-soccer':(kit,state)=>soccerScene(kit,state,assets.soccer!),'cat-defense':(kit,state)=>catsScene(kit,state,assets.cats!),'pocket-racers':(kit,state)=>raceScene(kit,state,assets.racing,assets.raceScenery),'platform-relay':(kit,state)=>platformScene(kit,state,assets.platform),'stick-rivals':(kit,state)=>stickScene(kit,state,assets.terrace!),'tank-arena':(kit,state)=>tankScene(kit,state,assets.action),'marble-run':(kit,state)=>marbleRunScene(kit,state,assets.action,assets.scenery),'paddle-duel':tableScene,'air-hockey':tableScene,'snake-arena':gridScene,'bomb-maze':gridScene,'mini-golf':(kit,state)=>golfScene(kit,state,assets.scenery,assets.golf),'marble-knockout':(kit,state)=>marbleScene(kit,state,assets.scenery),'paint-tag':paintScene,'kitchen-rush':(kit,state)=>kitchenScene(kit,state,assets.scenery),'orbit-rescue':(kit,state)=>spaceScene(kit,state,assets.scenery)};
+  this.seat=seat;this.game=state.game;this.host.dataset.assetPack=state.game==='cat-defense'?'craftpix-cat-defense':Object.keys(assets).length?'kenney':'original';if(['cat-defense','bridge-builders','pocket-soccer','tank-arena'].includes(state.game))this.fighterCamera=new T.OrthographicCamera(-35,35,20,-20,.1,200);this.renderer=new T.WebGLRenderer({antialias:true,alpha:false,powerPreference:'high-performance'});const environment=new RoomEnvironment(),pmrem=new T.PMREMGenerator(this.renderer);this.environment=pmrem.fromScene(environment,.04);this.k.scene.environment=this.environment.texture;this.k.scene.environmentIntensity=['air-hockey','paddle-duel','orbit-rescue'].includes(state.game)?.55:.3;environment.dispose();pmrem.dispose();this.renderer.outputColorSpace=T.SRGBColorSpace;this.renderer.toneMapping=T.ACESFilmicToneMapping;this.renderer.toneMappingExposure=.95;this.renderer.shadowMap.enabled=true;this.renderer.shadowMap.type=T.PCFShadowMap;this.ratio=Math.min(devicePixelRatio,1.6);this.renderer.setPixelRatio(this.ratio);host.appendChild(this.renderer.domElement);this.renderer.domElement.setAttribute('aria-label',state.game==='cat-defense'?'Cat Defense street battle':state.game==='pocket-soccer'?'3D soccer stadium':state.game==='bridge-builders'?'3D bridge ravine':state.game==='tank-arena'?'Toy tank tabletop arena':'3D game environment');this.sun=this.k.light(['pocket-soccer','air-hockey','paddle-duel','orbit-rescue'].includes(this.game));
+  const scenes:Record<string,(k:Kit,s:State)=>Step>={'bridge-builders':bridgeScene,'pocket-soccer':(kit,state)=>soccerScene(kit,state,assets.soccer!),'cat-defense':(kit,state)=>catsScene(kit,state,assets.cats!),'pocket-racers':(kit,state)=>raceScene(kit,state,assets.racing,assets.raceScenery),'platform-relay':(kit,state)=>platformScene(kit,state,assets.platform),'tank-arena':(kit,state)=>tankScene(kit,state,assets.action),'marble-run':(kit,state)=>marbleRunScene(kit,state,assets.action,assets.scenery),'paddle-duel':tableScene,'air-hockey':tableScene,'snake-arena':gridScene,'bomb-maze':gridScene,'mini-golf':(kit,state)=>golfScene(kit,state,assets.scenery,assets.golf),'marble-knockout':(kit,state)=>marbleScene(kit,state,assets.scenery),'paint-tag':paintScene,'kitchen-rush':(kit,state)=>kitchenScene(kit,state,assets.scenery),'orbit-rescue':(kit,state)=>spaceScene(kit,state,assets.scenery)};
   this.step=scenes[this.game](this.k,state);this.k.batch();if(this.game==='pocket-racers'){this.step({...state,viewSeat:seat??0},0,0);this.sun.shadow.mapSize.set(1024,1024);this.camera.near=.5;this.camera.far=700;}if(this.game==='platform-relay'){this.step({...state,viewSeat:seat??0},0,0);this.camera.near=1;this.camera.far=800;}if(this.game==='mini-golf'){const geometry=new T.BufferGeometry().setFromPoints([new T.Vector3(),new T.Vector3()]);this.guide=new T.Line(geometry,new T.LineDashedMaterial({color:'#fff2c4',dashSize:.6,gapSize:.4}));this.k.dynamic.add(this.guide);}this.push(state,seat);
   this.resize=new ResizeObserver(()=>this.size());this.resize.observe(host);this.size();this.observer=new IntersectionObserver(entries=>{this.visible=entries[0].isIntersecting;});this.observer.observe(host);
   this.frame=requestAnimationFrame(this.draw);
@@ -279,7 +278,6 @@ export class WorldRenderer {
  static async prepare(game:string):Promise<WorldAssets>{
   const assets:WorldAssets={};
   await Promise.all([
-   game==='stick-rivals'?loadStickTerrace().then(texture=>{assets.terrace=texture;}):undefined,
    game==='pocket-soccer'?import('./soccer-assets').then(m=>m.loadSoccerAssets()).then(a=>{assets.soccer=a;}):undefined,
    game==='cat-defense'?import('./cat-assets').then(m=>m.loadCatAssets()).then(a=>{assets.cats=a;}):undefined,
    game==='pocket-racers'?import('./race-scenery').then(m=>m.loadRaceScenery()).then(a=>{assets.raceScenery=a;}):undefined,
@@ -334,19 +332,6 @@ export class WorldRenderer {
    fc.left=-width/2;fc.right=width/2;fc.top=height/2;fc.bottom=-height/2;fc.far=400;fc.updateProjectionMatrix();target.set(x,y,0);eye.copy(desired);
   }
   else if(this.game==='mini-golf'){const course=golfCourses[Math.min(s.hole,golfCourses.length-1)],xs=course.cells.map(c=>W(c.x)),zs=course.cells.map(c=>Z(c.y)),width=Math.max(...xs)-Math.min(...xs)+12,depth=Math.max(...zs)-Math.min(...zs)+14,rotate=this.camera.aspect<.8,distance=Math.max(35,(rotate?depth:width)/(2*Math.tan(T.MathUtils.degToRad(21.5))*this.camera.aspect)*1.12,(rotate?width:depth)*1.35);target.set((Math.min(...xs)+Math.max(...xs))/2,0,(Math.min(...zs)+Math.max(...zs))/2);eye.set(target.x+(rotate?distance*.55:0),distance*.84,target.z+(rotate?0:distance*.55));this.camera.fov=43;}
-  else if(this.game==='stick-rivals'){
-   const a=s.players[0],b=s.players[1],mid=W((a.x+b.x)/2),gap=Math.abs(a.x-b.x)/10;
-   const ay=(410-a.y)/10,by=(410-b.y)/10,vGap=Math.abs(ay-by),airCentre=Math.max(ay,by)*.28;
-   const aspect=this.camera.aspect,height=Math.max(24,(gap+26)/aspect,vGap+19),width=height*aspect,midY=height*.22+airCentre,fc=this.fighterCamera!;
-   const freshImpact=(this.k.scene.userData.stickShake||0)>0;
-   const sx=freshImpact?Math.sin(now*.09)*.38:0,sy=freshImpact?Math.cos(now*.11)*.28:0;
-   const desired=new T.Vector3(mid+sx,midY+sy,80);fc.position.lerp(desired,this.cameraReady?1-Math.exp(-dt*6):1);fc.lookAt(fc.position.x,fc.position.y,0);
-   fc.left=-width/2;fc.right=width/2;fc.top=height/2;fc.bottom=-height/2;fc.updateProjectionMatrix();
-   // Keep the complete original terrace visible while the fight camera follows the duel.
-   const backdrop=this.k.scene.userData.stickBackdrop as T.Mesh;
-   backdrop.position.set(fc.position.x,fc.position.y,-20);backdrop.scale.set(width/112*1.02,height/63*1.02,1);
-   target.set(mid,midY,0);eye.set(mid,midY,80);
-  }
   else if(this.game==='tank-arena'){
    // Keep the whole board visible without perspective shrinking the far tanks.
    const fc=this.fighterCamera!,height=Math.max(57,104/this.camera.aspect),width=height*this.camera.aspect;

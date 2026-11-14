@@ -37,7 +37,7 @@ function addImpact(s,x,y,kind,dir=1,power=1,label='',owner=-1){
 }
 
 export function stepStickWorld(s,cs,DT,ranked){
- s.platforms=s.platforms||stickPlatforms.map(p=>({...p}));
+ s.platforms=[];
  s.weapons=[];
  s.beams=s.beams||[];
  s.impacts=s.impacts||[];
@@ -80,8 +80,8 @@ export function stepStickWorld(s,cs,DT,ranked){
   p.weapon=null;p.weaponTimer=0;p.weaponUses=0;
 
   const dx=Number(Boolean(c.right))-Number(Boolean(c.left)),rival=s.players[1-i]||p;
-  if(dx&&p.stun<=0)p.facing=dx;
-  else if(p.attack<=0)p.facing=rival.x>=p.x?1:-1;
+  // Keep the guard aimed at the rival while shuffling or retreating.
+  if(p.attack<=0)p.facing=rival.x>=p.x?1:-1;
 
   const wasBlocking=p.blocking;
   const stationaryCharge=Boolean(c.block&&!dx&&p.ground&&p.attack<=0&&p.stun<=0);
@@ -95,7 +95,7 @@ export function stepStickWorld(s,cs,DT,ranked){
 
   // A quick defensive step when pressing guard + direction
   if(c.block&&dx&&p.dashCooldown<=0&&p.stun<=0&&p.attack<=0&&p.guardBroken<=0&&p.energy>=14){
-   p.dashTimer=.16;p.dashCooldown=.65;p.energy-=14;
+   p.dashTimer=.16;p.dashCooldown=.65;p.energy-=14;p.dashDir=dx;
    p.vx=dx*480;
    p.leanVel=(p.leanVel||0)+dx*10;
    p.moveCallout='DASH';p.calloutTimer=.55;
@@ -106,7 +106,7 @@ export function stepStickWorld(s,cs,DT,ranked){
   if(p.stun>0||p.tumble>0){
    p.vx*=Math.exp(-4.5*DT);
   }else if(p.dashTimer>0){
-   p.vx=p.facing*460;
+   p.vx=(p.dashDir||p.facing)*460;
   }else if(p.attack>0){
    // Preserve the lunge/dropkick impulse through the active attack.
    p.vx*=Math.exp(-(p.attackKind==='divekick'?1:8)*DT);
@@ -176,13 +176,13 @@ export function stepStickWorld(s,cs,DT,ranked){
      id:(s.nextBeam=(s.nextBeam||0)+1),
      owner:i,
      x:p.x+p.facing*36,
-     y:p.y-55,
+     y:p.y-80,
      vx:p.facing*680,
      facing:p.facing,
      life:.55,
      hit:false
     });
-    addImpact(s,p.x+p.facing*34,p.y-55,'blast',p.facing,1.2,'KI BLAST!');
+    addImpact(s,p.x+p.facing*34,p.y-80,'blast',p.facing,1.2,'KI BLAST!');
    }
   }
 
@@ -232,8 +232,9 @@ export function stepStickWorld(s,cs,DT,ranked){
 
   p.attack=Math.max(0,p.attack-DT);
   const isLongMove=['kick','sweep','divekick','crescent','roundhouse','frontkick'].includes(p.attackKind);
-  const strikeWindow=isLongMove?.23:.18;
-  if(p.attack>0&&p.attack<strikeWindow&&!p.hit&&!['blast','throw'].includes(p.attackKind)){
+  const strikeAt=isLongMove?.10:.07;
+  const attackAge=(p.attackDuration||.22)-p.attack;
+  if(p.attack>0&&attackAge+1e-6>=strikeAt&&!p.hit&&!['blast','throw'].includes(p.attackKind)){
    const reach=(['kick','sweep','divekick','frontkick','roundhouse'].includes(p.attackKind)?95:p.attackKind==='crescent'?84:p.attackKind==='uppercut'||p.attackKind==='knee'?78:72);
    s.players.forEach((other,j)=>{
     if(i!==j&&Math.abs(other.y-p.y)<88&&(other.x-p.x)*p.facing>=-15&&Math.abs(other.x-p.x)<reach){
@@ -250,7 +251,7 @@ export function stepStickWorld(s,cs,DT,ranked){
   b.x+=b.vx*DT;
   if(!b.hit){
    s.players.forEach((target,j)=>{
-    if(j!==b.owner&&Math.abs(target.x-b.x)<42&&Math.abs((target.y-51)-b.y)<52){
+    if(j!==b.owner&&Math.abs(target.x-b.x)<42&&Math.abs((target.y-80)-b.y)<52){
      b.hit=true;b.life=Math.min(b.life,.08);
      hits.push({from:b.owner,to:j,kind:'blast'});
     }
@@ -263,7 +264,7 @@ export function stepStickWorld(s,cs,DT,ranked){
  for(const hit of hits){
   const p=s.players[hit.to],attacker=s.players[hit.from];
   const isThrow=hit.kind==='throw';
-  const contactX=p.x-attacker.facing*10,contactY=p.y-(hit.kind==='sweep'?18:['kick','crescent','uppercut','cross'].includes(hit.kind)?69:55);
+  const contactX=p.x-attacker.facing*10,contactY=p.y-(hit.kind==='sweep'?16:['kick','crescent','uppercut','cross','roundhouse'].includes(hit.kind)?96:84);
   if((p.dashTimer||0)>.06){addImpact(s,contactX,contactY,'dodge',p.facing,.8,'DODGE!',hit.to);continue;}
   const blocked=!isThrow&&p.blocking&&(attacker.x-p.x)*p.facing>0;
   const parried=blocked&&(p.parryTimer||0)>0;
@@ -290,11 +291,11 @@ export function stepStickWorld(s,cs,DT,ranked){
    p.energy=Math.min(100,p.energy+18);
    attacker.stun=.25;attacker.vx=-attacker.facing*220;
    p.parryPose=.3;p.moveCallout='PERFECT PARRY';p.calloutTimer=.8;attacker.attack=0;attacker.hit=true;attacker.combo=0;
-   addImpact(s,(p.x+attacker.x)/2,p.y-55,'parry',p.facing,1.4,'PARRY!',hit.to);
+   addImpact(s,(p.x+attacker.x)/2,p.y-88,'parry',p.facing,1.4,'PARRY!',hit.to);
   }else if(blocked){
    p.guardHit=.22;p.energy=Math.max(0,p.energy-18);
    if(p.energy<=1){p.blocking=false;p.guardBroken=.65;p.stun=.5;p.moveCallout='GUARD BREAK';p.calloutTimer=.8;addImpact(s,contactX,contactY,'break',attacker.facing,1.2,'BREAK!',hit.from);}
-   addImpact(s,(p.x+attacker.x)/2,p.y-55,'block',attacker.facing,.8,'GUARD',hit.from);
+   addImpact(s,(p.x+attacker.x)/2,p.y-88,'block',attacker.facing,.8,'GUARD',hit.from);
   }else{
    const label=p.hp<=0?'K.O.!':isThrow?'SLAM!':hit.kind==='crescent'?'CRESCENT!':hit.kind==='sweep'?'SWEPT!':hit.kind==='divekick'?'DROPKICK!':hit.kind==='uppercut'?'UPPERCUT!':hit.kind==='blast'?'BLAST!':'POW!';
    addImpact(s,contactX,contactY,p.hp<=0?'ko':isHeavy?'heavy':'hit',dir,p.hp<=0?1.8:isHeavy?1.35:1,label,hit.from);
