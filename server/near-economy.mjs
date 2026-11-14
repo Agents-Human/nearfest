@@ -20,7 +20,7 @@ export async function createNearEconomy(store,{chain=near,services}={}){
  store.loadNear=async ids=>{if(ids.length)for(const row of (await db.query('SELECT * FROM near_rooms WHERE id=ANY($1::text[])',[ids])).rows)roomCache.set(row.id,{...JSON.parse(row.json),error:row.error});};
  store.cachedNearStatus=(id,players=[])=>{const r=roomCache.get(id);return r?{unconfirmed_members:r.kind==='game'?r.members.filter(m=>!players.some(p=>p.id===m.account_id)).map(m=>m.account_id):[],network:'testnet',contract_id:chain.contractId,status:r.status,error:r.error||null,refund_at:r.refund_at,entry:r.entry,storage_fee:ROOM_STORAGE.toString(),evidence_hash:r.evidence_hash,explorer:`https://testnet.nearblocks.io/address/${chain.contractId}`}:null;};
  store.reserveNear=async (id,account,n)=>{if(BigInt(n)===0n)return;const r=(await cached(id)),u=(await store.user(account));if(u?.kind!=='wallet'||!r||r.status!=='open'||BigInt(member(r,account)?.amount||0)<BigInt(n))throw Error('Confirm your NEAR testnet deposit in your wallet first.');};
- const requireWallet=u=>{if(u?.kind!=='wallet')throw Error('Connect your NEAR testnet wallet to play for stakes.');if(!chain.contractId||!chain.oracleReady)throw Error('NEAR testnet escrow is not connected yet.');};
+ const requireWallet=u=>{if(u?.kind!=='wallet')throw Error('Sign in with your NearFest wallet account to play for stakes.');if(!chain.contractId||!chain.oracleReady)throw Error('NEAR testnet escrow is not connected yet.');};
  async function checkBalance(u,deposit){if(BigInt(await chain.balance(u.id))<deposit)throw Error('Your wallet balance cannot cover this stake and the required contract storage.');}
  async function load(id,kind){const r=await chain.view('get_room',{id});if(!r)throw Error('NEAR escrow not found. The wallet transaction may still be confirming.');(await save(r,kind));return r;}
  async function intent(u,operation,id,kind,data,args,method,deposit='0',extra={}){return store.transaction(async()=>{
@@ -40,7 +40,7 @@ export async function createNearEconomy(store,{chain=near,services}={}){
   if(checked.recovered.some(item=>item.operation==='create_room'))throw Error('Your previous room is ready in My rooms. Open it to continue.');
   rows=(await pendingCreations(u));if(!rows.length)return null;
   const matches=rows.filter(row=>{const p=JSON.parse(row.json);return p.kind===kind&&creationTerms(kind,p.data)===creationTerms(kind,data);});
-  if(!matches.length)throw Error('A different room payment is still pending. Continue it from Wallet → Activity, or wait for it to expire.');
+  if(!matches.length)throw Error('A different room payment is still pending. Continue it from Account → Activity, or wait for it to expire.');
   for(const row of matches){const p=JSON.parse(row.json),remote=await chain.view('get_room',{id:p.id});if(remote)return confirm(row.id,u);}
   const existing=matches.find(row=>JSON.parse(row.json).args.join_until>Date.now());
   if(existing){const p=JSON.parse(existing.json);return {intent_id:existing.id,transaction:{...chain.transaction(p.method,p.args,p.deposit,u.id,existing.id),signerId:u.id}};}
@@ -116,7 +116,10 @@ export async function createNearEconomy(store,{chain=near,services}={}){
    if(p.operation==='create')(await services.community.create(p.data,u,Date.now(),{id:p.id,chain:r}));
    (await services.community.sync(p.id,r,p.method==='claim_room'?{...p.data,id:a.claim_id}:null));result=(await services.community.get(p.id));
   }
-  (await db.prepare('UPDATE near_intents SET complete=1,result=$1 WHERE id=$2').run(JSON.stringify(result),iid));return result;
+  (await db.prepare('UPDATE near_intents SET complete=1,result=$1 WHERE id=$2').run(JSON.stringify(result),iid));chain.invalidateNearAccount?.(u.id);return result;
+ }
+ async function failIntent(iid,u){
+  await db.prepare('UPDATE near_intents SET complete=1,result=$1 WHERE id=$2 AND user_id=$3 AND complete=0').run(JSON.stringify({cancelled:true,failed:true}),iid,u.id);
  }
  async function abandon(iid,u){requireWallet(u);const row=(await db.prepare('SELECT * FROM near_intents WHERE id=$1 AND user_id=$2 AND complete=0').get(iid,u.id));if(!row)throw Error('Pending action not found.');const p=JSON.parse(row.json),r=await chain.view('get_room',{id:p.id});
   if(!r&&p.method==='create_room'&&Date.now()<p.args.join_until+60000)throw Error('This wallet request can still confirm. Retry the same room, or wait until its request expires before cancelling.');
@@ -136,7 +139,7 @@ export async function createNearEconomy(store,{chain=near,services}={}){
    const p=JSON.parse(row.json),result=JSON.parse(row.result||'null');
    let title=publishedGame(p.data?.game_id)?.title||p.data?.title;
    if(!title)try{title=(p.kind==='game'?(await services.get(p.id,u,p.key)):(await services.community.get(p.id))).title;}catch{}
-   return {id:row.id,room_id:p.id,title:title||'Room payment',operation:p.method,amount:result?.expired?'0':p.deposit,created_at:row.created,status:result?.expired?'expired':!result||result.cancelled?'cancelled':'confirmed'};
+   return {id:row.id,room_id:p.id,title:title||'Room payment',operation:p.method,amount:result?.expired||result?.failed?'0':p.deposit,created_at:row.created,status:result?.expired?'expired':result?.failed?'failed':!result||result.cancelled?'cancelled':'confirmed'};
   })));
   for(const row of (await db.prepare('SELECT * FROM near_payouts WHERE user_id=$1 ORDER BY created DESC LIMIT 30').all(u.id))){
    let title;try{title=((await cached(row.room_id))?.kind==='game'?(await services.get(row.room_id,u)):(await services.community.get(row.room_id))).title;}catch{}
@@ -238,5 +241,5 @@ export async function createNearEconomy(store,{chain=near,services}={}){
   for(const row of (await db.prepare("SELECT id FROM near_rooms WHERE json::jsonb->>'status' NOT IN ('settled','refunded')").all()))try{await settleRoom(row.id);}catch{}
  }finally{processing=false;}return revision!==prior;}
 
- return {create,action,confirm,abandon,tick,cached,pending,history,reconcile,recoverPending,retry,load,recoverIntent,settleRoom,enabled:Boolean(chain.contractId&&chain.oracleReady)};
+ return {create,action,confirm,abandon,failIntent,tick,cached,pending,history,reconcile,recoverPending,retry,load,recoverIntent,settleRoom,enabled:Boolean(chain.contractId&&chain.oracleReady)};
 }

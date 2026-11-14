@@ -1,6 +1,6 @@
 # NearFest app-managed testnet accounts
 
-New players choose a NearFest username and password. The app creates one named NEAR testnet account, obtains its initial 10 native test NEAR through NEAR's testnet account-creation helper, and continues the saved room invitation. No wallet extension, seed phrase, or wallet sign-in is required. Existing external-wallet users can still sign in through the collapsed existing-wallet option and retain their accounts and rooms.
+New players choose a NearFest username and password. The app creates one named NEAR testnet account, obtains its initial 10 native test NEAR through NEAR's testnet account-creation helper, and continues the saved room invitation. No external wallet extension, seed phrase, or wallet sign-in is used.
 
 Accounts, encrypted signing keys, password hashes, sessions, and prepared transactions are stored in PostgreSQL and work across replicas. Usernames are case-insensitive. Passwords use scrypt with a per-account salt. Keys use AES-256-GCM with the account ID as authenticated data. Neither password hashes nor private keys are returned to the browser. Losing a password currently requires creating another demo account; there is no email reset service.
 
@@ -14,9 +14,9 @@ The existing optional faucet remains available for later top-ups under its exist
 
 ## Transactions and recovery
 
-The existing escrow contract and server validation still prepare each game action. Prepared transactions carry a short-lived server MAC bound to the signer, contract, actions, deposit, and action ID. The managed signer rejects client-invented or modified actions and actions belonging to another user. Game intents keep stable action IDs across retries. External wallet signing remains available only for existing external-wallet sessions.
+The existing escrow contract and server validation prepare each game action. Prepared transactions carry a short-lived server MAC bound to the signer, contract, actions, deposit, and action ID. The managed signer executes them directly in the triggering request, rejects modified or unauthorized actions, and keeps stable action IDs across retries. External wallet signing has been completely removed.
 
-Account-scoped PostgreSQL locks serialize signing across replicas. The signed transaction and hash are committed before broadcast. Pending broadcasts are reconciled before another account nonce is prepared. Retries and durable background jobs resend only the saved signed transaction; they never sign another deposit for an ambiguous result. Successful and definitively failed receipts are recorded. Game membership and results are still accepted only after the existing finalized contract-state checks.
+Short-TTL PostgreSQL row leases (`managed_locks`) serialize per-account nonces across replicas without holding pool or advisory-lock connections during external RPC/helper I/O. The signed transaction and hash are committed before broadcast. Pending broadcasts are reconciled before another account nonce is prepared. Retries and durable background jobs resend only the saved signed transaction; they never sign another deposit for an ambiguous result. Successful and definitively failed receipts are recorded. Game membership and results are still accepted only after the existing finalized contract-state checks.
 
 Logout invalidates the app session without deleting the account, funds, or rooms. Signing in on another browser with the same username and password restores that same account. This is a custodial testnet demo: NearFest holds the encrypted testnet signing keys and signs only app-prepared actions initiated by the authenticated player. It is not enabled for mainnet.
 

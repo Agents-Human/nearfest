@@ -95,3 +95,22 @@ test('background recovery rebroadcasts the stored action without another signatu
  assert.equal(await x.accounts.recoverTransaction('intent-1'),false);assert.equal(x.preparations.length,1);
  assert(x.broadcasts.every(signed=>signed===x.broadcasts[0]));
 });
+
+test('cross-account lease serialization runs different accounts concurrently without exhausting poolMax=2',async t=>{
+ const x=await setup(t),users=await Promise.all([
+  x.accounts.register({username:'acctone',password}),
+  x.accounts.register({username:'accttwo',password}),
+  x.accounts.register({username:'acctthree',password}),
+  x.accounts.register({username:'acctfour',password}),
+ ]);
+ const originalSend=x.chain.send;
+ x.chain.send=async signed=>{await new Promise(resolve=>setTimeout(resolve,120));return originalSend(signed);};
+ const started=Date.now();
+ const results=await Promise.all(users.map((user,i)=>x.accounts.submit(user,x.transaction(user,'lease-'+i))));
+ const elapsed=Date.now()-started;
+ assert(results.every(r=>r.status==='confirmed'));
+ assert(elapsed<450,`Expected concurrent multi-account execution, took ${elapsed}ms`);
+ assert(x.store.db.connectionStats().queries.total<=2);
+ assert.equal(x.store.db.connectionStats().locks.total,0);
+ assert.equal((await x.store.db.prepare('SELECT count(*) AS count FROM managed_locks').get()).count,0);
+});

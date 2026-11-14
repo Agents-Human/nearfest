@@ -8,14 +8,14 @@ import {join} from 'node:path';
 import {once} from 'node:events';
 import {UNIT} from '../server/domain.mjs';
 const wait=ms=>new Promise(r=>setTimeout(r,ms));
-test('all eight published boards share real HTTP state; independent sessions reconnect, chat and settle two games once',{timeout:40000},async()=>{
+test('all seven published boards share real HTTP state; independent sessions reconnect, chat and settle two games once',{timeout:40000},async()=>{
  const dir=await mkdtemp(join(tmpdir(),'slotvend-skill-api-')),origin='http://127.0.0.1:5196';let child,log='';
  async function start(){child=spawn(process.execPath,['server/index.mjs'],{cwd:new URL('..',import.meta.url),env:{...process.env,PORT:'5196',APP_ORIGIN:origin,DATABASE_URL:process.env.TEST_DATABASE_URL,DATABASE_SCHEMA:testSchema(dir),SEED_PRACTICE:'false',NEAR_AI_API_KEY:'',NEAR_CONTRACT_ID:'',REQUIRE_SEMANTIC_MODERATION:'false'},stdio:['ignore','pipe','pipe']});child.stdout.on('data',b=>log+=b);child.stderr.on('data',b=>log+=b);for(let i=0;i<50;i++){try{if((await fetch(origin+'/api/config')).ok)return;}catch{}await wait(100);}throw Error(log);}
  async function stop(){if(child.exitCode===null){const exit=once(child,'exit');child.kill();await exit;}}
  function client(){let cookie='';return async(path,data,status=200)=>{const r=await fetch(origin+'/api'+path,{method:data===undefined?'GET':'POST',headers:{origin,cookie,'content-type':'application/json'},body:data===undefined?undefined:JSON.stringify(data)});if(r.headers.get('set-cookie'))cookie=r.headers.get('set-cookie').split(';')[0];const j=await r.json();assert.equal(r.status,status,JSON.stringify(j));return j;};}
  try{
   await start();const a=client(),b=client(),spectator=client(),guest=client();const alice=await a('/session/practice',{name:'Coral tester'}),bob=await b('/session/practice',{name:'Lilac tester'});await spectator('/session/practice',{name:'Spectator'});
-  const catalog=await guest('/play');assert.equal(catalog.length,58);assert(catalog.every(g=>g.solo&&g.multiplayer));const games=catalog.filter(g=>g.engine==='skill');assert.equal(games.length,8);assert(games.every(g=>g.skill_only));
+  const catalog=await guest('/play');assert.equal(catalog.length,51);assert(catalog.every(g=>g.solo&&g.multiplayer));const games=catalog.filter(g=>g.engine==='skill');assert.equal(games.length,7);assert(games.every(g=>g.skill_only));
   await a('/parties',{game_id:'ludo'},400);const rooms=[];
   for(const g of games){let r=await a('/parties',{game_id:g.id,entry:'0'},201);await b(`/parties/${r.id}/action`,{type:'join'});await a(`/parties/${r.id}/action`,{type:'ready',ready:true});await b(`/parties/${r.id}/action`,{type:'ready',ready:true});r=await a(`/parties/${r.id}/start`,{});assert.equal(r.legal_moves.length,0);rooms.push(r);}
   await wait(Math.max(...rooms.map(r=>r.starts_at))-Date.now()+40);

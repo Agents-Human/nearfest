@@ -27,10 +27,11 @@ test('guest sessions remain free; NEAR stakes reject guests; origin, catalogue a
     const t = Date.now(), draft = { title: 'Who wins our local chess game?', rules: 'One agreed chess game. Its winner wins both stakes; a draw refunds both.', category: 'Gaming', side_a: 'Alice', side_b: 'Bob', stake: '5', resolver: 'players', resolver_config: {}, join_before: t + 60000, ends_at: t + 120000 };
     await alice('/preview', { ...draft, title: 'A cocaine contest?' }, 400);
     await alice('/bets',draft,400);await alice('/parties',{game_id:'connect-four',entry:'0.1'},400);await alice('/collect',{},400);assert.equal((await alice('/me')).balance,'0');assert.equal((await bob('/me')).credit,'0');
-    const auth = await alice('/auth/challenge', { account_id: 'alice.testnet' }); await alice('/auth/verify', { id: auth.id, accountId: 'wrong.testnet', publicKey: 'invalid', signature: 'invalid' }, 400); await alice('/auth/verify', { id: auth.id, accountId: 'alice.testnet', publicKey: 'invalid', signature: 'invalid' }, 400);
-    const catalogue=await anon('/play');assert.equal(catalogue.filter(g=>g.multiplayer).length,58);assert(!JSON.stringify(catalogue).includes('"answer":'));
+    await alice('/auth/challenge', { account_id: 'alice.testnet' }, 404); await alice('/near/confirm', { intent_id: 'missing' }, 404);
+    const catalogue=await anon('/play');assert.equal(catalogue.filter(g=>g.multiplayer).length,51);assert(!JSON.stringify(catalogue).includes('"answer":'));
     await alice('/parties',{game_id:'ludo',entry:'0'},400);
     await alice('/parties',{game_id:'kalah',entry:'0'},400);
+    await alice('/parties',{game_id:'dots-boxes',entry:'0'},400);
     for(const game_id of ['chess','trivia','maths','science']){const restored=await alice('/parties',{game_id,entry:'0'},201);assert.equal(restored.game_id,game_id);}
     const solo=await alice('/play/chess/start',{});await bob(`/play/${solo.id}/run`,undefined,400);await alice(`/play/${solo.id}/answer`,{index:0,answer:'g6g7'});await anon(`/play/${solo.id}/proof`,undefined,400);await alice(`/play/${solo.id}/share`,{});assert.equal((await anon(`/play/${solo.id}/proof`)).score,1);
     await stop();start();await ready();assert.equal((await bob('/me')).id,b.id);assert.equal((await alice('/me')).credit,'0');assert.equal((await alice('/me')).name,'Alice plays');

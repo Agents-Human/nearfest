@@ -13,6 +13,7 @@ import {createPlay} from '../server/play.mjs';
 
 test('featured collection follows the selected order without duplicates',()=>{
  assert.deepEqual(discoveryGames.slice(0,5).map(g=>g.id),['platform-relay','pocket-racers','stick-rivals','tappy-plane','bridge-builders']);
+ assert(discoveryGames.findIndex(g=>g.id==='cat-defense')<discoveryGames.findIndex(g=>g.id==='checkers'));
  assert.equal(new Set(discoveryGames.map(g=>g.id)).size,discoveryGames.length);
  const firstTrivial=discoveryGames.findIndex(g=>!g.engine);
  assert(firstTrivial>0);
@@ -21,7 +22,7 @@ test('featured collection follows the selected order without duplicates',()=>{
 });
 
 test('1000+ separately sourced titles have unique identities, real entry files, covers and licence notices',()=>{
- assert(library.length>=1000);assert.equal(discoveryGames.length,58);assert(discoveryGames.every(g=>g.multiplayer&&g.solo&&!g.pack&&g.engine!=='imported'));assert(!discoveryGames.some(g=>g.id==='kalah'||g.id==='ludo'));assert.equal(discoveryGames.find(g=>g.id==='oware').title,'Mancala');
+ assert(library.length>=1000);assert.equal(discoveryGames.length,51);assert(discoveryGames.every(g=>g.multiplayer&&g.solo&&!g.pack&&g.engine!=='imported'));assert(!discoveryGames.some(g=>['kalah','ludo','dots-boxes','paddle-duel','air-hockey','bomb-maze','marble-knockout','kitchen-rush','paint-tag'].includes(g.id)));assert.equal(discoveryGames.find(g=>g.id==='oware').title,'Mancala');
  assert.equal(new Set(library.map(g=>g.id)).size,library.length);
  const normalized=s=>s.toLowerCase().replace(/[^a-z0-9]/g,'');
  assert.equal(new Set(library.map(g=>normalized(g.title))).size,library.length);

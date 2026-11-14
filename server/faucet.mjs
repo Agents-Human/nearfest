@@ -59,7 +59,8 @@ export function createFaucet(store,{chain=liveFaucet(),now=Date.now}={}){
   if(u.id===chain.id)throw Error('The faucet cannot fund itself.');
   if(busy)throw Error('Another testnet top-up is confirming. Try again in a moment.');
   busy=true;
-  try{return await db.withLock('faucet',async()=>{
+  const lease=fn=>db.withLease?db.withLease('faucet',fn):db.withLock('faucet',fn);
+  try{return await lease(async()=>{
    await chain.network();
    const last=(await latest(u.id));
    if(last?.status==='pending')return await recover(last);
@@ -83,7 +84,8 @@ export function createFaucet(store,{chain=liveFaucet(),now=Date.now}={}){
  }
  async function recoverClaim(id){
   if(!chain.enabled)return false;
-  return db.withLock('faucet',async()=>{
+  const lease=fn=>db.withLease?db.withLease('faucet',fn):db.withLock('faucet',fn);
+  return lease(async()=>{
    const row=await db.prepare("SELECT * FROM faucet_claims WHERE id=$1 AND status='pending'").get(id);if(!row)return false;
    await chain.network();const claim=await recover(row);
    if(claim.status==='pending')throw Error('The prepared faucet transfer is still confirming.');
@@ -92,7 +94,8 @@ export function createFaucet(store,{chain=liveFaucet(),now=Date.now}={}){
  }
  async function tick(){
   if(busy||!chain.enabled)return false;busy=true;
-  try{return await db.withLock('faucet',async()=>{
+  const lease=fn=>db.withLease?db.withLease('faucet',fn):db.withLock('faucet',fn);
+  try{return await lease(async()=>{
    const row=await db.prepare("SELECT * FROM faucet_claims WHERE status='pending' ORDER BY created LIMIT 1").get();
    if(!row)return false;
    try{await chain.network();await recover(row);}catch{}

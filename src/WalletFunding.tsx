@@ -9,18 +9,18 @@ export default function WalletFunding({user, busy, refresh, minimum = '0'}: {
 }) {
   const {faucet, funding, checking, error, pending, check, topUp} = useWalletFunding(user, refresh);
   const enough = (!user.managed || user.starter_funded) && !user.chain_error && BigInt(user.balance) >= BigInt(minimum), requested = useRef(false);
+  const fundingError = error || (!user.starter_funded && user.account_funding_error ? user.account_funding_error : '');
   useEffect(() => {
-    if (!enough && !busy && (!user.chain_error || user.managed) && faucet?.available && !pending && !funding && !error && !requested.current) {
+    if (!enough && !busy && (!user.chain_error || user.managed) && faucet?.available && !pending && !funding && !fundingError && !requested.current) {
       requested.current = true; void topUp();
     }
-  }, [enough, busy, user.chain_error, faucet?.available, pending, funding, error]);
+  }, [enough, busy, user.chain_error, faucet?.available, pending, funding, fundingError]);
   const unavailable = faucet && !faucet.available && !pending && !funding;
   return <section className="funding-step" aria-label="Preparing your account">
-    <div className="join-progress" role="status">{!error && (!unavailable || enough) && <span className="join-spinner" aria-hidden="true"/>}<p>{enough ? 'Preparing your entry…' : user.chain_error ? 'Checking your balance…' : unavailable ? 'Your account needs play funds to join.' : 'Adding free play funds…'}</p></div>
+    <div className="join-progress" role="status">{!fundingError && (!unavailable || enough) && <span className="join-spinner" aria-hidden="true"/>}<p>{enough ? 'Preparing your entry…' : fundingError ? 'Starting funds need a quick retry.' : user.chain_error ? 'Checking your balance…' : unavailable ? 'Your account needs play funds to join.' : 'Adding free play funds…'}</p></div>
     {!enough && <p className="funding-cost">{money(minimum)} NEAR needed · {money(user.balance,4)} NEAR available</p>}
-    {unavailable && !enough && <p className="wallet-quiet-status">{faucet.reason === 'cooldown' ? `Your next free top-up is ${new Date(faucet.claim!.next_claim_at).toLocaleString(undefined,{day:'numeric',month:'short',hour:'2-digit',minute:'2-digit'})}.` : 'Free test NEAR is temporarily unavailable. Your account and room invitation are saved; retry when funding is ready.'}</p>}
-    {error && <div className="join-error"><p className="inline-error" role="alert">{error}</p><button className="secondary full" disabled={funding || checking} onClick={() => void (user.chain_error ? check() : topUp())}>Retry</button></div>}
-    {user.chain_error && !error && <button className="secondary full" disabled={checking} onClick={() => void check()}>{checking ? 'Checking…' : 'Retry connection'}</button>}
-    {unavailable && !enough && !user.managed && <a className="secondary full" href="https://near-faucet.io/" target="_blank" rel="noreferrer">Get test NEAR ↗</a>}
+    {unavailable && !enough && !fundingError && <p className="wallet-quiet-status">{faucet.reason === 'cooldown' ? `Your next free top-up is ${new Date(faucet.claim!.next_claim_at).toLocaleString(undefined,{day:'numeric',month:'short',hour:'2-digit',minute:'2-digit'})}.` : 'Free test NEAR is temporarily unavailable. Your account and room invitation are saved; retry when funding is ready.'}</p>}
+    {fundingError && <div className="join-error"><p className="inline-error" role="alert">{fundingError}</p><button className="secondary full" disabled={funding || checking} onClick={() => void (user.chain_error && user.starter_funded ? check() : topUp())}>Retry</button></div>}
+    {user.chain_error && user.starter_funded && !fundingError && <button className="secondary full" disabled={checking} onClick={() => void check()}>{checking ? 'Checking…' : 'Retry connection'}</button>}
   </section>;
 }

@@ -1,1 +1,0 @@
-export function confirmWalletAction<T>(options:{confirm:()=>Promise<T>;send?:()=>Promise<unknown>;wait?:()=>Promise<unknown>;attempts?:number;now?:()=>number;timeoutMs?:number;signal?:AbortSignal;onStatus?:(status:'wallet'|'confirming'|'confirmed'|'pending')=>void}):Promise<T>;

@@ -13,8 +13,8 @@ export default function NearPending({pending, history, checking, error, refresh,
   }
   return <div className="wallet-activity-list">
     {pending.map(item => <div className="wallet-activity-row" key={item.intent_id}>
-      <div><b>{item.title}</b><span>{item.status === 'awaiting_wallet' ? 'Ready to continue' : item.status === 'unavailable' ? 'Reconnecting automatically' : 'Confirming payment'}{BigInt(item.amount) > 0n ? ` · ${money(item.amount)} NEAR` : ''}</span></div>
-      {item.status === 'awaiting_wallet' && <button className="text-button" disabled={Boolean(working)} onClick={() => void continuePayment(item.intent_id)}>{working === item.intent_id ? 'Opening…' : 'Continue'}</button>}
+      <div><b>{item.title}</b><span>{item.status === 'awaiting_wallet' ? 'Interrupted · ready to retry' : item.status === 'unavailable' ? 'Reconnecting automatically' : 'Confirming payment'}{BigInt(item.amount) > 0n ? ` · ${money(item.amount)} NEAR` : ''}</span></div>
+      {item.status === 'awaiting_wallet' && <button className="text-button" disabled={Boolean(working)} onClick={() => void continuePayment(item.intent_id)}>{working === item.intent_id ? 'Retrying…' : 'Retry'}</button>}
     </div>)}
     {history.map(item => <div className="wallet-activity-row" key={item.id}>
       <div><b>{item.title}</b><span>{item.status === 'expired' ? 'Expired · No payment' : item.status === 'failed' ? 'Transfer failed' : item.status === 'pending' ? 'Confirming automatically' : item.status === 'cancelled' ? 'Cancelled' : operations[item.operation] || 'Confirmed'}{BigInt(item.amount) > 0n ? ` · ${money(item.amount)} NEAR` : ''}</span><time dateTime={new Date(item.created_at).toISOString()}>{new Date(item.created_at).toLocaleString(undefined,{day:'numeric',month:'short',hour:'2-digit',minute:'2-digit'})}</time></div>

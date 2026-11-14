@@ -1,4 +1,3 @@
-import {confirmWalletAction} from './near-confirmation.mjs';
 export type NearEscrow={unconfirmed_members?:string[];network:string;contract_id:string;status:string;error?:string|null;refund_at:number;explorer:string};
 export type Config = { room_storage_fee:string; network: string; contract_id: string; oracle_ready: boolean; ai_ready: boolean; semantic_moderation: boolean; storage_fee: string; review_ms: number; resolution_ms: number };
 export type User = { id: string; name: string; kind: 'practice' | 'wallet'; managed?: boolean; username?: string; starter_funded?: boolean; account_funding_error?: string|null; balance: string; credit: string; pending: string; chain_error?: string };
@@ -9,22 +8,14 @@ export type Message = { id: number; user_id: string; name: string; text: string;
 export type Fixture = { id: string; name: string; date: string; status: string; state: 'live'|'upcoming'|'finished'|'unavailable'; completed: boolean; league: string; league_name?:string; sport?:string; teams: { id: string; name: string; abbreviation: string; score: string; winner: boolean; logo?:string }[] };
 export type Price = { symbol: string; price: string; source: string; observed_at: number };
 export type Leader = { id: string; name: string; wins: number; volume: string };
-const walletActions=new Map<string,Promise<unknown>>();
 export async function api<T>(path: string, data?: unknown): Promise<T> {
-  const res = await fetch('/api' + path, { method: data === undefined ? 'GET' : 'POST', credentials: 'same-origin', headers: data === undefined ? {} : { 'content-type': 'application/json' }, body: data === undefined ? undefined : JSON.stringify(data), signal: AbortSignal.timeout(60000) });
-  let result;try{result=await res.json();}catch{throw Error('The connection paused. Please try again.');} if (!res.ok){if(/Connect your NEAR testnet wallet/.test(result.error||''))window.dispatchEvent(new Event('nearfest:wallet-required'));throw Error(result.error || 'Could not complete that request.');}
-  if(result?.transaction&&result.intent_id){
-    const existing=walletActions.get(result.intent_id);if(existing)return existing as Promise<T>;
-    const task=(async()=>{
-      localStorage.setItem('nearfest-pending',result.intent_id);
-      window.dispatchEvent(new Event('nearfest:pending-payment'));
-      const {sendTransaction}=await import('./wallet');
-      const confirmed=await confirmWalletAction({confirm:()=>api<T>('/near/confirm',{intent_id:result.intent_id}),onStatus:status=>window.dispatchEvent(new CustomEvent('nearfest:wallet-status',{detail:{intent_id:result.intent_id,status}})),send:()=>sendTransaction(result.transaction,Boolean(result.resume))});
-      if(localStorage.getItem('nearfest-pending')===result.intent_id)localStorage.removeItem('nearfest-pending');
-      window.dispatchEvent(new Event('nearfest:pending-payment'));
-      return confirmed;
-    })().finally(()=>walletActions.delete(result.intent_id));
-    walletActions.set(result.intent_id,task);return task;
+  const res = await fetch('/api' + path, { method: data === undefined ? 'GET' : 'POST', credentials: 'same-origin', headers: data === undefined ? {} : { 'content-type': 'application/json' }, body: data === undefined ? undefined : JSON.stringify(data), signal: AbortSignal.timeout(data === undefined ? 30000 : 90000) });
+  let result;try{result=await res.json();}catch{throw Error('The connection paused. Please try again.');}
+  if (!res.ok){
+    const message=result.error || 'Could not complete that request.';
+    if(/Sign in with your NearFest|Connect your NEAR testnet wallet/.test(message))window.dispatchEvent(new Event('nearfest:wallet-required'));
+    if(/Activity|confirming|still pending/i.test(message))window.dispatchEvent(new Event('nearfest:pending-payment'));
+    throw Error(message);
   }
   return result;
 }

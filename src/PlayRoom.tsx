@@ -1,5 +1,6 @@
 import ChessPuzzle3D from './ChessPuzzle3D';
 import GameInfoTabs from './GameInfoTabs';
+import Confetti from './Confetti';
 import Modal from './Modal';
 import {RoomSetupHeading} from './RoomSetup';
 import {useEffect,useRef,useState} from 'react';
@@ -20,17 +21,25 @@ export function GameCard({game,open}:{game:Game;open:()=>void}){
  </button>;
 }
 export default function PlayRoom({game,user,join,createGroup,multiplayer}:{game:Game;user:User|null;join:()=>void;createGroup:()=>void;multiplayer:(entry?:string)=>void}){
- const startAfterLogin=useRef(false);
+ const startAfterLogin=useRef(false),prevDone=useRef(false);
  const [soloSetup,setSoloSetup]=useState(false);
- const [run,setRun]=useState<Run|null>(null),[busy,setBusy]=useState(false),[error,setError]=useState(''),[feedback,setFeedback]=useState<Run['feedback']>(),[time,setTime]=useState(Date.now()),[copied,setCopied]=useState(false),[difficulty,setDifficulty]=useState('mixed'),[shareLink,setShareLink]=useState('');
- async function start(){if(!user){join();return;}setBusy(true);setError('');try{const next=await api<Run>(`/play/${game.id}/start`,{difficulty});setSoloSetup(false);setTime(Date.now());setRun(next);setShareLink('');setCopied(false);setFeedback(undefined);}catch(e){setError((e as Error).message);}finally{setBusy(false);}}
+ const [run,setRun]=useState<Run|null>(null),[busy,setBusy]=useState(false),[error,setError]=useState(''),[feedback,setFeedback]=useState<Run['feedback']>(),[time,setTime]=useState(Date.now()),[copied,setCopied]=useState(false),[difficulty,setDifficulty]=useState('mixed'),[shareLink,setShareLink]=useState(''),[celebrate,setCelebrate]=useState(false);
+ async function start(){if(!user){join();return;}setBusy(true);setError('');try{const next=await api<Run>(`/play/${game.id}/start`,{difficulty});setCelebrate(false);prevDone.current=false;setSoloSetup(false);setTime(Date.now());setRun(next);setShareLink('');setCopied(false);setFeedback(undefined);}catch(e){setError((e as Error).message);}finally{setBusy(false);}}
  useEffect(()=>{if(user&&startAfterLogin.current){startAfterLogin.current=false;void start();}},[user?.id]);
  async function answer(value:number|string){if(!run||busy||feedback)return;setBusy(true);setError('');try{const r=await api<Run>(`/play/${run.id}/answer`,{index:run.index,answer:value});setFeedback(r.feedback);window.dispatchEvent(new CustomEvent('slotvend:sfx',{detail:r.done?'finish':r.feedback?.correct?'correct':'miss'}));setRun(r);}catch(e){setError((e as Error).message);}finally{setBusy(false);}}
  useEffect(()=>{if(!run||run.done)return;const timer=setInterval(()=>setTime(Date.now()),250);return()=>clearInterval(timer);},[run?.id,run?.done]);
- const seconds=run?Math.min(game.seconds,Math.max(0,Math.ceil((run.ends_at-time)/1000))):game.seconds,done=run&&(run.done||seconds===0);
+ const seconds=run?Math.min(game.seconds,Math.max(0,Math.ceil((run.ends_at-time)/1000))):game.seconds,done=Boolean(run&&(run.done||seconds===0));
  useGameSession(Boolean(run&&!done),async()=>{if(run)setRun(await api<Run>(`/play/${run.id}/end`,{}));});
  useEffect(()=>{if(run&&!run.done&&seconds===0)api<Run>(`/play/${run.id}/run`).then(setRun).catch(e=>setError(e.message));},[run?.id,seconds===0]);
+ useEffect(()=>{setCelebrate(false);prevDone.current=false;},[game.id]);
+ useEffect(()=>{
+  if(!run){prevDone.current=false;return;}
+  const wasDone=prevDone.current;
+  prevDone.current=done;
+  if(!wasDone&&done&&!run.abandoned&&run.score===run.total)setCelebrate(true);
+ },[done,run?.id,run?.abandoned,run?.score,run?.total]);
  return <>
+  <Confetti active={celebrate}/>
   {!run?<section className="arena-intro">
    <div className="arena-intro-image">
     <img src={gameCover(game)} alt=""/>

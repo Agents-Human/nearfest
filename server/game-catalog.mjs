@@ -35,10 +35,10 @@ export const games=[...arcadeGames,...skillGames,...library,...originals.map(g=>
 
 // Published games are our own implementations with both solo and online play.
 // Imported sources, older solo prototypes and generated configurations stay archived.
-const featuredIds=['platform-relay','pocket-racers','stick-rivals','tappy-plane','bridge-builders','oware','checkers','chess-online','connect-four','dots-boxes','reversi','hex','nine-mens-morris','maths','science','trivia','chess'];
+const featuredIds=['platform-relay','pocket-racers','stick-rivals','tappy-plane','bridge-builders','cat-defense','oware','checkers','chess-online','connect-four','reversi','hex','nine-mens-morris','maths','science','trivia','chess'];
 // Removed from the product catalogue and new-room creation. Keep engine metadata
 // available so existing room history and pending settlements can still be read.
-const retiredGameIds=new Set(['pocket-soccer','marble-run']);
+const retiredGameIds=new Set(['pocket-soccer','marble-run','dots-boxes','paddle-duel','air-hockey','bomb-maze','marble-knockout','kitchen-rush','paint-tag']);
 const published=games.filter(g=>!retiredGameIds.has(g.id)&&!g.pack&&(g.engine==='arcade'||g.engine==='skill'&&g.id!=='kalah'||!g.engine));
 const byId=new Map(published.map(g=>[g.id,g]));
 const orderedPublished=[...featuredIds.map(id=>byId.get(id)),...published.filter(g=>!featuredIds.includes(g.id))].filter(Boolean);

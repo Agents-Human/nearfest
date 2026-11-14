@@ -1,6 +1,6 @@
 import {useEffect,useRef,useState} from 'react';
 import {api,type User} from './api';
-import {signInAccount,connectWallet} from './wallet';
+import {signInAccount} from './wallet';
 import WalletFunding from './WalletFunding';
 import Modal from './Modal';
 import UiIcon from './UiIcon';
@@ -29,7 +29,6 @@ export default function Onboarding({user,request,updated,done,close}:{
      <button className="primary full" disabled={busy}>{busy?'Continuing…':'Continue & play'}<UiIcon name="arrow" size={17}/></button>
     </form>
     <p className="fine-print">Test NEAR is for playing on testnet. Save your username and password to return on any device.</p>
-    <details className="existing-wallet"><summary>Already played with a NEAR wallet?</summary><button className="text-button full" disabled={busy} onClick={()=>void run(async()=>{const next=await connectWallet();updated(next);if(hasAccess(next,request))await finish();})}>Use existing wallet</button></details>
    </>}
    {needsFunds&&!joining&&user&&<WalletFunding user={user} busy={busy} refresh={refresh} minimum={minimum}/>}
    {joining&&<div className="join-progress" role="status"><span className="join-spinner" aria-hidden="true"/><p>{request.next?'Opening your room…':'Getting ready…'}</p></div>}

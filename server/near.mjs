@@ -41,11 +41,30 @@ export async function oracleCall(method,args){
 }
 
 let storageCost,storageCostAt=0;
+const PROFILE_TTL_MS=3000;
+const profileCache=new Map();
+export function invalidateNearAccount(accountId){if(accountId)profileCache.delete(accountId);else profileCache.clear();}
 export async function balance(accountId) {
   await assertTestnet();
   if(storageCost===undefined||Date.now()-storageCostAt>300000){const config=await read('protocol',()=>provider.experimental_protocolConfig({finality:'final'}));storageCost=BigInt(config.runtime_config.storage_amount_per_byte);storageCostAt=Date.now();}
   const account=await read('account:'+accountId,()=>provider.viewAccount({accountId,blockQuery:{finality:'final'}}));
   return availableBalance(account,storageCost);
+}
+export async function accountProfile(accountId){
+  if(!accountId)return {balance:'0',credit:'0',pending:'0',chain_error:null};
+  const hit=profileCache.get(accountId);
+  if(hit&&Date.now()-hit.at<PROFILE_TTL_MS)return hit.value;
+  let bal='0',credit='0',pending='0',chain_error=null;
+  await Promise.all([
+    balance(accountId).then(v=>{bal=String(v);}).catch(()=>{chain_error='NEAR wallet balance unavailable.';}),
+    ...(contractId?[
+      view('get_credit',{account_id:accountId}).then(v=>{credit=v;}).catch(()=>{chain_error=chain_error||'NEAR balance unavailable. Try refreshing.';}),
+      view('get_pending',{account_id:accountId}).then(v=>{pending=v;}).catch(()=>{chain_error=chain_error||'NEAR balance unavailable. Try refreshing.';}),
+    ]:[]),
+  ]);
+  const value={balance:bal,credit,pending,chain_error};
+  if(!chain_error)profileCache.set(accountId,{at:Date.now(),value});
+  return value;
 }
 export async function requireBalance(accountId,deposit) {
   const available=BigInt(await balance(accountId));

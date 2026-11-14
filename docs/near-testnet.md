@@ -1,8 +1,8 @@
-> New default onboarding uses [app-managed testnet accounts](managed-accounts.md), username/password sign-in, automatic initial funding, and background transaction signing. The external-wallet flow below remains supported for existing wallet users.
+> NearFest uses [app-managed testnet accounts](managed-accounts.md), username/password sign-in, automatic initial funding, and direct server-side transaction execution. External wallet extensions and browser popups have been replaced end to end.
 
 # NearFest on NEAR testnet
 
-Choose **Play with friends**, enter a stake, and connect a NEAR testnet wallet. Players fund the same prize pot, play an authoritative multiplayer match, and collect the result. A zero stake opens a room without a deposit; **Play solo** starts individual practice. There is no FUN currency, fungible-token mint or mainnet mode.
+Choose **Play with friends**, enter a stake, and sign in with your NearFest account. Players fund the same prize pot, play an authoritative multiplayer match, and collect the result. A zero stake opens a room without a deposit; **Play solo** starts individual practice. There is no FUN currency, fungible-token mint or mainnet mode.
 
 ## Current deployment
 
@@ -16,9 +16,9 @@ The deployed WASM was downloaded through NEAR RPC and its SHA-256 compared to th
 ## Demo flow
 
 1. Open a competitive title such as Connect Four, Mancala or Paddle Duel and choose **Play with friends**.
-2. Choose **Join**. If sign-in is needed, it starts immediately. The connector combines wallet connection and NEP-413 authentication using `signMessageParams`; the app reuses an existing authenticated session without opening the wallet. A player name is optional. Authentication does not authorize spending.
-3. Choose the entry amount, create the room, and approve its deposit transaction. Share the room link with a second independent wallet.
-4. The other player deposits the same entry; both mark ready. The host confirms the on-chain participant list and starts.
+2. Choose **Join** and sign in or choose a username and password. New accounts create a named `.testnet` account and receive 10 free test NEAR automatically via NEAR's testnet helper.
+3. Choose the entry amount and create the room; the server signs, broadcasts, and confirms the contract deposit in one request. Share the room link with a second player.
+4. The other player joins with the same entry and both mark ready. The host confirms the on-chain participant list and starts.
 5. Play the match. The game server validates inputs, computes the result and submits the result hash and winner set through the separate oracle.
 6. Wait for **Rewards confirmed on NEAR**, then open the account panel and **Collect**. A finished local match does not itself mean settlement has confirmed.
 

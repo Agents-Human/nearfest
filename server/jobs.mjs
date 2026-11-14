@@ -25,7 +25,7 @@ export async function startJobs(store,{rooms,economy,faucet,managedAccounts,proc
   room:async data=>{if(await rooms[data.kind].expire(data.roomId))changed();},
   'near-intent':async data=>{if(await economy.recoverIntent(data.id))changed();},
   'near-room':async data=>{if(await economy.settleRoom(data.id))changed();},
-  'managed-transaction':async data=>{if(await managedAccounts.recoverTransaction(data.id))changed();},
+  'managed-transaction':async data=>{if(await managedAccounts.recoverTransaction(data.id)){try{await economy.recoverIntent(data.id);}catch{}changed();}},
   faucet:async data=>{if(await faucet.recoverClaim(data.id))changed();},
   'bet-check':data=>processBet(data.id),
   'bet-timeout':data=>processBet(data.id),

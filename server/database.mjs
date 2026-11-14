@@ -1,4 +1,5 @@
 import {AsyncLocalStorage} from 'node:async_hooks';
+import {randomBytes} from 'node:crypto';
 import {Pool, types} from 'pg';
 import {schema as initialSchema} from './schema.mjs';
 import {retryDatabaseStartup} from './database-startup.mjs';
@@ -17,11 +18,9 @@ export function databaseConfig(connectionString=process.env.DATABASE_URL,environ
  const namespace=environment.DATABASE_SCHEMA||'public';
  if(!/^[a-z_][a-z0-9_]*$/.test(namespace))throw Error('Invalid DATABASE_SCHEMA.');
  return {connectionString,namespace,
-  poolMax:setting(environment,'DATABASE_POOL_MAX',5,1,100),
+  poolMax:setting(environment,'DATABASE_POOL_MAX',2,1,100),
   connectionTimeoutMillis:setting(environment,'DATABASE_CONNECTION_TIMEOUT_MS',10000,100,60000),
   idleTimeoutMillis:setting(environment,'DATABASE_IDLE_TIMEOUT_MS',5000,100,60000),
-  lockPoolMax:setting(environment,'DATABASE_LOCK_POOL_MAX',4,1,50),
-  lockWaitMillis:setting(environment,'DATABASE_LOCK_WAIT_MS',90000,1000,600000),
   startupTimeoutMillis:setting(environment,'DATABASE_STARTUP_TIMEOUT_MS',30000,0,300000),
  };
 }
@@ -32,12 +31,10 @@ export async function openDatabase(connectionString,options={}){
 }
 async function connectDatabase(config,namespace){
  const shared={connectionString:config.connectionString,connectionTimeoutMillis:config.connectionTimeoutMillis,idleTimeoutMillis:config.idleTimeoutMillis,application_name:'nearfest',options:'-c search_path='+namespace+' -c lock_timeout=5000 -c idle_in_transaction_session_timeout=15000'};
- // Per process: a few query connections, plus a separate small pool for advisory locks.
+ // Per process: two pooled query connections, plus one dedicated connection for advisory locks.
  const pool=new Pool({...shared,max:config.poolMax,types:parsers});
  pool.on('error',error=>console.error('PostgreSQL connection error:',error.message));
- // Advisory locks are held across NEAR broadcasts (several seconds). They get their own small pool so a
- // slow signer never starves queries, and different accounts can sign in parallel.
- const lockPool=new Pool({...shared,max:config.lockPoolMax??4,idleTimeoutMillis:1000,connectionTimeoutMillis:config.lockWaitMillis??90000});
+ const lockPool=new Pool({...shared,max:1,idleTimeoutMillis:1000,connectionTimeoutMillis:60000});
  lockPool.on('error',error=>console.error('PostgreSQL lock connection error:',error.message));
  const context=new AsyncLocalStorage();
  const query=(sql,params=[])=>{
@@ -61,29 +58,44 @@ async function connectDatabase(config,namespace){
   for(const callback of active.afterCommit)try{await callback();}catch(error){console.error('Post-commit notification failed:',error.message);}
   return value;
  }
- // Same-key callers in this process queue in memory instead of each holding a connection while they wait.
- const localLocks=new Map();
  async function withLock(key,fn){
-  const previous=localLocks.get(key)||Promise.resolve();let release;
-  const current=new Promise(resolve=>{release=resolve;}),tail=previous.then(()=>current);
-  localLocks.set(key,tail);
-  try{await previous;return await withSharedLock(key,fn);}
-  finally{release();if(localLocks.get(key)===tail)localLocks.delete(key);}
- }
- async function withSharedLock(key,fn){
-  const deadline=Date.now()+(config.lockWaitMillis??90000);
   const client=await lockPool.connect();let locked=false,releaseError;
   try{
-   // Poll with try-lock so waiting on another replica never trips lock_timeout or pins a blocked statement.
-   while(!locked){
-    locked=(await client.query('SELECT pg_try_advisory_lock(hashtext(current_schema()),hashtext($1)) AS locked',[key])).rows[0].locked;
-    if(!locked){if(Date.now()>=deadline)throw Error('This account is busy finishing another action. Try again in a moment.');await new Promise(resolve=>setTimeout(resolve,200));}
-   }
+   await client.query('SELECT pg_advisory_lock(hashtext(current_schema()),hashtext($1))',[key]);locked=true;
    return await fn();
   }catch(error){if(!locked&&error.code)releaseError=error;throw error;}
   finally{try{if(locked)await client.query('SELECT pg_advisory_unlock(hashtext(current_schema()),hashtext($1))',[key]);}catch(error){releaseError=error;}finally{client.release(releaseError);}}
  }
- const db={query,transaction,withLock,namespace,inTransaction:()=>Boolean(context.getStore()),
+ // Same-key callers serialize in memory; across processes, a short-TTL row lease avoids pinning a pool connection during NEAR/HTTP I/O.
+ const localLeases=new Map();
+ async function withLease(key,fn,options={}){
+  const previous=localLeases.get(key)||Promise.resolve();let release;
+  const current=new Promise(resolve=>{release=resolve;}),tail=previous.then(()=>current);
+  localLeases.set(key,tail);
+  try{await previous;return await acquireLease(key,fn,options);}
+  finally{release();if(localLeases.get(key)===tail)localLeases.delete(key);}
+ }
+ async function acquireLease(key,fn,{ttlMillis=30000,waitMillis=90000}={}){
+  const owner=randomBytes(12).toString('hex'),deadline=Date.now()+waitMillis;let acquired=false,heartbeat;
+  try{
+   while(!acquired){
+    const now=Date.now();
+    const res=await pool.query(
+     'INSERT INTO managed_locks(lock_key,owner,expires_at) VALUES($1,$2,$3) ON CONFLICT(lock_key) DO UPDATE SET owner=EXCLUDED.owner,expires_at=EXCLUDED.expires_at WHERE managed_locks.expires_at<=$4 RETURNING owner',
+     [key,owner,now+ttlMillis,now]
+    );
+    acquired=res.rowCount>0;
+    if(!acquired){if(Date.now()>=deadline)throw Error('This account is busy finishing another action. Try again in a moment.');await new Promise(resolve=>setTimeout(resolve,250));}
+   }
+   heartbeat=setInterval(()=>{pool.query('UPDATE managed_locks SET expires_at=$1 WHERE lock_key=$2 AND owner=$3',[Date.now()+ttlMillis,key,owner]).catch(()=>{});},Math.max(1000,Math.floor(ttlMillis/3)));
+   heartbeat.unref?.();
+   return await fn();
+  }finally{
+   if(heartbeat)clearInterval(heartbeat);
+   if(acquired)await pool.query('DELETE FROM managed_locks WHERE lock_key=$1 AND owner=$2',[key,owner]).catch(()=>{});
+  }
+ }
+ const db={query,transaction,withLock,withLease,namespace,inTransaction:()=>Boolean(context.getStore()),
   afterCommit:callback=>{const active=context.getStore();if(active){active.afterCommit.push(callback);return;}return callback();},
   connectionStats:()=>({queries:{total:pool.totalCount,idle:pool.idleCount,waiting:pool.waitingCount},locks:{total:lockPool.totalCount,idle:lockPool.idleCount,waiting:lockPool.waitingCount}}),
   exec:sql=>query(sql),
@@ -138,6 +150,10 @@ async function connectDatabase(config,namespace){
      CREATE INDEX managed_transactions_pending ON managed_transactions(user_id,created) WHERE status='pending';
     `);
     await query('INSERT INTO schema_migrations(version) VALUES(5)');
+   }
+   if(!(await db.prepare('SELECT version FROM schema_migrations WHERE version=6').get())){
+    await query('CREATE TABLE managed_locks(lock_key TEXT PRIMARY KEY,owner TEXT NOT NULL,expires_at BIGINT NOT NULL)');
+    await query('INSERT INTO schema_migrations(version) VALUES(6)');
    }
   },{key:'schema-migrations'});
   return db;

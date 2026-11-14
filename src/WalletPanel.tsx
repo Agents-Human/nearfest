@@ -27,7 +27,6 @@ export default function WalletPanel({user, refresh, collect, switchAccount, logO
       <div>{funding.pending || funding.funding ? <p role="status">Adding test NEAR…</p>
         : funding.faucet?.available ? <button className={credit > 0n ? 'secondary full' : 'primary full'} disabled={disabled} onClick={() => void funding.topUp()}>Add {money(funding.faucet.amount)} free test NEAR</button>
         : <p>{!funding.faucet ? 'Checking availability…' : funding.faucet.reason === 'cooldown' ? `Free top-up available ${new Date(funding.faucet.claim!.next_claim_at).toLocaleDateString(undefined, {day:'numeric', month:'short'})}.` : funding.faucet.reason === 'funded' ? 'Your wallet is already funded.' : 'Free top-ups are temporarily unavailable.'}</p>}
-        {funding.faucet && !funding.faucet.available && !funding.pending && funding.faucet.reason !== 'funded' && <a href="https://near-faucet.io/" target="_blank" rel="noreferrer">Use the public faucet ↗</a>}
       </div>
     </details>
     {funding.message && !funding.pending && <p className="wallet-quiet-status" role="status">{funding.message}</p>}
@@ -36,7 +35,7 @@ export default function WalletPanel({user, refresh, collect, switchAccount, logO
       <NearPending {...recovery}/>
       <a className="wallet-history-link" href={`https://testnet.nearblocks.io/address/${encodeURIComponent(user.id)}`} target="_blank" rel="noreferrer">View all wallet transactions ↗</a>
     </details>
-    <div className="wallet-panel-footer"><button className="text-button" onClick={() => void navigator.clipboard.writeText(user.id).then(() => setCopied(true)).catch(() => setError('Select the wallet address above to copy it.'))}>{copied ? 'Copied' : 'Copy address'}</button><button className="text-button" disabled={disabled} onClick={() => void run(switchAccount)}>{user.managed?'Switch account':'Switch wallet'}</button></div>
+    <div className="wallet-panel-footer"><button className="text-button" onClick={() => void navigator.clipboard.writeText(user.id).then(() => setCopied(true)).catch(() => setError('Select the wallet address above to copy it.'))}>{copied ? 'Copied' : 'Copy address'}</button><button className="text-button" disabled={disabled} onClick={() => void run(switchAccount)}>Switch account</button></div>
     <button type="button" className="secondary full wallet-logout" disabled={busy || funding.funding} onClick={() => void run(logOut)}>Log out</button>
   </div>;
 }

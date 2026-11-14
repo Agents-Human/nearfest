@@ -17,14 +17,6 @@ export default function useWalletRecovery(user: User | null, recovered: (result:
     try {
       const result = await api<WalletRecovery>('/near/reconcile', {});
       if (!active.current || current.current.user?.id !== account.id) return;
-      // The server may have finished the payment while this browser was closed.
-      const intent = localStorage.getItem('nearfest-pending'), finished = result.history.find(item => item.id === intent);
-      if (finished && !result.recovered.some(item => item.intent_id === intent)) {
-        if (finished.status === 'confirmed') {
-          const room = await api<Party>('/near/confirm', {intent_id: intent});
-          result.recovered.push({intent_id: intent!, operation: finished.operation, room});
-        } else if (finished.status === 'expired' || finished.status === 'cancelled') result.expired.push(intent!);
-      }
       if (!active.current || current.current.user?.id !== account.id) return;
       setPending(result.pending); setHistory(result.history); setError('');
       current.current.recovered(result);
