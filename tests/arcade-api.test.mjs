@@ -7,7 +7,7 @@ import {tmpdir} from 'node:os';
 import {join} from 'node:path';
 import {arcadeGames} from '../server/arcade/catalog.mjs';
 const wait=ms=>new Promise(r=>setTimeout(r,ms));
-test('all 28 games open across independent HTTP sessions; authoritative streams survive latency, reconnect and dropped controls',{timeout:45000},async()=>{
+test('all published arcade games open across independent HTTP sessions; authoritative streams survive latency, reconnect and dropped controls',{timeout:45000},async()=>{
  const dir=await mkdtemp(join(tmpdir(),'slotvend-arcade-http-')),origin='http://127.0.0.1:5195',child=spawn(process.execPath,['server/index.mjs'],{cwd:new URL('..',import.meta.url),env:{...process.env,PORT:'5195',APP_ORIGIN:origin,DATABASE_PATH:join(dir,'qa.sqlite'),NEAR_CONTRACT_ID:'',NEAR_AI_API_KEY:'',SEED_PRACTICE:'false'},stdio:['ignore','pipe','pipe']});let log='';child.stdout.on('data',x=>log+=x);child.stderr.on('data',x=>log+=x);
  function client(){let cookie='';const request=async(path,data,status=200)=>{const r=await fetch(origin+'/api'+path,{method:data===undefined?'GET':'POST',headers:{origin,cookie,'content-type':'application/json'},body:data===undefined?undefined:JSON.stringify(data)});if(r.headers.get('set-cookie'))cookie=r.headers.get('set-cookie').split(';')[0];const value=await r.json();assert.equal(r.status,status,JSON.stringify(value));return value;};return {request,stream:async(id,key='')=>fetch(`${origin}/api/arcade/${id}/events${key?'?invite='+key:''}`,{headers:{cookie}})};}
  try{

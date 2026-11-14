@@ -35,7 +35,7 @@ export const games=[...arcadeGames,...skillGames,...library,...originals.map(g=>
 
 // Published games are our own implementations with both solo and online play.
 // Imported sources, older solo prototypes and generated configurations stay archived.
-const featuredIds=['oware','checkers','chess-online','pocket-racers','stick-rivals','maths','science','trivia','chess','connect-four','dots-boxes','reversi','hex','nine-mens-morris'];
+const featuredIds=['platform-relay','oware','checkers','chess-online','pocket-racers','stick-rivals','maths','science','trivia','chess','connect-four','dots-boxes','reversi','hex','nine-mens-morris'];
 const published=games.filter(g=>!g.pack&&(g.engine==='arcade'||g.engine==='skill'&&g.id!=='kalah'||!g.engine));
 const byId=new Map(published.map(g=>[g.id,g]));
 export const discoveryGames=[...featuredIds.map(id=>byId.get(id)),...published.filter(g=>!featuredIds.includes(g.id))]

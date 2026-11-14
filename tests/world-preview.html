@@ -1,16 +1,58 @@
-<!doctype html><html lang="en"><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Action world playtest</title><style>body{margin:0;background:#142b32;color:#e8f0e0;font:13px system-ui}header{display:flex;gap:12px;align-items:center;padding:12px;flex-wrap:wrap}select,button{font:inherit;padding:8px;background:#e9efde;color:#14353c;border:0;border-radius:5px}#world{height:calc(100vh - 100px);min-height:250px}footer{padding:10px;color:#a5c7c0}#metrics{margin-left:auto}canvas{display:block;width:100%;height:100%}</style><header><b>Action world playtest</b><select aria-label="Preview game" id="game"></select><button id="pause">Pause simulation</button><button id="restart">Restart</button><button id="camera">Change camera</button><button id="hole">Next golf hole</button><span id="metrics"></span></header><div id="world"></div><footer id="status">Loading…</footer><script type="module">
-// Manual development harness. Imports production rendering and authoritative
-// simulation directly; no copied game code or network/wallet side effects.
+<!doctype html>
+<html lang="en">
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Action world playtest</title>
+<style>
+body{margin:0;background:#142b32;color:#e8f0e0;font:13px system-ui}header{display:flex;gap:10px;align-items:center;padding:12px;flex-wrap:wrap}select,button{font:inherit;padding:8px;background:#e9efde;color:#14353c;border:0;border-radius:5px}#world{height:calc(100svh - 140px);min-height:250px}footer{padding:10px;color:#a5c7c0;display:grid;gap:6px}#metrics{margin-left:auto;font-variant-numeric:tabular-nums}canvas{display:block;width:100%;height:100%}
+</style>
+<header><b>Action world playtest</b><select aria-label="Preview game" id="game"></select>
+<select aria-label="Playtest controls" id="controls"><option value="bots">Practice bots</option><option value="keyboard">Keyboard · WASD / Space</option><option value="effects">Fire & bat drill</option><option value="storm">Storm approach</option></select>
+<label><input type="checkbox" id="jitter">Network jitter</label>
+<button id="pause">Pause simulation</button><button id="restart">Restart</button><button id="camera">Change camera</button><button id="hole">Next golf hole</button><span id="metrics"></span></header>
+<div id="world"></div><footer><span id="status">Loading…</span><span id="resources"></span><span>Keyboard: A / D move · W jump · Space fire. Fire & bat drill uses the production effects and physics.</span></footer>
+<script type="module">
+// Local-only harness: production rendering and simulation, no account or wallet calls.
 import {WorldRenderer} from '/src/games/world-renderer.ts';
 import {newWorld,advanceWorld,worldBot,worldAction,worldIds} from '/server/arcade/world.mjs';
 import {resetGolfHole,golfCourses} from '/server/arcade/golf-courses.mjs';
-const select=document.querySelector('#game'),host=document.querySelector('#world'),status=document.querySelector('#status'),metric=document.querySelector('#metrics');
+const select=document.querySelector('#game'),host=document.querySelector('#world'),status=document.querySelector('#status'),metric=document.querySelector('#metrics'),controlMode=document.querySelector('#controls');
 for(const id of worldIds){const o=document.createElement('option');o.value=id;o.textContent=id;select.append(o);}
-select.value=sessionStorage.getItem('world-preview-game')||'pocket-racers';
-let engine,state,paused=false,mode='follow',generation=0;
-async function start(){sessionStorage.setItem('world-preview-game',select.value);const current=++generation;engine?.dispose();engine=null;state=newWorld(select.value,['snake-arena','marble-knockout','cat-defense'].includes(select.value)?4:2);const assets=await WorldRenderer.prepare(select.value);if(current!==generation)return;engine=new WorldRenderer(host,state,0,m=>{metric.textContent=`${m.fps} FPS · ${m.drawCalls} draws · ${m.triangles.toLocaleString()} triangles`;},assets);engine.setAim(0,.65);paused=false;document.querySelector('#pause').textContent='Pause simulation';}
-document.querySelector('#hole').addEventListener('click',()=>{if(state.game!=='mini-golf')return;state.hole=(state.hole+1)%golfCourses.length;state.moving=false;resetGolfHole(state);state.tick++;engine.push(state,0);});
-select.addEventListener('change',start);document.querySelector('#restart').addEventListener('click',start);document.querySelector('#camera').addEventListener('click',()=>{mode=mode==='follow'?'overview':'follow';engine.setCamera(mode);});document.querySelector('#pause').addEventListener('click',e=>{paused=!paused;e.target.textContent=paused?'Resume simulation':'Pause simulation';});
-setInterval(()=>{if(!state||!engine||paused)return;const held=state.players.map((_,i)=>worldBot(state,i));state=advanceWorld(state,held);if(state.game==='mini-golf'&&!state.moving&&!state.finished)worldAction(state,state.turn,{type:'shoot',angle:0,power:.65});engine.push(state,0);status.textContent=`${state.game} · ${state.elapsed.toFixed(1)}s · ${state.finished?state.reason:'Playing'} · player 1 coins: ${state.players[0].coins||0}`;},50);
+const query=new URLSearchParams(location.search);
+select.value=query.get('game')||sessionStorage.getItem('world-preview-game')||'platform-relay';
+controlMode.value=query.get('controls')||'bots';
+let engine,state,paused=false,mode='follow',generation=0,held={},edges={},pending=[];
+async function start(){
+ sessionStorage.setItem('world-preview-game',select.value);const current=++generation;engine?.dispose();engine=null;pending=[];held={};edges={};
+ state=newWorld(select.value,['snake-arena','marble-knockout','cat-defense'].includes(select.value)?4:2);
+ if(state.game==='platform-relay'&&['effects','storm'].includes(controlMode.value)){
+  state.players[1].x=140;
+  if(controlMode.value==='storm'){state.elapsed=17.4;state.stormX=10.6;}
+  state.enemies=[{id:900,kind:'bat',label:'swooping bat',platformId:0,offsetX:330,minOffset:260,maxOffset:420,baseOffsetY:-100,x:330,y:360,vx:70,vy:0,speed:70,flying:true,phase:0,facing:1,alive:true},
+   {id:901,kind:'slime',label:'slime',platformId:0,offsetX:390,minOffset:200,maxOffset:420,baseOffsetY:-20,x:390,y:440,vx:-46,vy:0,speed:46,flying:false,phase:0,facing:-1,alive:true}];
+ }
+ if(controlMode.value==='storm')for(let i=0;i<6;i++)state=advanceWorld(state,state.players.map(()=>({attack:true})));
+ const assets=await WorldRenderer.prepare(select.value);if(current!==generation)return;
+ engine=new WorldRenderer(host,state,0,m=>{metric.textContent=`${m.fps} FPS · ${m.drawCalls} draws · p95 ${m.frameP95.toFixed(1)} ms`;document.querySelector('#resources').textContent=`GPU resources: ${m.geometries} geometries · ${m.textures} textures · ${m.triangles.toLocaleString()} triangles`;},assets);
+ engine.setAim(0,.65);paused=controlMode.value==='storm';document.querySelector('#pause').textContent=paused?'Resume simulation':'Pause simulation';
+ status.textContent=`${state.game} · ${state.elapsed.toFixed(1)}s · ${paused?'Storm preview · resume to play':'Playing'}`;
+}
+const keys={ArrowLeft:'left',KeyA:'left',ArrowRight:'right',KeyD:'right',ArrowUp:'up',KeyW:'up',ArrowDown:'down',KeyS:'down',Space:'attack',KeyJ:'attack'};
+for(const type of ['keydown','keyup'])window.addEventListener(type,e=>{if(e.target.closest('input,select,button')||!keys[e.code])return;e.preventDefault();const key=keys[e.code];if(type==='keydown'&&!held[key])edges[key]=true;held[key]=type==='keydown';});
+window.addEventListener('blur',()=>{held={};edges={};});
+document.querySelector('#hole').addEventListener('click',()=>{if(state.game!=='mini-golf')return;state.hole=(state.hole+1)%golfCourses.length;state.moving=false;resetGolfHole(state);state={...state,tick:state.tick+1};engine.push(state,0);});
+select.addEventListener('change',start);controlMode.addEventListener('change',start);
+document.querySelector('#restart').addEventListener('click',start);
+document.querySelector('#camera').addEventListener('click',()=>{mode=mode==='follow'?'overview':'follow';engine.setCamera(mode);});
+document.querySelector('#pause').addEventListener('click',e=>{paused=!paused;e.target.textContent=paused?'Resume simulation':'Pause simulation';});
+setInterval(()=>{
+ if(!state||!engine||paused)return;
+ const inputs=state.players.map((_,i)=>['effects','storm'].includes(controlMode.value)?{attack:true,...(i===0?held:{})}:controlMode.value==='keyboard'&&i===0?{...held,...edges}:worldBot(state,i));edges={};
+ state=advanceWorld(state,inputs);
+ if(state.game==='mini-golf'&&!state.moving&&!state.finished)worldAction(state,state.turn,{type:'shoot',angle:0,power:.65});
+ const now=performance.now(),delay=document.querySelector('#jitter').checked?[0,18,65,0,30][state.tick%5]:0;
+ pending.push({state,at:now+delay});const ready=pending.filter(p=>p.at<=now);pending=pending.filter(p=>p.at>now);for(const p of ready)engine.push(p.state,0);
+ status.textContent=`${state.game} · ${state.elapsed.toFixed(1)}s · ${state.finished?state.reason:'Playing'} · coins: ${state.players[0].coins||0} · shots: ${state.shots?.length||0} · bats: ${state.enemies?.filter(e=>e.kind==='bat'&&e.alive).length||0}`;
+},50);
 start();
-</script></html>
+</script>
+</html>

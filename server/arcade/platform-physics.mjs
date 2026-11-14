@@ -1,6 +1,6 @@
 import Matter from 'matter-js';
 
-const {Engine, World, Bodies, Body, Query} = Matter;
+const {Bodies, Body, Query} = Matter;
 
 export const BIOMES = [
   {id: 'grove', name: 'EMERALD GROVE', ground: 'ground-grass', trees: ['tree', 'pine'], details: ['flowers', 'mushrooms', 'plant', 'grass'], landAnimals: ['crab', 'hog', 'frog', 'slime'], airAnimals: ['bee'], waterAnimals: ['fish', 'piranha'], skyTop: '#5294c7', skyBottom: '#d2ebdc', fog: '#b3d4cf', water: '#228fa6'},
@@ -229,12 +229,11 @@ export function stepPlatformWorld(s, cs, DT, finish) {
   const difficultyBoost = Math.min(95, (s.difficulty - 1) * 10 + Math.min(60, Math.max(0, s.elapsed - 20) * 0.35));
   s.stormX = -500 + Math.max(0, s.elapsed - 10.5) * (74 + difficultyBoost);
 
-  // Create Matter.js physics engine for this authoritative step
-  const engine = Engine.create({gravity: {x: 0, y: 0, scale: 0}});
+  // Kinematic motion uses the authoritative fixed step; Matter only handles contact queries.
   const platformById = new Map();
-  const platformBodies = [];
+  const platformSurfaces = [];
 
-  // 1. Update platforms (including moving platforms) and register Matter.js static/kinematic bodies
+  // 1. Update the moving surfaces used for one-way landings.
   for (const floor of s.platforms) {
     const prevX = floor.x;
     const prevY = floor.y;
@@ -245,15 +244,8 @@ export function stepPlatformWorld(s, cs, DT, finish) {
     floor.vy = (floor.y - prevY) / DT;
     platformById.set(floor.id, {floor, prevX, prevY});
 
-    const body = Bodies.rectangle(floor.x + floor.w / 2, floor.y + floor.h / 2, floor.w, floor.h, {
-      isStatic: true,
-      isSensor: true,
-      label: 'platform',
-    });
-    body.plugin = {floor, prevX, prevY};
-    platformBodies.push(body);
+    platformSurfaces.push({floor, prevX, prevY});
   }
-  World.add(engine.world, platformBodies);
 
   // Sync coins, springs, and hazards attached to moving platforms
   for (const coin of s.coins) {
@@ -274,7 +266,6 @@ export function stepPlatformWorld(s, cs, DT, finish) {
     sb.plugin = {spring: sp};
     springBodies.push(sb);
   }
-  World.add(engine.world, springBodies);
 
   const hazardBodies = [];
   for (const h of s.hazards) {
@@ -294,7 +285,6 @@ export function stepPlatformWorld(s, cs, DT, finish) {
     hb.plugin = {hazard: h, hy};
     hazardBodies.push(hb);
   }
-  World.add(engine.world, hazardBodies);
 
   // 2. Update animal enemies (leaping water fish/piranhas, patrolling land animals, swooping air animals)
   const enemyBodies = [];
@@ -355,7 +345,6 @@ export function stepPlatformWorld(s, cs, DT, finish) {
       enemyBodies.push(eb);
     }
   }
-  World.add(engine.world, enemyBodies);
 
   // 2.5. Advance player blaster shots and check Matter.js collisions against monsters
   for (const shot of s.shots) {
@@ -406,7 +395,7 @@ export function stepPlatformWorld(s, cs, DT, finish) {
     }
   }
 
-  // 3. Step players using Matter.js bodies & collision queries
+  // 3. Step players and query contacts against the shared sensor bodies.
   s.players.forEach((p, i) => {
     if (!p.alive) return;
     if (p.lives === undefined) p.lives = 3;
@@ -442,7 +431,7 @@ export function stepPlatformWorld(s, cs, DT, finish) {
       }
     }
 
-    const jump = Boolean(c.up || (!p.ground && p.airJumps > 0 && c.attack));
+    const jump = Boolean(c.up);
 
     // If standing on a moving platform from previous tick, carry player with the platform
     if (p.ground && p.platformId !== undefined && platformById.has(p.platformId)) {
@@ -470,34 +459,18 @@ export function stepPlatformWorld(s, cs, DT, finish) {
     if (!jump && p.jumpHeld && p.vy < -245) p.vy = -245;
     p.jumpHeld = jump;
 
-    // Create Matter.js dynamic body for the player and integrate velocity + gravity in substeps <= 16.66ms
-    const playerBody = Bodies.rectangle(p.x, p.y, 22, 48, {
-      inertia: Infinity,
-      friction: 0,
-      frictionAir: 0,
-      restitution: 0,
-      collisionFilter: {group: -1},
-      label: 'player',
-    });
-    World.add(engine.world, playerBody);
-    const nextVy = p.vy + 1020 * DT;
-    const subSteps = 3;
-    const subDt = DT / subSteps;
-    const baseDeltaMs = 1000 / 60;
-    for (let step = 0; step < subSteps; step++) {
-      Body.setVelocity(playerBody, {x: p.vx * subDt, y: nextVy * subDt});
-      Engine.update(engine, baseDeltaMs);
-    }
-
-    p.vy = nextVy;
-    p.x = Math.max(20, playerBody.position.x);
-    p.y = playerBody.position.y;
+    // Integrate once, independently for each seat. Rebuilding an Engine and
+    // stepping every earlier player's body three more times per seat added
+    // allocation/solver work without contributing to these one-way collisions.
+    p.vy += 1020 * DT;
+    p.x = Math.max(20, p.x + p.vx * DT);
+    p.y += p.vy * DT;
+    const playerBody = Bodies.rectangle(p.x, p.y, 22, 48, {isSensor: true, label: 'player'});
     p.ground = false;
     p.platformId = undefined;
 
-    // Resolve one-way top surface landing with Matter.js platform bodies (forgiving ledge grab)
-    for (const pb of platformBodies) {
-      const {floor, prevY} = pb.plugin;
+    // Resolve one-way top surface landings with a forgiving ledge grab.
+    for (const {floor, prevY} of platformSurfaces) {
       if (
         p.x > floor.x - 16 &&
         p.x < floor.x + floor.w + 16 &&

@@ -23,7 +23,7 @@ test('guest sessions remain free; NEAR stakes reject guests; origin, catalogue a
     await alice('/preview', { ...draft, title: 'A cocaine contest?' }, 400);
     await alice('/bets',draft,400);await alice('/parties',{game_id:'connect-four',entry:'0.1'},400);await alice('/collect',{},400);assert.equal((await alice('/me')).balance,'0');assert.equal((await bob('/me')).credit,'0');
     const auth = await alice('/auth/challenge', { account_id: 'alice.testnet' }); await alice('/auth/verify', { id: auth.id, accountId: 'wrong.testnet', publicKey: 'invalid', signature: 'invalid' }, 400); await alice('/auth/verify', { id: auth.id, accountId: 'alice.testnet', publicKey: 'invalid', signature: 'invalid' }, 400);
-    const catalogue=await anon('/play');assert.equal(catalogue.filter(g=>g.multiplayer).length,59);assert(!JSON.stringify(catalogue).includes('"answer":'));
+    const catalogue=await anon('/play');assert.equal(catalogue.filter(g=>g.multiplayer).length,60);assert(!JSON.stringify(catalogue).includes('"answer":'));
     await alice('/parties',{game_id:'ludo',entry:'0'},400);
     await alice('/parties',{game_id:'kalah',entry:'0'},400);
     for(const game_id of ['chess','trivia','maths','science']){const restored=await alice('/parties',{game_id,entry:'0'},201);assert.equal(restored.game_id,game_id);}

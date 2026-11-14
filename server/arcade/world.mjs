@@ -2,21 +2,25 @@ import {socialWorldIds,newSocialWorld,advanceSocialWorld,socialWorldAction,socia
 import {extraWorldIds,newExtraWorld,advanceExtraWorld,extraWorldBot} from './extra-worlds.mjs';
 import {resetGolfHole,advanceGolf} from './golf-courses.mjs';
 import {extendPlatformCourse,stepPlatformWorld,platformBotControls} from './platform-physics.mjs';
+import {KART_ROSTER,createRaceTraffic,createRaceBoostPads,stepRaceWorld,raceBotControls} from './race-physics.mjs';
+import {newTappyWorld,advanceTappyWorld,tappyAction,tappyBot} from './tappy-plane.mjs';
 export const DT=.05;
 export const clamp=(n,a,b)=>Math.max(a,Math.min(b,n));
 export const angle=n=>Math.atan2(Math.sin(n),Math.cos(n));
 export const distance=(a,b)=>Math.hypot(a.x-b.x,a.y-b.y);
 export const controls=d=>Object.fromEntries(['left','right','up','down','attack','block'].map(k=>[k,d?.[k]===true]));
-export const worldIds=new Set([...socialWorldIds,...extraWorldIds,'pocket-racers','stick-rivals','paddle-duel','air-hockey','snake-arena','bomb-maze','mini-golf','marble-knockout','kitchen-rush','paint-tag','platform-relay','orbit-rescue']);
+export const worldIds=new Set(['tappy-plane',...socialWorldIds,...extraWorldIds,'pocket-racers','stick-rivals','paddle-duel','air-hockey','snake-arena','bomb-maze','mini-golf','marble-knockout','kitchen-rush','paint-tag','platform-relay','orbit-rescue']);
 export function finish(s,winners,reason){s.finished=true;s.winners=winners;s.reason=reason;return s;}
 export function ranked(s,values,reason,low=false){const best=(low?Math.min:Math.max)(...values);return finish(s,values.flatMap((v,i)=>Math.abs(v-best)<1e-7?[i]:[]),reason);}
 function fighter(i,round=0){const side=(i+round)%2;return {x:side?640:320,y:410,vx:0,vy:0,facing:side?-1:1,hp:100,energy:100,cooldown:0,attack:0,hit:false,blocking:false,ground:true,attackKind:'punch',attackSeq:0,stun:0};}
 export function newWorld(game,n){
  const s={game,tick:0,elapsed:0,finished:false,winners:[],reason:'',players:[],round:0};
- if(game==='pocket-racers'){
+ if(game==='tappy-plane')newTappyWorld(s,n);
+ else if(game==='pocket-racers'){
   s.courseLength=9000;
-  s.players=Array.from({length:n},()=>({x:480,y:0,heading:0,speed:0,boost:100,boosting:false,progress:0,finish:null,coins:0,collected:[],crashes:0,invulnerable:0}));
-  s.traffic=Array.from({length:17},(_,i)=>({id:i,x:[390,480,570][i%3],distance:850+i*440,speed:i%4===0?0:55,kind:i%4===0?'barrier':'car'}));
+  s.players=Array.from({length:n},(_,i)=>({x:480,y:0,vx:0,heading:0,steer:0,drift:0,speed:0,boost:100,boosting:false,padBoost:0,progress:0,finish:null,coins:0,collected:[],crashes:0,crashTimer:0,invulnerable:0,kart:KART_ROSTER[i%KART_ROSTER.length]}));
+  s.traffic=createRaceTraffic();
+  s.boostPads=createRaceBoostPads();
   s.pickups=Array.from({length:45},(_,i)=>({id:i,x:[570,390,480][Math.floor(i/3)%3],distance:550+i*175}));
  }
  else if(game==='stick-rivals'){s.players=Array.from({length:n},(_,i)=>fighter(i));s.scores=Array(n).fill(0);s.roundTime=0;s.breakTime=0;}
@@ -58,6 +62,7 @@ function resetMaze(s,n){s.players=Array.from({length:n},(_,i)=>({x:[1,11,1,11][(
 function movement(p,c,speed,dt=DT){let dx=Number(c.right)-Number(c.left),dy=Number(c.down)-Number(c.up),length=Math.hypot(dx,dy)||1;p.x=clamp(p.x+dx/length*speed*dt,30,930);p.y=clamp(p.y+dy/length*speed*dt,30,530);}
 export function worldAction(s,i,d){
  if(s.finished)throw Error('This game has ended.');
+ if(s.game==='tappy-plane')return tappyAction(s,i,d);
  if(socialWorldIds.has(s.game))return socialWorldAction(s,i,d);
  if(s.game==='mini-golf'){
   if(i!==s.turn||s.moving||s.players[i].sunk)throw Error('Wait for your shot.');
@@ -77,23 +82,11 @@ export function worldAction(s,i,d){
 }
 export function advanceWorld(previous,input){
  if(previous.finished)return previous;const s=structuredClone(previous),cs=s.players.map((_,i)=>controls(input[i]));s.tick++;s.elapsed+=DT;
+ if(s.game==='tappy-plane')return advanceTappyWorld(s,cs,DT,finish);
  if(socialWorldIds.has(s.game))return advanceSocialWorld(s,cs,DT,finish,ranked);
  if(extraWorldIds.has(s.game))return advanceExtraWorld(s,cs,DT,finish,ranked);
  if(s.game==='pocket-racers'){
-  for(let i=0;i<s.players.length;i++){
-   const p=s.players[i],c=cs[i];if(p.finish!==null)continue;
-   const before=p.y;p.invulnerable=Math.max(0,p.invulnerable-DT);
-   p.boosting=Boolean(c.attack&&p.boost>0);p.boost=clamp(p.boost+(p.boosting?-30:8)*DT,0,100);
-   const desired=c.down||c.block?130:p.boosting?335:235;
-   p.speed=p.speed<desired?Math.min(desired,p.speed+150*DT):Math.max(desired,p.speed-260*DT);
-   p.x=clamp(p.x+(Number(c.right)-Number(c.left))*245*DT,350,610);
-   p.heading=(Number(c.right)-Number(c.left))*.22;p.y+=p.speed*DT;p.progress=p.y/s.courseLength;
-   for(const vehicle of s.traffic){const z=vehicle.distance+vehicle.speed*s.elapsed,oldZ=z-vehicle.speed*DT;if(p.invulnerable===0&&Math.abs(p.x-vehicle.x)<29&&before<=oldZ+35&&p.y>=z-35){p.speed=Math.max(75,p.speed*.38);p.crashes++;p.invulnerable=1.25;}}
-   for(const item of s.pickups)if(!p.collected.includes(item.id)&&Math.abs(p.x-item.x)<35&&before<=item.distance+25&&p.y>=item.distance-25){p.collected.push(item.id);p.coins++;p.boost=Math.min(100,p.boost+8);}
-   if(p.y>=s.courseLength)p.finish=s.elapsed-DT+DT*(s.courseLength-before)/(p.y-before);
-  }
-  if(s.players.some(p=>p.finish!==null))ranked(s,s.players.map(p=>p.finish??Infinity),'Coastal sprint complete!',true);
-  else if(s.elapsed>=120)ranked(s,s.players.map(p=>p.y),'Furthest along the coast wins.');
+  stepRaceWorld(s,cs,DT,clamp,ranked);
  } else if(s.game==='stick-rivals'){
   if(s.breakTime>0){s.breakTime-=DT;if(s.breakTime<=0){s.round++;s.roundTime=0;s.players=s.players.map((_,i)=>fighter(i,s.round));}return s;}
   s.roundTime+=DT;const hits=[];
@@ -151,11 +144,11 @@ export function advanceWorld(previous,input){
 }
 export function worldBot(s,i){
  const p=s.players[i],c=controls({});if(s.finished)return c;
+ if(s.game==='tappy-plane')return tappyBot(s,i,c);
  if(socialWorldIds.has(s.game))return socialWorldBot(s,i,c);
  if(extraWorldIds.has(s.game))return extraWorldBot(s,i,c);
  if(s.game==='pocket-racers'){
-  const next=s.traffic.find(v=>v.distance+v.speed*s.elapsed>p.y-30&&v.distance+v.speed*s.elapsed<p.y+330);
-  const target=next&&Math.abs(p.x-next.x)<48?(next.x>=480?390:570):p.x;c.left=p.x>target+12;c.right=p.x<target-12;
+  raceBotControls(s,i,c);
  }
  else if(s.game==='stick-rivals'){const q=s.players[1-i],d=q.x-p.x,beat=(s.tick+i*7)%56;c.right=d>60;c.left=d< -60;c.attack=Math.abs(d)<75&&beat>=5&&beat<7;c.down=Math.abs(d)<95&&Math.floor(s.tick/56)%3===2&&beat>=20&&beat<22;c.block=q.attack>.16&&beat<5;c.up=Math.abs(d)>160&&s.tick%110<2;}
  else if(['paddle-duel','air-hockey'].includes(s.game)){const target=s.game==='paddle-duel'?s.ball:{x:s.ball.x<(i?480:960)&&s.ball.x>(i?0:480)?i?880:80:s.ball.x,y:s.ball.y};c.up=target.y<p.y-10;c.down=target.y>p.y+10;if(s.game==='air-hockey'){c.left=target.x<p.x-10;c.right=target.x>p.x+10;}}

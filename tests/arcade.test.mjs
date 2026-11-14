@@ -14,7 +14,7 @@ import {initialState,applyMove,legalMoves,ended} from '../server/skill/engines.m
 import {sowingFrames} from '../src/games/sowing-frames.mjs';
 const step=(s,count,advance=advancePuzzle)=>{for(let i=0;i<count;i++)s=advance(s);return s;};
 test('every new title has a unique original simulation and reaches a bounded finish without input',()=>{
- assert.equal(arcadeGames.length,32);assert.equal(freeOnly.size,16);
+ assert.equal(arcadeGames.length,33);assert.equal(freeOnly.size,17);
  for(const g of arcadeGames){let s=simulationIds.has(g.id)?newSimulation(g.id,g.min_players):worldIds.has(g.id)?newWorld(g.id,g.min_players):puzzleIds.has(g.id)?newPuzzle(g.id,g.min_players):newParty(g.id,g.min_players);
   const advance=simulationIds.has(g.id)?advanceSimulation:worldIds.has(g.id)?s=>advanceWorld(s,[]):puzzleIds.has(g.id)?advancePuzzle:advanceParty;
   for(let i=0;i<19000&&!s.finished;i++)s=advance(s);assert(s.finished,g.id);assert(s.players.length>=g.min_players);assert.doesNotThrow(()=>JSON.stringify(s));
@@ -152,13 +152,22 @@ test('survival hazards cost lives until eliminated, the storm prevents stalling,
  const store=openStore(':memory:');try{const rooms=createArcadeRooms(store),user=store.ensureUser('survival-solo','Runner','practice'),r=rooms.create({game_id:'platform-relay',solo:true,entry:'0'},user,1000);assert.equal(r.players.length,2);assert(r.players[1].bot);assert.equal(r.ends_at,null);}finally{store.db.close();}
 });
 test('sprint traffic penalizes speed without resetting the player, and steering is direct',()=>{
- let s=newWorld('pocket-racers',2);s.traffic=[{id:0,x:480,distance:30,speed:0,kind:'car'}];s.players[0].speed=235;s=advanceWorld(s,[{}, {right:true}]);assert(s.players[0].crashes===1);assert(s.players[0].speed<150);assert(s.players[0].y>0);assert(s.players[1].x>480);
+ let s=newWorld('pocket-racers',2);
+ assert.equal(s.players[0].kart,'race');assert.equal(s.players[1].kart,'race-future');
+ s.traffic=[{id:0,x:480,distance:30,speed:0,kind:'car',model:'police'}];s.players[0].speed=235;
+ s=advanceWorld(s,[{}, {right:true}]);
+ assert(s.players[0].crashes===1);assert(s.players[0].speed<150);assert(s.players[0].crashTimer>0);assert(s.players[0].y>0);assert(s.players[1].x>480);assert(s.players[1].vx>0);
+ // Releasing steering glides smoothly with tire grip decay instead of snapping to zero immediately
+ const vxBefore=s.players[1].vx;s=advanceWorld(s,[{},{}]);assert(s.players[1].vx>0&&s.players[1].vx<vxBefore);
+ // Driving over a turbo boost pad grants speed and boost charge
+ s.boostPads=[{id:99,x:s.players[1].x,distance:s.players[1].y+5}];s.players[1].boost=50;const spdBefore=s.players[1].speed;
+ s=advanceWorld(s,[{},{}]);assert(s.players[1].padBoost>0);assert(s.players[1].speed>spdBefore);assert(s.players[1].boost>50);
 });
 
 
 test('eight survival coins charge an air jump without adding lives',()=>{
  let s=newWorld('platform-relay',2);s.players[0].coins=7;s.coins=[{id:1,x:65,y:435,collectedBy:[]}];s=advanceWorld(s,[]);assert.equal(s.players[0].airJumps,1);assert.equal(s.players[0].coins,8);
- s.players[0].ground=false;s.players[0].coyote=0;s.players[0].y=270;s.players[0].vy=100;s=advanceWorld(s,[{attack:true},{}]);assert(s.players[0].vy<0);assert.equal(s.players[0].airJumps,0);assert.equal(s.players[0].coins,8);
+ s.players[0].ground=false;s.players[0].coyote=0;s.players[0].y=270;s.players[0].vy=100;s=advanceWorld(s,[{up:true},{}]);assert(s.players[0].vy<0);assert.equal(s.players[0].airJumps,0);assert.equal(s.players[0].coins,8);
 });
 test('a short jump tap survives release between authoritative simulation ticks',()=>{
  const store=openStore(':memory:');try{const rooms=createArcadeRooms(store),user=store.ensureUser('tap-runner','Runner','practice'),r=rooms.create({game_id:'platform-relay',solo:true,entry:'0'},user,1000);rooms.input(r.id,user,{seq:1,controls:{up:true}},null,4001);rooms.input(r.id,user,{seq:2,controls:{up:false}},null,4002);rooms.tick(4050);const first=rooms.get(r.id,user);assert(first.state.players[0].vy<0);assert.equal(first.state.players[0].ground,false);rooms.tick(4100);assert.equal(rooms.get(r.id,user).state.players[0].jumpHeld,false);}finally{store.db.close();}

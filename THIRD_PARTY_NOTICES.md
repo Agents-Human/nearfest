@@ -1,4 +1,20 @@
-# Third-party game source
+# Third-party notices
+
+The root [NearFest Evaluation Licence](LICENSE) applies only to original protectable NearFest material owned by KesaLabs Ghana Limited. It does not replace the licences below, acquire ownership of third-party material, or restrict permissions its authors already granted. Original notices remain applicable even when files are modified, bundled or archived.
+
+## Frontend baseline and dependencies
+
+The supplied React/Vite/Tezos vending-machine frontend is preserved in `legacy/tezos/` as inherited source. This archive is not newly authored NearFest code and is not relicensed by the root licence. Retain any applicable upstream terms; the archive is not a grant of additional rights.
+
+Dependencies listed in `package.json` and `package-lock.json`, including React, Vite, Three.js, Matter.js, GSAP and NEAR packages, remain governed by their respective package licences. The full `chess.js` BSD-2-Clause notice is preserved in `docs/chess-rules-library-LICENSE.txt`.
+
+## Artwork, models, audio and supplied media
+
+- Kenney packs retain their CC0 terms. Selected simulation assets and their six source-pack notices are listed in `public/models/simulation/manifest.json` and `public/models/simulation/licenses/`; other packs retain notices beside their runtime models.
+- CraftPix artwork retains the applicable [CraftPix licence](https://craftpix.net/file-licenses/), including its restrictions on redistributing art as reusable source assets. Fighter and background provenance is in `public/models/fighters/`; Cat Defense provenance is in `public/models/cats/`. These assets are not offered under the NearFest licence or MIT.
+- StudyJunior media retains its existing rights and access terms. Source records are in `assets/source/studyjunior/provenance.json` and `assets/source/studyjunior/choices/provenance.json`. Access through the asset service is not a grant by NearFest to redistribute that library independently.
+- “Lobby Time” by Kevin MacLeod is used under CC BY 4.0; retain `public/audio/CREDITS.md` and the associated attribution. Fonts retain their own notices.
+- Original project illustrations and AI-assisted artwork have provenance in `public/art/`. Those records distinguish generated references, redraws and sourced assets; they do not override any third-party rights.
 
 ## 2048
 
@@ -35,3 +51,7 @@ Cat Defense artwork is from the user-supplied **CraftPix Free Cartoon Cat Defens
 Pocket Soccer characters, equipment and ball artwork are original vector groups extracted from the supplied **Kenney Sports Pack**, licensed CC0. Exact group IDs and hashes are recorded in `public/models/soccer/provenance.json`; the CC0 license is included there. Articulated motion and the stadium are original code.
 
 Bridge Builders’ hold/release gameplay was referenced from <https://github.com/manumishra12/Stick_Man> by Manu Mishra. No repository code or artwork was copied. The multiplayer simulation, scenery, models and UI were implemented for this project.
+
+### Tappy Plane
+
+Tappy Plane 1.1 artwork by Kenney (CC0-1.0), supplied in `assets/new/kenney_tappy-plane`. Selected PNG sprites and the supplied sample cover are copied unchanged. The complete source licence and SHA-256 provenance are in `public/games/tappy-plane/License.txt` and `provenance.json`. Flight rules, multiplayer integration and browser rendering are original implementation work; the artwork remains credited to Kenney.

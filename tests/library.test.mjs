@@ -11,8 +11,13 @@ import {createCommunity} from '../server/community.mjs';
 import {createMultiplayer} from '../server/multiplayer.mjs';
 import {createPlay} from '../server/play.mjs';
 
+test('Platform Relay leads the featured collection without duplicates',()=>{
+ assert.equal(discoveryGames[0].id,'platform-relay');
+ assert.equal(discoveryGames.filter(g=>g.id==='platform-relay').length,1);
+});
+
 test('1000+ separately sourced titles have unique identities, real entry files, covers and licence notices',()=>{
- assert(library.length>=1000);assert.equal(discoveryGames.length,59);assert(discoveryGames.every(g=>g.multiplayer&&g.solo&&!g.pack&&g.engine!=='imported'));assert(!discoveryGames.some(g=>g.id==='kalah'||g.id==='ludo'));assert.equal(discoveryGames.find(g=>g.id==='oware').title,'Mancala');
+ assert(library.length>=1000);assert.equal(discoveryGames.length,60);assert(discoveryGames.every(g=>g.multiplayer&&g.solo&&!g.pack&&g.engine!=='imported'));assert(!discoveryGames.some(g=>g.id==='kalah'||g.id==='ludo'));assert.equal(discoveryGames.find(g=>g.id==='oware').title,'Mancala');
  assert.equal(new Set(library.map(g=>g.id)).size,library.length);
  const normalized=s=>s.toLowerCase().replace(/[^a-z0-9]/g,'');
  assert.equal(new Set(library.map(g=>normalized(g.title))).size,library.length);

@@ -233,12 +233,13 @@ function animalInstance(source: GLTF, id: string): THREE.Group {
   root.userData.animationNames = [...actions.keys()];
   root.userData.disposeAnimations = () => {
     mixer.stopAllAction();mixer.uncacheRoot(model);
+    model.traverse(object => {if (object instanceof THREE.SkinnedMesh) object.skeleton.dispose();});
   };
   playAnimation('run', 0);
   return root;
 }
 
-function spriteEnemyInstance(textures: [THREE.Texture, THREE.Texture], id: string): THREE.Group {
+export function spriteEnemyInstance(textures: [THREE.Texture, THREE.Texture], id: string): THREE.Group {
   const spec = spriteEnemySpecs[id];
   const root = new THREE.Group();root.name = 'kenney-extended-enemy-' + id;
   const frameTex: [THREE.Texture, THREE.Texture] = [textures[0].clone(), textures[1].clone()];
@@ -246,11 +247,17 @@ function spriteEnemyInstance(textures: [THREE.Texture, THREE.Texture], id: strin
     t.colorSpace = THREE.SRGBColorSpace;
     t.needsUpdate = true;
   }
-  const geometry = new THREE.PlaneGeometry(spec.width, spec.height);
+  // The bat's centre stays anchored while its wings bend continuously. Swapping
+  // differently sized silhouettes made the whole animal appear to blink.
+  const geometry = new THREE.PlaneGeometry(spec.width, spec.height, id === 'bat' ? 16 : 1, id === 'bat' ? 4 : 1);
+  const rest = id === 'bat' ? new Float32Array(geometry.attributes.position.array) : null;
+  geometry.computeBoundingSphere();
+  if (rest && geometry.boundingSphere) geometry.boundingSphere.radius += .6;
   const material = new THREE.MeshBasicMaterial({
     map: frameTex[0],
-    transparent: true,
-    alphaTest: .03,
+    transparent: false,
+    alphaTest: .25,
+    alphaToCoverage: true,
     side: THREE.DoubleSide,
     toneMapped: false,
   });
@@ -265,12 +272,20 @@ function spriteEnemyInstance(textures: [THREE.Texture, THREE.Texture], id: strin
     if (currentFrame === index) return;
     currentFrame = index;
     material.map = frameTex[index];
-    material.needsUpdate = true;
   };
   root.userData.mixer = {
     update(dt: number) {
       elapsed += dt;
-      if (id !== 'piranha') {
+      if (rest) {
+        const vertices = geometry.attributes.position as THREE.BufferAttribute;
+        const flap = Math.sin(elapsed * 12);
+        for (let i = 0; i < vertices.count; i++) {
+          const x = rest[i * 3], y = rest[i * 3 + 1];
+          const span = Math.max(0, (Math.abs(x) / (spec.width / 2) - .22) / .78);
+          vertices.setXYZ(i, x * (1 - .06 * span * (1 - flap)), y + flap * .42 * span * span, 0);
+        }
+        vertices.needsUpdate = true;
+      } else if (id !== 'piranha') {
         const next = Math.floor(elapsed * 6) % 2 as 0 | 1;
         root.userData.setFrame(next);
       }
@@ -283,96 +298,50 @@ function spriteEnemyInstance(textures: [THREE.Texture, THREE.Texture], id: strin
   return root;
 }
 
-function fireShotInstance(fxMap: Map<string, THREE.Texture>): THREE.Group {
-  const root = new THREE.Group();
-  root.name = 'kenney-tanks-fire-shot';
-  const f1 = fxMap.get('tank_explosion3.png')!.clone();
-  const f2 = fxMap.get('tank_explosion4.png')!.clone();
+/** A steady core and a continuous trail. No sprite flipping, rapid pulse, or
+ * transparent depth writes: overlapping shots remain readable in motion. */
+export function fireShotInstance(fxMap: Map<string, THREE.Texture>): THREE.Group {
+  const root = new THREE.Group();root.name = 'kenney-tanks-fire-shot';
   const coreTex = fxMap.get('tank_explosion2.png')!.clone();
-  for (const t of [f1, f2, coreTex]) {
-    t.colorSpace = THREE.SRGBColorSpace;
-    t.needsUpdate = true;
+  coreTex.colorSpace = THREE.SRGBColorSpace;
+  const coreMat = new THREE.MeshBasicMaterial({map:coreTex,transparent:true,depthWrite:false,side:THREE.DoubleSide,forceSinglePass:true,toneMapped:false});
+  const core = new THREE.Mesh(new THREE.PlaneGeometry(1.65,1.65),coreMat);
+  // A soft, tapered tail, with no additional image downloads.
+  const pixels = new Uint8Array(64*16*4);
+  for(let y=0;y<16;y++)for(let x=0;x<64;x++){
+    const offset=(y*64+x)*4,along=x/63,edge=1-Math.abs((y-7.5)/7.5);
+    pixels.set([255,177,61,Math.round(190*along*along*edge*edge)],offset);
   }
-  const flameGeo = new THREE.PlaneGeometry(2.6, 2.6);
-  const flameMat = new THREE.MeshBasicMaterial({
-    map: f1,
-    transparent: true,
-    alphaTest: .02,
-    side: THREE.DoubleSide,
-    toneMapped: false,
-  });
-  const flameMesh = new THREE.Mesh(flameGeo, flameMat);
-  const coreGeo = new THREE.PlaneGeometry(1.7, 1.7);
-  const coreMat = new THREE.MeshBasicMaterial({
-    map: coreTex,
-    transparent: true,
-    alphaTest: .02,
-    side: THREE.DoubleSide,
-    toneMapped: false,
-  });
-  const coreMesh = new THREE.Mesh(coreGeo, coreMat);
-  coreMesh.position.z = .05;
-  root.add(flameMesh, coreMesh);
-
-  let elapsed = 0;
-  root.userData.assetSource = 'Kenney Tanks / CC0';
-  root.userData.updateShot = (dt: number, vx = 1) => {
-    elapsed += dt;
-    const frame = Math.floor(elapsed * 18) % 2;
-    flameMat.map = frame === 0 ? f1 : f2;
-    flameMesh.rotation.z += dt * (vx >= 0 ? -14 : 14);
-    coreMesh.rotation.z += dt * (vx >= 0 ? 10 : -10);
-    const pulse = 1 + Math.sin(elapsed * 28) * .16;
-    flameMesh.scale.setScalar(pulse);
+  const trailTex=new THREE.DataTexture(pixels,64,16);trailTex.colorSpace=THREE.SRGBColorSpace;trailTex.magFilter=trailTex.minFilter=THREE.LinearFilter;trailTex.needsUpdate=true;
+  const trailMat=new THREE.MeshBasicMaterial({map:trailTex,transparent:true,depthWrite:false,side:THREE.DoubleSide,forceSinglePass:true,toneMapped:false});
+  const trail=new THREE.Mesh(new THREE.PlaneGeometry(3.4,1.1),trailMat);trail.position.set(-1.9,0,-.03);
+  root.add(trail,core);
+  let elapsed=0;
+  root.userData.assetSource='Kenney Tanks / CC0';
+  root.userData.resetShot=()=>{elapsed=0;coreMat.opacity=trailMat.opacity=0;};
+  root.userData.updateShot=(dt:number,vx=1,life=1)=>{
+    elapsed+=dt;
+    const opacity=Math.min(1,elapsed/.04)*Math.min(1,Math.max(0,life)/.14);
+    root.scale.x=vx>=0?1:-1;
+    coreMat.opacity=opacity;trailMat.opacity=opacity*.75;
   };
-  root.userData.disposeAnimations = () => {
-    f1.dispose();
-    f2.dispose();
-    coreTex.dispose();
-  };
+  root.userData.disposeAnimations=()=>{coreTex.dispose();trailTex.dispose();};
   return root;
 }
 
-function explosionEffectInstance(fxMap: Map<string, THREE.Texture>): THREE.Group {
-  const root = new THREE.Group();
-  root.name = 'kenney-tanks-explosion';
-  const frames = [
-    'tank_explosion2.png',
-    'tank_explosion3.png',
-    'tank_explosion4.png',
-    'tank_explosion6.png',
-    'tank_explosion8.png',
-  ].map(name => {
-    const t = fxMap.get(name)!.clone();
-    t.colorSpace = THREE.SRGBColorSpace;
-    t.needsUpdate = true;
-    return t;
-  });
-  const geo = new THREE.PlaneGeometry(3.6, 3.6);
-  const mat = new THREE.MeshBasicMaterial({
-    map: frames[0],
-    transparent: true,
-    alphaTest: .02,
-    side: THREE.DoubleSide,
-    toneMapped: false,
-  });
-  const mesh = new THREE.Mesh(geo, mat);
-  root.add(mesh);
-  let elapsed = 0;
-  const duration = .36;
-  root.userData.updateExplosion = (dt: number) => {
-    elapsed += dt;
-    const progress = Math.min(1, elapsed / duration);
-    const idx = Math.min(frames.length - 1, Math.floor(progress * frames.length));
-    mat.map = frames[idx];
-    mat.opacity = 1 - Math.max(0, (progress - .65) / .35);
-    mesh.scale.setScalar(.85 + progress * .75);
-    mesh.rotation.z += dt * 5;
-    return elapsed < duration;
+export function explosionEffectInstance(fxMap: Map<string, THREE.Texture>): THREE.Group {
+  const root=new THREE.Group();root.name='kenney-tanks-explosion';
+  const texture=fxMap.get('tank_explosion2.png')!.clone();texture.colorSpace=THREE.SRGBColorSpace;
+  const material=new THREE.MeshBasicMaterial({map:texture,transparent:true,depthWrite:false,side:THREE.DoubleSide,forceSinglePass:true,toneMapped:false});
+  const mesh=new THREE.Mesh(new THREE.PlaneGeometry(3,3),material);root.add(mesh);
+  let elapsed=0;
+  root.userData.updateExplosion=(dt:number)=>{
+    elapsed+=dt;const progress=Math.min(1,elapsed/.28);
+    material.opacity=(1-progress)*(1-progress)*.8;
+    mesh.scale.setScalar(.45+progress*.85);
+    return progress<1;
   };
-  root.userData.disposeAnimations = () => {
-    frames.forEach(f => f.dispose());
-  };
+  root.userData.disposeAnimations=()=>texture.dispose();
   return root;
 }
 
@@ -386,8 +355,9 @@ function bgElementInstance(sourceTex: THREE.Texture, id: string): THREE.Group {
   const geo = new THREE.PlaneGeometry(spec.width, spec.height);
   const mat = new THREE.MeshBasicMaterial({
     map: tex,
-    transparent: true,
-    alphaTest: .03,
+    transparent: false,
+    alphaTest: .25,
+    alphaToCoverage: true,
     side: THREE.DoubleSide,
     toneMapped: false,
   });

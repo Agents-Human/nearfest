@@ -1,0 +1,103 @@
+{
+  "pack": "Kenney Tappy Plane 1.1",
+  "author": "Kenney",
+  "license": "CC0-1.0",
+  "source": "assets/new/kenney_tappy-plane",
+  "files": [
+    {
+      "source": "PNG/background.png",
+      "file": "background.png",
+      "sha256": "30581f3f39562bac0f8240e32e4e4c48fbc330011980be57537a7ee1fc8cddc8"
+    },
+    {
+      "source": "PNG/groundGrass.png",
+      "file": "groundGrass.png",
+      "sha256": "d93f46ced9f628c766e09f7f00561933cfca961f11e45d4c1f689fbfa4b48b52"
+    },
+    {
+      "source": "PNG/rockGrass.png",
+      "file": "rockGrass.png",
+      "sha256": "faaa71f6ae38663fde629df881d18d928615a9efe6c34de8109935d6489be1a2"
+    },
+    {
+      "source": "PNG/rockGrassDown.png",
+      "file": "rockGrassDown.png",
+      "sha256": "0d71c0f00dff62a981070df6f0e9e7bf84be761c57198a25902546f57e18f795"
+    },
+    {
+      "source": "PNG/starGold.png",
+      "file": "starGold.png",
+      "sha256": "25d0af0761678361a73572d32b3c712bd47855dc3b7fa5c1c48ff7c30e0f6770"
+    },
+    {
+      "source": "PNG/puffSmall.png",
+      "file": "puffSmall.png",
+      "sha256": "da1f6b52218e83c66b05a402fcb528d5f9d6247bdba06f45e65243723f80d19f"
+    },
+    {
+      "source": "PNG/Planes/planeRed1.png",
+      "file": "planeRed1.png",
+      "sha256": "112a2625ce9f7fe53ff2de1a5dc5009840fad5e986d30479af1fdcb28bbfd5a3"
+    },
+    {
+      "source": "PNG/Planes/planeRed2.png",
+      "file": "planeRed2.png",
+      "sha256": "d297b59ceb64eb609c100a7b7814254e227231db639caa3b76a5f35bed8f31e0"
+    },
+    {
+      "source": "PNG/Planes/planeRed3.png",
+      "file": "planeRed3.png",
+      "sha256": "48fe1ac9464bd908896c4d0aedd09adcab24379764687dbf4734d73ab7e741ad"
+    },
+    {
+      "source": "PNG/Planes/planeBlue1.png",
+      "file": "planeBlue1.png",
+      "sha256": "16b4c29c3357a7d0d2101426d5ada2219fa1ec1405a7bb417e1999dd63d76820"
+    },
+    {
+      "source": "PNG/Planes/planeBlue2.png",
+      "file": "planeBlue2.png",
+      "sha256": "deec318d4c4495a383aefed0981fd164f8c3e525c24409971450e520b18c90e2"
+    },
+    {
+      "source": "PNG/Planes/planeBlue3.png",
+      "file": "planeBlue3.png",
+      "sha256": "ed6ab159bb39fc77e71979a6a83978f97b2c4146e3c808bc21e33dac9251d24e"
+    },
+    {
+      "source": "PNG/Planes/planeGreen1.png",
+      "file": "planeGreen1.png",
+      "sha256": "d7d838e94a47cfc1314ac2741a3c8d159cd7cb04fd3990f008df9a53ae5e9ed5"
+    },
+    {
+      "source": "PNG/Planes/planeGreen2.png",
+      "file": "planeGreen2.png",
+      "sha256": "8e0857d03ad89bb629b84519fa5439ae5fa03d5717e42b2a757cbbd1caa68be1"
+    },
+    {
+      "source": "PNG/Planes/planeGreen3.png",
+      "file": "planeGreen3.png",
+      "sha256": "4242e73bd1b2dd23b8bd3c7ae55fdb508e0f3135ef5da935f5d0e2aa2971932f"
+    },
+    {
+      "source": "PNG/Planes/planeYellow1.png",
+      "file": "planeYellow1.png",
+      "sha256": "3e9f101d33c50f2ec3b68cef7cdd05ae0de10113726b912316d6d37a34868208"
+    },
+    {
+      "source": "PNG/Planes/planeYellow2.png",
+      "file": "planeYellow2.png",
+      "sha256": "cb1b9e450506033907bda6dea4f9991be9b8e0fbaf5ab7280e43c6ac067f842b"
+    },
+    {
+      "source": "PNG/Planes/planeYellow3.png",
+      "file": "planeYellow3.png",
+      "sha256": "21498331424b804e6cbdf34457fbfc7100902a94c09e1adf5731773d99f562d9"
+    }
+  ],
+  "cover": {
+    "source": "Sample.png",
+    "file": "/art/action-games/tappy-plane.png",
+    "sha256": "47380589cea1eea9ff3ff8e35974b69e62d5097ab4cfaeb6c11cc2d78ff4592c"
+  }
+}

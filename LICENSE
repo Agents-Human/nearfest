@@ -1,0 +1,65 @@
+NearFest Evaluation Licence 1.0
+
+Copyright (c) 2026 KesaLabs Ghana Limited.
+All rights reserved, except for the permissions expressly stated below.
+
+1. Scope and ownership
+
+This licence applies only to original NearFest source code, documentation and
+other protectable material in this repository in which KesaLabs Ghana Limited
+holds the relevant rights (the "Covered Material"). It does not transfer
+ownership. Third-party material is excluded as described in section 5.
+
+2. Inspection, hackathon evaluation and authorized demos
+
+Anyone may view the Covered Material made publicly available in this repository.
+NEAR HACKATHON 2026 organizers, judges and their authorized reviewers may download,
+copy, build, run and test the Covered Material, including through automated
+screening tools, solely to evaluate the NearFest submission and reproduce its
+documented behavior. They may make local modifications necessary for that
+evaluation and retain evaluation copies and reports. Preserve this licence and
+applicable copyright and third-party notices in those copies.
+
+Visitors may run client-side Covered Material delivered by a NearFest demo or
+service authorized by KesaLabs Ghana Limited solely as necessary to use that
+demo or service, subject to any applicable service terms. This does not grant
+permission to extract and reuse the code or operate an independent deployment.
+
+3. Other uses require permission
+
+Except for section 2, a separate written agreement, rights granted under the
+applicable repository host's terms, or uses permitted by law, no permission is
+granted to copy, modify, redistribute, sublicense, sell, publicly deploy, offer
+as a hosted service, or incorporate the Covered Material into another product.
+This restriction applies to commercial and noncommercial uses. Request separate
+written permission from KesaLabs Ghana Limited for such uses.
+
+Publishing this repository for review does not release the Covered Material
+under MIT or another open-source licence.
+
+4. Names, marks and event promotion
+
+No trademark licence or endorsement is granted. Identifying NearFest in reviews
+is permitted. Any non-exclusive promotional rights granted to the hackathon
+organizers under the submission terms remain unaffected.
+
+5. Third-party material and existing rights
+
+Dependencies, imported or archived games, templates, artwork, models, fonts,
+audio and other third-party material remain subject to their own licences,
+copyright notices and permissions. See THIRD_PARTY_NOTICES.md, package notices
+and the licence and provenance files beside those materials.
+
+This licence does not relicense third-party material, restrict rights already
+granted by its owners, claim ownership of public-domain material or ideas, or
+create copyright in material that is not eligible for copyright protection.
+It grants only rights that KesaLabs Ghana Limited is entitled to grant.
+
+6. No warranty; limitation of liability
+
+To the extent permitted by applicable law, the Covered Material is provided
+"as is", without warranties, including warranties of merchantability, fitness
+for a particular purpose or non-infringement. To the extent permitted by law,
+KesaLabs Ghana Limited is not liable for claims, damages or other liability
+arising from use of the Covered Material. Nothing in this licence excludes
+rights or liability that cannot lawfully be excluded.

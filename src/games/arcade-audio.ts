@@ -269,8 +269,9 @@ export function createArcadeAudio(game: string): ArcadeAudio {
         if (mine.phase === 'walking' && oldMine.phase === 'turning') tone(180,.08,.08,'triangle',80);
         if (mine.phase === 'falling' && oldMine.phase !== 'falling') tone(450,.4,.07,'sine',70);
       } else if (game === 'pocket-racers') {
-        if (mine.crashes > oldMine.crashes) {noise(.2,.15,550);tone(140,.16,.08,'sine',60);}
-        if (ready && mine.speed > 145 && Math.abs(angle(mine.heading - oldMine.heading)) > .13) { noise(.12, .045, 2100); lastEffect = now; }
+        if (mine.crashes > oldMine.crashes) { sample('bump', .38); noise(.26, .18, 480); tone(135, .22, .1, 'sawtooth', 48); }
+        if ((mine.padBoost || 0) > (oldMine.padBoost || 0) + .1) { tone(280, .2, .08, 'triangle', 640); }
+        if (ready && mine.speed > 145 && Math.abs((mine.vx || 0) - (oldMine.vx || 0)) > 45) { noise(.1, .04, 2100); lastEffect = now; }
       } else if (game === 'platform-relay' || game === 'stick-rivals') {
         if ((oldMine.ground || (mine.airJumps ?? 0) < (oldMine.airJumps ?? 0)) && !mine.ground && mine.vy < -50 && !sample(oldMine.ground?'jump':'jump-high',.3)) tone(190, .19, .075, 'triangle', 490);
         if (game === 'platform-relay' && mine.bouncedAt && mine.bouncedAt !== oldMine.bouncedAt && !sample('jump-high',.35)) tone(260, .24, .09, 'sine', 640);

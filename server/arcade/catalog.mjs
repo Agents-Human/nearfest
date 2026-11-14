@@ -1,11 +1,13 @@
 const rows=[
+ ['platform-relay','Platform Relay','Action',2,4,0,'An endless island survival adventure. Jump onto monsters to squash them or press Space to shoot, collect gold coins, and outrun the storm. Each player gets three lives.'],
+ ['tappy-plane','Tappy Plane','Action',2,4,0,'Tap to climb, weave through the rocks and collect gold stars. Chase your best solo score or outlast up to three friends on the same course.'],
  ['town-council','Town Council','Simulation',2,4,840,'Run a small town together. Make promises, earn residents’ trust and prepare a festival in seven days. Every player leaves a different impression.'],
  ['castaway-crew','Castaway Crew','Simulation',2,4,900,'Explore an island with your crew. Share supplies, win survivors’ trust and repair the rescue radio before the storm arrives.'],
  ['pocket-soccer','Pocket Soccer','Sports',2,2,150,'Dribble, tackle and shoot in a floodlit stadium. Move with the arrows, press Space to kick. First to five goals.'],
  ['cat-defense','Cat Defense','Co-op',2,4,0,'Team up as four neighbourhood cats. Switch lanes, auto-fire at the dogs and unleash fish bombs. Collect coins and protect your barricade through five waves.'],
  ['marble-run','Marble Skyway','Racing',2,4,120,'Roll along a floating skyway. Steer for coins, hop the gaps and race your friends to the finish.'],
  ['tank-arena','Toy Tank Arena','Action',2,4,120,'Drive, find cover and fire. Your turret helps you aim. Smash crates, bounce shots and be first to five knockouts.'],
- ['pocket-racers','Pocket Racers','Racing',2,4,120,'A quick coastal sprint. Just steer left or right, dodge traffic, collect gold coins for boost and race to the finish.'],
+ ['pocket-racers','Pocket Racers','Racing',2,4,120,'A high-speed 3D kart race through coastal suburbs, downtown skyscrapers, and the Grand Prix stadium. Steer smoothly, hit turbo boost pads, dodge emergency & city traffic, and race to the finish.'],
  ['stick-rivals','Yokai Duel','Action',2,2,180,'Trade quick strikes, heavy attacks and guards as two Yokai rivals. First to two round wins.'],
  ['paddle-duel','Paddle Duel','Sports',2,2,180,'Move your paddle, read the bounce. First to seven.'],
  ['air-hockey','Air Hockey','Sports',2,2,180,'Guard your goal and strike the puck. First to five.'],
@@ -15,7 +17,6 @@ const rows=[
  ['marble-knockout','Marble Knockout','Action',2,6,120,'Keep your marble on the shrinking platform.'],
  ['kitchen-rush','Kitchen Rush','Co-op',2,4,180,'Pick, chop, cook and serve. Beat the kitchen clock together.'],
  ['paint-tag','Paint Tag','Action',2,4,120,'Dodge, aim and tag your rivals with colourful paint.'],
- ['platform-relay','Platform Relay','Action',2,4,0,'An endless island survival adventure. Jump onto monsters to squash them or press Space to shoot, collect gold coins, and outrun the storm. Each player gets three lives.'],
  ['draw-guess','Draw & Guess','Party games',3,8,480,'Draw the secret word. Guess your friends’ sketches.'],
  ['word-hunt','Word Hunt','Word games',2,8,90,'Trace neighbouring letters to find words on a shared grid.'],
  ['word-relay','Word Relay','Word games',2,8,180,'Start with the last letter. Keep the chain alive.'],
@@ -32,6 +33,6 @@ const rows=[
  ['sudoku-race','Sudoku Race','Puzzles',2,4,300,'One shared puzzle. Private answers. Race to a correct solution.'],
  ['codebreakers','Codebreakers','Puzzles',2,4,180,'Use every clue to deduce a unique four-symbol code.'],
 ];
-export const freeOnly=new Set(['town-council','castaway-crew','pocket-soccer','cat-defense','marble-run','tank-arena','draw-guess','category-sprint','clue-crew','bluff-club','deduction-club','kitchen-rush','platform-relay','circuit-crew','orbit-rescue','bridge-builders']);
+export const freeOnly=new Set(['tappy-plane','town-council','castaway-crew','pocket-soccer','cat-defense','marble-run','tank-arena','draw-guess','category-sprint','clue-crew','bluff-club','deduction-club','kitchen-rush','platform-relay','circuit-crew','orbit-rescue','bridge-builders']);
 export const arcadeGames=rows.map(([id,title,genre,min,max,seconds,description])=>({id,title,label:genre,genre,category:['Maths','Science'].includes(genre)?genre:'Gaming',min_players:min,max_players:max,seconds,description,engine:'arcade',kind:'game',solo:true,multiplayer:true,standalone:true,bettable:!freeOnly.has(id),rounds:1,art:id,rules_version:'slotvend-original-1'}));
 export const arcadeGame=id=>arcadeGames.find(g=>g.id===id);

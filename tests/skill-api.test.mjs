@@ -14,7 +14,7 @@ test('all eight published boards share real HTTP state; independent sessions rec
  function client(){let cookie='';return async(path,data,status=200)=>{const r=await fetch(origin+'/api'+path,{method:data===undefined?'GET':'POST',headers:{origin,cookie,'content-type':'application/json'},body:data===undefined?undefined:JSON.stringify(data)});if(r.headers.get('set-cookie'))cookie=r.headers.get('set-cookie').split(';')[0];const j=await r.json();assert.equal(r.status,status,JSON.stringify(j));return j;};}
  try{
   await start();const a=client(),b=client(),spectator=client(),guest=client();const alice=await a('/session/practice',{name:'Coral tester'}),bob=await b('/session/practice',{name:'Lilac tester'});await spectator('/session/practice',{name:'Spectator'});
-  const catalog=await guest('/play');assert.equal(catalog.length,59);assert(catalog.every(g=>g.solo&&g.multiplayer));const games=catalog.filter(g=>g.engine==='skill');assert.equal(games.length,8);assert(games.every(g=>g.skill_only));
+  const catalog=await guest('/play');assert.equal(catalog.length,60);assert(catalog.every(g=>g.solo&&g.multiplayer));const games=catalog.filter(g=>g.engine==='skill');assert.equal(games.length,8);assert(games.every(g=>g.skill_only));
   await a('/parties',{game_id:'ludo'},400);const rooms=[];
   for(const g of games){let r=await a('/parties',{game_id:g.id,entry:'0'},201);await b(`/parties/${r.id}/action`,{type:'join'});await a(`/parties/${r.id}/action`,{type:'ready',ready:true});await b(`/parties/${r.id}/action`,{type:'ready',ready:true});r=await a(`/parties/${r.id}/start`,{});assert.equal(r.legal_moves.length,0);rooms.push(r);}
   await wait(Math.max(...rooms.map(r=>r.starts_at))-Date.now()+40);
