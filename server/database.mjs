@@ -110,6 +110,14 @@ async function connectDatabase(config,namespace){
     `);
     await query('INSERT INTO schema_migrations(version) VALUES(4)');
    }
+   if(!(await db.prepare('SELECT version FROM schema_migrations WHERE version=5').get())){
+    await query(`
+     CREATE TABLE managed_accounts(user_id TEXT PRIMARY KEY REFERENCES users(id),username TEXT NOT NULL UNIQUE,password_hash TEXT NOT NULL,encrypted_key TEXT NOT NULL,created BIGINT NOT NULL,funded_at BIGINT);
+     CREATE TABLE managed_transactions(id TEXT PRIMARY KEY,user_id TEXT NOT NULL REFERENCES users(id),tx_hash TEXT NOT NULL,signed_tx TEXT NOT NULL,status TEXT NOT NULL,result TEXT,created BIGINT NOT NULL);
+     CREATE INDEX managed_transactions_pending ON managed_transactions(user_id,created) WHERE status='pending';
+    `);
+    await query('INSERT INTO schema_migrations(version) VALUES(5)');
+   }
   },{key:'schema-migrations'});
   return db;
  }catch(error){await Promise.all([pool.end(),lockPool.end()]);throw error;}

@@ -23,3 +23,9 @@ test('typed stakes keep exact precision and reject malformed amounts before onbo
     assert.throws(() => parseNearEntry(value), /valid NEAR amount/);
   }
 });
+
+test('managed accounts finish starter funding before entering a game',()=>{
+ const user={id:'new.testnet',kind:'wallet',managed:true,balance:'10000000000000000000000000',starter_funded:false};
+ assert.equal(hasAccess(user,{wallet:true,minimum:'1'}),false);assert.equal(hasAccess(user,{}),false);
+ assert.equal(hasAccess({...user,starter_funded:true},{wallet:true,minimum:'1'}),true);
+});

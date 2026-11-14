@@ -1,3 +1,4 @@
+import {accountKey,authorizeTransaction} from './managed-crypto.mjs';
 import {createNearReader,availableBalance} from './near-reads.mjs';
 import { Account, JsonRpcProvider, actions } from 'near-api-js';
 export const contractId = process.env.NEAR_CONTRACT_ID || '';
@@ -10,9 +11,9 @@ export async function view(method, args = {}) {
   await assertTestnet();
   return read(method+':'+JSON.stringify(args),()=>provider.callFunction({ contractId, method, args, blockQuery: { finality: 'final' } }));
 }
-export function transaction(methodName, args, deposit = '0', signerId) {
+export function transaction(methodName, args, deposit = '0', signerId, authorizationId) {
   if (!contractId) throw Error('Connect a deployed NEAR testnet contract first.');
-  return { ...(signerId?{signerId}:{}), receiverId: contractId, actions: [{ type: 'FunctionCall', params: { methodName, args, deposit, gas: '150000000000000' } }] };
+  return authorizeTransaction({ ...(signerId?{signerId}:{}), receiverId: contractId, actions: [{ type: 'FunctionCall', params: { methodName, args, deposit, gas: '150000000000000' } }] },accountKey(),{id:authorizationId});
 }
 export function assertSuccess(result) {
   const outcomes = [result?.status, ...(result?.receipts_outcome || []).map(r => r.outcome?.status)];

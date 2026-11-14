@@ -1,11 +1,16 @@
 import { NearConnector } from '@hot-labs/near-connect';
 import type { SignAndSendTransactionParams } from '@hot-labs/near-connect';
-import {api} from './api';
+import {api,type User} from './api';
+import {createAccountSession} from './account-session';
 import {createWalletSession} from './wallet-session';
 let connector: NearConnector | undefined;
 const getConnector = () => connector ||= new NearConnector({ network: 'testnet', features: { testnet: true, signMessage: true, signAndSendTransaction: true } });
 export const connectWallet = createWalletSession(api, getConnector);
-export async function sendTransaction(transaction: SignAndSendTransactionParams) {
+export const signInAccount = createAccountSession(api);
+export async function sendTransaction(transaction: SignAndSendTransactionParams, resuming = false) {
+  const user=await api<User|null>('/me');
+  if(user?.managed)return api('/near/submit',{transaction});
+  if(resuming)return;
   const wallet = await getConnector().wallet();
   const accounts = await wallet.getAccounts();
   if (transaction.signerId && !accounts.some(account => account.accountId === transaction.signerId)) throw Error('Your selected wallet account changed. Reconnect the account used for this room.');

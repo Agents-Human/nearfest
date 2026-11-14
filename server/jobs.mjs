@@ -1,5 +1,5 @@
 // Restore unfinished work once at startup. Runtime dispatch always targets one ID.
-export async function startJobs(store,{rooms,economy,faucet,processBet,changed=()=>{}}){
+export async function startJobs(store,{rooms,economy,faucet,managedAccounts,processBet,changed=()=>{}}){
  const {db,jobs}=store;
  const absent={ifAbsent:true};
  for(const [kind,table] of [['board','skill_rooms'],['quiz','multiplayer_rooms'],['arcade','arcade_rooms']]){
@@ -19,11 +19,13 @@ export async function startJobs(store,{rooms,economy,faucet,processBet,changed=(
   }
  }
  if(faucet.enabled)for(const row of (await db.query("SELECT id FROM faucet_claims WHERE status='pending'")).rows)await jobs.schedule('faucet',row.id,Date.now(),{},absent);
+ if(managedAccounts?.enabled)for(const row of (await db.query("SELECT id FROM managed_transactions WHERE status='pending'")).rows)await jobs.schedule('managed-transaction',row.id,Date.now(),{},absent);
  await jobs.schedule('sessions-cleanup','sessions',Date.now()+3600000,{},absent);
  await jobs.start({
   room:async data=>{if(await rooms[data.kind].expire(data.roomId))changed();},
   'near-intent':async data=>{if(await economy.recoverIntent(data.id))changed();},
   'near-room':async data=>{if(await economy.settleRoom(data.id))changed();},
+  'managed-transaction':async data=>{if(await managedAccounts.recoverTransaction(data.id))changed();},
   faucet:async data=>{if(await faucet.recoverClaim(data.id))changed();},
   'bet-check':data=>processBet(data.id),
   'bet-timeout':data=>processBet(data.id),

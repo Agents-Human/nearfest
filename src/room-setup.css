@@ -32,10 +32,18 @@ body:has(#machine-overlays .modal){overflow:hidden}
   .room-setup .platform-character img{width:35px;height:35px}
   .room-setup .platform-character b{font-size:10px}
   .room-setup form>.primary{width:100%}
+  .solo-quiz-field{padding:15px}
 }
 
 .solo-game-setup form{display:grid;gap:20px}
 .solo-game-setup .race-duration-field{margin:0}
+.solo-quiz-field{display:grid;gap:12px;padding:18px 20px;border:1px solid #29282022;border-radius:14px;background:#f1ecde}
+.solo-quiz-field .solo-field-label{font-size:13px;font-weight:700;color:var(--ink)}
+.solo-game-setup .quiz-difficulty{justify-content:flex-start;margin:0;flex-wrap:wrap}
+.solo-game-setup .quiz-difficulty>button{background:#fffdf5;font-weight:600}
+.solo-game-setup .quiz-difficulty>button.active{background:var(--yellow);font-weight:700}
+.solo-game-setup .curation-note{margin:0;font-size:12px;line-height:1.5;color:#726081}
+.solo-game-setup .inline-error{margin:0}
 
 .stake-amount-input{position:relative;width:100%}
 .stake-amount-input>input{display:block;width:100%;padding-right:76px!important;appearance:textfield;font-variant-numeric:tabular-nums}

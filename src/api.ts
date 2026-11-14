@@ -1,7 +1,7 @@
 import {confirmWalletAction} from './near-confirmation.mjs';
 export type NearEscrow={unconfirmed_members?:string[];network:string;contract_id:string;status:string;error?:string|null;refund_at:number;explorer:string};
 export type Config = { room_storage_fee:string; network: string; contract_id: string; oracle_ready: boolean; ai_ready: boolean; semantic_moderation: boolean; storage_fee: string; review_ms: number; resolution_ms: number };
-export type User = { id: string; name: string; kind: 'practice' | 'wallet'; balance: string; credit: string; pending: string; chain_error?: string };
+export type User = { id: string; name: string; kind: 'practice' | 'wallet'; managed?: boolean; username?: string; starter_funded?: boolean; account_funding_error?: string|null; balance: string; credit: string; pending: string; chain_error?: string };
 export type Evidence = { outcome: string; explanation: string; provider: string; observed_at: number; sources: { title: string; url: string; quote?: string }[]; limitation?: string };
 export type EventStream = { platform: 'youtube' | 'twitch'; id: string; url: string };
 export type Bet = { cover: string | null; stream: EventStream | null; id: string; mode: 'practice' | 'live'; creator: string; creator_name: string; opponent: string | null; opponent_name: string | null; invitee: string | null; referee: string | null; title: string; rules: string; category: string; side_a: string; side_b: string; stake: string; resolver: string; resolver_config: Record<string, string | number>; created_at: number; join_before: number; ends_at: number; resolve_until: number; status: string; outcome: string | null; creator_vote: string | null; opponent_vote: string | null; proposed_outcome: string | null; challenge_until: number | null; evidence: Evidence | null; reactions: Record<string, number>; chat_count: number };
@@ -19,7 +19,7 @@ export async function api<T>(path: string, data?: unknown): Promise<T> {
       localStorage.setItem('nearfest-pending',result.intent_id);
       window.dispatchEvent(new Event('nearfest:pending-payment'));
       const {sendTransaction}=await import('./wallet');
-      const confirmed=await confirmWalletAction({confirm:()=>api<T>('/near/confirm',{intent_id:result.intent_id}),onStatus:status=>window.dispatchEvent(new CustomEvent('nearfest:wallet-status',{detail:{intent_id:result.intent_id,status}})),...(result.resume?{}:{send:()=>sendTransaction(result.transaction)})});
+      const confirmed=await confirmWalletAction({confirm:()=>api<T>('/near/confirm',{intent_id:result.intent_id}),onStatus:status=>window.dispatchEvent(new CustomEvent('nearfest:wallet-status',{detail:{intent_id:result.intent_id,status}})),send:()=>sendTransaction(result.transaction,Boolean(result.resume))});
       if(localStorage.getItem('nearfest-pending')===result.intent_id)localStorage.removeItem('nearfest-pending');
       window.dispatchEvent(new Event('nearfest:pending-payment'));
       return confirmed;

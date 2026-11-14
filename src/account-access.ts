@@ -17,7 +17,7 @@ export function roomBudget(entry: string, creating = false) {
   return BigInt(entry) > 0n ? (BigInt(entry) + (creating ? 10n ** 23n : 10n ** 22n) + GAS_ALLOWANCE).toString() : '0';
 }
 export function hasAccess(user: User | null, request: AccessRequest) {
-  return Boolean(user && (!request.wallet || user.kind === 'wallet' && !user.chain_error && BigInt(user.balance) >= BigInt(request.minimum || '0')));
+  return Boolean(user && (!user.managed || user.starter_funded) && (!request.wallet || user.kind === 'wallet' && !user.chain_error && BigInt(user.balance) >= BigInt(request.minimum || '0')));
 }
 export function requestOnboarding(request: AccessRequest = {}) {
   window.dispatchEvent(new CustomEvent('nearfest:onboard', {detail: {autoConnect:true,...request}}));

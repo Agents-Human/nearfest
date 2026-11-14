@@ -13,7 +13,7 @@ export function liveFaucet(){
  const signer=enabled?new Account(id,provider,key):null;
  return {enabled,id,
   network:assertTestnet,
-  balance:async account=>BigInt(await new Account(account,provider).getBalance()),
+  balance:async account=>{try{return BigInt(await new Account(account,provider).getBalance());}catch(error){if(/^[a-f0-9]{64}$/.test(account)&&/does not exist|UNKNOWN_ACCOUNT|unknown account/i.test(error.message))return 0n;throw error;}},
   async prepare(recipient,amount){const tx=await signer.createSignedTransaction({receiverId:recipient,actions:[actions.transfer(BigInt(amount))]});return {hash:baseEncode(createHash('sha256').update(encodeTransaction(tx.transaction)).digest()),signed:Buffer.from(encodeTransaction(tx)).toString('base64')};},
   send:signed=>provider.sendTransactionUntil(decodeSignedTransaction(Buffer.from(signed,'base64')),'FINAL'),
   status:hash=>provider.viewTransactionStatus({txHash:hash,accountId:id,waitUntil:'FINAL'})
@@ -52,7 +52,7 @@ export function createFaucet(store,{chain=liveFaucet(),now=Date.now}={}){
   // Re-broadcast the same signed transaction, never mint a new transfer on retry.
   try{return (await accept(row,await chain.send(row.signed_tx)));}catch(e){if((await db.prepare('SELECT status FROM faucet_claims WHERE id=$1').get(row.id)).status==='failed')throw e;return result(row);}
  }
- async function claim(u,ip){
+ async function claim(u,ip,{minimumGrant=0n}={}){
   if(u?.kind!=='wallet')throw Error('Connect your NEAR testnet wallet first.');
   if(!chain.enabled)throw Error('Test NEAR top-ups are temporarily unavailable. Your room invitation is saved.');
   if(!u.id.endsWith('.testnet')&&!/^[a-f0-9]{64}$/.test(u.id))throw Error('Use a NEAR testnet wallet.');
@@ -74,7 +74,7 @@ export function createFaucet(store,{chain=liveFaucet(),now=Date.now}={}){
    const [balance,reserve]=await Promise.all([chain.balance(u.id),chain.balance(chain.id)]);
    if(balance>=10n*UNIT)throw Error('Your wallet already has at least 10 test NEAR. Top up here when it falls below 10 NEAR.');
    const grant=faucetGrant(reserve,balance);
-   if(!grant)throw Error('Test NEAR top-ups are temporarily out of funds. Your room invitation is saved.');
+   if(!grant||grant<minimumGrant)throw Error('Test NEAR top-ups are temporarily out of funds. Your room invitation is saved.');
    reserveCache=null;
    const prepared=await chain.prepare(u.id,grant.toString()),row={id:randomUUID(),user_id:u.id,ip_hash:digest,created:now(),status:'pending',amount:grant.toString(),tx_hash:prepared.hash,signed_tx:prepared.signed};
    await db.transaction(async()=>{await db.prepare('INSERT INTO faucet_claims(id,user_id,ip_hash,created,status,tx_hash,signed_tx,amount) VALUES($1,$2,$3,$4,$5,$6,$7,$8)').run(row.id,row.user_id,row.ip_hash,row.created,row.status,row.tx_hash,row.signed_tx,row.amount);await store.jobs?.schedule('faucet',row.id,Date.now()+20000);});

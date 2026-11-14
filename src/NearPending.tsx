@@ -13,7 +13,7 @@ export default function NearPending({pending, history, checking, error, refresh,
   }
   return <div className="wallet-activity-list">
     {pending.map(item => <div className="wallet-activity-row" key={item.intent_id}>
-      <div><b>{item.title}</b><span>{item.status === 'awaiting_wallet' ? 'Awaiting wallet approval' : item.status === 'unavailable' ? 'Reconnecting automatically' : 'Confirming payment'}{BigInt(item.amount) > 0n ? ` · ${money(item.amount)} NEAR` : ''}</span></div>
+      <div><b>{item.title}</b><span>{item.status === 'awaiting_wallet' ? 'Ready to continue' : item.status === 'unavailable' ? 'Reconnecting automatically' : 'Confirming payment'}{BigInt(item.amount) > 0n ? ` · ${money(item.amount)} NEAR` : ''}</span></div>
       {item.status === 'awaiting_wallet' && <button className="text-button" disabled={Boolean(working)} onClick={() => void continuePayment(item.intent_id)}>{working === item.intent_id ? 'Opening…' : 'Continue'}</button>}
     </div>)}
     {history.map(item => <div className="wallet-activity-row" key={item.id}>

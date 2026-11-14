@@ -15,7 +15,8 @@
     "setup:faucet": "node scripts/setup-faucet.mjs",
     "test:faucet": "node scripts/check-faucet.mjs",
     "db:local": "node --env-file-if-exists=.env scripts/local-postgres.mjs",
-    "db:migrate:sqlite": "node --env-file-if-exists=.env scripts/migrate-sqlite.mjs"
+    "db:migrate:sqlite": "node --env-file-if-exists=.env scripts/migrate-sqlite.mjs",
+    "setup:accounts": "node scripts/setup-managed-accounts.mjs"
   },
   "dependencies": {
     "@hot-labs/near-connect": "0.12.0",

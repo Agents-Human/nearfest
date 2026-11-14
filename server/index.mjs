@@ -1,3 +1,4 @@
+import {createManagedAccounts} from './managed-accounts.mjs';
 import {createFaucet} from './faucet.mjs';
 import {createNearEconomy} from './near-economy.mjs';
 import {createArcadeRooms} from './arcade/rooms.mjs';
@@ -62,7 +63,8 @@ async function login(res, user) { const token = randomBytes(32).toString('hex');
 async function review(text) { moderate(text); if (process.env.REQUIRE_SEMANTIC_MODERATION === 'true' && !hasAI) throw Error('Content creation is paused until the moderation service is configured.'); await semanticModerate(text); }
 async function required(req) { const u = (await current(req)); if (!u) throw Error('Choose a practice name or connect your NEAR wallet first.'); return u; }
 const walletAuth=createWalletAuth({origin,db,provider,network:assertTestnet,review});
-async function profile(u) { if (!u) return null; let credit = '0', pending = '0', chain_error = null, balance='0'; if(u.kind==='wallet'){try{await assertTestnet();balance=String(await nearBalance(u.id));}catch{chain_error='NEAR wallet balance unavailable.';}} if (u.kind === 'wallet' && contractId) { try { [credit, pending] = await Promise.all([view('get_credit', { account_id: u.id }), view('get_pending', { account_id: u.id })]); } catch { chain_error = 'NEAR balance unavailable. Try refreshing.'; } } return { ...u, balance, credit, pending, chain_error }; }
+const managedAccounts=createManagedAccounts(store,{faucet,review});
+async function profile(u) { if (!u) return null; let credit = '0', pending = '0', chain_error = null, balance='0'; if(u.kind==='wallet'){try{await assertTestnet();balance=String(await nearBalance(u.id));}catch{chain_error='NEAR wallet balance unavailable.';}} if (u.kind === 'wallet' && contractId) { try { [credit, pending] = await Promise.all([view('get_credit', { account_id: u.id }), view('get_pending', { account_id: u.id })]); } catch { chain_error = 'NEAR balance unavailable. Try refreshing.'; } } return { ...u, ...await managedAccounts.info(u), balance, credit, pending, chain_error }; }
 async function decorated(b) { const media = (await db.prepare('SELECT cover,stream_json FROM room_media WHERE bet_id=$1').get(b.id)); const reactions = {}; for (const r of (await db.prepare('SELECT emoji,count(*) AS n FROM reactions WHERE bet_id=$1 GROUP BY emoji').all(b.id))) reactions[r.emoji] = r.n; return { ...b, cover: media?.cover || null, stream: media?.stream_json ? JSON.parse(media.stream_json) : null, creator_name: (await store.user(b.creator))?.name || b.creator, opponent_name: b.opponent ? (await store.user(b.opponent))?.name || b.opponent : null, reactions, chat_count: (await db.prepare('SELECT count(*) AS n FROM messages WHERE bet_id=$1').get(b.id)).n }; }
 async function room(id) { const b = (await store.bet(id)); if (!b) throw Error('This room was not found.'); return b; }
 async function sync(id) {
@@ -93,10 +95,21 @@ const server = createServer(async (req, res) => {
   const url = new URL(req.url, origin), path = url.pathname;
   try {
     if (req.method === 'POST') { if (req.headers.origin !== origin) { json(res, { error: 'This request must come from the NearFest application.' }, 403); return; } if(!/^\/api\/arcade\/[^/]+\/input$/.test(path))rate('ip:' + req.socket.remoteAddress, (await current(req))?1000:120); }
-    if(path==='/api/near/faucet'&&req.method==='GET')return json(res,await faucet.status((await current(req))));
-    if(path==='/api/near/faucet'&&req.method==='POST'){const u=(await required(req));rate('faucet:'+u.id,5);const result=await faucet.claim(u,req.socket.remoteAddress||'unknown');return json(res,result);}
+    if((path==='/api/session/register'||path==='/api/session/login')&&req.method==='POST'){
+      rate('account-auth:'+req.socket.remoteAddress,15);const data=await body(req);
+      const u=await (path.endsWith('/register')?managedAccounts.register(data):managedAccounts.authenticate(data));
+      await login(res,u);let account_funding_error=null;
+      if(!(await managedAccounts.info(u)).starter_funded)try{await managedAccounts.fund(u,req.socket.remoteAddress||'unknown');}catch(error){account_funding_error=error.message;}
+      return json(res,{...await profile(u),account_funding_error});
+    }
+    if(path==='/api/near/submit'&&req.method==='POST'){
+      const u=await required(req);rate('account-sign:'+u.id,60);const {transaction}=await body(req);
+      return json(res,await managedAccounts.submit(u,transaction));
+    }
+    if(path==='/api/near/faucet'&&req.method==='GET')return json(res,await managedAccounts.fundingStatus((await current(req))));
+    if(path==='/api/near/faucet'&&req.method==='POST'){const u=(await required(req));rate('faucet:'+u.id,5);const result=await ((await managedAccounts.info(u)).managed?managedAccounts.fund(u,req.socket.remoteAddress||'unknown'):faucet.claim(u,req.socket.remoteAddress||'unknown'));return json(res,result);}
     if(path==='/api/near/pending'&&req.method==='GET')return json(res,(await economy.pending((await required(req)))));
-    if(path==='/api/near/reconcile'&&req.method==='POST'){const u=(await required(req));rate('near-reconcile:'+u.id,12);const result=await economy.reconcile(u);if(result.recovered.length)broadcast();return json(res,{...result,history:[...(await economy.history(u)),...(await faucet.history(u))].sort((a,b)=>b.created_at-a.created_at).slice(0,30)});}
+    if(path==='/api/near/reconcile'&&req.method==='POST'){const u=(await required(req));rate('near-reconcile:'+u.id,12);const result=await economy.reconcile(u);if(result.recovered.length)broadcast();return json(res,{...result,history:[...(await economy.history(u)),...(await faucet.history(u)),...(await managedAccounts.fundingHistory(u))].sort((a,b)=>b.created_at-a.created_at).slice(0,30)});}
     if(path==='/api/near/retry'&&req.method==='POST'){const u=(await required(req)),d=await body(req);rate('near-retry:'+u.id,10);const result=await economy.retry(d.intent_id,u);if(!result.transaction)broadcast();return json(res,result);}
     if(path==='/api/near/abandon'&&req.method==='POST'){const u=(await required(req)),d=await body(req);return json(res,await economy.abandon(d.intent_id,u));}
     if(path==='/api/near/confirm'&&req.method==='POST'){const u=(await required(req)),d=await body(req);const result=await economy.confirm(d.intent_id,u);broadcast();return json(res,result);}
@@ -236,7 +249,7 @@ async function processBet(id){
  else if(b.status==='proposed'&&now>=b.challenge_until){await store.move(id,b.creator,{type:'finalize'});broadcast();}
  else if(b.status==='matched'&&b.resolver!=='players'&&now>=b.ends_at&&!(b.resolver==='evidence'&&!hasAI))await getEvidence(id);
 }
-await startJobs(store,{rooms:{arcade:arcadeRooms,board:boardRooms,quiz:quizRooms},economy,faucet,processBet,changed:broadcast});
+await startJobs(store,{rooms:{arcade:arcadeRooms,board:boardRooms,quiz:quizRooms},economy,faucet,managedAccounts,processBet,changed:broadcast});
 // The physics clock is in memory and exists only while a game is running.
 let realtime=null;
 const stopActivity=arcadeRooms.onActivity(active=>{

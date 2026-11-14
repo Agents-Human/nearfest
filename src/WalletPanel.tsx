@@ -36,7 +36,7 @@ export default function WalletPanel({user, refresh, collect, switchAccount, logO
       <NearPending {...recovery}/>
       <a className="wallet-history-link" href={`https://testnet.nearblocks.io/address/${encodeURIComponent(user.id)}`} target="_blank" rel="noreferrer">View all wallet transactions ↗</a>
     </details>
-    <div className="wallet-panel-footer"><button className="text-button" onClick={() => void navigator.clipboard.writeText(user.id).then(() => setCopied(true)).catch(() => setError('Select the wallet address above to copy it.'))}>{copied ? 'Copied' : 'Copy address'}</button><button className="text-button" disabled={disabled} onClick={() => void run(switchAccount)}>Switch wallet</button></div>
+    <div className="wallet-panel-footer"><button className="text-button" onClick={() => void navigator.clipboard.writeText(user.id).then(() => setCopied(true)).catch(() => setError('Select the wallet address above to copy it.'))}>{copied ? 'Copied' : 'Copy address'}</button><button className="text-button" disabled={disabled} onClick={() => void run(switchAccount)}>{user.managed?'Switch account':'Switch wallet'}</button></div>
     <button type="button" className="secondary full wallet-logout" disabled={busy || funding.funding} onClick={() => void run(logOut)}>Log out</button>
   </div>;
 }

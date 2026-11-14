@@ -1,3 +1,5 @@
+> New default onboarding uses [app-managed testnet accounts](managed-accounts.md), username/password sign-in, automatic initial funding, and background transaction signing. The external-wallet flow below remains supported for existing wallet users.
+
 # NearFest on NEAR testnet
 
 Choose **Play with friends**, enter a stake, and connect a NEAR testnet wallet. Players fund the same prize pot, play an authoritative multiplayer match, and collect the result. A zero stake opens a room without a deposit; **Play solo** starts individual practice. There is no FUN currency, fungible-token mint or mainnet mode.

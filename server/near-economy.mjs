@@ -25,8 +25,8 @@ export async function createNearEconomy(store,{chain=near,services}={}){
  async function load(id,kind){const r=await chain.view('get_room',{id});if(!r)throw Error('NEAR escrow not found. The wallet transaction may still be confirming.');(await save(r,kind));return r;}
  async function intent(u,operation,id,kind,data,args,method,deposit='0',extra={}){return store.transaction(async()=>{
   const existing=(await db.prepare('SELECT id,json FROM near_intents WHERE user_id=$1 AND complete=0 ORDER BY created DESC LIMIT 30').all(u.id)).find(x=>{const p=JSON.parse(x.json);return p.id===id&&p.operation===operation&&p.method===method&&JSON.stringify(p.data)===JSON.stringify(data);});
-  if(existing)return {resume:true,intent_id:existing.id,transaction:{...chain.transaction(method,JSON.parse(existing.json).args,JSON.parse(existing.json).deposit),signerId:u.id}};
-  const iid=randomUUID(),p={operation,id,kind,data,args,method,deposit,...extra};(await db.prepare('INSERT INTO near_intents(id,user_id,json,created) VALUES($1,$2,$3,$4)').run(iid,u.id,JSON.stringify(p),Date.now()));await store.jobs?.schedule('near-intent',iid,Date.now()+20000);return {intent_id:iid,transaction:{...chain.transaction(method,args,deposit),signerId:u.id}};
+  if(existing)return {resume:true,intent_id:existing.id,transaction:{...chain.transaction(method,JSON.parse(existing.json).args,JSON.parse(existing.json).deposit,u.id,existing.id),signerId:u.id}};
+  const iid=randomUUID(),p={operation,id,kind,data,args,method,deposit,...extra};(await db.prepare('INSERT INTO near_intents(id,user_id,json,created) VALUES($1,$2,$3,$4)').run(iid,u.id,JSON.stringify(p),Date.now()));await store.jobs?.schedule('near-intent',iid,Date.now()+20000);return {intent_id:iid,transaction:{...chain.transaction(method,args,deposit,u.id,iid),signerId:u.id}};
  });}
  async function pendingCreations(u){return (await db.prepare('SELECT id,json FROM near_intents WHERE user_id=$1 AND complete=0 ORDER BY created DESC').all(u.id)).filter(row=>JSON.parse(row.json).operation==='create');}
  function creationTerms(kind,d){
@@ -43,7 +43,7 @@ export async function createNearEconomy(store,{chain=near,services}={}){
   if(!matches.length)throw Error('A different room payment is still pending. Continue it from Wallet → Activity, or wait for it to expire.');
   for(const row of matches){const p=JSON.parse(row.json),remote=await chain.view('get_room',{id:p.id});if(remote)return confirm(row.id,u);}
   const existing=matches.find(row=>JSON.parse(row.json).args.join_until>Date.now());
-  if(existing){const p=JSON.parse(existing.json);return {intent_id:existing.id,transaction:{...chain.transaction(p.method,p.args,p.deposit),signerId:u.id}};}
+  if(existing){const p=JSON.parse(existing.json);return {intent_id:existing.id,transaction:{...chain.transaction(p.method,p.args,p.deposit,u.id,existing.id),signerId:u.id}};}
   throw Error('That wallet request has expired. It will clear automatically after the final network check. Try again shortly.');
  }
  async function create(kind,d,u){
@@ -197,7 +197,7 @@ export async function createNearEconomy(store,{chain=near,services}={}){
   }
   if(p.method==='create_room'&&Date.now()>=p.args.join_until)throw Error('This room request has expired. We’re clearing it automatically.');
   await store.jobs?.schedule('near-intent',iid,Date.now()+20000);
-  return {intent_id:iid,transaction:{...chain.transaction(p.method,p.args,p.deposit),signerId:u.id}};
+  return {intent_id:iid,transaction:{...chain.transaction(p.method,p.args,p.deposit,u.id,row.id),signerId:u.id}};
  }
  async function recoverIntent(id){
   const row=await db.prepare('SELECT * FROM near_intents WHERE id=$1 AND complete=0').get(id);if(!row)return false;

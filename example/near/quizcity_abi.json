@@ -1,0 +1,1791 @@
+{
+  "schema_version": "0.4.0",
+  "metadata": {
+    "name": "quizcity",
+    "version": "0.1.0",
+    "build": {
+      "compiler": "rustc 1.95.0",
+      "builder": "cargo-near cargo-near-build 0.11.5"
+    },
+    "wasm_hash": "3YugEZbbtkdCTMXqQXDyidE8GpCPFSzTUStx6pnn4otn"
+  },
+  "body": {
+    "functions": [
+      {
+        "name": "accept_operator",
+        "kind": "call"
+      },
+      {
+        "name": "business_withdraw",
+        "kind": "call",
+        "params": {
+          "serialization_type": "json",
+          "args": [
+            {
+              "name": "business_id",
+              "type_schema": {
+                "type": "integer",
+                "format": "uint64",
+                "minimum": 0.0
+              }
+            },
+            {
+              "name": "amount",
+              "type_schema": {
+                "type": "string"
+              }
+            }
+          ]
+        },
+        "result": {
+          "serialization_type": "json",
+          "type_schema": {
+            "type": "boolean"
+          }
+        }
+      },
+      {
+        "name": "buy_business",
+        "kind": "call",
+        "params": {
+          "serialization_type": "json",
+          "args": [
+            {
+              "name": "business_id",
+              "type_schema": {
+                "type": "integer",
+                "format": "uint64",
+                "minimum": 0.0
+              }
+            },
+            {
+              "name": "expected_owner",
+              "type_schema": {
+                "description": "NEAR Account Identifier.\n\nThis is a unique, syntactically valid, human-readable account identifier on the NEAR network.\n\n[See the crate-level docs for information about validation.](index.html#account-id-rules)\n\nAlso see [Error kind precedence](AccountId#error-kind-precedence).\n\n## Examples\n\n``` use near_account_id::AccountId;\n\nlet alice: AccountId = \"alice.near\".parse().unwrap();\n\nassert!(\"ƒelicia.near\".parse::<AccountId>().is_err()); // (ƒ is not f) ```",
+                "type": "string"
+              }
+            },
+            {
+              "name": "expected_price",
+              "type_schema": {
+                "type": "string"
+              }
+            }
+          ]
+        },
+        "result": {
+          "serialization_type": "json",
+          "type_schema": {
+            "type": "boolean"
+          }
+        }
+      },
+      {
+        "name": "buy_property",
+        "kind": "call",
+        "params": {
+          "serialization_type": "json",
+          "args": [
+            {
+              "name": "property_id",
+              "type_schema": {
+                "type": "integer",
+                "format": "uint64",
+                "minimum": 0.0
+              }
+            }
+          ]
+        },
+        "result": {
+          "serialization_type": "json",
+          "type_schema": {
+            "type": "boolean"
+          }
+        }
+      },
+      {
+        "name": "cancel_charge",
+        "kind": "call",
+        "params": {
+          "serialization_type": "json",
+          "args": [
+            {
+              "name": "source_wallet",
+              "type_schema": {
+                "type": "string"
+              }
+            },
+            {
+              "name": "to_wallet",
+              "type_schema": {
+                "type": "string"
+              }
+            },
+            {
+              "name": "amount",
+              "type_schema": {
+                "type": "string"
+              }
+            },
+            {
+              "name": "reference",
+              "type_schema": {
+                "type": "string"
+              }
+            }
+          ]
+        },
+        "result": {
+          "serialization_type": "json",
+          "type_schema": {
+            "type": "boolean"
+          }
+        }
+      },
+      {
+        "name": "cancel_operator_change",
+        "kind": "call"
+      },
+      {
+        "name": "cancel_order",
+        "doc": " Cancellation is permanent, including when a user still has a signed order transaction.",
+        "kind": "call",
+        "params": {
+          "serialization_type": "json",
+          "args": [
+            {
+              "name": "reference",
+              "type_schema": {
+                "type": "string"
+              }
+            }
+          ]
+        },
+        "result": {
+          "serialization_type": "json",
+          "type_schema": {
+            "type": "boolean"
+          }
+        }
+      },
+      {
+        "name": "cancel_property_listing",
+        "kind": "call",
+        "params": {
+          "serialization_type": "json",
+          "args": [
+            {
+              "name": "property_id",
+              "type_schema": {
+                "type": "integer",
+                "format": "uint64",
+                "minimum": 0.0
+              }
+            }
+          ]
+        },
+        "result": {
+          "serialization_type": "json",
+          "type_schema": {
+            "type": "boolean"
+          }
+        }
+      },
+      {
+        "name": "claim_starter",
+        "kind": "call",
+        "result": {
+          "serialization_type": "json",
+          "type_schema": {
+            "type": "string"
+          }
+        }
+      },
+      {
+        "name": "contract_source_metadata",
+        "kind": "view"
+      },
+      {
+        "name": "create_business",
+        "kind": "call",
+        "params": {
+          "serialization_type": "json",
+          "args": [
+            {
+              "name": "property_id",
+              "type_schema": {
+                "type": "integer",
+                "format": "uint64",
+                "minimum": 0.0
+              }
+            },
+            {
+              "name": "name",
+              "type_schema": {
+                "type": "string"
+              }
+            }
+          ]
+        },
+        "result": {
+          "serialization_type": "json",
+          "type_schema": {
+            "type": "integer",
+            "format": "uint64",
+            "minimum": 0.0
+          }
+        }
+      },
+      {
+        "name": "create_property",
+        "kind": "call",
+        "params": {
+          "serialization_type": "json",
+          "args": [
+            {
+              "name": "kind",
+              "type_schema": {
+                "type": "string"
+              }
+            },
+            {
+              "name": "district",
+              "type_schema": {
+                "type": "string"
+              }
+            },
+            {
+              "name": "x",
+              "type_schema": {
+                "type": "integer",
+                "format": "int32"
+              }
+            },
+            {
+              "name": "y",
+              "type_schema": {
+                "type": "integer",
+                "format": "int32"
+              }
+            },
+            {
+              "name": "owner_wallet",
+              "type_schema": {
+                "type": "string"
+              }
+            },
+            {
+              "name": "price",
+              "type_schema": {
+                "type": "string"
+              }
+            }
+          ]
+        },
+        "result": {
+          "serialization_type": "json",
+          "type_schema": {
+            "type": "integer",
+            "format": "uint64",
+            "minimum": 0.0
+          }
+        }
+      },
+      {
+        "name": "create_wallet",
+        "kind": "call",
+        "params": {
+          "serialization_type": "json",
+          "args": [
+            {
+              "name": "wallet",
+              "type_schema": {
+                "type": "string"
+              }
+            },
+            {
+              "name": "initial_balance",
+              "type_schema": {
+                "type": "string"
+              }
+            }
+          ]
+        },
+        "result": {
+          "serialization_type": "json",
+          "type_schema": {
+            "type": "boolean"
+          }
+        }
+      },
+      {
+        "name": "credit_reward",
+        "kind": "call",
+        "params": {
+          "serialization_type": "json",
+          "args": [
+            {
+              "name": "wallet",
+              "type_schema": {
+                "type": "string"
+              }
+            },
+            {
+              "name": "amount",
+              "type_schema": {
+                "type": "string"
+              }
+            },
+            {
+              "name": "reference",
+              "type_schema": {
+                "type": "string"
+              }
+            }
+          ]
+        },
+        "result": {
+          "serialization_type": "json",
+          "type_schema": {
+            "type": "boolean"
+          }
+        }
+      },
+      {
+        "name": "fund_escrow",
+        "kind": "call",
+        "params": {
+          "serialization_type": "json",
+          "args": [
+            {
+              "name": "id",
+              "type_schema": {
+                "type": "string"
+              }
+            },
+            {
+              "name": "source_wallet",
+              "type_schema": {
+                "type": "string"
+              }
+            },
+            {
+              "name": "beneficiary_wallet",
+              "type_schema": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              }
+            },
+            {
+              "name": "amount",
+              "type_schema": {
+                "type": "string"
+              }
+            },
+            {
+              "name": "purpose",
+              "type_schema": {
+                "type": "string"
+              }
+            }
+          ]
+        },
+        "result": {
+          "serialization_type": "json",
+          "type_schema": {
+            "type": "boolean"
+          }
+        }
+      },
+      {
+        "name": "get_balance",
+        "kind": "view",
+        "params": {
+          "serialization_type": "json",
+          "args": [
+            {
+              "name": "wallet",
+              "type_schema": {
+                "type": "string"
+              }
+            }
+          ]
+        },
+        "result": {
+          "serialization_type": "json",
+          "type_schema": {
+            "type": "string"
+          }
+        }
+      },
+      {
+        "name": "get_business",
+        "kind": "view",
+        "params": {
+          "serialization_type": "json",
+          "args": [
+            {
+              "name": "business_id",
+              "type_schema": {
+                "type": "integer",
+                "format": "uint64",
+                "minimum": 0.0
+              }
+            }
+          ]
+        },
+        "result": {
+          "serialization_type": "json",
+          "type_schema": {
+            "anyOf": [
+              {
+                "$ref": "#/definitions/Business"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        }
+      },
+      {
+        "name": "get_business_sale_price",
+        "kind": "view",
+        "params": {
+          "serialization_type": "json",
+          "args": [
+            {
+              "name": "business_id",
+              "type_schema": {
+                "type": "integer",
+                "format": "uint64",
+                "minimum": 0.0
+              }
+            }
+          ]
+        },
+        "result": {
+          "serialization_type": "json",
+          "type_schema": {
+            "type": "string"
+          }
+        }
+      },
+      {
+        "name": "get_businesses",
+        "doc": " Returns up to `limit` businesses starting at zero-based offset `from_index`.\n `limit` is clamped to 100; an offset at or beyond the collection returns empty.\n Businesses are append-only (no delete method), so `UnorderedMap` iteration is\n insertion-ordered and stable across calls for this lifecycle.",
+        "kind": "view",
+        "params": {
+          "serialization_type": "json",
+          "args": [
+            {
+              "name": "from_index",
+              "type_schema": {
+                "type": "integer",
+                "format": "uint64",
+                "minimum": 0.0
+              }
+            },
+            {
+              "name": "limit",
+              "type_schema": {
+                "type": "integer",
+                "format": "uint64",
+                "minimum": 0.0
+              }
+            }
+          ]
+        },
+        "result": {
+          "serialization_type": "json",
+          "type_schema": {
+            "type": "array",
+            "items": {
+              "$ref": "#/definitions/Business"
+            }
+          }
+        }
+      },
+      {
+        "name": "get_escrow",
+        "kind": "view",
+        "params": {
+          "serialization_type": "json",
+          "args": [
+            {
+              "name": "id",
+              "type_schema": {
+                "type": "string"
+              }
+            }
+          ]
+        },
+        "result": {
+          "serialization_type": "json",
+          "type_schema": {
+            "anyOf": [
+              {
+                "$ref": "#/definitions/Escrow"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        }
+      },
+      {
+        "name": "get_lease",
+        "kind": "view",
+        "params": {
+          "serialization_type": "json",
+          "args": [
+            {
+              "name": "property_id",
+              "type_schema": {
+                "type": "integer",
+                "format": "uint64",
+                "minimum": 0.0
+              }
+            }
+          ]
+        },
+        "result": {
+          "serialization_type": "json",
+          "type_schema": {
+            "anyOf": [
+              {
+                "$ref": "#/definitions/Lease"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        }
+      },
+      {
+        "name": "get_lease_offer",
+        "kind": "view",
+        "params": {
+          "serialization_type": "json",
+          "args": [
+            {
+              "name": "property_id",
+              "type_schema": {
+                "type": "integer",
+                "format": "uint64",
+                "minimum": 0.0
+              }
+            }
+          ]
+        },
+        "result": {
+          "serialization_type": "json",
+          "type_schema": {
+            "anyOf": [
+              {
+                "$ref": "#/definitions/LeaseOffer"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        }
+      },
+      {
+        "name": "get_player",
+        "kind": "view",
+        "params": {
+          "serialization_type": "json",
+          "args": [
+            {
+              "name": "account",
+              "type_schema": {
+                "description": "NEAR Account Identifier.\n\nThis is a unique, syntactically valid, human-readable account identifier on the NEAR network.\n\n[See the crate-level docs for information about validation.](index.html#account-id-rules)\n\nAlso see [Error kind precedence](AccountId#error-kind-precedence).\n\n## Examples\n\n``` use near_account_id::AccountId;\n\nlet alice: AccountId = \"alice.near\".parse().unwrap();\n\nassert!(\"ƒelicia.near\".parse::<AccountId>().is_err()); // (ƒ is not f) ```",
+                "type": "string"
+              }
+            }
+          ]
+        },
+        "result": {
+          "serialization_type": "json",
+          "type_schema": {
+            "anyOf": [
+              {
+                "$ref": "#/definitions/Player"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        }
+      },
+      {
+        "name": "get_player_wallet",
+        "kind": "view",
+        "params": {
+          "serialization_type": "json",
+          "args": [
+            {
+              "name": "account",
+              "type_schema": {
+                "description": "NEAR Account Identifier.\n\nThis is a unique, syntactically valid, human-readable account identifier on the NEAR network.\n\n[See the crate-level docs for information about validation.](index.html#account-id-rules)\n\nAlso see [Error kind precedence](AccountId#error-kind-precedence).\n\n## Examples\n\n``` use near_account_id::AccountId;\n\nlet alice: AccountId = \"alice.near\".parse().unwrap();\n\nassert!(\"ƒelicia.near\".parse::<AccountId>().is_err()); // (ƒ is not f) ```",
+                "type": "string"
+              }
+            }
+          ]
+        },
+        "result": {
+          "serialization_type": "json",
+          "type_schema": {
+            "type": "string"
+          }
+        }
+      },
+      {
+        "name": "get_properties",
+        "doc": " Returns up to `limit` properties starting at zero-based offset `from_index`.\n `limit` is clamped to 100; an offset at or beyond the collection returns empty.\n Properties are append-only (no delete method), so `UnorderedMap` iteration is\n insertion-ordered and stable across calls for this lifecycle.",
+        "kind": "view",
+        "params": {
+          "serialization_type": "json",
+          "args": [
+            {
+              "name": "from_index",
+              "type_schema": {
+                "type": "integer",
+                "format": "uint64",
+                "minimum": 0.0
+              }
+            },
+            {
+              "name": "limit",
+              "type_schema": {
+                "type": "integer",
+                "format": "uint64",
+                "minimum": 0.0
+              }
+            }
+          ]
+        },
+        "result": {
+          "serialization_type": "json",
+          "type_schema": {
+            "type": "array",
+            "items": {
+              "$ref": "#/definitions/Property"
+            }
+          }
+        }
+      },
+      {
+        "name": "get_property",
+        "kind": "view",
+        "params": {
+          "serialization_type": "json",
+          "args": [
+            {
+              "name": "property_id",
+              "type_schema": {
+                "type": "integer",
+                "format": "uint64",
+                "minimum": 0.0
+              }
+            }
+          ]
+        },
+        "result": {
+          "serialization_type": "json",
+          "type_schema": {
+            "anyOf": [
+              {
+                "$ref": "#/definitions/Property"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        }
+      },
+      {
+        "name": "get_reward_policy",
+        "kind": "view",
+        "result": {
+          "serialization_type": "json",
+          "type_schema": true
+        }
+      },
+      {
+        "name": "get_stats",
+        "kind": "view",
+        "result": {
+          "serialization_type": "json",
+          "type_schema": {
+            "$ref": "#/definitions/CityStats"
+          }
+        }
+      },
+      {
+        "name": "get_wallet_count",
+        "kind": "view",
+        "result": {
+          "serialization_type": "json",
+          "type_schema": {
+            "type": "integer",
+            "format": "uint64",
+            "minimum": 0.0
+          }
+        }
+      },
+      {
+        "name": "get_wallets",
+        "doc": " Returns up to `limit` wallets starting at zero-based offset `from_index`.\n Wallets are append-only for this lifecycle, so iteration order is stable.",
+        "kind": "view",
+        "params": {
+          "serialization_type": "json",
+          "args": [
+            {
+              "name": "from_index",
+              "type_schema": {
+                "type": "integer",
+                "format": "uint64",
+                "minimum": 0.0
+              }
+            },
+            {
+              "name": "limit",
+              "type_schema": {
+                "type": "integer",
+                "format": "uint64",
+                "minimum": 0.0
+              }
+            }
+          ]
+        },
+        "result": {
+          "serialization_type": "json",
+          "type_schema": {
+            "type": "array",
+            "items": {
+              "$ref": "#/definitions/WalletBalance"
+            }
+          }
+        }
+      },
+      {
+        "name": "is_reference_processed",
+        "kind": "view",
+        "params": {
+          "serialization_type": "json",
+          "args": [
+            {
+              "name": "reference",
+              "type_schema": {
+                "type": "string"
+              }
+            }
+          ]
+        },
+        "result": {
+          "serialization_type": "json",
+          "type_schema": {
+            "type": "boolean"
+          }
+        }
+      },
+      {
+        "name": "list_business",
+        "kind": "call",
+        "params": {
+          "serialization_type": "json",
+          "args": [
+            {
+              "name": "business_id",
+              "type_schema": {
+                "type": "integer",
+                "format": "uint64",
+                "minimum": 0.0
+              }
+            },
+            {
+              "name": "price",
+              "type_schema": {
+                "type": "string"
+              }
+            }
+          ]
+        },
+        "result": {
+          "serialization_type": "json",
+          "type_schema": {
+            "type": "boolean"
+          }
+        }
+      },
+      {
+        "name": "list_lease",
+        "kind": "call",
+        "params": {
+          "serialization_type": "json",
+          "args": [
+            {
+              "name": "property_id",
+              "type_schema": {
+                "type": "integer",
+                "format": "uint64",
+                "minimum": 0.0
+              }
+            },
+            {
+              "name": "rent",
+              "type_schema": {
+                "type": "string"
+              }
+            },
+            {
+              "name": "period_days",
+              "type_schema": {
+                "type": "integer",
+                "format": "uint64",
+                "minimum": 0.0
+              }
+            }
+          ]
+        },
+        "result": {
+          "serialization_type": "json",
+          "type_schema": {
+            "type": "boolean"
+          }
+        }
+      },
+      {
+        "name": "list_property",
+        "kind": "call",
+        "params": {
+          "serialization_type": "json",
+          "args": [
+            {
+              "name": "property_id",
+              "type_schema": {
+                "type": "integer",
+                "format": "uint64",
+                "minimum": 0.0
+              }
+            },
+            {
+              "name": "price",
+              "type_schema": {
+                "type": "string"
+              }
+            }
+          ]
+        },
+        "result": {
+          "serialization_type": "json",
+          "type_schema": {
+            "type": "boolean"
+          }
+        }
+      },
+      {
+        "name": "migrate_economy",
+        "doc": " Supports only the exact reviewed previous layout; never guesses at an older deployment.",
+        "kind": "call",
+        "modifiers": [
+          "init",
+          "private"
+        ]
+      },
+      {
+        "name": "migrate_reset",
+        "doc": " Testnet demo-only state wipe. Built only with `--features demo-reset`.",
+        "kind": "call",
+        "modifiers": [
+          "init",
+          "private"
+        ]
+      },
+      {
+        "name": "new",
+        "kind": "call",
+        "modifiers": [
+          "init"
+        ]
+      },
+      {
+        "name": "npc_purchase",
+        "kind": "call",
+        "params": {
+          "serialization_type": "json",
+          "args": [
+            {
+              "name": "npc_wallet",
+              "type_schema": {
+                "type": "string"
+              }
+            },
+            {
+              "name": "business_id",
+              "type_schema": {
+                "type": "integer",
+                "format": "uint64",
+                "minimum": 0.0
+              }
+            },
+            {
+              "name": "amount",
+              "type_schema": {
+                "type": "string"
+              }
+            },
+            {
+              "name": "reference",
+              "type_schema": {
+                "type": "string"
+              }
+            }
+          ]
+        },
+        "result": {
+          "serialization_type": "json",
+          "type_schema": {
+            "type": "boolean"
+          }
+        }
+      },
+      {
+        "name": "pay_admission",
+        "kind": "call",
+        "params": {
+          "serialization_type": "json",
+          "args": [
+            {
+              "name": "business_id",
+              "type_schema": {
+                "type": "integer",
+                "format": "uint64",
+                "minimum": 0.0
+              }
+            },
+            {
+              "name": "amount",
+              "type_schema": {
+                "type": "string"
+              }
+            },
+            {
+              "name": "reference",
+              "type_schema": {
+                "type": "string"
+              }
+            }
+          ]
+        },
+        "result": {
+          "serialization_type": "json",
+          "type_schema": {
+            "type": "boolean"
+          }
+        }
+      },
+      {
+        "name": "pay_business_tax",
+        "kind": "call",
+        "params": {
+          "serialization_type": "json",
+          "args": [
+            {
+              "name": "business_id",
+              "type_schema": {
+                "type": "integer",
+                "format": "uint64",
+                "minimum": 0.0
+              }
+            },
+            {
+              "name": "period",
+              "type_schema": {
+                "type": "integer",
+                "format": "uint64",
+                "minimum": 0.0
+              }
+            }
+          ]
+        },
+        "result": {
+          "serialization_type": "json",
+          "type_schema": {
+            "type": "boolean"
+          }
+        }
+      },
+      {
+        "name": "pay_charge",
+        "kind": "call",
+        "params": {
+          "serialization_type": "json",
+          "args": [
+            {
+              "name": "source_wallet",
+              "type_schema": {
+                "type": "string"
+              }
+            },
+            {
+              "name": "to_wallet",
+              "type_schema": {
+                "type": "string"
+              }
+            },
+            {
+              "name": "amount",
+              "type_schema": {
+                "type": "string"
+              }
+            },
+            {
+              "name": "reference",
+              "type_schema": {
+                "type": "string"
+              }
+            }
+          ]
+        },
+        "result": {
+          "serialization_type": "json",
+          "type_schema": {
+            "type": "boolean"
+          }
+        }
+      },
+      {
+        "name": "pay_job",
+        "doc": " Pays a verified job from an NPC/business wallet. Operator-only, no minting.",
+        "kind": "call",
+        "params": {
+          "serialization_type": "json",
+          "args": [
+            {
+              "name": "employer_wallet",
+              "type_schema": {
+                "type": "string"
+              }
+            },
+            {
+              "name": "employee_wallet",
+              "type_schema": {
+                "type": "string"
+              }
+            },
+            {
+              "name": "amount",
+              "type_schema": {
+                "type": "string"
+              }
+            },
+            {
+              "name": "reference",
+              "type_schema": {
+                "type": "string"
+              }
+            }
+          ]
+        },
+        "result": {
+          "serialization_type": "json",
+          "type_schema": {
+            "type": "boolean"
+          }
+        }
+      },
+      {
+        "name": "pay_order",
+        "kind": "call",
+        "params": {
+          "serialization_type": "json",
+          "args": [
+            {
+              "name": "business_id",
+              "type_schema": {
+                "type": "integer",
+                "format": "uint64",
+                "minimum": 0.0
+              }
+            },
+            {
+              "name": "amount",
+              "type_schema": {
+                "type": "string"
+              }
+            },
+            {
+              "name": "reference",
+              "type_schema": {
+                "type": "string"
+              }
+            }
+          ]
+        },
+        "result": {
+          "serialization_type": "json",
+          "type_schema": {
+            "type": "boolean"
+          }
+        }
+      },
+      {
+        "name": "pay_rent",
+        "kind": "call",
+        "params": {
+          "serialization_type": "json",
+          "args": [
+            {
+              "name": "property_id",
+              "type_schema": {
+                "type": "integer",
+                "format": "uint64",
+                "minimum": 0.0
+              }
+            },
+            {
+              "name": "expected_owner",
+              "type_schema": {
+                "type": "string"
+              }
+            },
+            {
+              "name": "amount",
+              "type_schema": {
+                "type": "string"
+              }
+            },
+            {
+              "name": "reference",
+              "type_schema": {
+                "type": "string"
+              }
+            }
+          ]
+        },
+        "result": {
+          "serialization_type": "json",
+          "type_schema": {
+            "type": "boolean"
+          }
+        }
+      },
+      {
+        "name": "pay_service",
+        "kind": "call",
+        "params": {
+          "serialization_type": "json",
+          "args": [
+            {
+              "name": "business_id",
+              "type_schema": {
+                "type": "integer",
+                "format": "uint64",
+                "minimum": 0.0
+              }
+            },
+            {
+              "name": "amount",
+              "type_schema": {
+                "type": "string"
+              }
+            }
+          ]
+        },
+        "result": {
+          "serialization_type": "json",
+          "type_schema": {
+            "type": "boolean"
+          }
+        }
+      },
+      {
+        "name": "propose_operator",
+        "kind": "call",
+        "params": {
+          "serialization_type": "json",
+          "args": [
+            {
+              "name": "new_operator",
+              "type_schema": {
+                "description": "NEAR Account Identifier.\n\nThis is a unique, syntactically valid, human-readable account identifier on the NEAR network.\n\n[See the crate-level docs for information about validation.](index.html#account-id-rules)\n\nAlso see [Error kind precedence](AccountId#error-kind-precedence).\n\n## Examples\n\n``` use near_account_id::AccountId;\n\nlet alice: AccountId = \"alice.near\".parse().unwrap();\n\nassert!(\"ƒelicia.near\".parse::<AccountId>().is_err()); // (ƒ is not f) ```",
+                "type": "string"
+              }
+            }
+          ]
+        }
+      },
+      {
+        "name": "refund_admission",
+        "doc": " A full ticket refund is bound to its original buyer, venue, fee and paid reference.",
+        "kind": "call",
+        "params": {
+          "serialization_type": "json",
+          "args": [
+            {
+              "name": "business_id",
+              "type_schema": {
+                "type": "integer",
+                "format": "uint64",
+                "minimum": 0.0
+              }
+            },
+            {
+              "name": "buyer_wallet",
+              "type_schema": {
+                "type": "string"
+              }
+            },
+            {
+              "name": "amount",
+              "type_schema": {
+                "type": "string"
+              }
+            },
+            {
+              "name": "payment_reference",
+              "type_schema": {
+                "type": "string"
+              }
+            }
+          ]
+        },
+        "result": {
+          "serialization_type": "json",
+          "type_schema": {
+            "type": "boolean"
+          }
+        }
+      },
+      {
+        "name": "refund_order",
+        "kind": "call",
+        "params": {
+          "serialization_type": "json",
+          "args": [
+            {
+              "name": "business_id",
+              "type_schema": {
+                "type": "integer",
+                "format": "uint64",
+                "minimum": 0.0
+              }
+            },
+            {
+              "name": "buyer_wallet",
+              "type_schema": {
+                "type": "string"
+              }
+            },
+            {
+              "name": "amount",
+              "type_schema": {
+                "type": "string"
+              }
+            },
+            {
+              "name": "order_reference",
+              "type_schema": {
+                "type": "string"
+              }
+            }
+          ]
+        },
+        "result": {
+          "serialization_type": "json",
+          "type_schema": {
+            "type": "boolean"
+          }
+        }
+      },
+      {
+        "name": "register_player",
+        "kind": "call",
+        "params": {
+          "serialization_type": "json",
+          "args": [
+            {
+              "name": "username",
+              "type_schema": {
+                "type": "string"
+              }
+            }
+          ]
+        },
+        "result": {
+          "serialization_type": "json",
+          "type_schema": {
+            "type": "boolean"
+          }
+        }
+      },
+      {
+        "name": "reset_demo",
+        "doc": " Testnet-only demo helper: wipes game state so the demo can be re-recorded.",
+        "kind": "call"
+      },
+      {
+        "name": "set_paused",
+        "kind": "call",
+        "params": {
+          "serialization_type": "json",
+          "args": [
+            {
+              "name": "paused",
+              "type_schema": {
+                "type": "boolean"
+              }
+            }
+          ]
+        }
+      },
+      {
+        "name": "settle_escrow",
+        "kind": "call",
+        "params": {
+          "serialization_type": "json",
+          "args": [
+            {
+              "name": "id",
+              "type_schema": {
+                "type": "string"
+              }
+            },
+            {
+              "name": "recipient_wallet",
+              "type_schema": {
+                "type": "string"
+              }
+            },
+            {
+              "name": "amount",
+              "type_schema": {
+                "type": "string"
+              }
+            },
+            {
+              "name": "refund",
+              "type_schema": {
+                "type": "boolean"
+              }
+            },
+            {
+              "name": "reference",
+              "type_schema": {
+                "type": "string"
+              }
+            }
+          ]
+        },
+        "result": {
+          "serialization_type": "json",
+          "type_schema": {
+            "type": "boolean"
+          }
+        }
+      },
+      {
+        "name": "sponsor_quiz",
+        "kind": "call",
+        "params": {
+          "serialization_type": "json",
+          "args": [
+            {
+              "name": "id",
+              "type_schema": {
+                "type": "string"
+              }
+            },
+            {
+              "name": "source_wallet",
+              "type_schema": {
+                "type": "string"
+              }
+            },
+            {
+              "name": "amount",
+              "type_schema": {
+                "type": "string"
+              }
+            },
+            {
+              "name": "reference",
+              "type_schema": {
+                "type": "string"
+              }
+            }
+          ]
+        },
+        "result": {
+          "serialization_type": "json",
+          "type_schema": {
+            "type": "boolean"
+          }
+        }
+      },
+      {
+        "name": "supports_city_economy",
+        "kind": "view",
+        "result": {
+          "serialization_type": "json",
+          "type_schema": {
+            "type": "boolean"
+          }
+        }
+      },
+      {
+        "name": "supports_orders",
+        "doc": " Server-priced orders bind one durable reference to one payment.",
+        "kind": "view",
+        "result": {
+          "serialization_type": "json",
+          "type_schema": {
+            "type": "boolean"
+          }
+        }
+      },
+      {
+        "name": "transfer_business",
+        "kind": "call",
+        "params": {
+          "serialization_type": "json",
+          "args": [
+            {
+              "name": "business_id",
+              "type_schema": {
+                "type": "integer",
+                "format": "uint64",
+                "minimum": 0.0
+              }
+            },
+            {
+              "name": "new_owner",
+              "type_schema": {
+                "description": "NEAR Account Identifier.\n\nThis is a unique, syntactically valid, human-readable account identifier on the NEAR network.\n\n[See the crate-level docs for information about validation.](index.html#account-id-rules)\n\nAlso see [Error kind precedence](AccountId#error-kind-precedence).\n\n## Examples\n\n``` use near_account_id::AccountId;\n\nlet alice: AccountId = \"alice.near\".parse().unwrap();\n\nassert!(\"ƒelicia.near\".parse::<AccountId>().is_err()); // (ƒ is not f) ```",
+                "type": "string"
+              }
+            }
+          ]
+        },
+        "result": {
+          "serialization_type": "json",
+          "type_schema": {
+            "type": "boolean"
+          }
+        }
+      },
+      {
+        "name": "transfer_qc",
+        "kind": "call",
+        "params": {
+          "serialization_type": "json",
+          "args": [
+            {
+              "name": "to_wallet",
+              "type_schema": {
+                "type": "string"
+              }
+            },
+            {
+              "name": "amount",
+              "type_schema": {
+                "type": "string"
+              }
+            }
+          ]
+        },
+        "result": {
+          "serialization_type": "json",
+          "type_schema": {
+            "type": "boolean"
+          }
+        }
+      }
+    ],
+    "root_schema": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "String",
+      "type": "string",
+      "definitions": {
+        "Business": {
+          "type": "object",
+          "required": [
+            "id",
+            "name",
+            "owner",
+            "property_id",
+            "revenue_total",
+            "treasury"
+          ],
+          "properties": {
+            "id": {
+              "type": "integer",
+              "format": "uint64",
+              "minimum": 0.0
+            },
+            "name": {
+              "type": "string"
+            },
+            "owner": {
+              "description": "NEAR Account Identifier.\n\nThis is a unique, syntactically valid, human-readable account identifier on the NEAR network.\n\n[See the crate-level docs for information about validation.](index.html#account-id-rules)\n\nAlso see [Error kind precedence](AccountId#error-kind-precedence).\n\n## Examples\n\n``` use near_account_id::AccountId;\n\nlet alice: AccountId = \"alice.near\".parse().unwrap();\n\nassert!(\"ƒelicia.near\".parse::<AccountId>().is_err()); // (ƒ is not f) ```",
+              "type": "string"
+            },
+            "property_id": {
+              "type": "integer",
+              "format": "uint64",
+              "minimum": 0.0
+            },
+            "revenue_total": {
+              "type": "integer",
+              "format": "uint128",
+              "minimum": 0.0
+            },
+            "treasury": {
+              "type": "string"
+            }
+          }
+        },
+        "CityStats": {
+          "type": "object",
+          "required": [
+            "businesses",
+            "paused",
+            "players",
+            "properties",
+            "total_burned",
+            "total_issued",
+            "tx_count"
+          ],
+          "properties": {
+            "businesses": {
+              "type": "integer",
+              "format": "uint64",
+              "minimum": 0.0
+            },
+            "paused": {
+              "type": "boolean"
+            },
+            "pending_operator": {
+              "description": "NEAR Account Identifier.\n\nThis is a unique, syntactically valid, human-readable account identifier on the NEAR network.\n\n[See the crate-level docs for information about validation.](index.html#account-id-rules)\n\nAlso see [Error kind precedence](AccountId#error-kind-precedence).\n\n## Examples\n\n``` use near_account_id::AccountId;\n\nlet alice: AccountId = \"alice.near\".parse().unwrap();\n\nassert!(\"ƒelicia.near\".parse::<AccountId>().is_err()); // (ƒ is not f) ```",
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "players": {
+              "type": "integer",
+              "format": "uint64",
+              "minimum": 0.0
+            },
+            "properties": {
+              "type": "integer",
+              "format": "uint64",
+              "minimum": 0.0
+            },
+            "total_burned": {
+              "type": "string"
+            },
+            "total_issued": {
+              "type": "string"
+            },
+            "tx_count": {
+              "type": "integer",
+              "format": "uint64",
+              "minimum": 0.0
+            }
+          }
+        },
+        "Escrow": {
+          "type": "object",
+          "required": [
+            "funded",
+            "id",
+            "owner",
+            "purpose",
+            "remaining",
+            "source"
+          ],
+          "properties": {
+            "beneficiary": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "funded": {
+              "type": "integer",
+              "format": "uint128",
+              "minimum": 0.0
+            },
+            "id": {
+              "type": "string"
+            },
+            "owner": {
+              "description": "NEAR Account Identifier.\n\nThis is a unique, syntactically valid, human-readable account identifier on the NEAR network.\n\n[See the crate-level docs for information about validation.](index.html#account-id-rules)\n\nAlso see [Error kind precedence](AccountId#error-kind-precedence).\n\n## Examples\n\n``` use near_account_id::AccountId;\n\nlet alice: AccountId = \"alice.near\".parse().unwrap();\n\nassert!(\"ƒelicia.near\".parse::<AccountId>().is_err()); // (ƒ is not f) ```",
+              "type": "string"
+            },
+            "purpose": {
+              "type": "string"
+            },
+            "remaining": {
+              "type": "integer",
+              "format": "uint128",
+              "minimum": 0.0
+            },
+            "source": {
+              "type": "string"
+            }
+          }
+        },
+        "Lease": {
+          "type": "object",
+          "required": [
+            "ends_at",
+            "grace_ends_at",
+            "landlord",
+            "tenant"
+          ],
+          "properties": {
+            "ends_at": {
+              "type": "integer",
+              "format": "uint64",
+              "minimum": 0.0
+            },
+            "grace_ends_at": {
+              "type": "integer",
+              "format": "uint64",
+              "minimum": 0.0
+            },
+            "landlord": {
+              "type": "string"
+            },
+            "tenant": {
+              "description": "NEAR Account Identifier.\n\nThis is a unique, syntactically valid, human-readable account identifier on the NEAR network.\n\n[See the crate-level docs for information about validation.](index.html#account-id-rules)\n\nAlso see [Error kind precedence](AccountId#error-kind-precedence).\n\n## Examples\n\n``` use near_account_id::AccountId;\n\nlet alice: AccountId = \"alice.near\".parse().unwrap();\n\nassert!(\"ƒelicia.near\".parse::<AccountId>().is_err()); // (ƒ is not f) ```",
+              "type": "string"
+            }
+          }
+        },
+        "LeaseOffer": {
+          "type": "object",
+          "required": [
+            "days",
+            "landlord",
+            "rent"
+          ],
+          "properties": {
+            "days": {
+              "type": "integer",
+              "format": "uint64",
+              "minimum": 0.0
+            },
+            "landlord": {
+              "type": "string"
+            },
+            "rent": {
+              "type": "integer",
+              "format": "uint128",
+              "minimum": 0.0
+            }
+          }
+        },
+        "Player": {
+          "type": "object",
+          "required": [
+            "created_at",
+            "starter_claimed",
+            "username"
+          ],
+          "properties": {
+            "created_at": {
+              "type": "integer",
+              "format": "uint64",
+              "minimum": 0.0
+            },
+            "starter_claimed": {
+              "type": "boolean"
+            },
+            "username": {
+              "type": "string"
+            }
+          }
+        },
+        "Property": {
+          "type": "object",
+          "required": [
+            "district",
+            "for_sale",
+            "id",
+            "kind",
+            "owner",
+            "price",
+            "transfer_count",
+            "x",
+            "y"
+          ],
+          "properties": {
+            "district": {
+              "type": "string"
+            },
+            "for_sale": {
+              "type": "boolean"
+            },
+            "id": {
+              "type": "integer",
+              "format": "uint64",
+              "minimum": 0.0
+            },
+            "kind": {
+              "type": "string"
+            },
+            "owner": {
+              "type": "string"
+            },
+            "price": {
+              "type": "integer",
+              "format": "uint128",
+              "minimum": 0.0
+            },
+            "transfer_count": {
+              "type": "integer",
+              "format": "uint64",
+              "minimum": 0.0
+            },
+            "x": {
+              "type": "integer",
+              "format": "int32"
+            },
+            "y": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        },
+        "WalletBalance": {
+          "type": "object",
+          "required": [
+            "balance",
+            "wallet_id"
+          ],
+          "properties": {
+            "balance": {
+              "type": "string"
+            },
+            "wallet_id": {
+              "type": "string"
+            }
+          }
+        }
+      }
+    }
+  }
+}
