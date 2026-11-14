@@ -1,0 +1,71 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400" width="400" height="400" role="img" aria-labelledby="title-25 desc-25"><title id="title-25">Pear</title><desc id="desc-25">Pear. Part of Fruity Friends. A colourful vector picture for naming, sorting, and observation.</desc><style>
+@keyframes bob {0%,35%,100%{transform:translateY(0) rotate(0deg)} 50%{transform:translateY(-9px) rotate(-2deg)} 65%{transform:translateY(-3px) rotate(2deg)} 80%{transform:translateY(0) rotate(0deg)}}
+@keyframes sway {0%,100%{transform:rotate(-1.8deg)} 50%{transform:rotate(1.8deg)}}
+@keyframes wiggle {0%,35%,100%{transform:rotate(0deg)} 45%{transform:rotate(-3deg)} 60%{transform:rotate(3deg)} 75%{transform:rotate(-1.5deg)}}
+@keyframes hop {0%,40%,80%,100%{transform:translateY(0)} 53%{transform:translateY(-7px)} 68%{transform:translateY(-3px)}}
+@keyframes nod {0%,35%,100%{transform:rotate(0deg)} 50%{transform:rotate(-3deg)} 65%{transform:rotate(2deg)}}
+
+.picture-motion{transform-origin:200px 350px;animation:bob 4.6s ease-in-out infinite;}
+@media(prefers-reduced-motion:reduce){.picture-motion{animation:none}}</style><g class="picture-motion"><svg width="192.9774193548387" height="306.0" viewBox="80.964286 93.678571 13.964286 22.142857" style="        overflow:hidden;" x="103.51129032258065" y="47.0"><svg xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" id="pic25-fruits" x="0" y="0" viewBox="0 0 500 500" style="x: 0px !important; y: 0px !important; width: 150px !important; height: 150px !important; overflow: hidden !important;" xml:space="preserve" width="150" height="150">
+<g>
+	
+	
+	
+	
+	
+	
+	<g>
+		<g>
+			<path style="fill:#8D4706;" d="M294.358,330.181c-0.353,0-0.686-0.214-0.82-0.563c-0.05-0.13-1.222-3.213-1.462-6.935     c-0.138-2.135,0.478-4.205,0.504-4.293c0.14-0.465,0.63-0.728,1.095-0.588c0.464,0.14,0.727,0.63,0.588,1.094     c-0.01,0.034-0.549,1.871-0.433,3.673c0.222,3.444,1.338,6.389,1.349,6.418c0.173,0.453-0.053,0.961-0.505,1.135     C294.569,330.162,294.462,330.181,294.358,330.181z"/>
+			<path style="fill:#A2B00A;" d="M305.719,340.137c0-6.954-4.929-12.591-11.01-12.591c-6.081,0-11.01,5.637-11.01,12.591     c0,6.384-10.307,10.834-10.424,24.187c-0.104,11.837,9.597,21.435,21.435,21.435c11.838,0,21.435-9.597,21.435-21.435     C316.144,349.332,305.719,346.521,305.719,340.137z"/>
+			<path style="fill:#BAC733;" d="M293.525,327.619c-5.523,0.676-9.826,6.022-9.826,12.518c0,6.384-10.307,10.834-10.424,24.187     c-0.074,8.43,4.826,15.72,11.928,19.22c0.7,0.069,1.41,0.106,2.128,0.106c11.838,0,21.435-9.597,21.435-21.435     c0-14.992-10.424-17.803-10.424-24.187C298.34,333.702,296.431,329.886,293.525,327.619z"/>
+			<path style="fill:#50A822;" d="M292.163,323.175c0,0-4.221,5.442-10.308,3.35c-9.956-3.421-11.657-11.148-11.657-11.148     s5.521-5.278,16.078-1.302C292.298,316.343,292.163,323.175,292.163,323.175z"/>
+			<path style="fill:#578D38;" d="M286.275,314.075c-10.556-3.976-16.078,1.302-16.078,1.302s0.003,0.015,0.009,0.036l21.957,7.697     C292.159,322.422,291.962,316.216,286.275,314.075z"/>
+		</g>
+		<path style="fill:#D5DE71;" d="M290.246,359.283c-1.119,3.671-4.403,5.923-7.335,5.029c-2.932-0.893-4.402-4.594-3.284-8.265    c1.119-3.671,4.403-5.923,7.335-5.029C289.895,351.911,291.365,355.612,290.246,359.283z"/>
+	</g>
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+</g>
+<defs><defs>
+					
+						<ellipse id="pic25-SVGID_1_" transform="matrix(0.9998 -0.0201 0.0201 0.9998 -3.2663 1.5049)" cx="73.065" cy="162.878" rx="14.118" ry="19.361"/>
+				</defs><clipPath id="pic25-SVGID_00000052815692573038761380000000431161396581870508_">
+					<use xlink:href="#pic25-SVGID_1_" style="overflow:visible;"/>
+				</clipPath><defs>
+					
+						<ellipse id="pic25-SVGID_00000103972142943376540060000018218008872126452411_" transform="matrix(0.9998 -0.0201 0.0201 0.9998 -3.2663 1.5049)" cx="73.065" cy="162.878" rx="14.118" ry="19.361"/>
+				</defs><clipPath id="pic25-SVGID_00000153689803115532175590000012857943019940260531_">
+					<use xlink:href="#pic25-SVGID_00000103972142943376540060000018218008872126452411_" style="overflow:visible;"/>
+				</clipPath><defs>
+					
+						<ellipse id="pic25-SVGID_00000000917565881191171070000003084725623156938150_" transform="matrix(0.9998 -0.0201 0.0201 0.9998 -3.2663 1.5049)" cx="73.065" cy="162.878" rx="14.118" ry="19.361"/>
+				</defs><clipPath id="pic25-SVGID_00000155105287256073014280000011571914935467333278_">
+					<use xlink:href="#pic25-SVGID_00000000917565881191171070000003084725623156938150_" style="overflow:visible;"/>
+				</clipPath><defs>
+					<path id="pic25-SVGID_00000082360469986334338730000005433951196568204977_" d="M148.508,179.229       c0,15.565-9.846,23.604-21.992,23.604s-21.992-8.039-21.992-23.604c0-15.565,9.846-32.762,21.992-32.762       S148.508,163.664,148.508,179.229z"/>
+				</defs><clipPath id="pic25-SVGID_00000092458749697167502160000007092710908244415397_">
+					<use xlink:href="#pic25-SVGID_00000082360469986334338730000005433951196568204977_" style="overflow:visible;"/>
+				</clipPath></defs></svg></svg></g></svg>

@@ -1,3 +1,5 @@
+import {withChoiceArt} from './choice-art.mjs';
+
 // Reviewed SVG selections from the user-owned StudyJunior production library.
 // Exact MCP IDs, source hashes and presentation changes are recorded in
 // assets/source/studyjunior/provenance.json. Both solo and online quiz rounds
@@ -89,10 +91,10 @@ export const questionArt = new Map([
 
 export function withQuestionArt(question, artwork = questionArt) {
   const art = artwork.get(question.prompt);
-  if (!art) return question;
+  if (!art) return withChoiceArt(question);
   const {src, alt, width, height} = art;
   if (typeof src !== 'string' || !/^\/art\/studyjunior\/[a-z0-9-]+\.svg$/.test(src)
     || typeof alt !== 'string' || !Number.isInteger(width) || width < 1
     || !Number.isInteger(height) || height < 1) throw Error('Invalid quiz illustration.');
-  return {...question, illustration: {src, alt, width, height}};
+  return withChoiceArt({...question, illustration: {src, alt, width, height}});
 }

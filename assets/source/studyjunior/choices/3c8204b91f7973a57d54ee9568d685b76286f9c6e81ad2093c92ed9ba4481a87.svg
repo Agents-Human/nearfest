@@ -1,0 +1,119 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="22.7475" height="15.66" viewBox="133.5012 67.86 22.7475 15.66"><title>Peach</title><style>.sj-fruit{transform-box:view-box;transform-origin:0 0;animation:2.4s ease-in-out infinite both}.sj-bounce{animation-name:sj-bounce}.sj-sway{animation-name:sj-sway;animation-duration:3.2s}.sj-wobble{animation-name:sj-wobble;animation-duration:2.8s}@keyframes sj-bounce{0%,100%{transform:translate(0,0) rotate(0) scale(1,1)}12%{transform:translate(0,0) rotate(0) scale(1.05,.95)}30%{transform:translate(0,-8px) rotate(-2deg) scale(.97,1.03)}45%{transform:translate(0,-10px) rotate(0) scale(1,1)}60%{transform:translate(0,-8px) rotate(2deg) scale(.98,1.02)}78%{transform:translate(0,0) rotate(0) scale(1.04,.96)}90%{transform:translate(0,0) rotate(0) scale(.99,1.01)}}@keyframes sj-sway{0%,100%{transform:rotate(-6deg)}50%{transform:rotate(6deg)}}@keyframes sj-wobble{0%,100%{transform:rotate(0) scale(1,1)}25%{transform:rotate(-4deg) scale(1,1)}50%{transform:rotate(0) scale(1.02,.98)}75%{transform:rotate(4deg) scale(1,1)}}@media (prefers-reduced-motion:reduce){.sj-fruit{animation:none}}</style><g transform="translate(144.875 83.25) scale(0.135)"><g class="sj-fruit sj-bounce" style="animation-delay:-1.1s"><g transform="scale(7.4074) translate(-144.875 -83.25)"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" x="0" y="0" viewBox="0 0 500 450" style="x: 0px !important; y: 0px !important; width: 167px !important; height: 150px !important; overflow: hidden !important;" xml:space="preserve" width="167" height="150">
+
+
+
+
+
+
+
+<g id="Layer_23">
+	<g>
+		<g>
+			<polygon style="fill:#FFB236;" points="424.044,221.849 414.368,231.916 429.224,232.601    "/>
+			<polygon style="fill:#FFC303;" points="414.954,221.556 424.044,221.849 414.368,231.916    "/>
+			<polygon style="fill:#F29B00;" points="411.143,226.736 414.954,221.556 414.368,231.916    "/>
+			<polygon style="fill:#FF9700;" points="413,218.135 414.954,221.556 411.143,226.736    "/>
+			<polygon style="fill:#FC8300;" points="417.397,216.962 413,218.135 414.954,221.556    "/>
+			<polygon style="fill:#E5A900;" points="417.495,214.226 417.397,216.962 413,218.135    "/>
+			<polygon style="fill:#F79E00;" points="422.877,212.573 417.495,214.226 417.397,216.962    "/>
+			<polygon style="fill:#E5A900;" points="414.368,231.916 411.143,226.736 413.293,235.435    "/>
+			<polygon style="fill:#F79E00;" points="415.736,237.39 414.368,231.916 413.293,235.435    "/>
+			<polygon style="fill:#F29B00;" points="416.029,240.127 415.736,237.39 413.293,235.435    "/>
+			<polygon style="fill:#D33200;" points="420.603,244.46 416.029,240.127 415.736,237.39    "/>
+			<polygon style="fill:#FFCC3E;" points="417.397,216.962 424.044,221.849 414.954,221.556    "/>
+			<polygon style="fill:#FFC303;" points="422.877,212.573 417.397,216.962 424.044,221.849    "/>
+			<polygon style="fill:#FF7F00;" points="435.87,220.872 424.044,221.849 422.877,212.573    "/>
+			<polygon style="fill:#FF5715;" points="429.224,232.601 424.044,221.849 435.87,220.872    "/>
+			<polygon style="fill:#FFC303;" points="415.736,237.39 414.368,231.916 429.224,232.601    "/>
+			<polygon style="fill:#FF5B00;" points="420.603,244.46 432.156,243.939 415.736,237.39    "/>
+			<polygon style="fill:#FF7F00;" points="429.224,232.601 415.736,237.39 432.156,243.939    "/>
+			<polygon style="fill:#E53803;" points="439.584,233.871 429.224,232.601 432.156,243.939    "/>
+			<polygon style="fill:#FC2F00;" points="435.87,220.872 439.584,233.871 429.224,232.601    "/>
+			<polygon style="fill:#E80000;" points="438.02,214.421 435.87,220.872 422.877,212.573    "/>
+			<polygon style="fill:#FFB236;" points="404.691,229.766 411.143,226.736 413.293,235.435    "/>
+			<polygon style="fill:#FFC303;" points="405.474,219.504 411.143,226.736 404.691,229.766    "/>
+			<polygon style="fill:#FFB236;" points="413,218.135 405.474,219.504 411.143,226.736    "/>
+			<polygon style="fill:#FFC303;" points="409.774,213.444 413,218.135 405.474,219.504    "/>
+			<polygon style="fill:#FFC303;" points="417.495,214.226 409.774,213.444 413,218.135    "/>
+			<polygon style="fill:#FFB236;" points="417.201,210.121 417.495,214.226 409.774,213.444    "/>
+			<polygon style="fill:#FFC303;" points="422.877,212.573 417.201,210.121 417.495,214.226    "/>
+			<polygon style="fill:#CC0000;" points="426.878,210.023 422.877,212.573 417.201,210.121    "/>
+			<polygon style="fill:#CC3000;" points="438.02,214.421 426.878,210.023 422.877,212.573    "/>
+			<polygon style="fill:#FFC303;" points="413.293,235.435 407.722,239.441 404.691,229.766    "/>
+			<polygon style="fill:#FF7517;" points="416.029,240.127 413.293,235.435 407.722,239.441    "/>
+			<polygon style="fill:#E53803;" points="414.172,245.209 416.029,240.127 407.722,239.441    "/>
+			<polygon style="fill:#FC2F00;" points="420.603,244.46 416.029,240.127 414.172,245.209    "/>
+			<polygon style="fill:#CC0000;" points="424.924,247.163 420.603,244.46 432.156,243.939    "/>
+			<polygon style="fill:#BA0000;" points="414.172,245.209 420.603,244.46 424.924,247.163    "/>
+			<polygon style="fill:#E80000;" points="432.156,243.939 433.817,246.186 424.924,247.163    "/>
+			<polygon style="fill:#CC3000;" points="439.584,233.871 439.976,241.788 432.156,243.939    "/>
+			<polygon style="fill:#CC0000;" points="433.817,246.186 432.156,243.939 439.976,241.788    "/>
+			<polygon style="fill:#CC0000;" points="439.584,233.871 443.689,228.495 435.87,220.872    "/>
+			<polygon style="fill:#CC0000;" points="438.02,214.421 442.712,221.36 435.87,220.872    "/>
+			<polygon style="fill:#BA0000;" points="443.689,228.495 435.87,220.872 442.712,221.36    "/>
+			<polygon style="fill:#CC0000;" points="439.584,233.871 443.005,236.021 439.976,241.788    "/>
+			<polygon style="fill:#E80000;" points="443.689,228.495 439.584,233.871 443.005,236.021    "/>
+		</g>
+		<g>
+			<polygon style="fill:#FF7517;" points="440.59,221.265 432.899,220.64 426.65,226.209 426.339,237.802 437.096,248.525      447.537,248.048 449.63,246.377 451.894,246.67 460.908,242.111 463.646,227.166 457.066,217.04 447.466,215.838      442.104,220.787    "/>
+			<polygon style="fill:#FFC303;" points="441.485,224.097 433.337,222.021 427.823,226.936 427.549,237.162 437.947,247.528      446.756,246.823 448.979,245.093 451.893,245.198 459.794,241.342 462.322,227.547 456.517,218.613 448.047,217.553      442.861,223.662    "/>
+			<polygon style="fill:#FF661A;" points="442.861,223.662 442.104,220.787 447.466,215.838 448.047,217.553    "/>
+			<polygon style="fill:#F45914;" points="456.517,218.613 457.066,217.04 463.646,227.166 462.322,227.547    "/>
+			<polygon style="fill:#F93500;" points="459.794,241.342 462.322,227.547 463.646,227.166 460.908,242.111    "/>
+			<polygon style="fill:#E80000;" points="451.894,246.67 451.893,245.198 459.794,241.342 460.908,242.111    "/>
+			<polygon style="fill:#E53803;" points="449.63,246.377 448.979,245.093 446.756,246.823 447.537,248.048    "/>
+			<polygon style="fill:#FF7517;" points="437.096,248.525 437.947,247.528 446.756,246.823 447.537,248.048    "/>
+			<polygon style="fill:#F79E00;" points="427.549,237.162 426.339,237.802 426.65,226.209 427.823,226.936    "/>
+			<polygon style="fill:#FFA506;" points="448.979,245.093 442.861,223.662 448.047,217.553 456.517,218.613 462.322,227.547      459.794,241.342 451.893,245.198    "/>
+			<polygon style="fill:#FF5715;" points="441.485,224.097 440.59,221.265 442.104,220.787 442.861,223.662    "/>
+			<polygon style="fill:#F29B00;" points="441.485,224.097 437.907,231.394 440.695,240.207 448.608,243.749 452.87,237.02      449.602,226.684 442.861,223.662    "/>
+			<polygon style="fill:#590808;" points="442.413,224.497 439.057,231.188 441.367,239.539 448.12,242.308 451.775,236.936      448.822,227.6    "/>
+			<polygon style="fill:#EF8200;" points="442.861,223.662 442.413,224.497 441.485,224.097    "/>
+			<polygon style="fill:#EF8800;" points="449.602,226.684 448.822,227.6 451.775,236.936 452.87,237.02    "/>
+			<polygon style="fill:#EF8800;" points="448.608,243.749 448.12,242.308 441.367,239.539 440.695,240.207    "/>
+			<polygon style="fill:#F7A616;" points="439.057,231.188 437.907,231.394 441.485,224.097 442.413,224.497    "/>
+			<polygon style="fill:#682815;" points="442.413,224.497 439.057,231.188 443.63,230.875    "/>
+			<polygon style="fill:#721803;" points="441.367,239.539 444.059,237.572 443.63,230.875 439.057,231.188    "/>
+			<polygon style="fill:#4C0707;" points="448.822,227.6 447.319,230.066 442.413,224.497    "/>
+			<polygon style="fill:#3D0303;" points="451.775,236.936 447.997,236.326 447.319,230.066 448.822,227.6    "/>
+			<polygon style="fill:#330303;" points="448.12,242.308 446.472,237.925 447.997,236.326 451.775,236.936    "/>
+			<polygon style="fill:#4C0606;" points="441.367,239.539 444.059,237.572 446.472,237.925 448.12,242.308    "/>
+			<polygon style="fill:#6B0505;" points="443.63,230.875 447.319,230.066 442.413,224.497    "/>
+		</g>
+	</g>
+</g>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<defs><defs>
+					
+						<rect id="SVGID_1_" x="148.905" y="314.701" transform="matrix(0.9423 -0.3348 0.3348 0.9423 -98.8101 75.3784)" width="40.621" height="19.136"/>
+				</defs><clipPath id="SVGID_00000071524780190612013200000011894321434621813653_">
+					<use xlink:href="#SVGID_1_" style="overflow:visible;"/>
+				</clipPath><defs>
+					
+						<rect id="SVGID_00000101788447425438132990000005432016782449422012_" x="332.147" y="57.568" width="41.105" height="24.644"/>
+				</defs><clipPath id="SVGID_00000124141202076453202910000015667687703746878612_">
+					<use xlink:href="#SVGID_00000101788447425438132990000005432016782449422012_" style="overflow:visible;"/>
+				</clipPath><defs>
+					<polygon id="SVGID_00000065793590978203390220000003884297431909793455_" points="352.017,395.012 354.453,395.012        355.847,399.911 354.742,402.624 356.017,406.933 357.935,403.912 357.239,399.911 358.91,395.012 366.083,399.121        369.565,404.773 370.609,409.427 368.938,415.416 365.038,420.735 359.258,423.076 352.503,422.254 345.609,420.735        341.172,416.263 339.735,411.175 339.366,405.51 340.844,402.115 342.588,399.275 349.509,395.787      "/>
+				</defs><clipPath id="SVGID_00000134966212348821179640000001306779665394724011_">
+					<use xlink:href="#SVGID_00000065793590978203390220000003884297431909793455_" style="overflow:visible;"/>
+				</clipPath></defs></svg></g></g></g></svg>

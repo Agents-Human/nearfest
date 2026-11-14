@@ -1,0 +1,35 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="17.015 -0.22375 62.22 22.1975" width="622.2" height="221.975" role="img" id="garden-4-17" data-teaching-action="" aria-labelledby="garden-4-17-title" data-garden-item="green-cucumber" data-animation="produce"><title id="garden-4-17-title">Green cucumber</title><desc>Animated garden illustration. Motion pauses when reduced motion is requested.</desc><style>#garden-4-17 .garden-4-17-produce-sway-1{transform-box:view-box;transform-origin:48.125px 18.1875px;animation:garden-4-17-produce-sway-1 5.7s ease-in-out 0s infinite both;}
+@keyframes garden-4-17-produce-sway-1{0%,100%{transform:rotate(0deg)}25%{transform:rotate(1.6deg)}75%{transform:rotate(-1.1199999999999999deg)}}
+@media (prefers-reduced-motion:reduce){#garden-4-17 [data-motion]{animation:none!important;transform:none!important;opacity:1}#garden-4-17 [data-motion="water-drop"]{opacity:0}}
+@media (prefers-reduced-motion:reduce){#garden-4-17 [data-water-effect]{display:none!important}}</style><defs><g id="garden-4-17-art"><svg version="1.1" id="garden-4-17-Шар_1" x="0" y="0" viewBox="0 0 2400 2000" style="x: 0px !important; y: 0px !important; width: 180px !important; height: 150px !important; overflow: hidden !important;" xml:space="preserve" width="180" height="150" data-source-index="0">
+<g data-source-index="1">
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	<g data-source-index="2">
+		<path style="fill:#2B7B3C;" d="M567.082,61.682c-68.134-13.3-133.727-37.654-189.958-1.56    c-12.642,8.115-35.626,22.867-36.552,43.668c-3.053,68.565,236.811,130.143,415.705,142.348    c128.636,8.776,160.403-12.433,173.69-33.518c21.428-34.003,10.618-92.798-22.197-127.543    C846.077,19.755,763.907,100.102,567.082,61.682z" data-source-index="3"/>
+		<path style="fill:#2A7138;" d="M381.571,145.217c-1.79,5.69,88.248,47.178,199.217,71.803    c146.757,32.566,276.4,23.716,276.821,17.22c0.326-5.019-76.6-7.183-221.316-33.676    C475.546,171.137,383.352,139.553,381.571,145.217z" data-source-index="4"/>
+		<path style="fill:#408942;" d="M341.931,99.306c-2.623,6.496-0.63,12.794,0.356,15.91c5.588,17.656,31.381,42.472,199.229,46.575    c36.065,0.881,216.075,5.281,217.556-14.295c1.122-14.827-101.014-32.374-181.517-46.204    C481.574,84.802,356.176,64.029,341.931,99.306z" data-source-index="5"/>
+		<path style="fill:#529943;" d="M343.559,102.522c0.943,0.472,6.909-9.77,8.074-11.687c13.525-22.258,53.746-31.14,69.284-34.833    c19.496-4.633,51.643-9.687,92.229-4.155c-8.817-2.281-21.333-4.865-36.507-5.817c-35.529-2.229-62.131,5.927-69.721,8.417    c-28.302,9.286-54.717,24.128-61.044,40.033C345.493,95.439,342.822,102.154,343.559,102.522z" data-source-index="6"/>
+		<path style="fill:#529943;" d="M344.536,114.9c-0.5,0.92,42.191,29.133,98.089,52.466c46.554,19.433,88.077,29.558,118.964,35.17    c-36.162-9.624-84.912-24.949-140.296-49.841C376.701,132.653,344.961,114.118,344.536,114.9z" data-source-index="7"/>
+		<path style="fill:#529943;" d="M750.771,128.043c-0.362,2.065,3.239,4.969,6.421,6.015c4.272,1.403,8.364-0.356,9.384-0.768    c14.817-5.973,74.644-6.833,74.503-9.311c-0.072-1.277-15.963-1.065-46.727-0.656    C760.734,123.772,751.313,124.953,750.771,128.043z" data-source-index="8"/>
+		<path style="fill:#529943;" d="M340.695,107.861c0.763,2.224,33.657-12.319,80.442-18.762c54.436-7.496,93.196,1.07,131.583,6.672    c131.97,19.257,252.131,13.856,252.226,12.434c0.089-1.331-105.473,7.3-240.365-19.881C506.46,76.613,479.41,73.37,457.066,74.387    c-4.31,0.196-15.677,1.136-30.426,3.699C377.839,86.567,339.869,105.452,340.695,107.861z" data-source-index="9"/>
+		<path style="fill:#529943;" d="M387.814,114.593c-28.97-4.393-43.81-7.561-44.21-5.993c-0.572,2.243,28.559,13.629,61.65,19.312    c29.697,5.1,52.604,4.084,58.293,3.659c88.284-6.592,247.485,47.905,247.668,47.206c0.174-0.666-143.884-52.298-236.289-53.682    C457.813,124.839,431.068,121.152,387.814,114.593z" data-source-index="10"/>
+		<path style="fill:#408942;" d="M872.934,165.019c23.824-4.953,47.645-20.134,45.826-25.332    c-3.424-9.786-99.954,9.416-99.364,19.762C819.713,165.003,848.139,170.173,872.934,165.019z" data-source-index="11"/>
+	</g>
+	
+</g>
+</svg></g></defs><g class="garden-4-17-produce-sway-1" data-motion="produce-sway"><use href="#garden-4-17-art" xlink:href="#garden-4-17-art"/></g></svg>

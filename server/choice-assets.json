@@ -1,0 +1,584 @@
+{
+  "assets": {
+    "677100a904d2cc5792e6c2548758ac775055292dd6dcd7e70cf548697ab6dafe": {
+      "assetId": "01a188e1-2893-716d-a59e-2e8e70179c9b",
+      "hash": "677100a904d2cc5792e6c2548758ac775055292dd6dcd7e70cf548697ab6dafe",
+      "src": "https://clever-hall.fra1.digitaloceanspaces.com/assets/677100a904d2cc5792e6c2548758ac775055292dd6dcd7e70cf548697ab6dafe.svg",
+      "fallbackSrc": "/art/studyjunior/choices/677100a904d2cc5792e6c2548758ac775055292dd6dcd7e70cf548697ab6dafe.svg",
+      "width": 640,
+      "height": 354
+    },
+    "81f37529b10f93c1b8dacf13e19328a1be8fbc6d1e06366efe75d786a0a8b374": {
+      "assetId": "01a188df-1474-71e4-9b95-c86b66847761",
+      "hash": "81f37529b10f93c1b8dacf13e19328a1be8fbc6d1e06366efe75d786a0a8b374",
+      "src": "https://clever-hall.fra1.digitaloceanspaces.com/assets/81f37529b10f93c1b8dacf13e19328a1be8fbc6d1e06366efe75d786a0a8b374.svg",
+      "fallbackSrc": "/art/studyjunior/choices/81f37529b10f93c1b8dacf13e19328a1be8fbc6d1e06366efe75d786a0a8b374.svg",
+      "width": 640,
+      "height": 688
+    },
+    "702e3a8ad493f043613db76c2d3a10d200bbac71abb62410049bdd144b2e1b88": {
+      "assetId": "01a188e1-a753-725e-aac9-c60ac8719c25",
+      "hash": "702e3a8ad493f043613db76c2d3a10d200bbac71abb62410049bdd144b2e1b88",
+      "src": "https://clever-hall.fra1.digitaloceanspaces.com/assets/702e3a8ad493f043613db76c2d3a10d200bbac71abb62410049bdd144b2e1b88.svg",
+      "fallbackSrc": "/art/studyjunior/choices/702e3a8ad493f043613db76c2d3a10d200bbac71abb62410049bdd144b2e1b88.svg",
+      "width": 640,
+      "height": 418
+    },
+    "aebe0643ad25303018b47a011e1535f691dc739b3f653c7af6b7592b1311fd25": {
+      "assetId": "01a188e0-3ecc-715a-b69a-2b39cbfbc3b2",
+      "hash": "aebe0643ad25303018b47a011e1535f691dc739b3f653c7af6b7592b1311fd25",
+      "src": "https://clever-hall.fra1.digitaloceanspaces.com/assets/aebe0643ad25303018b47a011e1535f691dc739b3f653c7af6b7592b1311fd25.svg",
+      "fallbackSrc": "/art/studyjunior/choices/aebe0643ad25303018b47a011e1535f691dc739b3f653c7af6b7592b1311fd25.svg",
+      "width": 640,
+      "height": 484
+    },
+    "380efb503e102f058a9925f8da0040489d0b9c863e362da8b4ee3739d84a52da": {
+      "assetId": "01a188e1-c238-7224-b564-3c83ee1b02d1",
+      "hash": "380efb503e102f058a9925f8da0040489d0b9c863e362da8b4ee3739d84a52da",
+      "src": "https://clever-hall.fra1.digitaloceanspaces.com/assets/380efb503e102f058a9925f8da0040489d0b9c863e362da8b4ee3739d84a52da.svg",
+      "fallbackSrc": "/art/studyjunior/choices/380efb503e102f058a9925f8da0040489d0b9c863e362da8b4ee3739d84a52da.svg",
+      "width": 640,
+      "height": 404
+    },
+    "5a2e961c286220d8b4fc3bcfd8b0f9b906184648eb2160222441a6d7a98e87f3": {
+      "assetId": "01a160bb-e16d-7066-9b01-3b5fa8319cc8",
+      "hash": "5a2e961c286220d8b4fc3bcfd8b0f9b906184648eb2160222441a6d7a98e87f3",
+      "src": "https://clever-hall.fra1.digitaloceanspaces.com/assets/5a2e961c286220d8b4fc3bcfd8b0f9b906184648eb2160222441a6d7a98e87f3.svg",
+      "fallbackSrc": "/art/studyjunior/choices/5a2e961c286220d8b4fc3bcfd8b0f9b906184648eb2160222441a6d7a98e87f3.svg",
+      "width": 640,
+      "height": 449
+    },
+    "dcdbfff7c0ef1770571ad9a770d9cb05ce0d2a5c2fab7285974516e5ada38b07": {
+      "assetId": "01a160bc-3e19-73ae-a54b-61862b092121",
+      "hash": "dcdbfff7c0ef1770571ad9a770d9cb05ce0d2a5c2fab7285974516e5ada38b07",
+      "src": "https://clever-hall.fra1.digitaloceanspaces.com/assets/dcdbfff7c0ef1770571ad9a770d9cb05ce0d2a5c2fab7285974516e5ada38b07.svg",
+      "fallbackSrc": "/art/studyjunior/choices/dcdbfff7c0ef1770571ad9a770d9cb05ce0d2a5c2fab7285974516e5ada38b07.svg",
+      "width": 640,
+      "height": 882
+    },
+    "b42b6fd82b738ed1bd071cb8fcd0b57ce7bd81c20b574a6bc48ab88be87ad4af": {
+      "assetId": "01a188dd-bf5e-728b-8db4-e851fe675644",
+      "hash": "b42b6fd82b738ed1bd071cb8fcd0b57ce7bd81c20b574a6bc48ab88be87ad4af",
+      "src": "https://clever-hall.fra1.digitaloceanspaces.com/assets/b42b6fd82b738ed1bd071cb8fcd0b57ce7bd81c20b574a6bc48ab88be87ad4af.svg",
+      "fallbackSrc": "/art/studyjunior/choices/b42b6fd82b738ed1bd071cb8fcd0b57ce7bd81c20b574a6bc48ab88be87ad4af.svg",
+      "width": 640,
+      "height": 321
+    },
+    "0dcdb926df669aea09684cdd3a543fd3e92c8d09a1bec352a6c8065abb57d9af": {
+      "assetId": "01a160bd-d98d-704d-856f-df07bafd6919",
+      "hash": "0dcdb926df669aea09684cdd3a543fd3e92c8d09a1bec352a6c8065abb57d9af",
+      "src": "https://clever-hall.fra1.digitaloceanspaces.com/assets/0dcdb926df669aea09684cdd3a543fd3e92c8d09a1bec352a6c8065abb57d9af.svg",
+      "fallbackSrc": "/art/studyjunior/choices/0dcdb926df669aea09684cdd3a543fd3e92c8d09a1bec352a6c8065abb57d9af.svg",
+      "width": 640,
+      "height": 237
+    },
+    "dac5ba0c04c1f2c939e30f6a70e99e925e401df0fd373848c1456d627001c961": {
+      "assetId": "01a160bc-bf49-73c5-a620-1393ea2e8e11",
+      "hash": "dac5ba0c04c1f2c939e30f6a70e99e925e401df0fd373848c1456d627001c961",
+      "src": "https://clever-hall.fra1.digitaloceanspaces.com/assets/dac5ba0c04c1f2c939e30f6a70e99e925e401df0fd373848c1456d627001c961.svg",
+      "fallbackSrc": "/art/studyjunior/choices/dac5ba0c04c1f2c939e30f6a70e99e925e401df0fd373848c1456d627001c961.svg",
+      "width": 640,
+      "height": 424
+    },
+    "586fe8dcaaaf57f64a69321c298fb471fa22fa8705d5e65510c11a3b4c479482": {
+      "assetId": "01a160be-037b-737a-b4c1-28c5f505f7f9",
+      "hash": "586fe8dcaaaf57f64a69321c298fb471fa22fa8705d5e65510c11a3b4c479482",
+      "src": "https://clever-hall.fra1.digitaloceanspaces.com/assets/586fe8dcaaaf57f64a69321c298fb471fa22fa8705d5e65510c11a3b4c479482.svg",
+      "fallbackSrc": "/art/studyjunior/choices/586fe8dcaaaf57f64a69321c298fb471fa22fa8705d5e65510c11a3b4c479482.svg",
+      "width": 640,
+      "height": 769
+    },
+    "4d99d8d804eecbc0da28bee27c52825c6a4d80b36ae934cd5714a4d46646492e": {
+      "assetId": "01a160ba-ee24-7146-82d6-baf00ca23f2b",
+      "hash": "4d99d8d804eecbc0da28bee27c52825c6a4d80b36ae934cd5714a4d46646492e",
+      "src": "https://clever-hall.fra1.digitaloceanspaces.com/assets/4d99d8d804eecbc0da28bee27c52825c6a4d80b36ae934cd5714a4d46646492e.svg",
+      "fallbackSrc": "/art/studyjunior/choices/4d99d8d804eecbc0da28bee27c52825c6a4d80b36ae934cd5714a4d46646492e.svg",
+      "width": 640,
+      "height": 684
+    },
+    "d2406aefe93f2f694f5dc434740468561f24b0e5690aa6f53a6456a15ee1fb31": {
+      "assetId": "01a160bd-a3c8-72d1-aeb9-b3f37db25edc",
+      "hash": "d2406aefe93f2f694f5dc434740468561f24b0e5690aa6f53a6456a15ee1fb31",
+      "src": "https://clever-hall.fra1.digitaloceanspaces.com/assets/d2406aefe93f2f694f5dc434740468561f24b0e5690aa6f53a6456a15ee1fb31.svg",
+      "fallbackSrc": "/art/studyjunior/choices/d2406aefe93f2f694f5dc434740468561f24b0e5690aa6f53a6456a15ee1fb31.svg",
+      "width": 640,
+      "height": 216
+    },
+    "84fafc1d2af308435026962a85e61e5d30d872b044e55d836a1640c4bcdcc1f7": {
+      "assetId": "01a160ba-db63-7219-bce2-370720bbbd14",
+      "hash": "84fafc1d2af308435026962a85e61e5d30d872b044e55d836a1640c4bcdcc1f7",
+      "src": "https://clever-hall.fra1.digitaloceanspaces.com/assets/84fafc1d2af308435026962a85e61e5d30d872b044e55d836a1640c4bcdcc1f7.svg",
+      "fallbackSrc": "/art/studyjunior/choices/84fafc1d2af308435026962a85e61e5d30d872b044e55d836a1640c4bcdcc1f7.svg",
+      "width": 640,
+      "height": 377
+    },
+    "1f26d747810d57ce3a5121de72d724cb19591b8db8a1a6d825e11425a8bf6c60": {
+      "assetId": "01a160bc-1c4b-736e-b273-4791d53a9eb8",
+      "hash": "1f26d747810d57ce3a5121de72d724cb19591b8db8a1a6d825e11425a8bf6c60",
+      "src": "https://clever-hall.fra1.digitaloceanspaces.com/assets/1f26d747810d57ce3a5121de72d724cb19591b8db8a1a6d825e11425a8bf6c60.svg",
+      "fallbackSrc": "/art/studyjunior/choices/1f26d747810d57ce3a5121de72d724cb19591b8db8a1a6d825e11425a8bf6c60.svg",
+      "width": 640,
+      "height": 637
+    },
+    "346ebaa3c74e61f973499a2bbf3a6e37beb68ccab5a37b6cf5b1a64de299faac": {
+      "assetId": "01a160c6-4f5b-7011-a750-39e055e5e8e0",
+      "hash": "346ebaa3c74e61f973499a2bbf3a6e37beb68ccab5a37b6cf5b1a64de299faac",
+      "src": "https://clever-hall.fra1.digitaloceanspaces.com/assets/346ebaa3c74e61f973499a2bbf3a6e37beb68ccab5a37b6cf5b1a64de299faac.svg",
+      "fallbackSrc": "/art/studyjunior/choices/346ebaa3c74e61f973499a2bbf3a6e37beb68ccab5a37b6cf5b1a64de299faac.svg",
+      "width": 640,
+      "height": 685
+    },
+    "956dcbd5c441e87cb748229d3fb15d6bff3b7c2b3f33fbcb83fbf769b733b5e6": {
+      "assetId": "01a160c6-3cea-70d4-9f06-8921b85e1b15",
+      "hash": "956dcbd5c441e87cb748229d3fb15d6bff3b7c2b3f33fbcb83fbf769b733b5e6",
+      "src": "https://clever-hall.fra1.digitaloceanspaces.com/assets/956dcbd5c441e87cb748229d3fb15d6bff3b7c2b3f33fbcb83fbf769b733b5e6.svg",
+      "fallbackSrc": "/art/studyjunior/choices/956dcbd5c441e87cb748229d3fb15d6bff3b7c2b3f33fbcb83fbf769b733b5e6.svg",
+      "width": 640,
+      "height": 390
+    },
+    "3624f732b933d24ca7df642795208cf3bcf3999d974489ea00125891293c99f6": {
+      "assetId": "01a160c6-c0e3-735d-8eb2-38e5535da176",
+      "hash": "3624f732b933d24ca7df642795208cf3bcf3999d974489ea00125891293c99f6",
+      "src": "https://clever-hall.fra1.digitaloceanspaces.com/assets/3624f732b933d24ca7df642795208cf3bcf3999d974489ea00125891293c99f6.svg",
+      "fallbackSrc": "/art/studyjunior/choices/3624f732b933d24ca7df642795208cf3bcf3999d974489ea00125891293c99f6.svg",
+      "width": 640,
+      "height": 523
+    },
+    "2130869c69626bf5908ff337d36bbf8d0d8e508bb06896949c3cca00f4bdd5c0": {
+      "assetId": "01a160c5-d10b-72c3-97eb-1b5bb3b8c993",
+      "hash": "2130869c69626bf5908ff337d36bbf8d0d8e508bb06896949c3cca00f4bdd5c0",
+      "src": "https://clever-hall.fra1.digitaloceanspaces.com/assets/2130869c69626bf5908ff337d36bbf8d0d8e508bb06896949c3cca00f4bdd5c0.svg",
+      "fallbackSrc": "/art/studyjunior/choices/2130869c69626bf5908ff337d36bbf8d0d8e508bb06896949c3cca00f4bdd5c0.svg",
+      "width": 640,
+      "height": 402
+    },
+    "cf45cf1a4e4d4d7bbe225f3816babf85f2a959e44c3275b379132180c21c4236": {
+      "assetId": "01a160ba-d720-703b-9b2c-d826cd04ffa5",
+      "hash": "cf45cf1a4e4d4d7bbe225f3816babf85f2a959e44c3275b379132180c21c4236",
+      "src": "https://clever-hall.fra1.digitaloceanspaces.com/assets/cf45cf1a4e4d4d7bbe225f3816babf85f2a959e44c3275b379132180c21c4236.svg",
+      "fallbackSrc": "/art/studyjunior/choices/cf45cf1a4e4d4d7bbe225f3816babf85f2a959e44c3275b379132180c21c4236.svg",
+      "width": 640,
+      "height": 782
+    },
+    "e90f04a4ecd8a1d27b7ad8ec392497a5dd6fb7216b9b865d9ae8c1ef7b268665": {
+      "assetId": "01a160be-6aa2-7186-b417-ea029291cb49",
+      "hash": "e90f04a4ecd8a1d27b7ad8ec392497a5dd6fb7216b9b865d9ae8c1ef7b268665",
+      "src": "https://clever-hall.fra1.digitaloceanspaces.com/assets/e90f04a4ecd8a1d27b7ad8ec392497a5dd6fb7216b9b865d9ae8c1ef7b268665.svg",
+      "fallbackSrc": "/art/studyjunior/choices/e90f04a4ecd8a1d27b7ad8ec392497a5dd6fb7216b9b865d9ae8c1ef7b268665.svg",
+      "width": 640,
+      "height": 489
+    },
+    "379ee7d000f35807e0b5cb03b2b9e285b2bd3e4085d1797a8e43ac2a7203a3cb": {
+      "assetId": "01a160bb-bf34-711a-90c8-ac6cc342e5a9",
+      "hash": "379ee7d000f35807e0b5cb03b2b9e285b2bd3e4085d1797a8e43ac2a7203a3cb",
+      "src": "https://clever-hall.fra1.digitaloceanspaces.com/assets/379ee7d000f35807e0b5cb03b2b9e285b2bd3e4085d1797a8e43ac2a7203a3cb.svg",
+      "fallbackSrc": "/art/studyjunior/choices/379ee7d000f35807e0b5cb03b2b9e285b2bd3e4085d1797a8e43ac2a7203a3cb.svg",
+      "width": 640,
+      "height": 492
+    },
+    "beec8d87948e2498892963ee1e406941e59fbc22f6bb36b1f09dd2d6389c3b68": {
+      "assetId": "01a160be-7eb9-70ac-a6cb-c21a3f52349c",
+      "hash": "beec8d87948e2498892963ee1e406941e59fbc22f6bb36b1f09dd2d6389c3b68",
+      "src": "https://clever-hall.fra1.digitaloceanspaces.com/assets/beec8d87948e2498892963ee1e406941e59fbc22f6bb36b1f09dd2d6389c3b68.svg",
+      "fallbackSrc": "/art/studyjunior/choices/beec8d87948e2498892963ee1e406941e59fbc22f6bb36b1f09dd2d6389c3b68.svg",
+      "width": 640,
+      "height": 810
+    },
+    "c94ddc5cc33ec6bcf114520a97a24424da28ab50e196072dbf7feb7b1fcfc210": {
+      "assetId": "01a166dd-72bc-7334-b534-94f490567c87",
+      "hash": "c94ddc5cc33ec6bcf114520a97a24424da28ab50e196072dbf7feb7b1fcfc210",
+      "src": "https://clever-hall.fra1.digitaloceanspaces.com/assets/c94ddc5cc33ec6bcf114520a97a24424da28ab50e196072dbf7feb7b1fcfc210.svg",
+      "fallbackSrc": "/art/studyjunior/choices/c94ddc5cc33ec6bcf114520a97a24424da28ab50e196072dbf7feb7b1fcfc210.svg",
+      "width": 640,
+      "height": 627
+    },
+    "c6dcbe3d230cd28c5522c4a9c2e0ee9e307342ca906fbfb5ebaf1d742a4152e6": {
+      "assetId": "01a166dd-9ee5-7369-a10c-7507697dbb53",
+      "hash": "c6dcbe3d230cd28c5522c4a9c2e0ee9e307342ca906fbfb5ebaf1d742a4152e6",
+      "src": "https://clever-hall.fra1.digitaloceanspaces.com/assets/c6dcbe3d230cd28c5522c4a9c2e0ee9e307342ca906fbfb5ebaf1d742a4152e6.svg",
+      "fallbackSrc": "/art/studyjunior/choices/c6dcbe3d230cd28c5522c4a9c2e0ee9e307342ca906fbfb5ebaf1d742a4152e6.svg",
+      "width": 640,
+      "height": 629
+    },
+    "5aadeba8cdb7a1bf689d8e4cb3d5545801cb22598eb6c0f95c04abe80b9e0966": {
+      "assetId": "01a166dd-6b08-73a0-b751-1555ba9f54ab",
+      "hash": "5aadeba8cdb7a1bf689d8e4cb3d5545801cb22598eb6c0f95c04abe80b9e0966",
+      "src": "https://clever-hall.fra1.digitaloceanspaces.com/assets/5aadeba8cdb7a1bf689d8e4cb3d5545801cb22598eb6c0f95c04abe80b9e0966.svg",
+      "fallbackSrc": "/art/studyjunior/choices/5aadeba8cdb7a1bf689d8e4cb3d5545801cb22598eb6c0f95c04abe80b9e0966.svg",
+      "width": 640,
+      "height": 733
+    },
+    "0dff2604e5fd2355a729f1d11e43d251852e671abb796862cb4e9aa895b183c0": {
+      "assetId": "01a166db-a713-7153-be61-e50c6b7f5aed",
+      "hash": "0dff2604e5fd2355a729f1d11e43d251852e671abb796862cb4e9aa895b183c0",
+      "src": "https://clever-hall.fra1.digitaloceanspaces.com/assets/0dff2604e5fd2355a729f1d11e43d251852e671abb796862cb4e9aa895b183c0.svg",
+      "fallbackSrc": "/art/studyjunior/choices/0dff2604e5fd2355a729f1d11e43d251852e671abb796862cb4e9aa895b183c0.svg",
+      "width": 640,
+      "height": 626
+    },
+    "82ea77b09f0f3a694e6cdf45fd681ea988c8a19e975182c154ebbbe2a9e5bdcd": {
+      "assetId": "01a166dd-82ca-7331-9303-1ccf5ce62661",
+      "hash": "82ea77b09f0f3a694e6cdf45fd681ea988c8a19e975182c154ebbbe2a9e5bdcd",
+      "src": "https://clever-hall.fra1.digitaloceanspaces.com/assets/82ea77b09f0f3a694e6cdf45fd681ea988c8a19e975182c154ebbbe2a9e5bdcd.svg",
+      "fallbackSrc": "/art/studyjunior/choices/82ea77b09f0f3a694e6cdf45fd681ea988c8a19e975182c154ebbbe2a9e5bdcd.svg",
+      "width": 640,
+      "height": 284
+    },
+    "a3947d1f4cfcac7548666c4044cdc1712ebceab1c011c3a95343f1d2d6cf6ba8": {
+      "assetId": "01a166dd-55a6-7292-9233-e0bf2b7cfd3b",
+      "hash": "a3947d1f4cfcac7548666c4044cdc1712ebceab1c011c3a95343f1d2d6cf6ba8",
+      "src": "https://clever-hall.fra1.digitaloceanspaces.com/assets/a3947d1f4cfcac7548666c4044cdc1712ebceab1c011c3a95343f1d2d6cf6ba8.svg",
+      "fallbackSrc": "/art/studyjunior/choices/a3947d1f4cfcac7548666c4044cdc1712ebceab1c011c3a95343f1d2d6cf6ba8.svg",
+      "width": 640,
+      "height": 640
+    },
+    "d9341b3ad0fa57af75e6b146e85092ed9898690074f24c17b54c46a63be4b60d": {
+      "assetId": "01a166dd-78aa-72af-9103-a8b661632417",
+      "hash": "d9341b3ad0fa57af75e6b146e85092ed9898690074f24c17b54c46a63be4b60d",
+      "src": "https://clever-hall.fra1.digitaloceanspaces.com/assets/d9341b3ad0fa57af75e6b146e85092ed9898690074f24c17b54c46a63be4b60d.svg",
+      "fallbackSrc": "/art/studyjunior/choices/d9341b3ad0fa57af75e6b146e85092ed9898690074f24c17b54c46a63be4b60d.svg",
+      "width": 640,
+      "height": 621
+    },
+    "6d8eccb578d1a0d7f9168d7f4003e7cb049096df4c92a36df3587d8e4d467b8f": {
+      "assetId": "01a166dd-930d-700f-aa70-42087c0f162d",
+      "hash": "6d8eccb578d1a0d7f9168d7f4003e7cb049096df4c92a36df3587d8e4d467b8f",
+      "src": "https://clever-hall.fra1.digitaloceanspaces.com/assets/6d8eccb578d1a0d7f9168d7f4003e7cb049096df4c92a36df3587d8e4d467b8f.svg",
+      "fallbackSrc": "/art/studyjunior/choices/6d8eccb578d1a0d7f9168d7f4003e7cb049096df4c92a36df3587d8e4d467b8f.svg",
+      "width": 640,
+      "height": 640
+    },
+    "a154c72d18204d04defabaf85d7ab1282f3e4029da615531f03f3391bd3f217a": {
+      "assetId": "01a16ab2-9304-7148-87d4-7b4aea4b6a14",
+      "hash": "a154c72d18204d04defabaf85d7ab1282f3e4029da615531f03f3391bd3f217a",
+      "src": "https://clever-hall.fra1.digitaloceanspaces.com/assets/a154c72d18204d04defabaf85d7ab1282f3e4029da615531f03f3391bd3f217a.svg",
+      "fallbackSrc": "/art/studyjunior/choices/a154c72d18204d04defabaf85d7ab1282f3e4029da615531f03f3391bd3f217a.svg",
+      "width": 640,
+      "height": 683
+    },
+    "14500022a3971dd14af0901dc83d31b58dbf035323fef49b19bd68c8984210e8": {
+      "assetId": "01a16c49-82c5-71c1-9983-1d18f6e8ecc7",
+      "hash": "14500022a3971dd14af0901dc83d31b58dbf035323fef49b19bd68c8984210e8",
+      "src": "https://clever-hall.fra1.digitaloceanspaces.com/assets/14500022a3971dd14af0901dc83d31b58dbf035323fef49b19bd68c8984210e8.svg",
+      "fallbackSrc": "/art/studyjunior/choices/14500022a3971dd14af0901dc83d31b58dbf035323fef49b19bd68c8984210e8.svg",
+      "width": 640,
+      "height": 228
+    },
+    "a95810e0dcbb25d843c2c8a262a30436c7ea266f356c7dce417360cbf09f1eb0": {
+      "assetId": "01a17602-4af0-7307-9633-90af8070c865",
+      "hash": "a95810e0dcbb25d843c2c8a262a30436c7ea266f356c7dce417360cbf09f1eb0",
+      "src": "https://clever-hall.fra1.digitaloceanspaces.com/assets/a95810e0dcbb25d843c2c8a262a30436c7ea266f356c7dce417360cbf09f1eb0.svg",
+      "fallbackSrc": "/art/studyjunior/choices/a95810e0dcbb25d843c2c8a262a30436c7ea266f356c7dce417360cbf09f1eb0.svg",
+      "width": 640,
+      "height": 640
+    },
+    "11b934173e87157534c4d58e1b70536532302909cb850f7f6ef8dfe26c85c79c": {
+      "assetId": "01a17602-5910-7145-ae71-a28976112877",
+      "hash": "11b934173e87157534c4d58e1b70536532302909cb850f7f6ef8dfe26c85c79c",
+      "src": "https://clever-hall.fra1.digitaloceanspaces.com/assets/11b934173e87157534c4d58e1b70536532302909cb850f7f6ef8dfe26c85c79c.svg",
+      "fallbackSrc": "/art/studyjunior/choices/11b934173e87157534c4d58e1b70536532302909cb850f7f6ef8dfe26c85c79c.svg",
+      "width": 640,
+      "height": 640
+    },
+    "4918530fb6b1ddd825cf3826fdc87ec9d81e766cd5bf33449f46637ef6e3b75e": {
+      "assetId": "01a16ab4-539c-72fe-be6b-c61db98d032c",
+      "hash": "4918530fb6b1ddd825cf3826fdc87ec9d81e766cd5bf33449f46637ef6e3b75e",
+      "src": "https://clever-hall.fra1.digitaloceanspaces.com/assets/4918530fb6b1ddd825cf3826fdc87ec9d81e766cd5bf33449f46637ef6e3b75e.svg",
+      "fallbackSrc": "/art/studyjunior/choices/4918530fb6b1ddd825cf3826fdc87ec9d81e766cd5bf33449f46637ef6e3b75e.svg",
+      "width": 640,
+      "height": 519
+    },
+    "fb66d26069127a753568c8eb1591e417321aff7e24ec6c20a2ce130b7ac637ba": {
+      "assetId": "01a16ab2-446a-7396-8eff-19086a60b04e",
+      "hash": "fb66d26069127a753568c8eb1591e417321aff7e24ec6c20a2ce130b7ac637ba",
+      "src": "https://clever-hall.fra1.digitaloceanspaces.com/assets/fb66d26069127a753568c8eb1591e417321aff7e24ec6c20a2ce130b7ac637ba.svg",
+      "fallbackSrc": "/art/studyjunior/choices/fb66d26069127a753568c8eb1591e417321aff7e24ec6c20a2ce130b7ac637ba.svg",
+      "width": 640,
+      "height": 574
+    },
+    "08ef23cf520f025d0c45b1d500df562206f9ea07ed22e1aac5324f9c640a8006": {
+      "assetId": "01a17601-bce6-73de-86cf-9efc8675c454",
+      "hash": "08ef23cf520f025d0c45b1d500df562206f9ea07ed22e1aac5324f9c640a8006",
+      "src": "https://clever-hall.fra1.digitaloceanspaces.com/assets/08ef23cf520f025d0c45b1d500df562206f9ea07ed22e1aac5324f9c640a8006.svg",
+      "fallbackSrc": "/art/studyjunior/choices/08ef23cf520f025d0c45b1d500df562206f9ea07ed22e1aac5324f9c640a8006.svg",
+      "width": 640,
+      "height": 640
+    },
+    "3c8204b91f7973a57d54ee9568d685b76286f9c6e81ad2093c92ed9ba4481a87": {
+      "assetId": "01a16ab5-3ada-73bb-8e8c-77eb74630865",
+      "hash": "3c8204b91f7973a57d54ee9568d685b76286f9c6e81ad2093c92ed9ba4481a87",
+      "src": "https://clever-hall.fra1.digitaloceanspaces.com/assets/3c8204b91f7973a57d54ee9568d685b76286f9c6e81ad2093c92ed9ba4481a87.svg",
+      "fallbackSrc": "/art/studyjunior/choices/3c8204b91f7973a57d54ee9568d685b76286f9c6e81ad2093c92ed9ba4481a87.svg",
+      "width": 640,
+      "height": 441
+    },
+    "69ef599e00a61e830c1ed8c965f08022d75781815fbd1a82a95b98acdc297294": {
+      "assetId": "01a17603-19ab-73fd-b847-ad21cfc62ee3",
+      "hash": "69ef599e00a61e830c1ed8c965f08022d75781815fbd1a82a95b98acdc297294",
+      "src": "https://clever-hall.fra1.digitaloceanspaces.com/assets/69ef599e00a61e830c1ed8c965f08022d75781815fbd1a82a95b98acdc297294.svg",
+      "fallbackSrc": "/art/studyjunior/choices/69ef599e00a61e830c1ed8c965f08022d75781815fbd1a82a95b98acdc297294.svg",
+      "width": 640,
+      "height": 640
+    },
+    "f5addb7ba5e42d41ba1495376f68775c0e1e1c69c0ee4a550868c68e9673003a": {
+      "assetId": "01a17602-f730-7335-8252-aeb179353685",
+      "hash": "f5addb7ba5e42d41ba1495376f68775c0e1e1c69c0ee4a550868c68e9673003a",
+      "src": "https://clever-hall.fra1.digitaloceanspaces.com/assets/f5addb7ba5e42d41ba1495376f68775c0e1e1c69c0ee4a550868c68e9673003a.svg",
+      "fallbackSrc": "/art/studyjunior/choices/f5addb7ba5e42d41ba1495376f68775c0e1e1c69c0ee4a550868c68e9673003a.svg",
+      "width": 640,
+      "height": 640
+    },
+    "57b7b54641d570212d41c02b82f2d8c0c10c5096791118cb24fc6946c47f0fa1": {
+      "assetId": "01a17603-2fea-72fc-9f7f-ac16f50b2bdf",
+      "hash": "57b7b54641d570212d41c02b82f2d8c0c10c5096791118cb24fc6946c47f0fa1",
+      "src": "https://clever-hall.fra1.digitaloceanspaces.com/assets/57b7b54641d570212d41c02b82f2d8c0c10c5096791118cb24fc6946c47f0fa1.svg",
+      "fallbackSrc": "/art/studyjunior/choices/57b7b54641d570212d41c02b82f2d8c0c10c5096791118cb24fc6946c47f0fa1.svg",
+      "width": 640,
+      "height": 640
+    },
+    "9d35e48b42ed8fc8005315dd903ee2ec19eec9d769a180e925b34f0d463791eb": {
+      "assetId": "01a17602-f274-7037-9897-f392162ce3d9",
+      "hash": "9d35e48b42ed8fc8005315dd903ee2ec19eec9d769a180e925b34f0d463791eb",
+      "src": "https://clever-hall.fra1.digitaloceanspaces.com/assets/9d35e48b42ed8fc8005315dd903ee2ec19eec9d769a180e925b34f0d463791eb.svg",
+      "fallbackSrc": "/art/studyjunior/choices/9d35e48b42ed8fc8005315dd903ee2ec19eec9d769a180e925b34f0d463791eb.svg",
+      "width": 640,
+      "height": 640
+    },
+    "ecc2cebdb38e47cf667619185e52c2adaf3ede03322196ad278a3d0ca5c944bd": {
+      "assetId": "01a179f3-0940-70a9-8d2d-c60521cc675e",
+      "hash": "ecc2cebdb38e47cf667619185e52c2adaf3ede03322196ad278a3d0ca5c944bd",
+      "src": "https://clever-hall.fra1.digitaloceanspaces.com/assets/ecc2cebdb38e47cf667619185e52c2adaf3ede03322196ad278a3d0ca5c944bd.svg",
+      "fallbackSrc": "/art/studyjunior/choices/ecc2cebdb38e47cf667619185e52c2adaf3ede03322196ad278a3d0ca5c944bd.svg",
+      "width": 640,
+      "height": 573
+    },
+    "37fabb0c1607a4e1b8ff3d95f394af66e735103e9ab2827233ecf932ed3dc2c6": {
+      "assetId": "01a1714f-bef3-73ce-9402-92687cf6ca5e",
+      "hash": "37fabb0c1607a4e1b8ff3d95f394af66e735103e9ab2827233ecf932ed3dc2c6",
+      "src": "https://clever-hall.fra1.digitaloceanspaces.com/assets/37fabb0c1607a4e1b8ff3d95f394af66e735103e9ab2827233ecf932ed3dc2c6.svg",
+      "fallbackSrc": "/art/studyjunior/choices/37fabb0c1607a4e1b8ff3d95f394af66e735103e9ab2827233ecf932ed3dc2c6.svg",
+      "width": 640,
+      "height": 640
+    },
+    "982add57a29cb85859a5d79d16ecfc1e4ecec63ee4ca2d26e8ea2a02df14514b": {
+      "assetId": "01a18881-17b3-72c8-bb4e-55c055f834f5",
+      "hash": "982add57a29cb85859a5d79d16ecfc1e4ecec63ee4ca2d26e8ea2a02df14514b",
+      "src": "https://clever-hall.fra1.digitaloceanspaces.com/assets/982add57a29cb85859a5d79d16ecfc1e4ecec63ee4ca2d26e8ea2a02df14514b.svg",
+      "fallbackSrc": "/art/studyjunior/choices/982add57a29cb85859a5d79d16ecfc1e4ecec63ee4ca2d26e8ea2a02df14514b.svg",
+      "width": 640,
+      "height": 469
+    },
+    "7f62bde1170e33f00566a3af3ab647312f645f167a6e9bd51b23ca3b1db84243": {
+      "assetId": "01a17a22-9990-71ca-abe1-ea4a83cd55d0",
+      "hash": "7f62bde1170e33f00566a3af3ab647312f645f167a6e9bd51b23ca3b1db84243",
+      "src": "https://clever-hall.fra1.digitaloceanspaces.com/assets/7f62bde1170e33f00566a3af3ab647312f645f167a6e9bd51b23ca3b1db84243.svg",
+      "fallbackSrc": "/art/studyjunior/choices/7f62bde1170e33f00566a3af3ab647312f645f167a6e9bd51b23ca3b1db84243.svg",
+      "width": 640,
+      "height": 654
+    },
+    "fbf5e62b4144a9381161640e91f54cc742fd198001926be654a87f082d6af763": {
+      "assetId": "01a160d6-23f9-72ce-944b-d6c118856fce",
+      "hash": "fbf5e62b4144a9381161640e91f54cc742fd198001926be654a87f082d6af763",
+      "src": "https://clever-hall.fra1.digitaloceanspaces.com/assets/fbf5e62b4144a9381161640e91f54cc742fd198001926be654a87f082d6af763.svg",
+      "fallbackSrc": "/art/studyjunior/choices/fbf5e62b4144a9381161640e91f54cc742fd198001926be654a87f082d6af763.svg",
+      "width": 640,
+      "height": 689
+    },
+    "7664b79096e24ca1cbb7435016300e2e1296505b36e5f2f44feeec8ee1e996b8": {
+      "assetId": "01a1760a-95dd-712b-aa9b-7adce5403dcc",
+      "hash": "7664b79096e24ca1cbb7435016300e2e1296505b36e5f2f44feeec8ee1e996b8",
+      "src": "https://clever-hall.fra1.digitaloceanspaces.com/assets/7664b79096e24ca1cbb7435016300e2e1296505b36e5f2f44feeec8ee1e996b8.svg",
+      "fallbackSrc": "/art/studyjunior/choices/7664b79096e24ca1cbb7435016300e2e1296505b36e5f2f44feeec8ee1e996b8.svg",
+      "width": 640,
+      "height": 640
+    },
+    "c452d8be851a3b01855f8db34f80733d142c77cfc35f5b63e1293f1946bd9b1b": {
+      "assetId": "01a16a39-3e55-7085-a364-31f28a002fc1",
+      "hash": "c452d8be851a3b01855f8db34f80733d142c77cfc35f5b63e1293f1946bd9b1b",
+      "src": "https://clever-hall.fra1.digitaloceanspaces.com/assets/c452d8be851a3b01855f8db34f80733d142c77cfc35f5b63e1293f1946bd9b1b.svg",
+      "fallbackSrc": "/art/studyjunior/choices/c452d8be851a3b01855f8db34f80733d142c77cfc35f5b63e1293f1946bd9b1b.svg",
+      "width": 640,
+      "height": 640
+    },
+    "e34acdad206133118af96fd67e1630fc82e7e2264f2482ebda65588a9d64d2f1": {
+      "assetId": "01a1763d-fb0c-724b-9c97-6da99077c446",
+      "hash": "e34acdad206133118af96fd67e1630fc82e7e2264f2482ebda65588a9d64d2f1",
+      "src": "https://clever-hall.fra1.digitaloceanspaces.com/assets/e34acdad206133118af96fd67e1630fc82e7e2264f2482ebda65588a9d64d2f1.svg",
+      "fallbackSrc": "/art/studyjunior/choices/e34acdad206133118af96fd67e1630fc82e7e2264f2482ebda65588a9d64d2f1.svg",
+      "width": 640,
+      "height": 1049
+    },
+    "6fe5f2dd1b2a9a4ef962d06811deaf98527fba4e27a39a0377f9588fe0da343e": {
+      "assetId": "01a1714f-f895-7037-b6b5-6b4ff1e0c744",
+      "hash": "6fe5f2dd1b2a9a4ef962d06811deaf98527fba4e27a39a0377f9588fe0da343e",
+      "src": "https://clever-hall.fra1.digitaloceanspaces.com/assets/6fe5f2dd1b2a9a4ef962d06811deaf98527fba4e27a39a0377f9588fe0da343e.svg",
+      "fallbackSrc": "/art/studyjunior/choices/6fe5f2dd1b2a9a4ef962d06811deaf98527fba4e27a39a0377f9588fe0da343e.svg",
+      "width": 640,
+      "height": 640
+    },
+    "f78b650d64caa3167b608f740a5f897e2c436156cef942d8d2bef4e8be9536a9": {
+      "assetId": "01a160bb-08b2-703b-b0b1-3f247414553e",
+      "hash": "f78b650d64caa3167b608f740a5f897e2c436156cef942d8d2bef4e8be9536a9",
+      "src": "https://clever-hall.fra1.digitaloceanspaces.com/assets/f78b650d64caa3167b608f740a5f897e2c436156cef942d8d2bef4e8be9536a9.svg",
+      "fallbackSrc": "/art/studyjunior/choices/f78b650d64caa3167b608f740a5f897e2c436156cef942d8d2bef4e8be9536a9.svg",
+      "width": 640,
+      "height": 684
+    },
+    "40903e1ee1a1c1d52cfea5eec843982d1c747f458d3ffd34c7cdf92ef0b1ed27": {
+      "assetId": "01a1762c-ff84-733e-8b51-350a8f265c4e",
+      "hash": "40903e1ee1a1c1d52cfea5eec843982d1c747f458d3ffd34c7cdf92ef0b1ed27",
+      "src": "https://clever-hall.fra1.digitaloceanspaces.com/assets/40903e1ee1a1c1d52cfea5eec843982d1c747f458d3ffd34c7cdf92ef0b1ed27.svg",
+      "fallbackSrc": "/art/studyjunior/choices/40903e1ee1a1c1d52cfea5eec843982d1c747f458d3ffd34c7cdf92ef0b1ed27.svg",
+      "width": 640,
+      "height": 600
+    },
+    "2b8e6e8eda45179f052a7c8bebc69a585aebe885809f8f061862357e1d05ad3f": {
+      "assetId": "01a173fb-36e4-73ed-95d8-4e2b8810434b",
+      "hash": "2b8e6e8eda45179f052a7c8bebc69a585aebe885809f8f061862357e1d05ad3f",
+      "src": "https://clever-hall.fra1.digitaloceanspaces.com/assets/2b8e6e8eda45179f052a7c8bebc69a585aebe885809f8f061862357e1d05ad3f.svg",
+      "fallbackSrc": "/art/studyjunior/choices/2b8e6e8eda45179f052a7c8bebc69a585aebe885809f8f061862357e1d05ad3f.svg",
+      "width": 640,
+      "height": 495
+    },
+    "42af943478c5866647b8e2c977ea7fbba9ba01da3f79bda9e6691cb99001ca27": {
+      "assetId": "01a18896-daba-70d2-b425-0e5362764111",
+      "hash": "42af943478c5866647b8e2c977ea7fbba9ba01da3f79bda9e6691cb99001ca27",
+      "src": "https://clever-hall.fra1.digitaloceanspaces.com/assets/42af943478c5866647b8e2c977ea7fbba9ba01da3f79bda9e6691cb99001ca27.svg",
+      "fallbackSrc": "/art/studyjunior/choices/42af943478c5866647b8e2c977ea7fbba9ba01da3f79bda9e6691cb99001ca27.svg",
+      "width": 640,
+      "height": 1338
+    },
+    "cd941c7bd775cd286b50c5ff67e0dc92b76f2fd7fa2e87568791a6525a561001": {
+      "assetId": "01a160d3-e615-70c6-bf43-699c75f9c973",
+      "hash": "cd941c7bd775cd286b50c5ff67e0dc92b76f2fd7fa2e87568791a6525a561001",
+      "src": "https://clever-hall.fra1.digitaloceanspaces.com/assets/cd941c7bd775cd286b50c5ff67e0dc92b76f2fd7fa2e87568791a6525a561001.svg",
+      "fallbackSrc": "/art/studyjunior/choices/cd941c7bd775cd286b50c5ff67e0dc92b76f2fd7fa2e87568791a6525a561001.svg",
+      "width": 640,
+      "height": 602
+    },
+    "0368275f2b891c94e6f039ae0448ccb7489653ae9d0bfa07811af54f2f30ac49": {
+      "assetId": "01a17a1f-27f0-71d0-af8c-679edc9a8e8f",
+      "hash": "0368275f2b891c94e6f039ae0448ccb7489653ae9d0bfa07811af54f2f30ac49",
+      "src": "https://clever-hall.fra1.digitaloceanspaces.com/assets/0368275f2b891c94e6f039ae0448ccb7489653ae9d0bfa07811af54f2f30ac49.svg",
+      "fallbackSrc": "/art/studyjunior/choices/0368275f2b891c94e6f039ae0448ccb7489653ae9d0bfa07811af54f2f30ac49.svg",
+      "width": 640,
+      "height": 574
+    }
+  },
+  "questions": {
+    "Which planet is closest to the Sun?": {
+      "Mercury": "c94ddc5cc33ec6bcf114520a97a24424da28ab50e196072dbf7feb7b1fcfc210",
+      "Venus": "c6dcbe3d230cd28c5522c4a9c2e0ee9e307342ca906fbfb5ebaf1d742a4152e6",
+      "Mars": "5aadeba8cdb7a1bf689d8e4cb3d5545801cb22598eb6c0f95c04abe80b9e0966",
+      "Earth": "0dff2604e5fd2355a729f1d11e43d251852e671abb796862cb4e9aa895b183c0"
+    },
+    "Which animal is a mammal?": {
+      "Dolphin": "677100a904d2cc5792e6c2548758ac775055292dd6dcd7e70cf548697ab6dafe",
+      "Shark": "81f37529b10f93c1b8dacf13e19328a1be8fbc6d1e06366efe75d786a0a8b374",
+      "Carp": "702e3a8ad493f043613db76c2d3a10d200bbac71abb62410049bdd144b2e1b88",
+      "Octopus": "aebe0643ad25303018b47a011e1535f691dc739b3f653c7af6b7592b1311fd25"
+    },
+    "What gets wetter as it dries?": {
+      "A towel": "ecc2cebdb38e47cf667619185e52c2adaf3ede03322196ad278a3d0ca5c944bd",
+      "A bottle": "e34acdad206133118af96fd67e1630fc82e7e2264f2482ebda65588a9d64d2f1",
+      "A mirror": "37fabb0c1607a4e1b8ff3d95f394af66e735103e9ab2827233ecf932ed3dc2c6",
+      "A stone": "982add57a29cb85859a5d79d16ecfc1e4ecec63ee4ca2d26e8ea2a02df14514b"
+    },
+    "What has hands but cannot clap?": {
+      "A clock": "7f62bde1170e33f00566a3af3ab647312f645f167a6e9bd51b23ca3b1db84243",
+      "A tree": "fbf5e62b4144a9381161640e91f54cc742fd198001926be654a87f082d6af763",
+      "A book": "7664b79096e24ca1cbb7435016300e2e1296505b36e5f2f44feeec8ee1e996b8",
+      "A shoe": "c452d8be851a3b01855f8db34f80733d142c77cfc35f5b63e1293f1946bd9b1b"
+    },
+    "What has a neck but no head?": {
+      "A bottle": "e34acdad206133118af96fd67e1630fc82e7e2264f2482ebda65588a9d64d2f1",
+      "A stone": "982add57a29cb85859a5d79d16ecfc1e4ecec63ee4ca2d26e8ea2a02df14514b",
+      "A mirror": "37fabb0c1607a4e1b8ff3d95f394af66e735103e9ab2827233ecf932ed3dc2c6",
+      "A table": "6fe5f2dd1b2a9a4ef962d06811deaf98527fba4e27a39a0377f9588fe0da343e"
+    },
+    "What has words but never speaks?": {
+      "A book": "7664b79096e24ca1cbb7435016300e2e1296505b36e5f2f44feeec8ee1e996b8",
+      "A clock": "7f62bde1170e33f00566a3af3ab647312f645f167a6e9bd51b23ca3b1db84243",
+      "A parrot": "f78b650d64caa3167b608f740a5f897e2c436156cef942d8d2bef4e8be9536a9",
+      "A microphone": "40903e1ee1a1c1d52cfea5eec843982d1c747f458d3ffd34c7cdf92ef0b1ed27"
+    },
+    "Which planet is famous for its prominent rings?": {
+      "Saturn": "82ea77b09f0f3a694e6cdf45fd681ea988c8a19e975182c154ebbbe2a9e5bdcd",
+      "Mars": "5aadeba8cdb7a1bf689d8e4cb3d5545801cb22598eb6c0f95c04abe80b9e0966",
+      "Mercury": "c94ddc5cc33ec6bcf114520a97a24424da28ab50e196072dbf7feb7b1fcfc210",
+      "Venus": "c6dcbe3d230cd28c5522c4a9c2e0ee9e307342ca906fbfb5ebaf1d742a4152e6"
+    },
+    "Which planet is called the Red Planet?": {
+      "Mars": "5aadeba8cdb7a1bf689d8e4cb3d5545801cb22598eb6c0f95c04abe80b9e0966",
+      "Jupiter": "a3947d1f4cfcac7548666c4044cdc1712ebceab1c011c3a95343f1d2d6cf6ba8",
+      "Neptune": "d9341b3ad0fa57af75e6b146e85092ed9898690074f24c17b54c46a63be4b60d",
+      "Venus": "c6dcbe3d230cd28c5522c4a9c2e0ee9e307342ca906fbfb5ebaf1d742a4152e6"
+    },
+    "Which planet is the largest in our solar system?": {
+      "Jupiter": "a3947d1f4cfcac7548666c4044cdc1712ebceab1c011c3a95343f1d2d6cf6ba8",
+      "Saturn": "82ea77b09f0f3a694e6cdf45fd681ea988c8a19e975182c154ebbbe2a9e5bdcd",
+      "Earth": "0dff2604e5fd2355a729f1d11e43d251852e671abb796862cb4e9aa895b183c0",
+      "Neptune": "d9341b3ad0fa57af75e6b146e85092ed9898690074f24c17b54c46a63be4b60d"
+    },
+    "Which planet is farthest from the Sun in the eight-planet model?": {
+      "Neptune": "d9341b3ad0fa57af75e6b146e85092ed9898690074f24c17b54c46a63be4b60d",
+      "Uranus": "6d8eccb578d1a0d7f9168d7f4003e7cb049096df4c92a36df3587d8e4d467b8f",
+      "Saturn": "82ea77b09f0f3a694e6cdf45fd681ea988c8a19e975182c154ebbbe2a9e5bdcd",
+      "Jupiter": "a3947d1f4cfcac7548666c4044cdc1712ebceab1c011c3a95343f1d2d6cf6ba8"
+    },
+    "What is the largest living animal?": {
+      "Blue whale": "380efb503e102f058a9925f8da0040489d0b9c863e362da8b4ee3739d84a52da",
+      "African elephant": "5a2e961c286220d8b4fc3bcfd8b0f9b906184648eb2160222441a6d7a98e87f3",
+      "Giraffe": "dcdbfff7c0ef1770571ad9a770d9cb05ce0d2a5c2fab7285974516e5ada38b07",
+      "Whale shark": "b42b6fd82b738ed1bd071cb8fcd0b57ce7bd81c20b574a6bc48ab88be87ad4af"
+    },
+    "Which of these animals lays eggs?": {
+      "Platypus": "0dcdb926df669aea09684cdd3a543fd3e92c8d09a1bec352a6c8065abb57d9af",
+      "Dolphin": "677100a904d2cc5792e6c2548758ac775055292dd6dcd7e70cf548697ab6dafe",
+      "Kangaroo": "dac5ba0c04c1f2c939e30f6a70e99e925e401df0fd373848c1456d627001c961",
+      "Rabbit": "586fe8dcaaaf57f64a69321c298fb471fa22fa8705d5e65510c11a3b4c479482"
+    },
+    "Which animal is known for building dams?": {
+      "Beaver": "4d99d8d804eecbc0da28bee27c52825c6a4d80b36ae934cd5714a4d46646492e",
+      "Otter": "d2406aefe93f2f694f5dc434740468561f24b0e5690aa6f53a6456a15ee1fb31",
+      "Badger": "84fafc1d2af308435026962a85e61e5d30d872b044e55d836a1640c4bcdcc1f7",
+      "Fox": "1f26d747810d57ce3a5121de72d724cb19591b8db8a1a6d825e11425a8bf6c60"
+    },
+    "What does a caterpillar become after metamorphosis?": {
+      "Butterfly or moth": "346ebaa3c74e61f973499a2bbf3a6e37beb68ccab5a37b6cf5b1a64de299faac",
+      "Beetle": "956dcbd5c441e87cb748229d3fb15d6bff3b7c2b3f33fbcb83fbf769b733b5e6",
+      "Dragonfly": "3624f732b933d24ca7df642795208cf3bcf3999d974489ea00125891293c99f6",
+      "Ant": "2130869c69626bf5908ff337d36bbf8d0d8e508bb06896949c3cca00f4bdd5c0"
+    },
+    "Which of these is a flightless bird?": {
+      "Penguin": "cf45cf1a4e4d4d7bbe225f3816babf85f2a959e44c3275b379132180c21c4236",
+      "Sparrow": "e90f04a4ecd8a1d27b7ad8ec392497a5dd6fb7216b9b865d9ae8c1ef7b268665",
+      "Eagle": "379ee7d000f35807e0b5cb03b2b9e285b2bd3e4085d1797a8e43ac2a7203a3cb",
+      "Swallow": "beec8d87948e2498892963ee1e406941e59fbc22f6bb36b1f09dd2d6389c3b68"
+    },
+    "Which of these instruments is usually played by strumming strings?": {
+      "Guitar": "2b8e6e8eda45179f052a7c8bebc69a585aebe885809f8f061862357e1d05ad3f",
+      "Drum": "42af943478c5866647b8e2c977ea7fbba9ba01da3f79bda9e6691cb99001ca27",
+      "Xylophone": "cd941c7bd775cd286b50c5ff67e0dc92b76f2fd7fa2e87568791a6525a561001",
+      "Maracas": "0368275f2b891c94e6f039ae0448ccb7489653ae9d0bfa07811af54f2f30ac49"
+    },
+    "Which grain is used to make traditional risotto?": {
+      "Rice": "69ef599e00a61e830c1ed8c965f08022d75781815fbd1a82a95b98acdc297294",
+      "Wheat": "f5addb7ba5e42d41ba1495376f68775c0e1e1c69c0ee4a550868c68e9673003a",
+      "Millet": "57b7b54641d570212d41c02b82f2d8c0c10c5096791118cb24fc6946c47f0fa1",
+      "Oats": "9d35e48b42ed8fc8005315dd903ee2ec19eec9d769a180e925b34f0d463791eb"
+    },
+    "What is the main ingredient in guacamole?": {
+      "Avocado": "a154c72d18204d04defabaf85d7ab1282f3e4029da615531f03f3391bd3f217a",
+      "Cucumber": "14500022a3971dd14af0901dc83d31b58dbf035323fef49b19bd68c8984210e8",
+      "Courgette": "a95810e0dcbb25d843c2c8a262a30436c7ea266f356c7dce417360cbf09f1eb0",
+      "Peas": "11b934173e87157534c4d58e1b70536532302909cb850f7f6ef8dfe26c85c79c"
+    },
+    "Which of these is a citrus fruit?": {
+      "Lemon": "4918530fb6b1ddd825cf3826fdc87ec9d81e766cd5bf33449f46637ef6e3b75e",
+      "Apple": "fb66d26069127a753568c8eb1591e417321aff7e24ec6c20a2ce130b7ac637ba",
+      "Pear": "08ef23cf520f025d0c45b1d500df562206f9ea07ed22e1aac5324f9c640a8006",
+      "Peach": "3c8204b91f7973a57d54ee9568d685b76286f9c6e81ad2093c92ed9ba4481a87"
+    }
+  }
+}

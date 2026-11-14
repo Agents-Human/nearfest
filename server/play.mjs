@@ -1,3 +1,4 @@
+import {withChoiceArt} from './choice-art.mjs';
 import { randomUUID, randomInt } from 'node:crypto';
 import { games,discoveryGames } from './game-catalog.mjs';
 import { banks } from './question-bank.mjs';
@@ -26,7 +27,7 @@ export function createPlay(store,{curate=curateQuestions}={}) {
  db.exec('CREATE TABLE IF NOT EXISTS play_runs(id TEXT PRIMARY KEY,user_id TEXT NOT NULL,game_id TEXT NOT NULL,json TEXT NOT NULL)');
  const read=id=>{const r=db.prepare('SELECT json FROM play_runs WHERE id=?').get(id);if(!r)throw Error('Game not found.');return JSON.parse(r.json);};
  const save=r=>db.prepare('INSERT INTO play_runs VALUES(?,?,?,?) ON CONFLICT(id) DO UPDATE SET json=excluded.json').run(r.id,r.user_id,r.game_id,JSON.stringify(r));
- function publicRun(r,now=Date.now()){const done=r.abandoned||r.index>=r.questions.length||now>=r.ends_at;let question=null;if(!done){const {answer,...q}=r.questions[r.index];question=q;}return {id:r.id,game_id:r.game_id,index:r.index,total:r.questions.length,score:r.score,ends_at:r.ends_at,abandoned:Boolean(r.abandoned),done,question,curation:r.curation||'bank',difficulty:r.difficulty||'mixed',completed_at:r.completed_at||null,shared:r.shared===true};}
+ function publicRun(r,now=Date.now()){const done=r.abandoned||r.index>=r.questions.length||now>=r.ends_at;let question=null;if(!done){const {answer,...q}=r.questions[r.index];question=withChoiceArt(q);}return {id:r.id,game_id:r.game_id,index:r.index,total:r.questions.length,score:r.score,ends_at:r.ends_at,abandoned:Boolean(r.abandoned),done,question,curation:r.curation||'bank',difficulty:r.difficulty||'mixed',completed_at:r.completed_at||null,shared:r.shared===true};}
  function finishExpired(r,now=Date.now()){if(now>=r.ends_at&&!r.completed_at){r.completed_at=r.ends_at;save(r);}return r;}
  async function start(id,user,options={}){
    const game=games.find(g=>g.id===id);if(!game||game.engine)throw Error('Choose a timed challenge.');

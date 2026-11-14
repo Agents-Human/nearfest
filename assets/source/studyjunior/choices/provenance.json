@@ -1,0 +1,3833 @@
+{
+  "endpoint": "https://bc.studyjunior.com/api/mcp/primer",
+  "asset_origin": "https://clever-hall.fra1.digitaloceanspaces.com/",
+  "authorization": "User-owned StudyJunior production library; read-only list_collections, search_assets and get_assets with the existing MCP_ASSETS credential. No credential is retained here.",
+  "retrieved_at": "2026-11-14",
+  "usage": "Answer choice illustrations, not correct-answer hints. The public payload excludes tags and taxonomy. The same mapping is used for solo and multiplayer, including restored runs.",
+  "fallback": "Local files preserve the exact original bytes and SHA-256 hash. External SVGs are rendered only as img elements. No script, foreignObject, event attributes or external image resources were found.",
+  "coverage": {
+    "trivia": 2,
+    "life": 4,
+    "space": 4,
+    "animals": 5,
+    "music": 1,
+    "food": 3
+  },
+  "assets": [
+    {
+      "label": "Dolphin",
+      "query": "dolphin",
+      "search_record": "search/dolphin.json",
+      "id": "01a188e1-2893-716d-a59e-2e8e70179c9b",
+      "hash": "677100a904d2cc5792e6c2548758ac775055292dd6dcd7e70cf548697ab6dafe",
+      "original_name": "dolphin (1).svg",
+      "mime_type": "image/svg+xml",
+      "asset_type": "image",
+      "s3_key": "assets/677100a904d2cc5792e6c2548758ac775055292dd6dcd7e70cf548697ab6dafe.svg",
+      "width": null,
+      "height": null,
+      "duration_ms": null,
+      "tags": [
+        "dolphin",
+        "dark blue dolphin",
+        "sea animal",
+        "marine mammal"
+      ],
+      "asset_anchors": [],
+      "collections": [
+        {
+          "id": 5,
+          "name": "Aquatic",
+          "parent_id": 1
+        }
+      ],
+      "folder_tags": [],
+      "environment": false,
+      "search_match": {
+        "score": 100,
+        "name_terms": [
+          "dolphin"
+        ],
+        "tag_terms": [
+          "dolphin"
+        ],
+        "collections": [],
+        "explanation": [
+          {
+            "term": "dolphin",
+            "kind": "exact",
+            "points": 100,
+            "detail": "the file is named \"dolphin\""
+          }
+        ]
+      },
+      "source_url": "https://clever-hall.fra1.digitaloceanspaces.com/assets/677100a904d2cc5792e6c2548758ac775055292dd6dcd7e70cf548697ab6dafe.svg",
+      "source_sha256": "677100a904d2cc5792e6c2548758ac775055292dd6dcd7e70cf548697ab6dafe",
+      "original_file": "assets/source/studyjunior/choices/677100a904d2cc5792e6c2548758ac775055292dd6dcd7e70cf548697ab6dafe.svg",
+      "retrieved_at": "2026-11-14T11:15:15.995Z",
+      "viewBox": "74.473 1.269 45.554 25.212",
+      "display_width": 640,
+      "display_height": 354,
+      "public_file": "/art/studyjunior/choices/677100a904d2cc5792e6c2548758ac775055292dd6dcd7e70cf548697ab6dafe.svg",
+      "embedded_raster_images": 0
+    },
+    {
+      "label": "Shark",
+      "query": "shark",
+      "search_record": "search/shark.json",
+      "id": "01a188df-1474-71e4-9b95-c86b66847761",
+      "hash": "81f37529b10f93c1b8dacf13e19328a1be8fbc6d1e06366efe75d786a0a8b374",
+      "original_name": "shark (1).svg",
+      "mime_type": "image/svg+xml",
+      "asset_type": "image",
+      "s3_key": "assets/81f37529b10f93c1b8dacf13e19328a1be8fbc6d1e06366efe75d786a0a8b374.svg",
+      "width": null,
+      "height": null,
+      "duration_ms": null,
+      "tags": [
+        "shark",
+        "blue shark",
+        "cartoon shark",
+        "smiling shark",
+        "fish",
+        "sea animal"
+      ],
+      "asset_anchors": [],
+      "collections": [
+        {
+          "id": 5,
+          "name": "Aquatic",
+          "parent_id": 1
+        }
+      ],
+      "folder_tags": [],
+      "environment": false,
+      "search_match": {
+        "score": 100,
+        "name_terms": [
+          "shark"
+        ],
+        "tag_terms": [
+          "shark"
+        ],
+        "collections": [],
+        "explanation": [
+          {
+            "term": "shark",
+            "kind": "exact",
+            "points": 100,
+            "detail": "the file is named \"shark\""
+          }
+        ]
+      },
+      "source_url": "https://clever-hall.fra1.digitaloceanspaces.com/assets/81f37529b10f93c1b8dacf13e19328a1be8fbc6d1e06366efe75d786a0a8b374.svg",
+      "source_sha256": "81f37529b10f93c1b8dacf13e19328a1be8fbc6d1e06366efe75d786a0a8b374",
+      "original_file": "assets/source/studyjunior/choices/81f37529b10f93c1b8dacf13e19328a1be8fbc6d1e06366efe75d786a0a8b374.svg",
+      "retrieved_at": "2026-11-14T11:15:16.288Z",
+      "viewBox": "43.053 76.053 6.644 7.144",
+      "display_width": 640,
+      "display_height": 688,
+      "public_file": "/art/studyjunior/choices/81f37529b10f93c1b8dacf13e19328a1be8fbc6d1e06366efe75d786a0a8b374.svg",
+      "embedded_raster_images": 0
+    },
+    {
+      "label": "Carp",
+      "query": "river",
+      "search_record": "search/river.json",
+      "id": "01a188e1-a753-725e-aac9-c60ac8719c25",
+      "hash": "702e3a8ad493f043613db76c2d3a10d200bbac71abb62410049bdd144b2e1b88",
+      "original_name": "carp.svg",
+      "mime_type": "image/svg+xml",
+      "asset_type": "image",
+      "s3_key": "assets/702e3a8ad493f043613db76c2d3a10d200bbac71abb62410049bdd144b2e1b88.svg",
+      "width": null,
+      "height": null,
+      "duration_ms": null,
+      "tags": [
+        "carp",
+        "blue fish",
+        "river fish",
+        "fish"
+      ],
+      "asset_anchors": [],
+      "collections": [
+        {
+          "id": 5,
+          "name": "Aquatic",
+          "parent_id": 1
+        }
+      ],
+      "folder_tags": [],
+      "environment": false,
+      "search_match": {
+        "score": 20,
+        "name_terms": [],
+        "tag_terms": [],
+        "collections": [],
+        "explanation": [
+          {
+            "term": "river",
+            "kind": "tag",
+            "points": 20,
+            "detail": "tagged \"river fish\" (modifier match)"
+          }
+        ]
+      },
+      "source_url": "https://clever-hall.fra1.digitaloceanspaces.com/assets/702e3a8ad493f043613db76c2d3a10d200bbac71abb62410049bdd144b2e1b88.svg",
+      "source_sha256": "702e3a8ad493f043613db76c2d3a10d200bbac71abb62410049bdd144b2e1b88",
+      "original_file": "assets/source/studyjunior/choices/702e3a8ad493f043613db76c2d3a10d200bbac71abb62410049bdd144b2e1b88.svg",
+      "retrieved_at": "2026-11-14T11:15:16.469Z",
+      "viewBox": "127.031 111.812 36.937 24.126",
+      "display_width": 640,
+      "display_height": 418,
+      "public_file": "/art/studyjunior/choices/702e3a8ad493f043613db76c2d3a10d200bbac71abb62410049bdd144b2e1b88.svg",
+      "embedded_raster_images": 0
+    },
+    {
+      "label": "Octopus",
+      "query": "octopus",
+      "search_record": "search/octopus.json",
+      "id": "01a188e0-3ecc-715a-b69a-2b39cbfbc3b2",
+      "hash": "aebe0643ad25303018b47a011e1535f691dc739b3f653c7af6b7592b1311fd25",
+      "original_name": "octopus (1).svg",
+      "mime_type": "image/svg+xml",
+      "asset_type": "image",
+      "s3_key": "assets/aebe0643ad25303018b47a011e1535f691dc739b3f653c7af6b7592b1311fd25.svg",
+      "width": null,
+      "height": null,
+      "duration_ms": null,
+      "tags": [
+        "octopus",
+        "red octopus",
+        "orange octopus",
+        "sea animal"
+      ],
+      "asset_anchors": [],
+      "collections": [
+        {
+          "id": 5,
+          "name": "Aquatic",
+          "parent_id": 1
+        }
+      ],
+      "folder_tags": [],
+      "environment": false,
+      "search_match": {
+        "score": 100,
+        "name_terms": [
+          "octopus"
+        ],
+        "tag_terms": [
+          "octopus"
+        ],
+        "collections": [],
+        "explanation": [
+          {
+            "term": "octopus",
+            "kind": "exact",
+            "points": 100,
+            "detail": "the file is named \"octopus\""
+          }
+        ]
+      },
+      "source_url": "https://clever-hall.fra1.digitaloceanspaces.com/assets/aebe0643ad25303018b47a011e1535f691dc739b3f653c7af6b7592b1311fd25.svg",
+      "source_sha256": "aebe0643ad25303018b47a011e1535f691dc739b3f653c7af6b7592b1311fd25",
+      "original_file": "assets/source/studyjunior/choices/aebe0643ad25303018b47a011e1535f691dc739b3f653c7af6b7592b1311fd25.svg",
+      "retrieved_at": "2026-11-14T11:15:16.752Z",
+      "viewBox": "44.588 82.472 9.34 7.057",
+      "display_width": 640,
+      "display_height": 484,
+      "public_file": "/art/studyjunior/choices/aebe0643ad25303018b47a011e1535f691dc739b3f653c7af6b7592b1311fd25.svg",
+      "embedded_raster_images": 0
+    },
+    {
+      "label": "Blue whale",
+      "query": "blue whale",
+      "search_record": "search/blue-whale.json",
+      "id": "01a188e1-c238-7224-b564-3c83ee1b02d1",
+      "hash": "380efb503e102f058a9925f8da0040489d0b9c863e362da8b4ee3739d84a52da",
+      "original_name": "blue_whale (1).svg",
+      "mime_type": "image/svg+xml",
+      "asset_type": "image",
+      "s3_key": "assets/380efb503e102f058a9925f8da0040489d0b9c863e362da8b4ee3739d84a52da.svg",
+      "width": null,
+      "height": null,
+      "duration_ms": null,
+      "tags": [
+        "blue whale",
+        "whale",
+        "sea animal",
+        "blue animal"
+      ],
+      "asset_anchors": [],
+      "collections": [
+        {
+          "id": 5,
+          "name": "Aquatic",
+          "parent_id": 1
+        }
+      ],
+      "folder_tags": [],
+      "environment": false,
+      "search_match": {
+        "score": 170,
+        "name_terms": [
+          "whale"
+        ],
+        "tag_terms": [
+          "whale"
+        ],
+        "collections": [],
+        "explanation": [
+          {
+            "term": "blue",
+            "kind": "modifier",
+            "points": 20,
+            "detail": "\"blue whale\" only uses \"blue\" to describe something else"
+          },
+          {
+            "term": "whale",
+            "kind": "tag",
+            "points": 100,
+            "detail": "tagged \"whale\""
+          },
+          {
+            "term": "blue whale",
+            "kind": "phrase",
+            "points": 50,
+            "detail": "all words appear together in the name"
+          }
+        ]
+      },
+      "source_url": "https://clever-hall.fra1.digitaloceanspaces.com/assets/380efb503e102f058a9925f8da0040489d0b9c863e362da8b4ee3739d84a52da.svg",
+      "source_sha256": "380efb503e102f058a9925f8da0040489d0b9c863e362da8b4ee3739d84a52da",
+      "original_file": "assets/source/studyjunior/choices/380efb503e102f058a9925f8da0040489d0b9c863e362da8b4ee3739d84a52da.svg",
+      "retrieved_at": "2026-11-14T11:15:16.902Z",
+      "viewBox": "24.295 54.479 116.409 73.541",
+      "display_width": 640,
+      "display_height": 404,
+      "public_file": "/art/studyjunior/choices/380efb503e102f058a9925f8da0040489d0b9c863e362da8b4ee3739d84a52da.svg",
+      "embedded_raster_images": 0
+    },
+    {
+      "label": "African elephant",
+      "query": "African elephant",
+      "search_record": "search/african-elephant.json",
+      "id": "01a160bb-e16d-7066-9b01-3b5fa8319cc8",
+      "hash": "5a2e961c286220d8b4fc3bcfd8b0f9b906184648eb2160222441a6d7a98e87f3",
+      "original_name": "elephant (10).svg",
+      "mime_type": "image/svg+xml",
+      "asset_type": "image",
+      "s3_key": "assets/5a2e961c286220d8b4fc3bcfd8b0f9b906184648eb2160222441a6d7a98e87f3.svg",
+      "width": null,
+      "height": null,
+      "duration_ms": null,
+      "tags": [
+        "elephant",
+        "grey elephant",
+        "african elephant",
+        "wild animal"
+      ],
+      "asset_anchors": [],
+      "collections": [
+        {
+          "id": 3,
+          "name": "Wild",
+          "parent_id": 1
+        }
+      ],
+      "folder_tags": [],
+      "environment": false,
+      "search_match": {
+        "score": 170,
+        "name_terms": [
+          "elephant"
+        ],
+        "tag_terms": [
+          "elephant"
+        ],
+        "collections": [],
+        "explanation": [
+          {
+            "term": "african",
+            "kind": "tag",
+            "points": 20,
+            "detail": "tagged \"african elephant\" (modifier match)"
+          },
+          {
+            "term": "elephant",
+            "kind": "exact",
+            "points": 100,
+            "detail": "the file is named \"elephant\""
+          },
+          {
+            "term": "african elephant",
+            "kind": "phrase",
+            "points": 50,
+            "detail": "all words appear together in the tag \"african elephant\""
+          }
+        ]
+      },
+      "source_url": "https://clever-hall.fra1.digitaloceanspaces.com/assets/5a2e961c286220d8b4fc3bcfd8b0f9b906184648eb2160222441a6d7a98e87f3.svg",
+      "source_sha256": "5a2e961c286220d8b4fc3bcfd8b0f9b906184648eb2160222441a6d7a98e87f3",
+      "original_file": "assets/source/studyjunior/choices/5a2e961c286220d8b4fc3bcfd8b0f9b906184648eb2160222441a6d7a98e87f3.svg",
+      "retrieved_at": "2026-11-14T11:15:17.050Z",
+      "viewBox": "8.5549 6.7212 54.6403 38.3056",
+      "display_width": 640,
+      "display_height": 449,
+      "public_file": "/art/studyjunior/choices/5a2e961c286220d8b4fc3bcfd8b0f9b906184648eb2160222441a6d7a98e87f3.svg",
+      "embedded_raster_images": 0
+    },
+    {
+      "label": "Giraffe",
+      "query": "giraffe",
+      "search_record": "search/giraffe.json",
+      "id": "01a160bc-3e19-73ae-a54b-61862b092121",
+      "hash": "dcdbfff7c0ef1770571ad9a770d9cb05ce0d2a5c2fab7285974516e5ada38b07",
+      "original_name": "giraffe (1).svg",
+      "mime_type": "image/svg+xml",
+      "asset_type": "image",
+      "s3_key": "assets/dcdbfff7c0ef1770571ad9a770d9cb05ce0d2a5c2fab7285974516e5ada38b07.svg",
+      "width": null,
+      "height": null,
+      "duration_ms": null,
+      "tags": [
+        "giraffe",
+        "yellow giraffe",
+        "spotted giraffe",
+        "wild animal"
+      ],
+      "asset_anchors": [],
+      "collections": [
+        {
+          "id": 3,
+          "name": "Wild",
+          "parent_id": 1
+        }
+      ],
+      "folder_tags": [],
+      "environment": false,
+      "search_match": {
+        "score": 100,
+        "name_terms": [
+          "giraffe"
+        ],
+        "tag_terms": [
+          "giraffe"
+        ],
+        "collections": [],
+        "explanation": [
+          {
+            "term": "giraffe",
+            "kind": "exact",
+            "points": 100,
+            "detail": "the file is named \"giraffe\""
+          }
+        ]
+      },
+      "source_url": "https://clever-hall.fra1.digitaloceanspaces.com/assets/dcdbfff7c0ef1770571ad9a770d9cb05ce0d2a5c2fab7285974516e5ada38b07.svg",
+      "source_sha256": "dcdbfff7c0ef1770571ad9a770d9cb05ce0d2a5c2fab7285974516e5ada38b07",
+      "original_file": "assets/source/studyjunior/choices/dcdbfff7c0ef1770571ad9a770d9cb05ce0d2a5c2fab7285974516e5ada38b07.svg",
+      "retrieved_at": "2026-11-14T11:15:17.212Z",
+      "viewBox": "52.1398 30.678 48.4704 66.822",
+      "display_width": 640,
+      "display_height": 882,
+      "public_file": "/art/studyjunior/choices/dcdbfff7c0ef1770571ad9a770d9cb05ce0d2a5c2fab7285974516e5ada38b07.svg",
+      "embedded_raster_images": 0
+    },
+    {
+      "label": "Whale shark",
+      "query": "whale shark",
+      "search_record": "search/whale-shark.json",
+      "id": "01a188dd-bf5e-728b-8db4-e851fe675644",
+      "hash": "b42b6fd82b738ed1bd071cb8fcd0b57ce7bd81c20b574a6bc48ab88be87ad4af",
+      "original_name": "whale_shark.svg",
+      "mime_type": "image/svg+xml",
+      "asset_type": "image",
+      "s3_key": "assets/b42b6fd82b738ed1bd071cb8fcd0b57ce7bd81c20b574a6bc48ab88be87ad4af.svg",
+      "width": null,
+      "height": null,
+      "duration_ms": null,
+      "tags": [
+        "whale shark",
+        "spotted shark",
+        "blue shark",
+        "sea animal"
+      ],
+      "asset_anchors": [],
+      "collections": [
+        {
+          "id": 5,
+          "name": "Aquatic",
+          "parent_id": 1
+        }
+      ],
+      "folder_tags": [],
+      "environment": false,
+      "search_match": {
+        "score": 155,
+        "name_terms": [
+          "shark"
+        ],
+        "tag_terms": [
+          "shark"
+        ],
+        "collections": [],
+        "explanation": [
+          {
+            "term": "whale",
+            "kind": "modifier",
+            "points": 20,
+            "detail": "\"whale shark\" only uses \"whale\" to describe something else"
+          },
+          {
+            "term": "shark",
+            "kind": "tag",
+            "points": 85,
+            "detail": "tagged \"spotted shark\" (described match)"
+          },
+          {
+            "term": "whale shark",
+            "kind": "phrase",
+            "points": 50,
+            "detail": "all words appear together in the name"
+          }
+        ]
+      },
+      "source_url": "https://clever-hall.fra1.digitaloceanspaces.com/assets/b42b6fd82b738ed1bd071cb8fcd0b57ce7bd81c20b574a6bc48ab88be87ad4af.svg",
+      "source_sha256": "b42b6fd82b738ed1bd071cb8fcd0b57ce7bd81c20b574a6bc48ab88be87ad4af",
+      "original_file": "assets/source/studyjunior/choices/b42b6fd82b738ed1bd071cb8fcd0b57ce7bd81c20b574a6bc48ab88be87ad4af.svg",
+      "retrieved_at": "2026-11-14T11:15:17.478Z",
+      "viewBox": "67.345 75.037 9.81 4.926",
+      "display_width": 640,
+      "display_height": 321,
+      "public_file": "/art/studyjunior/choices/b42b6fd82b738ed1bd071cb8fcd0b57ce7bd81c20b574a6bc48ab88be87ad4af.svg",
+      "embedded_raster_images": 0
+    },
+    {
+      "label": "Platypus",
+      "query": "platypus",
+      "search_record": "search/platypus.json",
+      "id": "01a160bd-d98d-704d-856f-df07bafd6919",
+      "hash": "0dcdb926df669aea09684cdd3a543fd3e92c8d09a1bec352a6c8065abb57d9af",
+      "original_name": "platypus.svg",
+      "mime_type": "image/svg+xml",
+      "asset_type": "image",
+      "s3_key": "assets/0dcdb926df669aea09684cdd3a543fd3e92c8d09a1bec352a6c8065abb57d9af.svg",
+      "width": null,
+      "height": null,
+      "duration_ms": null,
+      "tags": [
+        "platypus",
+        "brown platypus",
+        "duck billed animal",
+        "wild animal"
+      ],
+      "asset_anchors": [],
+      "collections": [
+        {
+          "id": 3,
+          "name": "Wild",
+          "parent_id": 1
+        }
+      ],
+      "folder_tags": [],
+      "environment": false,
+      "search_match": {
+        "score": 100,
+        "name_terms": [
+          "platypus"
+        ],
+        "tag_terms": [
+          "platypus"
+        ],
+        "collections": [],
+        "explanation": [
+          {
+            "term": "platypus",
+            "kind": "exact",
+            "points": 100,
+            "detail": "the file is named \"platypus\""
+          }
+        ]
+      },
+      "source_url": "https://clever-hall.fra1.digitaloceanspaces.com/assets/0dcdb926df669aea09684cdd3a543fd3e92c8d09a1bec352a6c8065abb57d9af.svg",
+      "source_sha256": "0dcdb926df669aea09684cdd3a543fd3e92c8d09a1bec352a6c8065abb57d9af",
+      "original_file": "assets/source/studyjunior/choices/0dcdb926df669aea09684cdd3a543fd3e92c8d09a1bec352a6c8065abb57d9af.svg",
+      "retrieved_at": "2026-11-14T11:15:17.621Z",
+      "viewBox": "138.2061 28.8062 81.5879 30.2283",
+      "display_width": 640,
+      "display_height": 237,
+      "public_file": "/art/studyjunior/choices/0dcdb926df669aea09684cdd3a543fd3e92c8d09a1bec352a6c8065abb57d9af.svg",
+      "embedded_raster_images": 0
+    },
+    {
+      "label": "Kangaroo",
+      "query": "kangaroo",
+      "search_record": "search/kangaroo.json",
+      "id": "01a160bc-bf49-73c5-a620-1393ea2e8e11",
+      "hash": "dac5ba0c04c1f2c939e30f6a70e99e925e401df0fd373848c1456d627001c961",
+      "original_name": "kangaroo (2).svg",
+      "mime_type": "image/svg+xml",
+      "asset_type": "image",
+      "s3_key": "assets/dac5ba0c04c1f2c939e30f6a70e99e925e401df0fd373848c1456d627001c961.svg",
+      "width": null,
+      "height": null,
+      "duration_ms": null,
+      "tags": [
+        "kangaroo",
+        "peach kangaroo",
+        "jumping animal",
+        "wild animal"
+      ],
+      "asset_anchors": [],
+      "collections": [
+        {
+          "id": 3,
+          "name": "Wild",
+          "parent_id": 1
+        }
+      ],
+      "folder_tags": [],
+      "environment": false,
+      "search_match": {
+        "score": 100,
+        "name_terms": [
+          "kangaroo"
+        ],
+        "tag_terms": [
+          "kangaroo"
+        ],
+        "collections": [],
+        "explanation": [
+          {
+            "term": "kangaroo",
+            "kind": "exact",
+            "points": 100,
+            "detail": "the file is named \"kangaroo\""
+          }
+        ]
+      },
+      "source_url": "https://clever-hall.fra1.digitaloceanspaces.com/assets/dac5ba0c04c1f2c939e30f6a70e99e925e401df0fd373848c1456d627001c961.svg",
+      "source_sha256": "dac5ba0c04c1f2c939e30f6a70e99e925e401df0fd373848c1456d627001c961",
+      "original_file": "assets/source/studyjunior/choices/dac5ba0c04c1f2c939e30f6a70e99e925e401df0fd373848c1456d627001c961.svg",
+      "retrieved_at": "2026-11-14T11:15:17.764Z",
+      "viewBox": "16.4965 13.158 51.507 34.092",
+      "display_width": 640,
+      "display_height": 424,
+      "public_file": "/art/studyjunior/choices/dac5ba0c04c1f2c939e30f6a70e99e925e401df0fd373848c1456d627001c961.svg",
+      "embedded_raster_images": 0
+    },
+    {
+      "label": "Rabbit",
+      "query": "rabbit",
+      "search_record": "refined/rabbit.json",
+      "id": "01a160be-037b-737a-b4c1-28c5f505f7f9",
+      "hash": "586fe8dcaaaf57f64a69321c298fb471fa22fa8705d5e65510c11a3b4c479482",
+      "original_name": "rabbit.svg",
+      "mime_type": "image/svg+xml",
+      "asset_type": "image",
+      "s3_key": "assets/586fe8dcaaaf57f64a69321c298fb471fa22fa8705d5e65510c11a3b4c479482.svg",
+      "width": null,
+      "height": null,
+      "duration_ms": null,
+      "tags": [
+        "rabbit",
+        "grey rabbit",
+        "hare",
+        "wild animal"
+      ],
+      "asset_anchors": [],
+      "collections": [
+        {
+          "id": 3,
+          "name": "Wild",
+          "parent_id": 1
+        }
+      ],
+      "folder_tags": [],
+      "environment": false,
+      "search_match": {
+        "score": 100,
+        "name_terms": [
+          "rabbit"
+        ],
+        "tag_terms": [
+          "rabbit"
+        ],
+        "collections": [],
+        "explanation": [
+          {
+            "term": "rabbit",
+            "kind": "exact",
+            "points": 100,
+            "detail": "the file is named \"rabbit\""
+          }
+        ]
+      },
+      "source_url": "https://clever-hall.fra1.digitaloceanspaces.com/assets/586fe8dcaaaf57f64a69321c298fb471fa22fa8705d5e65510c11a3b4c479482.svg",
+      "source_sha256": "586fe8dcaaaf57f64a69321c298fb471fa22fa8705d5e65510c11a3b4c479482",
+      "original_file": "assets/source/studyjunior/choices/586fe8dcaaaf57f64a69321c298fb471fa22fa8705d5e65510c11a3b4c479482.svg",
+      "retrieved_at": "2026-11-14T11:15:17.910Z",
+      "viewBox": "180.17 7.34 11.16 13.41",
+      "display_width": 640,
+      "display_height": 769,
+      "public_file": "/art/studyjunior/choices/586fe8dcaaaf57f64a69321c298fb471fa22fa8705d5e65510c11a3b4c479482.svg",
+      "embedded_raster_images": 0
+    },
+    {
+      "label": "Beaver",
+      "query": "beaver",
+      "search_record": "search/beaver.json",
+      "id": "01a160ba-ee24-7146-82d6-baf00ca23f2b",
+      "hash": "4d99d8d804eecbc0da28bee27c52825c6a4d80b36ae934cd5714a4d46646492e",
+      "original_name": "beaver.svg",
+      "mime_type": "image/svg+xml",
+      "asset_type": "image",
+      "s3_key": "assets/4d99d8d804eecbc0da28bee27c52825c6a4d80b36ae934cd5714a4d46646492e.svg",
+      "width": null,
+      "height": null,
+      "duration_ms": null,
+      "tags": [
+        "beaver",
+        "grey beaver",
+        "brown beaver",
+        "wild animal"
+      ],
+      "asset_anchors": [],
+      "collections": [
+        {
+          "id": 3,
+          "name": "Wild",
+          "parent_id": 1
+        }
+      ],
+      "folder_tags": [],
+      "environment": false,
+      "search_match": {
+        "score": 100,
+        "name_terms": [
+          "beaver"
+        ],
+        "tag_terms": [
+          "beaver"
+        ],
+        "collections": [],
+        "explanation": [
+          {
+            "term": "beaver",
+            "kind": "exact",
+            "points": 100,
+            "detail": "the file is named \"beaver\""
+          }
+        ]
+      },
+      "source_url": "https://clever-hall.fra1.digitaloceanspaces.com/assets/4d99d8d804eecbc0da28bee27c52825c6a4d80b36ae934cd5714a4d46646492e.svg",
+      "source_sha256": "4d99d8d804eecbc0da28bee27c52825c6a4d80b36ae934cd5714a4d46646492e",
+      "original_file": "assets/source/studyjunior/choices/4d99d8d804eecbc0da28bee27c52825c6a4d80b36ae934cd5714a4d46646492e.svg",
+      "retrieved_at": "2026-11-14T11:15:18.054Z",
+      "viewBox": "169.98 71.2267 15.54 16.6201",
+      "display_width": 640,
+      "display_height": 684,
+      "public_file": "/art/studyjunior/choices/4d99d8d804eecbc0da28bee27c52825c6a4d80b36ae934cd5714a4d46646492e.svg",
+      "embedded_raster_images": 0
+    },
+    {
+      "label": "Otter",
+      "query": "otter",
+      "search_record": "search/otter.json",
+      "id": "01a160bd-a3c8-72d1-aeb9-b3f37db25edc",
+      "hash": "d2406aefe93f2f694f5dc434740468561f24b0e5690aa6f53a6456a15ee1fb31",
+      "original_name": "otter.svg",
+      "mime_type": "image/svg+xml",
+      "asset_type": "image",
+      "s3_key": "assets/d2406aefe93f2f694f5dc434740468561f24b0e5690aa6f53a6456a15ee1fb31.svg",
+      "width": null,
+      "height": null,
+      "duration_ms": null,
+      "tags": [
+        "otter",
+        "brown otter",
+        "swimming otter",
+        "wild animal"
+      ],
+      "asset_anchors": [],
+      "collections": [
+        {
+          "id": 3,
+          "name": "Wild",
+          "parent_id": 1
+        }
+      ],
+      "folder_tags": [],
+      "environment": false,
+      "search_match": {
+        "score": 100,
+        "name_terms": [
+          "otter"
+        ],
+        "tag_terms": [
+          "otter"
+        ],
+        "collections": [],
+        "explanation": [
+          {
+            "term": "otter",
+            "kind": "exact",
+            "points": 100,
+            "detail": "the file is named \"otter\""
+          }
+        ]
+      },
+      "source_url": "https://clever-hall.fra1.digitaloceanspaces.com/assets/d2406aefe93f2f694f5dc434740468561f24b0e5690aa6f53a6456a15ee1fb31.svg",
+      "source_sha256": "d2406aefe93f2f694f5dc434740468561f24b0e5690aa6f53a6456a15ee1fb31",
+      "original_file": "assets/source/studyjunior/choices/d2406aefe93f2f694f5dc434740468561f24b0e5690aa6f53a6456a15ee1fb31.svg",
+      "retrieved_at": "2026-11-14T11:15:18.197Z",
+      "viewBox": "189.0568 2.1732 33.1364 11.1924",
+      "display_width": 640,
+      "display_height": 216,
+      "public_file": "/art/studyjunior/choices/d2406aefe93f2f694f5dc434740468561f24b0e5690aa6f53a6456a15ee1fb31.svg",
+      "embedded_raster_images": 0
+    },
+    {
+      "label": "Badger",
+      "query": "badger",
+      "search_record": "search/badger.json",
+      "id": "01a160ba-db63-7219-bce2-370720bbbd14",
+      "hash": "84fafc1d2af308435026962a85e61e5d30d872b044e55d836a1640c4bcdcc1f7",
+      "original_name": "badger.svg",
+      "mime_type": "image/svg+xml",
+      "asset_type": "image",
+      "s3_key": "assets/84fafc1d2af308435026962a85e61e5d30d872b044e55d836a1640c4bcdcc1f7.svg",
+      "width": null,
+      "height": null,
+      "duration_ms": null,
+      "tags": [
+        "badger",
+        "grey badger",
+        "wild animal"
+      ],
+      "asset_anchors": [],
+      "collections": [
+        {
+          "id": 3,
+          "name": "Wild",
+          "parent_id": 1
+        }
+      ],
+      "folder_tags": [],
+      "environment": false,
+      "search_match": {
+        "score": 100,
+        "name_terms": [
+          "badger"
+        ],
+        "tag_terms": [
+          "badger"
+        ],
+        "collections": [],
+        "explanation": [
+          {
+            "term": "badger",
+            "kind": "exact",
+            "points": 100,
+            "detail": "the file is named \"badger\""
+          }
+        ]
+      },
+      "source_url": "https://clever-hall.fra1.digitaloceanspaces.com/assets/84fafc1d2af308435026962a85e61e5d30d872b044e55d836a1640c4bcdcc1f7.svg",
+      "source_sha256": "84fafc1d2af308435026962a85e61e5d30d872b044e55d836a1640c4bcdcc1f7",
+      "original_file": "assets/source/studyjunior/choices/84fafc1d2af308435026962a85e61e5d30d872b044e55d836a1640c4bcdcc1f7.svg",
+      "retrieved_at": "2026-11-14T11:15:18.338Z",
+      "viewBox": "15.882 54.4292 43.9859 25.8773",
+      "display_width": 640,
+      "display_height": 377,
+      "public_file": "/art/studyjunior/choices/84fafc1d2af308435026962a85e61e5d30d872b044e55d836a1640c4bcdcc1f7.svg",
+      "embedded_raster_images": 0
+    },
+    {
+      "label": "Fox",
+      "query": "fox",
+      "search_record": "refined/fox.json",
+      "id": "01a160bc-1c4b-736e-b273-4791d53a9eb8",
+      "hash": "1f26d747810d57ce3a5121de72d724cb19591b8db8a1a6d825e11425a8bf6c60",
+      "original_name": "fox.svg",
+      "mime_type": "image/svg+xml",
+      "asset_type": "image",
+      "s3_key": "assets/1f26d747810d57ce3a5121de72d724cb19591b8db8a1a6d825e11425a8bf6c60.svg",
+      "width": null,
+      "height": null,
+      "duration_ms": null,
+      "tags": [
+        "fox",
+        "orange fox",
+        "wild animal"
+      ],
+      "asset_anchors": [],
+      "collections": [
+        {
+          "id": 3,
+          "name": "Wild",
+          "parent_id": 1
+        }
+      ],
+      "folder_tags": [],
+      "environment": false,
+      "search_match": {
+        "score": 100,
+        "name_terms": [
+          "fox"
+        ],
+        "tag_terms": [
+          "fox"
+        ],
+        "collections": [],
+        "explanation": [
+          {
+            "term": "fox",
+            "kind": "exact",
+            "points": 100,
+            "detail": "the file is named \"fox\""
+          }
+        ]
+      },
+      "source_url": "https://clever-hall.fra1.digitaloceanspaces.com/assets/1f26d747810d57ce3a5121de72d724cb19591b8db8a1a6d825e11425a8bf6c60.svg",
+      "source_sha256": "1f26d747810d57ce3a5121de72d724cb19591b8db8a1a6d825e11425a8bf6c60",
+      "original_file": "assets/source/studyjunior/choices/1f26d747810d57ce3a5121de72d724cb19591b8db8a1a6d825e11425a8bf6c60.svg",
+      "retrieved_at": "2026-11-14T11:15:18.485Z",
+      "viewBox": "82.4419 6.9712 26.8663 26.7608",
+      "display_width": 640,
+      "display_height": 637,
+      "public_file": "/art/studyjunior/choices/1f26d747810d57ce3a5121de72d724cb19591b8db8a1a6d825e11425a8bf6c60.svg",
+      "embedded_raster_images": 0
+    },
+    {
+      "label": "Butterfly or moth",
+      "query": "butterfly",
+      "search_record": "search/butterfly.json",
+      "id": "01a160c6-4f5b-7011-a750-39e055e5e8e0",
+      "hash": "346ebaa3c74e61f973499a2bbf3a6e37beb68ccab5a37b6cf5b1a64de299faac",
+      "original_name": "blue_butterfly.svg",
+      "mime_type": "image/svg+xml",
+      "asset_type": "image",
+      "s3_key": "assets/346ebaa3c74e61f973499a2bbf3a6e37beb68ccab5a37b6cf5b1a64de299faac.svg",
+      "width": null,
+      "height": null,
+      "duration_ms": null,
+      "tags": [
+        "butterfly",
+        "blue butterfly",
+        "black butterfly",
+        "insect"
+      ],
+      "asset_anchors": [],
+      "collections": [
+        {
+          "id": 4,
+          "name": "Insects",
+          "parent_id": 1
+        }
+      ],
+      "folder_tags": [],
+      "environment": false,
+      "search_match": {
+        "score": 100,
+        "name_terms": [
+          "butterfly"
+        ],
+        "tag_terms": [
+          "butterfly"
+        ],
+        "collections": [],
+        "explanation": [
+          {
+            "term": "butterfly",
+            "kind": "tag",
+            "points": 100,
+            "detail": "tagged \"butterfly\""
+          }
+        ]
+      },
+      "source_url": "https://clever-hall.fra1.digitaloceanspaces.com/assets/346ebaa3c74e61f973499a2bbf3a6e37beb68ccab5a37b6cf5b1a64de299faac.svg",
+      "source_sha256": "346ebaa3c74e61f973499a2bbf3a6e37beb68ccab5a37b6cf5b1a64de299faac",
+      "original_file": "assets/source/studyjunior/choices/346ebaa3c74e61f973499a2bbf3a6e37beb68ccab5a37b6cf5b1a64de299faac.svg",
+      "retrieved_at": "2026-11-14T11:15:18.630Z",
+      "viewBox": "11.25 52.8125 48.75 52.1875",
+      "display_width": 640,
+      "display_height": 685,
+      "public_file": "/art/studyjunior/choices/346ebaa3c74e61f973499a2bbf3a6e37beb68ccab5a37b6cf5b1a64de299faac.svg",
+      "embedded_raster_images": 0
+    },
+    {
+      "label": "Beetle",
+      "query": "beetle",
+      "search_record": "search/beetle.json",
+      "id": "01a160c6-3cea-70d4-9f06-8921b85e1b15",
+      "hash": "956dcbd5c441e87cb748229d3fb15d6bff3b7c2b3f33fbcb83fbf769b733b5e6",
+      "original_name": "beetle (1).svg",
+      "mime_type": "image/svg+xml",
+      "asset_type": "image",
+      "s3_key": "assets/956dcbd5c441e87cb748229d3fb15d6bff3b7c2b3f33fbcb83fbf769b733b5e6.svg",
+      "width": null,
+      "height": null,
+      "duration_ms": null,
+      "tags": [
+        "beetle",
+        "brown beetle",
+        "insect",
+        "bug"
+      ],
+      "asset_anchors": [],
+      "collections": [
+        {
+          "id": 4,
+          "name": "Insects",
+          "parent_id": 1
+        }
+      ],
+      "folder_tags": [],
+      "environment": false,
+      "search_match": {
+        "score": 100,
+        "name_terms": [
+          "beetle"
+        ],
+        "tag_terms": [
+          "beetle"
+        ],
+        "collections": [],
+        "explanation": [
+          {
+            "term": "beetle",
+            "kind": "exact",
+            "points": 100,
+            "detail": "the file is named \"beetle\""
+          }
+        ]
+      },
+      "source_url": "https://clever-hall.fra1.digitaloceanspaces.com/assets/956dcbd5c441e87cb748229d3fb15d6bff3b7c2b3f33fbcb83fbf769b733b5e6.svg",
+      "source_sha256": "956dcbd5c441e87cb748229d3fb15d6bff3b7c2b3f33fbcb83fbf769b733b5e6",
+      "original_file": "assets/source/studyjunior/choices/956dcbd5c441e87cb748229d3fb15d6bff3b7c2b3f33fbcb83fbf769b733b5e6.svg",
+      "retrieved_at": "2026-11-14T11:15:18.779Z",
+      "viewBox": "140.2499 12.623 37.0002 22.5547",
+      "display_width": 640,
+      "display_height": 390,
+      "public_file": "/art/studyjunior/choices/956dcbd5c441e87cb748229d3fb15d6bff3b7c2b3f33fbcb83fbf769b733b5e6.svg",
+      "embedded_raster_images": 0
+    },
+    {
+      "label": "Dragonfly",
+      "query": "dragonfly",
+      "search_record": "search/dragonfly.json",
+      "id": "01a160c6-c0e3-735d-8eb2-38e5535da176",
+      "hash": "3624f732b933d24ca7df642795208cf3bcf3999d974489ea00125891293c99f6",
+      "original_name": "dragonfly (1).svg",
+      "mime_type": "image/svg+xml",
+      "asset_type": "image",
+      "s3_key": "assets/3624f732b933d24ca7df642795208cf3bcf3999d974489ea00125891293c99f6.svg",
+      "width": null,
+      "height": null,
+      "duration_ms": null,
+      "tags": [
+        "dragonfly",
+        "orange dragonfly",
+        "cartoon dragonfly",
+        "insect"
+      ],
+      "asset_anchors": [],
+      "collections": [
+        {
+          "id": 4,
+          "name": "Insects",
+          "parent_id": 1
+        }
+      ],
+      "folder_tags": [],
+      "environment": false,
+      "search_match": {
+        "score": 100,
+        "name_terms": [
+          "dragonfly"
+        ],
+        "tag_terms": [
+          "dragonfly"
+        ],
+        "collections": [],
+        "explanation": [
+          {
+            "term": "dragonfly",
+            "kind": "exact",
+            "points": 100,
+            "detail": "the file is named \"dragonfly\""
+          }
+        ]
+      },
+      "source_url": "https://clever-hall.fra1.digitaloceanspaces.com/assets/3624f732b933d24ca7df642795208cf3bcf3999d974489ea00125891293c99f6.svg",
+      "source_sha256": "3624f732b933d24ca7df642795208cf3bcf3999d974489ea00125891293c99f6",
+      "original_file": "assets/source/studyjunior/choices/3624f732b933d24ca7df642795208cf3bcf3999d974489ea00125891293c99f6.svg",
+      "retrieved_at": "2026-11-14T11:15:18.926Z",
+      "viewBox": "148.1116 32.9804 48.7768 39.8592",
+      "display_width": 640,
+      "display_height": 523,
+      "public_file": "/art/studyjunior/choices/3624f732b933d24ca7df642795208cf3bcf3999d974489ea00125891293c99f6.svg",
+      "embedded_raster_images": 0
+    },
+    {
+      "label": "Ant",
+      "query": "ant",
+      "search_record": "search/ant.json",
+      "id": "01a160c5-d10b-72c3-97eb-1b5bb3b8c993",
+      "hash": "2130869c69626bf5908ff337d36bbf8d0d8e508bb06896949c3cca00f4bdd5c0",
+      "original_name": "ant (1).svg",
+      "mime_type": "image/svg+xml",
+      "asset_type": "image",
+      "s3_key": "assets/2130869c69626bf5908ff337d36bbf8d0d8e508bb06896949c3cca00f4bdd5c0.svg",
+      "width": null,
+      "height": null,
+      "duration_ms": null,
+      "tags": [
+        "ant",
+        "red ant",
+        "black and red ant",
+        "insect",
+        "bug"
+      ],
+      "asset_anchors": [],
+      "collections": [
+        {
+          "id": 4,
+          "name": "Insects",
+          "parent_id": 1
+        }
+      ],
+      "folder_tags": [],
+      "environment": false,
+      "search_match": {
+        "score": 100,
+        "name_terms": [
+          "ant"
+        ],
+        "tag_terms": [
+          "ant"
+        ],
+        "collections": [],
+        "explanation": [
+          {
+            "term": "ant",
+            "kind": "exact",
+            "points": 100,
+            "detail": "the file is named \"ant\""
+          }
+        ]
+      },
+      "source_url": "https://clever-hall.fra1.digitaloceanspaces.com/assets/2130869c69626bf5908ff337d36bbf8d0d8e508bb06896949c3cca00f4bdd5c0.svg",
+      "source_sha256": "2130869c69626bf5908ff337d36bbf8d0d8e508bb06896949c3cca00f4bdd5c0",
+      "original_file": "assets/source/studyjunior/choices/2130869c69626bf5908ff337d36bbf8d0d8e508bb06896949c3cca00f4bdd5c0.svg",
+      "retrieved_at": "2026-11-14T11:15:19.074Z",
+      "viewBox": "95.0862 116.3913 44.0775 27.6652",
+      "display_width": 640,
+      "display_height": 402,
+      "public_file": "/art/studyjunior/choices/2130869c69626bf5908ff337d36bbf8d0d8e508bb06896949c3cca00f4bdd5c0.svg",
+      "embedded_raster_images": 0
+    },
+    {
+      "label": "Penguin",
+      "query": "penguin",
+      "search_record": "search/penguin.json",
+      "id": "01a160ba-d720-703b-9b2c-d826cd04ffa5",
+      "hash": "cf45cf1a4e4d4d7bbe225f3816babf85f2a959e44c3275b379132180c21c4236",
+      "original_name": "baby_penguin.svg",
+      "mime_type": "image/svg+xml",
+      "asset_type": "image",
+      "s3_key": "assets/cf45cf1a4e4d4d7bbe225f3816babf85f2a959e44c3275b379132180c21c4236.svg",
+      "width": null,
+      "height": null,
+      "duration_ms": null,
+      "tags": [
+        "baby penguin",
+        "penguin",
+        "grey penguin",
+        "chick",
+        "bird"
+      ],
+      "asset_anchors": [],
+      "collections": [
+        {
+          "id": 3,
+          "name": "Wild",
+          "parent_id": 1
+        }
+      ],
+      "folder_tags": [],
+      "environment": false,
+      "search_match": {
+        "score": 100,
+        "name_terms": [
+          "penguin"
+        ],
+        "tag_terms": [
+          "penguin"
+        ],
+        "collections": [],
+        "explanation": [
+          {
+            "term": "penguin",
+            "kind": "tag",
+            "points": 100,
+            "detail": "tagged \"penguin\""
+          }
+        ]
+      },
+      "source_url": "https://clever-hall.fra1.digitaloceanspaces.com/assets/cf45cf1a4e4d4d7bbe225f3816babf85f2a959e44c3275b379132180c21c4236.svg",
+      "source_sha256": "cf45cf1a4e4d4d7bbe225f3816babf85f2a959e44c3275b379132180c21c4236",
+      "original_file": "assets/source/studyjunior/choices/cf45cf1a4e4d4d7bbe225f3816babf85f2a959e44c3275b379132180c21c4236.svg",
+      "retrieved_at": "2026-11-14T11:15:19.219Z",
+      "viewBox": "125.0452 62.3597 23.4097 28.6025",
+      "display_width": 640,
+      "display_height": 782,
+      "public_file": "/art/studyjunior/choices/cf45cf1a4e4d4d7bbe225f3816babf85f2a959e44c3275b379132180c21c4236.svg",
+      "embedded_raster_images": 0
+    },
+    {
+      "label": "Sparrow",
+      "query": "sparrow",
+      "search_record": "search/sparrow.json",
+      "id": "01a160be-6aa2-7186-b417-ea029291cb49",
+      "hash": "e90f04a4ecd8a1d27b7ad8ec392497a5dd6fb7216b9b865d9ae8c1ef7b268665",
+      "original_name": "sparrow.svg",
+      "mime_type": "image/svg+xml",
+      "asset_type": "image",
+      "s3_key": "assets/e90f04a4ecd8a1d27b7ad8ec392497a5dd6fb7216b9b865d9ae8c1ef7b268665.svg",
+      "width": null,
+      "height": null,
+      "duration_ms": null,
+      "tags": [
+        "sparrow",
+        "flying sparrow",
+        "brown sparrow",
+        "bird"
+      ],
+      "asset_anchors": [],
+      "collections": [
+        {
+          "id": 3,
+          "name": "Wild",
+          "parent_id": 1
+        }
+      ],
+      "folder_tags": [],
+      "environment": false,
+      "search_match": {
+        "score": 100,
+        "name_terms": [
+          "sparrow"
+        ],
+        "tag_terms": [
+          "sparrow"
+        ],
+        "collections": [],
+        "explanation": [
+          {
+            "term": "sparrow",
+            "kind": "exact",
+            "points": 100,
+            "detail": "the file is named \"sparrow\""
+          }
+        ]
+      },
+      "source_url": "https://clever-hall.fra1.digitaloceanspaces.com/assets/e90f04a4ecd8a1d27b7ad8ec392497a5dd6fb7216b9b865d9ae8c1ef7b268665.svg",
+      "source_sha256": "e90f04a4ecd8a1d27b7ad8ec392497a5dd6fb7216b9b865d9ae8c1ef7b268665",
+      "original_file": "assets/source/studyjunior/choices/e90f04a4ecd8a1d27b7ad8ec392497a5dd6fb7216b9b865d9ae8c1ef7b268665.svg",
+      "retrieved_at": "2026-11-14T11:15:19.370Z",
+      "viewBox": "154.7175 36.9068 57.315 43.7664",
+      "display_width": 640,
+      "display_height": 489,
+      "public_file": "/art/studyjunior/choices/e90f04a4ecd8a1d27b7ad8ec392497a5dd6fb7216b9b865d9ae8c1ef7b268665.svg",
+      "embedded_raster_images": 0
+    },
+    {
+      "label": "Eagle",
+      "query": "eagle",
+      "search_record": "search/eagle.json",
+      "id": "01a160bb-bf34-711a-90c8-ac6cc342e5a9",
+      "hash": "379ee7d000f35807e0b5cb03b2b9e285b2bd3e4085d1797a8e43ac2a7203a3cb",
+      "original_name": "eagle.svg",
+      "mime_type": "image/svg+xml",
+      "asset_type": "image",
+      "s3_key": "assets/379ee7d000f35807e0b5cb03b2b9e285b2bd3e4085d1797a8e43ac2a7203a3cb.svg",
+      "width": null,
+      "height": null,
+      "duration_ms": null,
+      "tags": [
+        "eagle",
+        "golden eagle",
+        "brown eagle",
+        "bird of prey"
+      ],
+      "asset_anchors": [],
+      "collections": [
+        {
+          "id": 3,
+          "name": "Wild",
+          "parent_id": 1
+        }
+      ],
+      "folder_tags": [],
+      "environment": false,
+      "search_match": {
+        "score": 100,
+        "name_terms": [
+          "eagle"
+        ],
+        "tag_terms": [
+          "eagle"
+        ],
+        "collections": [],
+        "explanation": [
+          {
+            "term": "eagle",
+            "kind": "exact",
+            "points": 100,
+            "detail": "the file is named \"eagle\""
+          }
+        ]
+      },
+      "source_url": "https://clever-hall.fra1.digitaloceanspaces.com/assets/379ee7d000f35807e0b5cb03b2b9e285b2bd3e4085d1797a8e43ac2a7203a3cb.svg",
+      "source_sha256": "379ee7d000f35807e0b5cb03b2b9e285b2bd3e4085d1797a8e43ac2a7203a3cb",
+      "original_file": "assets/source/studyjunior/choices/379ee7d000f35807e0b5cb03b2b9e285b2bd3e4085d1797a8e43ac2a7203a3cb.svg",
+      "retrieved_at": "2026-11-14T11:15:19.652Z",
+      "viewBox": "168.8141 56.447 38.1219 29.303",
+      "display_width": 640,
+      "display_height": 492,
+      "public_file": "/art/studyjunior/choices/379ee7d000f35807e0b5cb03b2b9e285b2bd3e4085d1797a8e43ac2a7203a3cb.svg",
+      "embedded_raster_images": 0
+    },
+    {
+      "label": "Swallow",
+      "query": "swallow",
+      "search_record": "search/swallow.json",
+      "id": "01a160be-7eb9-70ac-a6cb-c21a3f52349c",
+      "hash": "beec8d87948e2498892963ee1e406941e59fbc22f6bb36b1f09dd2d6389c3b68",
+      "original_name": "swallow.svg",
+      "mime_type": "image/svg+xml",
+      "asset_type": "image",
+      "s3_key": "assets/beec8d87948e2498892963ee1e406941e59fbc22f6bb36b1f09dd2d6389c3b68.svg",
+      "width": null,
+      "height": null,
+      "duration_ms": null,
+      "tags": [
+        "swallow",
+        "barn swallow",
+        "bird",
+        "red throat bird",
+        "wild bird",
+        "brown bird",
+        "small bird"
+      ],
+      "asset_anchors": [],
+      "collections": [
+        {
+          "id": 3,
+          "name": "Wild",
+          "parent_id": 1
+        }
+      ],
+      "folder_tags": [],
+      "environment": false,
+      "search_match": {
+        "score": 100,
+        "name_terms": [
+          "swallow"
+        ],
+        "tag_terms": [
+          "swallow"
+        ],
+        "collections": [],
+        "explanation": [
+          {
+            "term": "swallow",
+            "kind": "exact",
+            "points": 100,
+            "detail": "the file is named \"swallow\""
+          }
+        ]
+      },
+      "source_url": "https://clever-hall.fra1.digitaloceanspaces.com/assets/beec8d87948e2498892963ee1e406941e59fbc22f6bb36b1f09dd2d6389c3b68.svg",
+      "source_sha256": "beec8d87948e2498892963ee1e406941e59fbc22f6bb36b1f09dd2d6389c3b68",
+      "original_file": "assets/source/studyjunior/choices/beec8d87948e2498892963ee1e406941e59fbc22f6bb36b1f09dd2d6389c3b68.svg",
+      "retrieved_at": "2026-11-14T11:15:19.805Z",
+      "viewBox": "8.9386 36.233 23.1229 29.267",
+      "display_width": 640,
+      "display_height": 810,
+      "public_file": "/art/studyjunior/choices/beec8d87948e2498892963ee1e406941e59fbc22f6bb36b1f09dd2d6389c3b68.svg",
+      "embedded_raster_images": 0
+    },
+    {
+      "label": "Mercury",
+      "query": "Mercury planet",
+      "search_record": "search/mercury-planet.json",
+      "id": "01a166dd-72bc-7334-b534-94f490567c87",
+      "hash": "c94ddc5cc33ec6bcf114520a97a24424da28ab50e196072dbf7feb7b1fcfc210",
+      "original_name": "mercury-cratered.svg",
+      "mime_type": "image/svg+xml",
+      "asset_type": "image",
+      "s3_key": "assets/c94ddc5cc33ec6bcf114520a97a24424da28ab50e196072dbf7feb7b1fcfc210.svg",
+      "width": null,
+      "height": null,
+      "duration_ms": null,
+      "tags": [
+        "mercury",
+        "planet mercury",
+        "cratered planet",
+        "solar system"
+      ],
+      "asset_anchors": [],
+      "collections": [
+        {
+          "id": 31,
+          "name": "Solar System",
+          "parent_id": null
+        }
+      ],
+      "folder_tags": [],
+      "environment": false,
+      "search_match": {
+        "score": 170,
+        "name_terms": [],
+        "tag_terms": [
+          "mercury",
+          "planet"
+        ],
+        "collections": [],
+        "explanation": [
+          {
+            "term": "mercury",
+            "kind": "tag",
+            "points": 100,
+            "detail": "tagged \"mercury\""
+          },
+          {
+            "term": "planet",
+            "kind": "tag",
+            "points": 70,
+            "detail": "tagged \"cratered planet\" (head match)"
+          }
+        ]
+      },
+      "source_url": "https://clever-hall.fra1.digitaloceanspaces.com/assets/c94ddc5cc33ec6bcf114520a97a24424da28ab50e196072dbf7feb7b1fcfc210.svg",
+      "source_sha256": "c94ddc5cc33ec6bcf114520a97a24424da28ab50e196072dbf7feb7b1fcfc210",
+      "original_file": "assets/source/studyjunior/choices/c94ddc5cc33ec6bcf114520a97a24424da28ab50e196072dbf7feb7b1fcfc210.svg",
+      "retrieved_at": "2026-11-14T11:15:19.949Z",
+      "viewBox": "0 0 512 501.960784313725",
+      "display_width": 640,
+      "display_height": 627,
+      "public_file": "/art/studyjunior/choices/c94ddc5cc33ec6bcf114520a97a24424da28ab50e196072dbf7feb7b1fcfc210.svg",
+      "embedded_raster_images": 1
+    },
+    {
+      "label": "Venus",
+      "query": "Venus planet",
+      "search_record": "search/venus-planet.json",
+      "id": "01a166dd-9ee5-7369-a10c-7507697dbb53",
+      "hash": "c6dcbe3d230cd28c5522c4a9c2e0ee9e307342ca906fbfb5ebaf1d742a4152e6",
+      "original_name": "venus-golden.svg",
+      "mime_type": "image/svg+xml",
+      "asset_type": "image",
+      "s3_key": "assets/c6dcbe3d230cd28c5522c4a9c2e0ee9e307342ca906fbfb5ebaf1d742a4152e6.svg",
+      "width": null,
+      "height": null,
+      "duration_ms": null,
+      "tags": [
+        "venus",
+        "golden venus",
+        "gold planet",
+        "yellow planet",
+        "planet",
+        "solar system",
+        "space"
+      ],
+      "asset_anchors": [],
+      "collections": [
+        {
+          "id": 31,
+          "name": "Solar System",
+          "parent_id": null
+        }
+      ],
+      "folder_tags": [],
+      "environment": false,
+      "search_match": {
+        "score": 200,
+        "name_terms": [],
+        "tag_terms": [
+          "venus",
+          "planet"
+        ],
+        "collections": [],
+        "explanation": [
+          {
+            "term": "venus",
+            "kind": "tag",
+            "points": 100,
+            "detail": "tagged \"venus\""
+          },
+          {
+            "term": "planet",
+            "kind": "tag",
+            "points": 100,
+            "detail": "tagged \"planet\""
+          }
+        ]
+      },
+      "source_url": "https://clever-hall.fra1.digitaloceanspaces.com/assets/c6dcbe3d230cd28c5522c4a9c2e0ee9e307342ca906fbfb5ebaf1d742a4152e6.svg",
+      "source_sha256": "c6dcbe3d230cd28c5522c4a9c2e0ee9e307342ca906fbfb5ebaf1d742a4152e6",
+      "original_file": "assets/source/studyjunior/choices/c6dcbe3d230cd28c5522c4a9c2e0ee9e307342ca906fbfb5ebaf1d742a4152e6.svg",
+      "retrieved_at": "2026-11-14T11:15:20.515Z",
+      "viewBox": "0 0 512 502.857142857143",
+      "display_width": 640,
+      "display_height": 629,
+      "public_file": "/art/studyjunior/choices/c6dcbe3d230cd28c5522c4a9c2e0ee9e307342ca906fbfb5ebaf1d742a4152e6.svg",
+      "embedded_raster_images": 107
+    },
+    {
+      "label": "Mars",
+      "query": "Mars planet",
+      "search_record": "search/mars-planet.json",
+      "id": "01a166dd-6b08-73a0-b751-1555ba9f54ab",
+      "hash": "5aadeba8cdb7a1bf689d8e4cb3d5545801cb22598eb6c0f95c04abe80b9e0966",
+      "original_name": "mars-red.svg",
+      "mime_type": "image/svg+xml",
+      "asset_type": "image",
+      "s3_key": "assets/5aadeba8cdb7a1bf689d8e4cb3d5545801cb22598eb6c0f95c04abe80b9e0966.svg",
+      "width": null,
+      "height": null,
+      "duration_ms": null,
+      "tags": [
+        "mars",
+        "planet mars",
+        "red planet",
+        "solar system"
+      ],
+      "asset_anchors": [],
+      "collections": [
+        {
+          "id": 31,
+          "name": "Solar System",
+          "parent_id": null
+        }
+      ],
+      "folder_tags": [],
+      "environment": false,
+      "search_match": {
+        "score": 185,
+        "name_terms": [
+          "mar"
+        ],
+        "tag_terms": [
+          "mar",
+          "planet"
+        ],
+        "collections": [],
+        "explanation": [
+          {
+            "term": "mar",
+            "kind": "tag",
+            "points": 100,
+            "detail": "tagged \"mars\""
+          },
+          {
+            "term": "planet",
+            "kind": "tag",
+            "points": 85,
+            "detail": "tagged \"red planet\" (described match)"
+          }
+        ]
+      },
+      "source_url": "https://clever-hall.fra1.digitaloceanspaces.com/assets/5aadeba8cdb7a1bf689d8e4cb3d5545801cb22598eb6c0f95c04abe80b9e0966.svg",
+      "source_sha256": "5aadeba8cdb7a1bf689d8e4cb3d5545801cb22598eb6c0f95c04abe80b9e0966",
+      "original_file": "assets/source/studyjunior/choices/5aadeba8cdb7a1bf689d8e4cb3d5545801cb22598eb6c0f95c04abe80b9e0966.svg",
+      "retrieved_at": "2026-11-14T11:15:20.661Z",
+      "viewBox": "0 0 446.984126984127 512",
+      "display_width": 640,
+      "display_height": 733,
+      "public_file": "/art/studyjunior/choices/5aadeba8cdb7a1bf689d8e4cb3d5545801cb22598eb6c0f95c04abe80b9e0966.svg",
+      "embedded_raster_images": 0
+    },
+    {
+      "label": "Earth",
+      "query": "Earth planet",
+      "search_record": "search/earth-planet.json",
+      "id": "01a166db-a713-7153-be61-e50c6b7f5aed",
+      "hash": "0dff2604e5fd2355a729f1d11e43d251852e671abb796862cb4e9aa895b183c0",
+      "original_name": "earth-globe.svg",
+      "mime_type": "image/svg+xml",
+      "asset_type": "image",
+      "s3_key": "assets/0dff2604e5fd2355a729f1d11e43d251852e671abb796862cb4e9aa895b183c0.svg",
+      "width": null,
+      "height": null,
+      "duration_ms": null,
+      "tags": [
+        "earth",
+        "planet earth",
+        "globe",
+        "blue planet"
+      ],
+      "asset_anchors": [],
+      "collections": [
+        {
+          "id": 31,
+          "name": "Solar System",
+          "parent_id": null
+        }
+      ],
+      "folder_tags": [],
+      "environment": false,
+      "search_match": {
+        "score": 185,
+        "name_terms": [],
+        "tag_terms": [
+          "earth",
+          "planet"
+        ],
+        "collections": [],
+        "explanation": [
+          {
+            "term": "earth",
+            "kind": "tag",
+            "points": 100,
+            "detail": "tagged \"earth\""
+          },
+          {
+            "term": "planet",
+            "kind": "tag",
+            "points": 85,
+            "detail": "tagged \"blue planet\" (described match)"
+          }
+        ]
+      },
+      "source_url": "https://clever-hall.fra1.digitaloceanspaces.com/assets/0dff2604e5fd2355a729f1d11e43d251852e671abb796862cb4e9aa895b183c0.svg",
+      "source_sha256": "0dff2604e5fd2355a729f1d11e43d251852e671abb796862cb4e9aa895b183c0",
+      "original_file": "assets/source/studyjunior/choices/0dff2604e5fd2355a729f1d11e43d251852e671abb796862cb4e9aa895b183c0.svg",
+      "retrieved_at": "2026-11-14T11:15:21.478Z",
+      "viewBox": "-102.7 -100.49 1785.4 1746.98",
+      "display_width": 640,
+      "display_height": 626,
+      "public_file": "/art/studyjunior/choices/0dff2604e5fd2355a729f1d11e43d251852e671abb796862cb4e9aa895b183c0.svg",
+      "embedded_raster_images": 114
+    },
+    {
+      "label": "Saturn",
+      "query": "Saturn planet",
+      "search_record": "search/saturn-planet.json",
+      "id": "01a166dd-82ca-7331-9303-1ccf5ce62661",
+      "hash": "82ea77b09f0f3a694e6cdf45fd681ea988c8a19e975182c154ebbbe2a9e5bdcd",
+      "original_name": "saturn-golden.svg",
+      "mime_type": "image/svg+xml",
+      "asset_type": "image",
+      "s3_key": "assets/82ea77b09f0f3a694e6cdf45fd681ea988c8a19e975182c154ebbbe2a9e5bdcd.svg",
+      "width": null,
+      "height": null,
+      "duration_ms": null,
+      "tags": [
+        "saturn",
+        "golden saturn",
+        "yellow planet",
+        "planet",
+        "ringed planet",
+        "solar system"
+      ],
+      "asset_anchors": [],
+      "collections": [
+        {
+          "id": 31,
+          "name": "Solar System",
+          "parent_id": null
+        }
+      ],
+      "folder_tags": [],
+      "environment": false,
+      "search_match": {
+        "score": 200,
+        "name_terms": [],
+        "tag_terms": [
+          "saturn",
+          "planet"
+        ],
+        "collections": [],
+        "explanation": [
+          {
+            "term": "saturn",
+            "kind": "tag",
+            "points": 100,
+            "detail": "tagged \"saturn\""
+          },
+          {
+            "term": "planet",
+            "kind": "tag",
+            "points": 100,
+            "detail": "tagged \"planet\""
+          }
+        ]
+      },
+      "source_url": "https://clever-hall.fra1.digitaloceanspaces.com/assets/82ea77b09f0f3a694e6cdf45fd681ea988c8a19e975182c154ebbbe2a9e5bdcd.svg",
+      "source_sha256": "82ea77b09f0f3a694e6cdf45fd681ea988c8a19e975182c154ebbbe2a9e5bdcd",
+      "original_file": "assets/source/studyjunior/choices/82ea77b09f0f3a694e6cdf45fd681ea988c8a19e975182c154ebbbe2a9e5bdcd.svg",
+      "retrieved_at": "2026-11-14T11:15:21.973Z",
+      "viewBox": "0 0 512 226.969072164948",
+      "display_width": 640,
+      "display_height": 284,
+      "public_file": "/art/studyjunior/choices/82ea77b09f0f3a694e6cdf45fd681ea988c8a19e975182c154ebbbe2a9e5bdcd.svg",
+      "embedded_raster_images": 107
+    },
+    {
+      "label": "Jupiter",
+      "query": "Jupiter planet",
+      "search_record": "search/jupiter-planet.json",
+      "id": "01a166dd-55a6-7292-9233-e0bf2b7cfd3b",
+      "hash": "a3947d1f4cfcac7548666c4044cdc1712ebceab1c011c3a95343f1d2d6cf6ba8",
+      "original_name": "jupiter-cream-bands.svg",
+      "mime_type": "image/svg+xml",
+      "asset_type": "image",
+      "s3_key": "assets/a3947d1f4cfcac7548666c4044cdc1712ebceab1c011c3a95343f1d2d6cf6ba8.svg",
+      "width": null,
+      "height": null,
+      "duration_ms": null,
+      "tags": [
+        "jupiter",
+        "planet jupiter",
+        "cream orange planet",
+        "solar system"
+      ],
+      "asset_anchors": [],
+      "collections": [
+        {
+          "id": 31,
+          "name": "Solar System",
+          "parent_id": null
+        }
+      ],
+      "folder_tags": [],
+      "environment": false,
+      "search_match": {
+        "score": 170,
+        "name_terms": [],
+        "tag_terms": [
+          "jupiter",
+          "planet"
+        ],
+        "collections": [],
+        "explanation": [
+          {
+            "term": "jupiter",
+            "kind": "tag",
+            "points": 100,
+            "detail": "tagged \"jupiter\""
+          },
+          {
+            "term": "planet",
+            "kind": "tag",
+            "points": 70,
+            "detail": "tagged \"cream orange planet\" (head match)"
+          }
+        ]
+      },
+      "source_url": "https://clever-hall.fra1.digitaloceanspaces.com/assets/a3947d1f4cfcac7548666c4044cdc1712ebceab1c011c3a95343f1d2d6cf6ba8.svg",
+      "source_sha256": "a3947d1f4cfcac7548666c4044cdc1712ebceab1c011c3a95343f1d2d6cf6ba8",
+      "original_file": "assets/source/studyjunior/choices/a3947d1f4cfcac7548666c4044cdc1712ebceab1c011c3a95343f1d2d6cf6ba8.svg",
+      "retrieved_at": "2026-11-14T11:15:22.532Z",
+      "viewBox": "0 0 512 512",
+      "display_width": 640,
+      "display_height": 640,
+      "public_file": "/art/studyjunior/choices/a3947d1f4cfcac7548666c4044cdc1712ebceab1c011c3a95343f1d2d6cf6ba8.svg",
+      "embedded_raster_images": 107
+    },
+    {
+      "label": "Neptune",
+      "query": "Neptune planet",
+      "search_record": "search/neptune-planet.json",
+      "id": "01a166dd-78aa-72af-9103-a8b661632417",
+      "hash": "d9341b3ad0fa57af75e6b146e85092ed9898690074f24c17b54c46a63be4b60d",
+      "original_name": "neptune-blue-bands.svg",
+      "mime_type": "image/svg+xml",
+      "asset_type": "image",
+      "s3_key": "assets/d9341b3ad0fa57af75e6b146e85092ed9898690074f24c17b54c46a63be4b60d.svg",
+      "width": null,
+      "height": null,
+      "duration_ms": null,
+      "tags": [
+        "neptune",
+        "planet neptune",
+        "blue planet",
+        "solar system"
+      ],
+      "asset_anchors": [],
+      "collections": [
+        {
+          "id": 31,
+          "name": "Solar System",
+          "parent_id": null
+        }
+      ],
+      "folder_tags": [],
+      "environment": false,
+      "search_match": {
+        "score": 185,
+        "name_terms": [],
+        "tag_terms": [
+          "neptune",
+          "planet"
+        ],
+        "collections": [],
+        "explanation": [
+          {
+            "term": "neptune",
+            "kind": "tag",
+            "points": 100,
+            "detail": "tagged \"neptune\""
+          },
+          {
+            "term": "planet",
+            "kind": "tag",
+            "points": 85,
+            "detail": "tagged \"blue planet\" (described match)"
+          }
+        ]
+      },
+      "source_url": "https://clever-hall.fra1.digitaloceanspaces.com/assets/d9341b3ad0fa57af75e6b146e85092ed9898690074f24c17b54c46a63be4b60d.svg",
+      "source_sha256": "d9341b3ad0fa57af75e6b146e85092ed9898690074f24c17b54c46a63be4b60d",
+      "original_file": "assets/source/studyjunior/choices/d9341b3ad0fa57af75e6b146e85092ed9898690074f24c17b54c46a63be4b60d.svg",
+      "retrieved_at": "2026-11-14T11:15:22.702Z",
+      "viewBox": "0 0 512 496.484848484848",
+      "display_width": 640,
+      "display_height": 621,
+      "public_file": "/art/studyjunior/choices/d9341b3ad0fa57af75e6b146e85092ed9898690074f24c17b54c46a63be4b60d.svg",
+      "embedded_raster_images": 8
+    },
+    {
+      "label": "Uranus",
+      "query": "Uranus planet",
+      "search_record": "search/uranus-planet.json",
+      "id": "01a166dd-930d-700f-aa70-42087c0f162d",
+      "hash": "6d8eccb578d1a0d7f9168d7f4003e7cb049096df4c92a36df3587d8e4d467b8f",
+      "original_name": "uranus-ice-blue.svg",
+      "mime_type": "image/svg+xml",
+      "asset_type": "image",
+      "s3_key": "assets/6d8eccb578d1a0d7f9168d7f4003e7cb049096df4c92a36df3587d8e4d467b8f.svg",
+      "width": null,
+      "height": null,
+      "duration_ms": null,
+      "tags": [
+        "uranus",
+        "ice blue uranus",
+        "light blue uranus",
+        "blue planet",
+        "planet",
+        "solar system",
+        "space",
+        "ice giant"
+      ],
+      "asset_anchors": [],
+      "collections": [
+        {
+          "id": 31,
+          "name": "Solar System",
+          "parent_id": null
+        }
+      ],
+      "folder_tags": [],
+      "environment": false,
+      "search_match": {
+        "score": 200,
+        "name_terms": [],
+        "tag_terms": [
+          "uranus",
+          "planet"
+        ],
+        "collections": [],
+        "explanation": [
+          {
+            "term": "uranus",
+            "kind": "tag",
+            "points": 100,
+            "detail": "tagged \"uranus\""
+          },
+          {
+            "term": "planet",
+            "kind": "tag",
+            "points": 100,
+            "detail": "tagged \"planet\""
+          }
+        ]
+      },
+      "source_url": "https://clever-hall.fra1.digitaloceanspaces.com/assets/6d8eccb578d1a0d7f9168d7f4003e7cb049096df4c92a36df3587d8e4d467b8f.svg",
+      "source_sha256": "6d8eccb578d1a0d7f9168d7f4003e7cb049096df4c92a36df3587d8e4d467b8f",
+      "original_file": "assets/source/studyjunior/choices/6d8eccb578d1a0d7f9168d7f4003e7cb049096df4c92a36df3587d8e4d467b8f.svg",
+      "retrieved_at": "2026-11-14T11:15:22.874Z",
+      "viewBox": "0 0 512 512",
+      "display_width": 640,
+      "display_height": 640,
+      "public_file": "/art/studyjunior/choices/6d8eccb578d1a0d7f9168d7f4003e7cb049096df4c92a36df3587d8e4d467b8f.svg",
+      "embedded_raster_images": 8
+    },
+    {
+      "label": "Avocado",
+      "query": "avocado",
+      "search_record": "search/avocado.json",
+      "id": "01a16ab2-9304-7148-87d4-7b4aea4b6a14",
+      "hash": "a154c72d18204d04defabaf85d7ab1282f3e4029da615531f03f3391bd3f217a",
+      "original_name": "avocado-01.svg",
+      "mime_type": "image/svg+xml",
+      "asset_type": "image",
+      "s3_key": "assets/a154c72d18204d04defabaf85d7ab1282f3e4029da615531f03f3391bd3f217a.svg",
+      "width": null,
+      "height": null,
+      "duration_ms": null,
+      "tags": [
+        "avocado",
+        "green avocado",
+        "avocado half",
+        "fruit",
+        "cartoon avocado"
+      ],
+      "asset_anchors": [],
+      "collections": [
+        {
+          "id": 12,
+          "name": "Fruits",
+          "parent_id": 26
+        }
+      ],
+      "folder_tags": [],
+      "environment": false,
+      "search_match": {
+        "score": 100,
+        "name_terms": [
+          "avocado"
+        ],
+        "tag_terms": [
+          "avocado"
+        ],
+        "collections": [],
+        "explanation": [
+          {
+            "term": "avocado",
+            "kind": "exact",
+            "points": 100,
+            "detail": "the file is named \"avocado\""
+          }
+        ]
+      },
+      "source_url": "https://clever-hall.fra1.digitaloceanspaces.com/assets/a154c72d18204d04defabaf85d7ab1282f3e4029da615531f03f3391bd3f217a.svg",
+      "source_sha256": "a154c72d18204d04defabaf85d7ab1282f3e4029da615531f03f3391bd3f217a",
+      "original_file": "assets/source/studyjunior/choices/a154c72d18204d04defabaf85d7ab1282f3e4029da615531f03f3391bd3f217a.svg",
+      "retrieved_at": "2026-11-14T11:15:23.017Z",
+      "viewBox": "90.5525 -1.865 51.395 54.81",
+      "display_width": 640,
+      "display_height": 683,
+      "public_file": "/art/studyjunior/choices/a154c72d18204d04defabaf85d7ab1282f3e4029da615531f03f3391bd3f217a.svg",
+      "embedded_raster_images": 0
+    },
+    {
+      "label": "Cucumber",
+      "query": "cucumber",
+      "search_record": "search/cucumber.json",
+      "id": "01a16c49-82c5-71c1-9983-1d18f6e8ecc7",
+      "hash": "14500022a3971dd14af0901dc83d31b58dbf035323fef49b19bd68c8984210e8",
+      "original_name": "green-cucumber.svg",
+      "mime_type": "image/svg+xml",
+      "asset_type": "image",
+      "s3_key": "assets/14500022a3971dd14af0901dc83d31b58dbf035323fef49b19bd68c8984210e8.svg",
+      "width": null,
+      "height": null,
+      "duration_ms": null,
+      "tags": [
+        "cucumber",
+        "green cucumber",
+        "green vegetable",
+        "vegetable"
+      ],
+      "asset_anchors": [],
+      "collections": [
+        {
+          "id": 37,
+          "name": "Farming and Gardening",
+          "parent_id": null
+        }
+      ],
+      "folder_tags": [],
+      "environment": false,
+      "search_match": {
+        "score": 100,
+        "name_terms": [
+          "cucumber"
+        ],
+        "tag_terms": [
+          "cucumber"
+        ],
+        "collections": [],
+        "explanation": [
+          {
+            "term": "cucumber",
+            "kind": "tag",
+            "points": 100,
+            "detail": "tagged \"cucumber\""
+          }
+        ]
+      },
+      "source_url": "https://clever-hall.fra1.digitaloceanspaces.com/assets/14500022a3971dd14af0901dc83d31b58dbf035323fef49b19bd68c8984210e8.svg",
+      "source_sha256": "14500022a3971dd14af0901dc83d31b58dbf035323fef49b19bd68c8984210e8",
+      "original_file": "assets/source/studyjunior/choices/14500022a3971dd14af0901dc83d31b58dbf035323fef49b19bd68c8984210e8.svg",
+      "retrieved_at": "2026-11-14T11:15:23.164Z",
+      "viewBox": "17.015 -0.22375 62.22 22.1975",
+      "display_width": 640,
+      "display_height": 228,
+      "public_file": "/art/studyjunior/choices/14500022a3971dd14af0901dc83d31b58dbf035323fef49b19bd68c8984210e8.svg",
+      "embedded_raster_images": 0
+    },
+    {
+      "label": "Courgette",
+      "query": "courgette",
+      "search_record": "search/courgette.json",
+      "id": "01a17602-4af0-7307-9633-90af8070c865",
+      "hash": "a95810e0dcbb25d843c2c8a262a30436c7ea266f356c7dce417360cbf09f1eb0",
+      "original_name": "long-pale-green-courgette.svg",
+      "mime_type": "image/svg+xml",
+      "asset_type": "image",
+      "s3_key": "assets/a95810e0dcbb25d843c2c8a262a30436c7ea266f356c7dce417360cbf09f1eb0.svg",
+      "width": null,
+      "height": null,
+      "duration_ms": null,
+      "tags": [
+        "courgette",
+        "zucchini",
+        "pale green courgette",
+        "vegetable"
+      ],
+      "asset_anchors": [],
+      "collections": [
+        {
+          "id": 14,
+          "name": "Vegetables",
+          "parent_id": 26
+        }
+      ],
+      "folder_tags": [],
+      "environment": false,
+      "search_match": {
+        "score": 100,
+        "name_terms": [
+          "courgette"
+        ],
+        "tag_terms": [
+          "courgette"
+        ],
+        "collections": [],
+        "explanation": [
+          {
+            "term": "courgette",
+            "kind": "tag",
+            "points": 100,
+            "detail": "tagged \"courgette\""
+          }
+        ]
+      },
+      "source_url": "https://clever-hall.fra1.digitaloceanspaces.com/assets/a95810e0dcbb25d843c2c8a262a30436c7ea266f356c7dce417360cbf09f1eb0.svg",
+      "source_sha256": "a95810e0dcbb25d843c2c8a262a30436c7ea266f356c7dce417360cbf09f1eb0",
+      "original_file": "assets/source/studyjunior/choices/a95810e0dcbb25d843c2c8a262a30436c7ea266f356c7dce417360cbf09f1eb0.svg",
+      "retrieved_at": "2026-11-14T11:15:23.315Z",
+      "viewBox": "0 0 400 400",
+      "display_width": 640,
+      "display_height": 640,
+      "public_file": "/art/studyjunior/choices/a95810e0dcbb25d843c2c8a262a30436c7ea266f356c7dce417360cbf09f1eb0.svg",
+      "embedded_raster_images": 0
+    },
+    {
+      "label": "Peas",
+      "query": "peas",
+      "search_record": "search/peas.json",
+      "id": "01a17602-5910-7145-ae71-a28976112877",
+      "hash": "11b934173e87157534c4d58e1b70536532302909cb850f7f6ef8dfe26c85c79c",
+      "original_name": "pea-pod-and-peas.svg",
+      "mime_type": "image/svg+xml",
+      "asset_type": "image",
+      "s3_key": "assets/11b934173e87157534c4d58e1b70536532302909cb850f7f6ef8dfe26c85c79c.svg",
+      "width": null,
+      "height": null,
+      "duration_ms": null,
+      "tags": [
+        "pea pod",
+        "green peas",
+        "peas",
+        "vegetable"
+      ],
+      "asset_anchors": [],
+      "collections": [
+        {
+          "id": 14,
+          "name": "Vegetables",
+          "parent_id": 26
+        }
+      ],
+      "folder_tags": [],
+      "environment": false,
+      "search_match": {
+        "score": 100,
+        "name_terms": [],
+        "tag_terms": [
+          "pea"
+        ],
+        "collections": [],
+        "explanation": [
+          {
+            "term": "pea",
+            "kind": "tag",
+            "points": 100,
+            "detail": "tagged \"peas\""
+          }
+        ]
+      },
+      "source_url": "https://clever-hall.fra1.digitaloceanspaces.com/assets/11b934173e87157534c4d58e1b70536532302909cb850f7f6ef8dfe26c85c79c.svg",
+      "source_sha256": "11b934173e87157534c4d58e1b70536532302909cb850f7f6ef8dfe26c85c79c",
+      "original_file": "assets/source/studyjunior/choices/11b934173e87157534c4d58e1b70536532302909cb850f7f6ef8dfe26c85c79c.svg",
+      "retrieved_at": "2026-11-14T11:15:23.453Z",
+      "viewBox": "0 0 400 400",
+      "display_width": 640,
+      "display_height": 640,
+      "public_file": "/art/studyjunior/choices/11b934173e87157534c4d58e1b70536532302909cb850f7f6ef8dfe26c85c79c.svg",
+      "embedded_raster_images": 0
+    },
+    {
+      "label": "Lemon",
+      "query": "lemon",
+      "search_record": "search/lemon.json",
+      "id": "01a16ab4-539c-72fe-be6b-c61db98d032c",
+      "hash": "4918530fb6b1ddd825cf3826fdc87ec9d81e766cd5bf33449f46637ef6e3b75e",
+      "original_name": "lemon-01.svg",
+      "mime_type": "image/svg+xml",
+      "asset_type": "image",
+      "s3_key": "assets/4918530fb6b1ddd825cf3826fdc87ec9d81e766cd5bf33449f46637ef6e3b75e.svg",
+      "width": null,
+      "height": null,
+      "duration_ms": null,
+      "tags": [
+        "lemon",
+        "yellow lemon",
+        "cut lemon",
+        "fruit"
+      ],
+      "asset_anchors": [],
+      "collections": [
+        {
+          "id": 12,
+          "name": "Fruits",
+          "parent_id": 26
+        }
+      ],
+      "folder_tags": [],
+      "environment": false,
+      "search_match": {
+        "score": 100,
+        "name_terms": [
+          "lemon"
+        ],
+        "tag_terms": [
+          "lemon"
+        ],
+        "collections": [],
+        "explanation": [
+          {
+            "term": "lemon",
+            "kind": "exact",
+            "points": 100,
+            "detail": "the file is named \"lemon\""
+          }
+        ]
+      },
+      "source_url": "https://clever-hall.fra1.digitaloceanspaces.com/assets/4918530fb6b1ddd825cf3826fdc87ec9d81e766cd5bf33449f46637ef6e3b75e.svg",
+      "source_sha256": "4918530fb6b1ddd825cf3826fdc87ec9d81e766cd5bf33449f46637ef6e3b75e",
+      "original_file": "assets/source/studyjunior/choices/4918530fb6b1ddd825cf3826fdc87ec9d81e766cd5bf33449f46637ef6e3b75e.svg",
+      "retrieved_at": "2026-11-14T11:15:23.597Z",
+      "viewBox": "101.3825 94.975 23.235 18.85",
+      "display_width": 640,
+      "display_height": 519,
+      "public_file": "/art/studyjunior/choices/4918530fb6b1ddd825cf3826fdc87ec9d81e766cd5bf33449f46637ef6e3b75e.svg",
+      "embedded_raster_images": 0
+    },
+    {
+      "label": "Apple",
+      "query": "apple",
+      "search_record": "search/apple.json",
+      "id": "01a16ab2-446a-7396-8eff-19086a60b04e",
+      "hash": "fb66d26069127a753568c8eb1591e417321aff7e24ec6c20a2ce130b7ac637ba",
+      "original_name": "apple-01.svg",
+      "mime_type": "image/svg+xml",
+      "asset_type": "image",
+      "s3_key": "assets/fb66d26069127a753568c8eb1591e417321aff7e24ec6c20a2ce130b7ac637ba.svg",
+      "width": null,
+      "height": null,
+      "duration_ms": null,
+      "tags": [
+        "apple",
+        "red apple",
+        "fruit",
+        "cartoon apple"
+      ],
+      "asset_anchors": [],
+      "collections": [
+        {
+          "id": 12,
+          "name": "Fruits",
+          "parent_id": 26
+        }
+      ],
+      "folder_tags": [],
+      "environment": false,
+      "search_match": {
+        "score": 100,
+        "name_terms": [
+          "apple"
+        ],
+        "tag_terms": [
+          "apple"
+        ],
+        "collections": [],
+        "explanation": [
+          {
+            "term": "apple",
+            "kind": "exact",
+            "points": 100,
+            "detail": "the file is named \"apple\""
+          }
+        ]
+      },
+      "source_url": "https://clever-hall.fra1.digitaloceanspaces.com/assets/fb66d26069127a753568c8eb1591e417321aff7e24ec6c20a2ce130b7ac637ba.svg",
+      "source_sha256": "fb66d26069127a753568c8eb1591e417321aff7e24ec6c20a2ce130b7ac637ba",
+      "original_file": "assets/source/studyjunior/choices/fb66d26069127a753568c8eb1591e417321aff7e24ec6c20a2ce130b7ac637ba.svg",
+      "retrieved_at": "2026-11-14T11:15:23.743Z",
+      "viewBox": "83.4025 56.45 9.695 8.7",
+      "display_width": 640,
+      "display_height": 574,
+      "public_file": "/art/studyjunior/choices/fb66d26069127a753568c8eb1591e417321aff7e24ec6c20a2ce130b7ac637ba.svg",
+      "embedded_raster_images": 0
+    },
+    {
+      "label": "Pear",
+      "query": "pear",
+      "search_record": "search/pear.json",
+      "id": "01a17601-bce6-73de-86cf-9efc8675c454",
+      "hash": "08ef23cf520f025d0c45b1d500df562206f9ea07ed22e1aac5324f9c640a8006",
+      "original_name": "green-pear.svg",
+      "mime_type": "image/svg+xml",
+      "asset_type": "image",
+      "s3_key": "assets/08ef23cf520f025d0c45b1d500df562206f9ea07ed22e1aac5324f9c640a8006.svg",
+      "width": null,
+      "height": null,
+      "duration_ms": null,
+      "tags": [
+        "pear",
+        "green pear",
+        "yellow green pear",
+        "fruit"
+      ],
+      "asset_anchors": [],
+      "collections": [
+        {
+          "id": 12,
+          "name": "Fruits",
+          "parent_id": 26
+        }
+      ],
+      "folder_tags": [],
+      "environment": false,
+      "search_match": {
+        "score": 100,
+        "name_terms": [
+          "pear"
+        ],
+        "tag_terms": [
+          "pear"
+        ],
+        "collections": [],
+        "explanation": [
+          {
+            "term": "pear",
+            "kind": "tag",
+            "points": 100,
+            "detail": "tagged \"pear\""
+          }
+        ]
+      },
+      "source_url": "https://clever-hall.fra1.digitaloceanspaces.com/assets/08ef23cf520f025d0c45b1d500df562206f9ea07ed22e1aac5324f9c640a8006.svg",
+      "source_sha256": "08ef23cf520f025d0c45b1d500df562206f9ea07ed22e1aac5324f9c640a8006",
+      "original_file": "assets/source/studyjunior/choices/08ef23cf520f025d0c45b1d500df562206f9ea07ed22e1aac5324f9c640a8006.svg",
+      "retrieved_at": "2026-11-14T11:15:23.889Z",
+      "viewBox": "0 0 400 400",
+      "display_width": 640,
+      "display_height": 640,
+      "public_file": "/art/studyjunior/choices/08ef23cf520f025d0c45b1d500df562206f9ea07ed22e1aac5324f9c640a8006.svg",
+      "embedded_raster_images": 0
+    },
+    {
+      "label": "Peach",
+      "query": "peach",
+      "search_record": "search/peach.json",
+      "id": "01a16ab5-3ada-73bb-8e8c-77eb74630865",
+      "hash": "3c8204b91f7973a57d54ee9568d685b76286f9c6e81ad2093c92ed9ba4481a87",
+      "original_name": "peach-01.svg",
+      "mime_type": "image/svg+xml",
+      "asset_type": "image",
+      "s3_key": "assets/3c8204b91f7973a57d54ee9568d685b76286f9c6e81ad2093c92ed9ba4481a87.svg",
+      "width": null,
+      "height": null,
+      "duration_ms": null,
+      "tags": [
+        "peach",
+        "yellow peach",
+        "cut peach",
+        "fruit"
+      ],
+      "asset_anchors": [],
+      "collections": [
+        {
+          "id": 12,
+          "name": "Fruits",
+          "parent_id": 26
+        }
+      ],
+      "folder_tags": [],
+      "environment": false,
+      "search_match": {
+        "score": 100,
+        "name_terms": [
+          "peach"
+        ],
+        "tag_terms": [
+          "peach"
+        ],
+        "collections": [],
+        "explanation": [
+          {
+            "term": "peach",
+            "kind": "exact",
+            "points": 100,
+            "detail": "the file is named \"peach\""
+          }
+        ]
+      },
+      "source_url": "https://clever-hall.fra1.digitaloceanspaces.com/assets/3c8204b91f7973a57d54ee9568d685b76286f9c6e81ad2093c92ed9ba4481a87.svg",
+      "source_sha256": "3c8204b91f7973a57d54ee9568d685b76286f9c6e81ad2093c92ed9ba4481a87",
+      "original_file": "assets/source/studyjunior/choices/3c8204b91f7973a57d54ee9568d685b76286f9c6e81ad2093c92ed9ba4481a87.svg",
+      "retrieved_at": "2026-11-14T11:15:24.033Z",
+      "viewBox": "133.5012 67.86 22.7475 15.66",
+      "display_width": 640,
+      "display_height": 441,
+      "public_file": "/art/studyjunior/choices/3c8204b91f7973a57d54ee9568d685b76286f9c6e81ad2093c92ed9ba4481a87.svg",
+      "embedded_raster_images": 0
+    },
+    {
+      "label": "Rice",
+      "query": "rice",
+      "search_record": "search/rice.json",
+      "id": "01a17603-19ab-73fd-b847-ad21cfc62ee3",
+      "hash": "69ef599e00a61e830c1ed8c965f08022d75781815fbd1a82a95b98acdc297294",
+      "original_name": "rice-plant-with-grains.svg",
+      "mime_type": "image/svg+xml",
+      "asset_type": "image",
+      "s3_key": "assets/69ef599e00a61e830c1ed8c965f08022d75781815fbd1a82a95b98acdc297294.svg",
+      "width": null,
+      "height": null,
+      "duration_ms": null,
+      "tags": [
+        "rice plant",
+        "rice grains",
+        "rice",
+        "grain"
+      ],
+      "asset_anchors": [],
+      "collections": [
+        {
+          "id": 386,
+          "name": "Grains and Nuts",
+          "parent_id": 26
+        }
+      ],
+      "folder_tags": [],
+      "environment": false,
+      "search_match": {
+        "score": 100,
+        "name_terms": [],
+        "tag_terms": [
+          "rice"
+        ],
+        "collections": [],
+        "explanation": [
+          {
+            "term": "rice",
+            "kind": "tag",
+            "points": 100,
+            "detail": "tagged \"rice\""
+          }
+        ]
+      },
+      "source_url": "https://clever-hall.fra1.digitaloceanspaces.com/assets/69ef599e00a61e830c1ed8c965f08022d75781815fbd1a82a95b98acdc297294.svg",
+      "source_sha256": "69ef599e00a61e830c1ed8c965f08022d75781815fbd1a82a95b98acdc297294",
+      "original_file": "assets/source/studyjunior/choices/69ef599e00a61e830c1ed8c965f08022d75781815fbd1a82a95b98acdc297294.svg",
+      "retrieved_at": "2026-11-14T11:15:24.218Z",
+      "viewBox": "0 0 400 400",
+      "display_width": 640,
+      "display_height": 640,
+      "public_file": "/art/studyjunior/choices/69ef599e00a61e830c1ed8c965f08022d75781815fbd1a82a95b98acdc297294.svg",
+      "embedded_raster_images": 0
+    },
+    {
+      "label": "Wheat",
+      "query": "wheat",
+      "search_record": "refined/wheat.json",
+      "id": "01a17602-f730-7335-8252-aeb179353685",
+      "hash": "f5addb7ba5e42d41ba1495376f68775c0e1e1c69c0ee4a550868c68e9673003a",
+      "original_name": "golden-wheat-plant-with-grains.svg",
+      "mime_type": "image/svg+xml",
+      "asset_type": "image",
+      "s3_key": "assets/f5addb7ba5e42d41ba1495376f68775c0e1e1c69c0ee4a550868c68e9673003a.svg",
+      "width": null,
+      "height": null,
+      "duration_ms": null,
+      "tags": [
+        "wheat",
+        "wheat plant",
+        "golden wheat",
+        "grain"
+      ],
+      "asset_anchors": [],
+      "collections": [
+        {
+          "id": 386,
+          "name": "Grains and Nuts",
+          "parent_id": 26
+        }
+      ],
+      "folder_tags": [],
+      "environment": false,
+      "search_match": {
+        "score": 100,
+        "name_terms": [],
+        "tag_terms": [
+          "wheat"
+        ],
+        "collections": [],
+        "explanation": [
+          {
+            "term": "wheat",
+            "kind": "tag",
+            "points": 100,
+            "detail": "tagged \"wheat\""
+          }
+        ]
+      },
+      "source_url": "https://clever-hall.fra1.digitaloceanspaces.com/assets/f5addb7ba5e42d41ba1495376f68775c0e1e1c69c0ee4a550868c68e9673003a.svg",
+      "source_sha256": "f5addb7ba5e42d41ba1495376f68775c0e1e1c69c0ee4a550868c68e9673003a",
+      "original_file": "assets/source/studyjunior/choices/f5addb7ba5e42d41ba1495376f68775c0e1e1c69c0ee4a550868c68e9673003a.svg",
+      "retrieved_at": "2026-11-14T11:15:24.527Z",
+      "viewBox": "0 0 400 400",
+      "display_width": 640,
+      "display_height": 640,
+      "public_file": "/art/studyjunior/choices/f5addb7ba5e42d41ba1495376f68775c0e1e1c69c0ee4a550868c68e9673003a.svg",
+      "embedded_raster_images": 0
+    },
+    {
+      "label": "Millet",
+      "query": "millet",
+      "search_record": "search/millet.json",
+      "id": "01a17603-2fea-72fc-9f7f-ac16f50b2bdf",
+      "hash": "57b7b54641d570212d41c02b82f2d8c0c10c5096791118cb24fc6946c47f0fa1",
+      "original_name": "yellow-millet-plant.svg",
+      "mime_type": "image/svg+xml",
+      "asset_type": "image",
+      "s3_key": "assets/57b7b54641d570212d41c02b82f2d8c0c10c5096791118cb24fc6946c47f0fa1.svg",
+      "width": null,
+      "height": null,
+      "duration_ms": null,
+      "tags": [
+        "millet",
+        "millet plant",
+        "yellow millet",
+        "grain plant",
+        "cereal plant",
+        "orange millet heads",
+        "grain",
+        "plant"
+      ],
+      "asset_anchors": [],
+      "collections": [
+        {
+          "id": 386,
+          "name": "Grains and Nuts",
+          "parent_id": 26
+        }
+      ],
+      "folder_tags": [],
+      "environment": false,
+      "search_match": {
+        "score": 100,
+        "name_terms": [],
+        "tag_terms": [
+          "millet"
+        ],
+        "collections": [],
+        "explanation": [
+          {
+            "term": "millet",
+            "kind": "tag",
+            "points": 100,
+            "detail": "tagged \"millet\""
+          }
+        ]
+      },
+      "source_url": "https://clever-hall.fra1.digitaloceanspaces.com/assets/57b7b54641d570212d41c02b82f2d8c0c10c5096791118cb24fc6946c47f0fa1.svg",
+      "source_sha256": "57b7b54641d570212d41c02b82f2d8c0c10c5096791118cb24fc6946c47f0fa1",
+      "original_file": "assets/source/studyjunior/choices/57b7b54641d570212d41c02b82f2d8c0c10c5096791118cb24fc6946c47f0fa1.svg",
+      "retrieved_at": "2026-11-14T11:15:26.208Z",
+      "viewBox": "0 0 400 400",
+      "display_width": 640,
+      "display_height": 640,
+      "public_file": "/art/studyjunior/choices/57b7b54641d570212d41c02b82f2d8c0c10c5096791118cb24fc6946c47f0fa1.svg",
+      "embedded_raster_images": 0
+    },
+    {
+      "label": "Oats",
+      "query": "oats",
+      "search_record": "search/oats.json",
+      "id": "01a17602-f274-7037-9897-f392162ce3d9",
+      "hash": "9d35e48b42ed8fc8005315dd903ee2ec19eec9d769a180e925b34f0d463791eb",
+      "original_name": "golden-oat-plant.svg",
+      "mime_type": "image/svg+xml",
+      "asset_type": "image",
+      "s3_key": "assets/9d35e48b42ed8fc8005315dd903ee2ec19eec9d769a180e925b34f0d463791eb.svg",
+      "width": null,
+      "height": null,
+      "duration_ms": null,
+      "tags": [
+        "oat plant",
+        "golden oats",
+        "oats",
+        "grain plant"
+      ],
+      "asset_anchors": [],
+      "collections": [
+        {
+          "id": 386,
+          "name": "Grains and Nuts",
+          "parent_id": 26
+        }
+      ],
+      "folder_tags": [],
+      "environment": false,
+      "search_match": {
+        "score": 100,
+        "name_terms": [],
+        "tag_terms": [
+          "oat"
+        ],
+        "collections": [],
+        "explanation": [
+          {
+            "term": "oat",
+            "kind": "tag",
+            "points": 100,
+            "detail": "tagged \"oats\""
+          }
+        ]
+      },
+      "source_url": "https://clever-hall.fra1.digitaloceanspaces.com/assets/9d35e48b42ed8fc8005315dd903ee2ec19eec9d769a180e925b34f0d463791eb.svg",
+      "source_sha256": "9d35e48b42ed8fc8005315dd903ee2ec19eec9d769a180e925b34f0d463791eb",
+      "original_file": "assets/source/studyjunior/choices/9d35e48b42ed8fc8005315dd903ee2ec19eec9d769a180e925b34f0d463791eb.svg",
+      "retrieved_at": "2026-11-14T11:15:26.405Z",
+      "viewBox": "0 0 400 400",
+      "display_width": 640,
+      "display_height": 640,
+      "public_file": "/art/studyjunior/choices/9d35e48b42ed8fc8005315dd903ee2ec19eec9d769a180e925b34f0d463791eb.svg",
+      "embedded_raster_images": 0
+    },
+    {
+      "label": "A towel",
+      "query": "towel",
+      "search_record": "search/towel.json",
+      "id": "01a179f3-0940-70a9-8d2d-c60521cc675e",
+      "hash": "ecc2cebdb38e47cf667619185e52c2adaf3ede03322196ad278a3d0ca5c944bd",
+      "original_name": "pink-towel-on-rail.svg",
+      "mime_type": "image/svg+xml",
+      "asset_type": "image",
+      "s3_key": "assets/ecc2cebdb38e47cf667619185e52c2adaf3ede03322196ad278a3d0ca5c944bd.svg",
+      "width": null,
+      "height": null,
+      "duration_ms": null,
+      "tags": [
+        "towel",
+        "pink towel",
+        "towel on rail",
+        "bathroom"
+      ],
+      "asset_anchors": [],
+      "collections": [
+        {
+          "id": 395,
+          "name": "Environment",
+          "parent_id": 83
+        }
+      ],
+      "folder_tags": [],
+      "environment": false,
+      "search_match": {
+        "score": 100,
+        "name_terms": [],
+        "tag_terms": [
+          "towel"
+        ],
+        "collections": [],
+        "explanation": [
+          {
+            "term": "towel",
+            "kind": "tag",
+            "points": 100,
+            "detail": "tagged \"towel\""
+          }
+        ]
+      },
+      "source_url": "https://clever-hall.fra1.digitaloceanspaces.com/assets/ecc2cebdb38e47cf667619185e52c2adaf3ede03322196ad278a3d0ca5c944bd.svg",
+      "source_sha256": "ecc2cebdb38e47cf667619185e52c2adaf3ede03322196ad278a3d0ca5c944bd",
+      "original_file": "assets/source/studyjunior/choices/ecc2cebdb38e47cf667619185e52c2adaf3ede03322196ad278a3d0ca5c944bd.svg",
+      "retrieved_at": "2026-11-14T11:15:26.587Z",
+      "viewBox": "0 0 928 830.63576",
+      "display_width": 640,
+      "display_height": 573,
+      "public_file": "/art/studyjunior/choices/ecc2cebdb38e47cf667619185e52c2adaf3ede03322196ad278a3d0ca5c944bd.svg",
+      "embedded_raster_images": 0
+    },
+    {
+      "label": "A mirror",
+      "query": "mirror",
+      "search_record": "search/mirror.json",
+      "id": "01a1714f-bef3-73ce-9402-92687cf6ca5e",
+      "hash": "37fabb0c1607a4e1b8ff3d95f394af66e735103e9ab2827233ecf932ed3dc2c6",
+      "original_name": "ornate-gold-hand-mirror.svg",
+      "mime_type": "image/svg+xml",
+      "asset_type": "image",
+      "s3_key": "assets/37fabb0c1607a4e1b8ff3d95f394af66e735103e9ab2827233ecf932ed3dc2c6.svg",
+      "width": null,
+      "height": null,
+      "duration_ms": null,
+      "tags": [
+        "hand mirror",
+        "gold hand mirror",
+        "ornate mirror",
+        "mirror"
+      ],
+      "asset_anchors": [],
+      "collections": [
+        {
+          "id": 83,
+          "name": "Household",
+          "parent_id": null
+        }
+      ],
+      "folder_tags": [],
+      "environment": false,
+      "search_match": {
+        "score": 100,
+        "name_terms": [
+          "mirror"
+        ],
+        "tag_terms": [
+          "mirror"
+        ],
+        "collections": [],
+        "explanation": [
+          {
+            "term": "mirror",
+            "kind": "tag",
+            "points": 100,
+            "detail": "tagged \"mirror\""
+          }
+        ]
+      },
+      "source_url": "https://clever-hall.fra1.digitaloceanspaces.com/assets/37fabb0c1607a4e1b8ff3d95f394af66e735103e9ab2827233ecf932ed3dc2c6.svg",
+      "source_sha256": "37fabb0c1607a4e1b8ff3d95f394af66e735103e9ab2827233ecf932ed3dc2c6",
+      "original_file": "assets/source/studyjunior/choices/37fabb0c1607a4e1b8ff3d95f394af66e735103e9ab2827233ecf932ed3dc2c6.svg",
+      "retrieved_at": "2026-11-14T11:15:26.735Z",
+      "viewBox": "0 0 500 500",
+      "display_width": 640,
+      "display_height": 640,
+      "public_file": "/art/studyjunior/choices/37fabb0c1607a4e1b8ff3d95f394af66e735103e9ab2827233ecf932ed3dc2c6.svg",
+      "embedded_raster_images": 0
+    },
+    {
+      "label": "A stone",
+      "query": "stone",
+      "search_record": "search/stone.json",
+      "id": "01a18881-17b3-72c8-bb4e-55c055f834f5",
+      "hash": "982add57a29cb85859a5d79d16ecfc1e4ecec63ee4ca2d26e8ea2a02df14514b",
+      "original_name": "boulder-beige-grey-round.svg",
+      "mime_type": "image/svg+xml",
+      "asset_type": "image",
+      "s3_key": "assets/982add57a29cb85859a5d79d16ecfc1e4ecec63ee4ca2d26e8ea2a02df14514b.svg",
+      "width": null,
+      "height": null,
+      "duration_ms": null,
+      "tags": [
+        "boulder",
+        "big rock",
+        "grey rock",
+        "stone"
+      ],
+      "asset_anchors": [],
+      "collections": [
+        {
+          "id": 32,
+          "name": "Rocks, Texture, Mountains",
+          "parent_id": null
+        }
+      ],
+      "folder_tags": [],
+      "environment": false,
+      "search_match": {
+        "score": 100,
+        "name_terms": [],
+        "tag_terms": [
+          "stone"
+        ],
+        "collections": [],
+        "explanation": [
+          {
+            "term": "stone",
+            "kind": "tag",
+            "points": 100,
+            "detail": "tagged \"stone\""
+          }
+        ]
+      },
+      "source_url": "https://clever-hall.fra1.digitaloceanspaces.com/assets/982add57a29cb85859a5d79d16ecfc1e4ecec63ee4ca2d26e8ea2a02df14514b.svg",
+      "source_sha256": "982add57a29cb85859a5d79d16ecfc1e4ecec63ee4ca2d26e8ea2a02df14514b",
+      "original_file": "assets/source/studyjunior/choices/982add57a29cb85859a5d79d16ecfc1e4ecec63ee4ca2d26e8ea2a02df14514b.svg",
+      "retrieved_at": "2026-11-14T11:15:26.877Z",
+      "viewBox": "65 58.5 41.25 30.25",
+      "display_width": 640,
+      "display_height": 469,
+      "public_file": "/art/studyjunior/choices/982add57a29cb85859a5d79d16ecfc1e4ecec63ee4ca2d26e8ea2a02df14514b.svg",
+      "embedded_raster_images": 0
+    },
+    {
+      "label": "A clock",
+      "query": "clock",
+      "search_record": "search/clock.json",
+      "id": "01a17a22-9990-71ca-abe1-ea4a83cd55d0",
+      "hash": "7f62bde1170e33f00566a3af3ab647312f645f167a6e9bd51b23ca3b1db84243",
+      "original_name": "blue-wall-clock.svg",
+      "mime_type": "image/svg+xml",
+      "asset_type": "image",
+      "s3_key": "assets/7f62bde1170e33f00566a3af3ab647312f645f167a6e9bd51b23ca3b1db84243.svg",
+      "width": null,
+      "height": null,
+      "duration_ms": null,
+      "tags": [
+        "wall clock",
+        "blue clock",
+        "round clock",
+        "clock"
+      ],
+      "asset_anchors": [],
+      "collections": [
+        {
+          "id": 403,
+          "name": "Environment",
+          "parent_id": 402
+        }
+      ],
+      "folder_tags": [],
+      "environment": false,
+      "search_match": {
+        "score": 100,
+        "name_terms": [
+          "clock"
+        ],
+        "tag_terms": [
+          "clock"
+        ],
+        "collections": [],
+        "explanation": [
+          {
+            "term": "clock",
+            "kind": "tag",
+            "points": 100,
+            "detail": "tagged \"clock\""
+          }
+        ]
+      },
+      "source_url": "https://clever-hall.fra1.digitaloceanspaces.com/assets/7f62bde1170e33f00566a3af3ab647312f645f167a6e9bd51b23ca3b1db84243.svg",
+      "source_sha256": "7f62bde1170e33f00566a3af3ab647312f645f167a6e9bd51b23ca3b1db84243",
+      "original_file": "assets/source/studyjunior/choices/7f62bde1170e33f00566a3af3ab647312f645f167a6e9bd51b23ca3b1db84243.svg",
+      "retrieved_at": "2026-11-14T11:15:27.015Z",
+      "viewBox": "0 0 908 928",
+      "display_width": 640,
+      "display_height": 654,
+      "public_file": "/art/studyjunior/choices/7f62bde1170e33f00566a3af3ab647312f645f167a6e9bd51b23ca3b1db84243.svg",
+      "embedded_raster_images": 0
+    },
+    {
+      "label": "A tree",
+      "query": "tree",
+      "search_record": "search/tree.json",
+      "id": "01a160d6-23f9-72ce-944b-d6c118856fce",
+      "hash": "fbf5e62b4144a9381161640e91f54cc742fd198001926be654a87f082d6af763",
+      "original_name": "apple-tree.svg",
+      "mime_type": "image/svg+xml",
+      "asset_type": "image",
+      "s3_key": "assets/fbf5e62b4144a9381161640e91f54cc742fd198001926be654a87f082d6af763.svg",
+      "width": null,
+      "height": null,
+      "duration_ms": null,
+      "tags": [
+        "apple tree",
+        "fruit tree",
+        "tree",
+        "green tree"
+      ],
+      "asset_anchors": [
+        {
+          "bbox": {
+            "x": 107.67,
+            "y": 204,
+            "width": 2.44,
+            "height": 3,
+            "center_x": 108.89,
+            "center_y": 205.5
+          },
+          "kind": "anchor",
+          "name": "anchor-fruit-17",
+          "role": "reference",
+          "label": "Anchor Fruit 17",
+          "element": {
+            "id": "anchor-fruit-17",
+            "tag": "path",
+            "source_value": "anchor-fruit-17",
+            "source_attribute": "id"
+          }
+        },
+        {
+          "bbox": {
+            "x": 40,
+            "y": 139,
+            "width": 4,
+            "height": 4,
+            "center_x": 42,
+            "center_y": 141
+          },
+          "kind": "anchor",
+          "name": "anchor-fruit-8",
+          "role": "reference",
+          "label": "Anchor Fruit 8",
+          "element": {
+            "id": "anchor-fruit-8",
+            "tag": "path",
+            "source_value": "anchor-fruit-8",
+            "source_attribute": "id"
+          }
+        },
+        {
+          "bbox": {
+            "x": 66,
+            "y": 100,
+            "width": 4,
+            "height": 4,
+            "center_x": 68,
+            "center_y": 102
+          },
+          "kind": "anchor",
+          "name": "anchor-fruit-7",
+          "role": "reference",
+          "label": "Anchor Fruit 7",
+          "element": {
+            "id": "anchor-fruit-7",
+            "tag": "path",
+            "source_value": "anchor-fruit-7",
+            "source_attribute": "id"
+          }
+        },
+        {
+          "bbox": {
+            "x": 95,
+            "y": 62,
+            "width": 4,
+            "height": 4,
+            "center_x": 97,
+            "center_y": 64
+          },
+          "kind": "anchor",
+          "name": "anchor-fruit-5",
+          "role": "reference",
+          "label": "Anchor Fruit 5",
+          "element": {
+            "id": "anchor-fruit-5",
+            "tag": "path",
+            "source_value": "anchor-fruit-5",
+            "source_attribute": "id"
+          }
+        },
+        {
+          "bbox": {
+            "x": 93,
+            "y": 88,
+            "width": 4,
+            "height": 4,
+            "center_x": 95,
+            "center_y": 90
+          },
+          "kind": "anchor",
+          "name": "anchor-fruit-6",
+          "role": "reference",
+          "label": "Anchor Fruit 6",
+          "element": {
+            "id": "anchor-fruit-6",
+            "tag": "path",
+            "source_value": "anchor-fruit-6",
+            "source_attribute": "id"
+          }
+        },
+        {
+          "bbox": {
+            "x": 168,
+            "y": 178,
+            "width": 4,
+            "height": 4,
+            "center_x": 170,
+            "center_y": 180
+          },
+          "kind": "anchor",
+          "name": "anchor-fruit-9",
+          "role": "reference",
+          "label": "Anchor Fruit 9",
+          "element": {
+            "id": "anchor-fruit-9",
+            "tag": "path",
+            "source_value": "anchor-fruit-9",
+            "source_attribute": "id"
+          }
+        },
+        {
+          "bbox": {
+            "x": 234,
+            "y": 173,
+            "width": 1,
+            "height": 2,
+            "center_x": 234.5,
+            "center_y": 174
+          },
+          "kind": "anchor",
+          "name": "anchor-fruit-16",
+          "role": "reference",
+          "label": "Anchor Fruit 16",
+          "element": {
+            "id": "anchor-fruit-16",
+            "tag": "path",
+            "source_value": "anchor-fruit-16",
+            "source_attribute": "id"
+          }
+        },
+        {
+          "bbox": {
+            "x": 211,
+            "y": 127,
+            "width": 1,
+            "height": 2,
+            "center_x": 211.5,
+            "center_y": 128
+          },
+          "kind": "anchor",
+          "name": "anchor-fruit-11",
+          "role": "reference",
+          "label": "Anchor Fruit 11",
+          "element": {
+            "id": "anchor-fruit-11",
+            "tag": "path",
+            "source_value": "anchor-fruit-11",
+            "source_attribute": "id"
+          }
+        },
+        {
+          "bbox": {
+            "x": 159,
+            "y": 22,
+            "width": 4,
+            "height": 4,
+            "center_x": 161,
+            "center_y": 24
+          },
+          "kind": "anchor",
+          "name": "anchor-fruit-15",
+          "role": "reference",
+          "label": "Anchor Fruit 15",
+          "element": {
+            "id": "anchor-fruit-15",
+            "tag": "path",
+            "source_value": "anchor-fruit-15",
+            "source_attribute": "id"
+          }
+        },
+        {
+          "bbox": {
+            "x": 127.67,
+            "y": 155,
+            "width": 17.44,
+            "height": 6,
+            "center_x": 136.39,
+            "center_y": 158
+          },
+          "kind": "anchor",
+          "name": "anchor-fruit-18",
+          "role": "reference",
+          "label": "Anchor Fruit 18",
+          "element": {
+            "id": "anchor-fruit-18",
+            "tag": "path",
+            "source_value": "anchor-fruit-18",
+            "source_attribute": "id"
+          }
+        },
+        {
+          "bbox": {
+            "x": 105.76,
+            "y": 74,
+            "width": 19.69,
+            "height": 7.44,
+            "center_x": 115.61,
+            "center_y": 77.72
+          },
+          "kind": "anchor",
+          "name": "anchor-fruit-1",
+          "role": "reference",
+          "label": "Anchor Fruit 1",
+          "element": {
+            "id": "anchor-fruit-1",
+            "tag": "path",
+            "source_value": "anchor-fruit-1",
+            "source_attribute": "id"
+          }
+        },
+        {
+          "bbox": {
+            "x": 169,
+            "y": 138,
+            "width": 4,
+            "height": 4,
+            "center_x": 171,
+            "center_y": 140
+          },
+          "kind": "anchor",
+          "name": "anchor-fruit-14",
+          "role": "reference",
+          "label": "Anchor Fruit 14",
+          "element": {
+            "id": "anchor-fruit-14",
+            "tag": "path",
+            "source_value": "anchor-fruit-14",
+            "source_attribute": "id"
+          }
+        },
+        {
+          "bbox": {
+            "x": 159,
+            "y": 67,
+            "width": 4,
+            "height": 4,
+            "center_x": 161,
+            "center_y": 69
+          },
+          "kind": "anchor",
+          "name": "anchor-fruit-4",
+          "role": "reference",
+          "label": "Anchor Fruit 4",
+          "element": {
+            "id": "anchor-fruit-4",
+            "tag": "path",
+            "source_value": "anchor-fruit-4",
+            "source_attribute": "id"
+          }
+        },
+        {
+          "bbox": {
+            "x": 273,
+            "y": 114,
+            "width": 1,
+            "height": 4,
+            "center_x": 273.5,
+            "center_y": 116
+          },
+          "kind": "anchor",
+          "name": "anchor-fruit-10",
+          "role": "reference",
+          "label": "Anchor Fruit 10",
+          "element": {
+            "id": "anchor-fruit-10",
+            "tag": "path",
+            "source_value": "anchor-fruit-10",
+            "source_attribute": "id"
+          }
+        },
+        {
+          "bbox": {
+            "x": 216,
+            "y": 151,
+            "width": 4,
+            "height": 4,
+            "center_x": 218,
+            "center_y": 153
+          },
+          "kind": "anchor",
+          "name": "anchor-fruit-13",
+          "role": "reference",
+          "label": "Anchor Fruit 13",
+          "element": {
+            "id": "anchor-fruit-13",
+            "tag": "path",
+            "source_value": "anchor-fruit-13",
+            "source_attribute": "id"
+          }
+        },
+        {
+          "bbox": {
+            "x": 51,
+            "y": 67,
+            "width": 3,
+            "height": 3.44,
+            "center_x": 52.5,
+            "center_y": 68.72
+          },
+          "kind": "anchor",
+          "name": "anchor-fruit-20",
+          "role": "reference",
+          "label": "Anchor Fruit 20",
+          "element": {
+            "id": "anchor-fruit-20",
+            "tag": "path",
+            "source_value": "anchor-fruit-20",
+            "source_attribute": "id"
+          }
+        },
+        {
+          "bbox": {
+            "x": 185,
+            "y": 116,
+            "width": 4,
+            "height": 4,
+            "center_x": 187,
+            "center_y": 118
+          },
+          "kind": "anchor",
+          "name": "anchor-fruit-2",
+          "role": "reference",
+          "label": "Anchor Fruit 2",
+          "element": {
+            "id": "anchor-fruit-2",
+            "tag": "path",
+            "source_value": "anchor-fruit-2",
+            "source_attribute": "id"
+          }
+        },
+        {
+          "bbox": {
+            "x": 193,
+            "y": 87,
+            "width": 4,
+            "height": 4,
+            "center_x": 195,
+            "center_y": 89
+          },
+          "kind": "anchor",
+          "name": "anchor-fruit-3",
+          "role": "reference",
+          "label": "Anchor Fruit 3",
+          "element": {
+            "id": "anchor-fruit-3",
+            "tag": "path",
+            "source_value": "anchor-fruit-3",
+            "source_attribute": "id"
+          }
+        },
+        {
+          "bbox": {
+            "x": 33,
+            "y": 101,
+            "width": 9,
+            "height": 7,
+            "center_x": 37.5,
+            "center_y": 104.5
+          },
+          "kind": "anchor",
+          "name": "anchor-fruit-19",
+          "role": "reference",
+          "label": "Anchor Fruit 19",
+          "element": {
+            "id": "anchor-fruit-19",
+            "tag": "path",
+            "source_value": "anchor-fruit-19",
+            "source_attribute": "id"
+          }
+        },
+        {
+          "bbox": {
+            "x": 226,
+            "y": 59,
+            "width": 4,
+            "height": 4,
+            "center_x": 228,
+            "center_y": 61
+          },
+          "kind": "anchor",
+          "name": "anchor-fruit-12",
+          "role": "reference",
+          "label": "Anchor Fruit 12",
+          "element": {
+            "id": "anchor-fruit-12",
+            "tag": "path",
+            "source_value": "anchor-fruit-12",
+            "source_attribute": "id"
+          }
+        }
+      ],
+      "collections": [
+        {
+          "id": 46,
+          "name": "Environment",
+          "parent_id": 11
+        }
+      ],
+      "folder_tags": [],
+      "environment": false,
+      "search_match": {
+        "score": 100,
+        "name_terms": [
+          "tree"
+        ],
+        "tag_terms": [
+          "tree"
+        ],
+        "collections": [],
+        "explanation": [
+          {
+            "term": "tree",
+            "kind": "tag",
+            "points": 100,
+            "detail": "tagged \"tree\""
+          }
+        ]
+      },
+      "source_url": "https://clever-hall.fra1.digitaloceanspaces.com/assets/fbf5e62b4144a9381161640e91f54cc742fd198001926be654a87f082d6af763.svg",
+      "source_sha256": "fbf5e62b4144a9381161640e91f54cc742fd198001926be654a87f082d6af763",
+      "original_file": "assets/source/studyjunior/choices/fbf5e62b4144a9381161640e91f54cc742fd198001926be654a87f082d6af763.svg",
+      "retrieved_at": "2026-11-14T11:15:27.213Z",
+      "viewBox": "0 0 313 337",
+      "display_width": 640,
+      "display_height": 689,
+      "public_file": "/art/studyjunior/choices/fbf5e62b4144a9381161640e91f54cc742fd198001926be654a87f082d6af763.svg",
+      "embedded_raster_images": 0
+    },
+    {
+      "label": "A book",
+      "query": "book",
+      "search_record": "search/book.json",
+      "id": "01a1760a-95dd-712b-aa9b-7adce5403dcc",
+      "hash": "7664b79096e24ca1cbb7435016300e2e1296505b36e5f2f44feeec8ee1e996b8",
+      "original_name": "closed-red-book.svg",
+      "mime_type": "image/svg+xml",
+      "asset_type": "image",
+      "s3_key": "assets/7664b79096e24ca1cbb7435016300e2e1296505b36e5f2f44feeec8ee1e996b8.svg",
+      "width": null,
+      "height": null,
+      "duration_ms": null,
+      "tags": [
+        "book",
+        "red book",
+        "closed book",
+        "hardback book"
+      ],
+      "asset_anchors": [],
+      "collections": [
+        {
+          "id": 389,
+          "name": "Arts",
+          "parent_id": null
+        }
+      ],
+      "folder_tags": [],
+      "environment": false,
+      "search_match": {
+        "score": 100,
+        "name_terms": [
+          "book"
+        ],
+        "tag_terms": [
+          "book"
+        ],
+        "collections": [],
+        "explanation": [
+          {
+            "term": "book",
+            "kind": "tag",
+            "points": 100,
+            "detail": "tagged \"book\""
+          }
+        ]
+      },
+      "source_url": "https://clever-hall.fra1.digitaloceanspaces.com/assets/7664b79096e24ca1cbb7435016300e2e1296505b36e5f2f44feeec8ee1e996b8.svg",
+      "source_sha256": "7664b79096e24ca1cbb7435016300e2e1296505b36e5f2f44feeec8ee1e996b8",
+      "original_file": "assets/source/studyjunior/choices/7664b79096e24ca1cbb7435016300e2e1296505b36e5f2f44feeec8ee1e996b8.svg",
+      "retrieved_at": "2026-11-14T11:15:27.647Z",
+      "viewBox": "0 0 240 240",
+      "display_width": 640,
+      "display_height": 640,
+      "public_file": "/art/studyjunior/choices/7664b79096e24ca1cbb7435016300e2e1296505b36e5f2f44feeec8ee1e996b8.svg",
+      "embedded_raster_images": 12
+    },
+    {
+      "label": "A shoe",
+      "query": "shoe",
+      "search_record": "search/shoe.json",
+      "id": "01a16a39-3e55-7085-a364-31f28a002fc1",
+      "hash": "c452d8be851a3b01855f8db34f80733d142c77cfc35f5b63e1293f1946bd9b1b",
+      "original_name": "tan-lace-up-sneakers.svg",
+      "mime_type": "image/svg+xml",
+      "asset_type": "image",
+      "s3_key": "assets/c452d8be851a3b01855f8db34f80733d142c77cfc35f5b63e1293f1946bd9b1b.svg",
+      "width": null,
+      "height": null,
+      "duration_ms": null,
+      "tags": [
+        "lace up sneakers",
+        "tan sneakers",
+        "brown sneakers",
+        "trainers",
+        "shoes",
+        "pair of shoes"
+      ],
+      "asset_anchors": [],
+      "collections": [
+        {
+          "id": 40,
+          "name": "Clothes",
+          "parent_id": null
+        }
+      ],
+      "folder_tags": [],
+      "environment": false,
+      "search_match": {
+        "score": 100,
+        "name_terms": [],
+        "tag_terms": [
+          "shoe"
+        ],
+        "collections": [],
+        "explanation": [
+          {
+            "term": "shoe",
+            "kind": "tag",
+            "points": 100,
+            "detail": "tagged \"shoes\""
+          }
+        ]
+      },
+      "source_url": "https://clever-hall.fra1.digitaloceanspaces.com/assets/c452d8be851a3b01855f8db34f80733d142c77cfc35f5b63e1293f1946bd9b1b.svg",
+      "source_sha256": "c452d8be851a3b01855f8db34f80733d142c77cfc35f5b63e1293f1946bd9b1b",
+      "original_file": "assets/source/studyjunior/choices/c452d8be851a3b01855f8db34f80733d142c77cfc35f5b63e1293f1946bd9b1b.svg",
+      "retrieved_at": "2026-11-14T11:15:27.816Z",
+      "viewBox": "5286.064063 5462.197396 953.596875 953.596875",
+      "display_width": 640,
+      "display_height": 640,
+      "public_file": "/art/studyjunior/choices/c452d8be851a3b01855f8db34f80733d142c77cfc35f5b63e1293f1946bd9b1b.svg",
+      "embedded_raster_images": 0
+    },
+    {
+      "label": "A bottle",
+      "query": "bottle",
+      "search_record": "search/bottle.json",
+      "id": "01a1763d-fb0c-724b-9c97-6da99077c446",
+      "hash": "e34acdad206133118af96fd67e1630fc82e7e2264f2482ebda65588a9d64d2f1",
+      "original_name": "green-bottle.svg",
+      "mime_type": "image/svg+xml",
+      "asset_type": "image",
+      "s3_key": "assets/e34acdad206133118af96fd67e1630fc82e7e2264f2482ebda65588a9d64d2f1.svg",
+      "width": null,
+      "height": null,
+      "duration_ms": null,
+      "tags": [
+        "green bottle",
+        "dark green bottle",
+        "glass bottle",
+        "bottle"
+      ],
+      "asset_anchors": [],
+      "collections": [
+        {
+          "id": 83,
+          "name": "Household",
+          "parent_id": null
+        }
+      ],
+      "folder_tags": [],
+      "environment": false,
+      "search_match": {
+        "score": 100,
+        "name_terms": [
+          "bottle"
+        ],
+        "tag_terms": [
+          "bottle"
+        ],
+        "collections": [],
+        "explanation": [
+          {
+            "term": "bottle",
+            "kind": "tag",
+            "points": 100,
+            "detail": "tagged \"bottle\""
+          }
+        ]
+      },
+      "source_url": "https://clever-hall.fra1.digitaloceanspaces.com/assets/e34acdad206133118af96fd67e1630fc82e7e2264f2482ebda65588a9d64d2f1.svg",
+      "source_sha256": "e34acdad206133118af96fd67e1630fc82e7e2264f2482ebda65588a9d64d2f1",
+      "original_file": "assets/source/studyjunior/choices/e34acdad206133118af96fd67e1630fc82e7e2264f2482ebda65588a9d64d2f1.svg",
+      "retrieved_at": "2026-11-14T11:15:28.575Z",
+      "viewBox": "45.8 3.775 47.4 77.7",
+      "display_width": 640,
+      "display_height": 1049,
+      "public_file": "/art/studyjunior/choices/e34acdad206133118af96fd67e1630fc82e7e2264f2482ebda65588a9d64d2f1.svg",
+      "embedded_raster_images": 0
+    },
+    {
+      "label": "A table",
+      "query": "table",
+      "search_record": "search/table.json",
+      "id": "01a1714f-f895-7037-b6b5-6b4ff1e0c744",
+      "hash": "6fe5f2dd1b2a9a4ef962d06811deaf98527fba4e27a39a0377f9588fe0da343e",
+      "original_name": "plain-light-wooden-table.svg",
+      "mime_type": "image/svg+xml",
+      "asset_type": "image",
+      "s3_key": "assets/6fe5f2dd1b2a9a4ef962d06811deaf98527fba4e27a39a0377f9588fe0da343e.svg",
+      "width": null,
+      "height": null,
+      "duration_ms": null,
+      "tags": [
+        "table",
+        "wooden table",
+        "light wood table",
+        "furniture"
+      ],
+      "asset_anchors": [],
+      "collections": [
+        {
+          "id": 83,
+          "name": "Household",
+          "parent_id": null
+        }
+      ],
+      "folder_tags": [],
+      "environment": false,
+      "search_match": {
+        "score": 100,
+        "name_terms": [
+          "table"
+        ],
+        "tag_terms": [
+          "table"
+        ],
+        "collections": [],
+        "explanation": [
+          {
+            "term": "table",
+            "kind": "tag",
+            "points": 100,
+            "detail": "tagged \"table\""
+          }
+        ]
+      },
+      "source_url": "https://clever-hall.fra1.digitaloceanspaces.com/assets/6fe5f2dd1b2a9a4ef962d06811deaf98527fba4e27a39a0377f9588fe0da343e.svg",
+      "source_sha256": "6fe5f2dd1b2a9a4ef962d06811deaf98527fba4e27a39a0377f9588fe0da343e",
+      "original_file": "assets/source/studyjunior/choices/6fe5f2dd1b2a9a4ef962d06811deaf98527fba4e27a39a0377f9588fe0da343e.svg",
+      "retrieved_at": "2026-11-14T11:15:28.738Z",
+      "viewBox": "0 0 4000 4000",
+      "display_width": 640,
+      "display_height": 640,
+      "public_file": "/art/studyjunior/choices/6fe5f2dd1b2a9a4ef962d06811deaf98527fba4e27a39a0377f9588fe0da343e.svg",
+      "embedded_raster_images": 0
+    },
+    {
+      "label": "A parrot",
+      "query": "parrot",
+      "search_record": "search/parrot.json",
+      "id": "01a160bb-08b2-703b-b0b1-3f247414553e",
+      "hash": "f78b650d64caa3167b608f740a5f897e2c436156cef942d8d2bef4e8be9536a9",
+      "original_name": "blue_and_yellow_macaw.svg",
+      "mime_type": "image/svg+xml",
+      "asset_type": "image",
+      "s3_key": "assets/f78b650d64caa3167b608f740a5f897e2c436156cef942d8d2bef4e8be9536a9.svg",
+      "width": null,
+      "height": null,
+      "duration_ms": null,
+      "tags": [
+        "macaw",
+        "blue and yellow macaw",
+        "parrot",
+        "bird"
+      ],
+      "asset_anchors": [],
+      "collections": [
+        {
+          "id": 3,
+          "name": "Wild",
+          "parent_id": 1
+        }
+      ],
+      "folder_tags": [],
+      "environment": false,
+      "search_match": {
+        "score": 100,
+        "name_terms": [],
+        "tag_terms": [
+          "parrot"
+        ],
+        "collections": [],
+        "explanation": [
+          {
+            "term": "parrot",
+            "kind": "tag",
+            "points": 100,
+            "detail": "tagged \"parrot\""
+          }
+        ]
+      },
+      "source_url": "https://clever-hall.fra1.digitaloceanspaces.com/assets/f78b650d64caa3167b608f740a5f897e2c436156cef942d8d2bef4e8be9536a9.svg",
+      "source_sha256": "f78b650d64caa3167b608f740a5f897e2c436156cef942d8d2bef4e8be9536a9",
+      "original_file": "assets/source/studyjunior/choices/f78b650d64caa3167b608f740a5f897e2c436156cef942d8d2bef4e8be9536a9.svg",
+      "retrieved_at": "2026-11-14T11:15:28.880Z",
+      "viewBox": "56.0821 54.688 28.5858 30.562",
+      "display_width": 640,
+      "display_height": 684,
+      "public_file": "/art/studyjunior/choices/f78b650d64caa3167b608f740a5f897e2c436156cef942d8d2bef4e8be9536a9.svg",
+      "embedded_raster_images": 0
+    },
+    {
+      "label": "A microphone",
+      "query": "microphone",
+      "search_record": "search/microphone.json",
+      "id": "01a1762c-ff84-733e-8b51-350a8f265c4e",
+      "hash": "40903e1ee1a1c1d52cfea5eec843982d1c747f458d3ffd34c7cdf92ef0b1ed27",
+      "original_name": "handheld-microphone.svg",
+      "mime_type": "image/svg+xml",
+      "asset_type": "image",
+      "s3_key": "assets/40903e1ee1a1c1d52cfea5eec843982d1c747f458d3ffd34c7cdf92ef0b1ed27.svg",
+      "width": null,
+      "height": null,
+      "duration_ms": null,
+      "tags": [
+        "microphone",
+        "handheld microphone",
+        "hand mic",
+        "singing"
+      ],
+      "asset_anchors": [],
+      "collections": [
+        {
+          "id": 392,
+          "name": "Appliance & Devices",
+          "parent_id": null
+        }
+      ],
+      "folder_tags": [],
+      "environment": false,
+      "search_match": {
+        "score": 100,
+        "name_terms": [
+          "microphone"
+        ],
+        "tag_terms": [
+          "microphone"
+        ],
+        "collections": [],
+        "explanation": [
+          {
+            "term": "microphone",
+            "kind": "tag",
+            "points": 100,
+            "detail": "tagged \"microphone\""
+          }
+        ]
+      },
+      "source_url": "https://clever-hall.fra1.digitaloceanspaces.com/assets/40903e1ee1a1c1d52cfea5eec843982d1c747f458d3ffd34c7cdf92ef0b1ed27.svg",
+      "source_sha256": "40903e1ee1a1c1d52cfea5eec843982d1c747f458d3ffd34c7cdf92ef0b1ed27",
+      "original_file": "assets/source/studyjunior/choices/40903e1ee1a1c1d52cfea5eec843982d1c747f458d3ffd34c7cdf92ef0b1ed27.svg",
+      "retrieved_at": "2026-11-14T11:15:29.179Z",
+      "viewBox": "0 0 320 300",
+      "display_width": 640,
+      "display_height": 600,
+      "public_file": "/art/studyjunior/choices/40903e1ee1a1c1d52cfea5eec843982d1c747f458d3ffd34c7cdf92ef0b1ed27.svg",
+      "embedded_raster_images": 0
+    },
+    {
+      "label": "Guitar",
+      "query": "musical instrument",
+      "search_record": "refined/instruments.json",
+      "id": "01a173fb-36e4-73ed-95d8-4e2b8810434b",
+      "hash": "2b8e6e8eda45179f052a7c8bebc69a585aebe885809f8f061862357e1d05ad3f",
+      "original_name": "toy-guitar.svg",
+      "mime_type": "image/svg+xml",
+      "asset_type": "image",
+      "s3_key": "assets/2b8e6e8eda45179f052a7c8bebc69a585aebe885809f8f061862357e1d05ad3f.svg",
+      "width": null,
+      "height": null,
+      "duration_ms": null,
+      "tags": [
+        "toy guitar",
+        "guitar",
+        "brown guitar",
+        "music instrument",
+        "string instrument",
+        "music notes",
+        "toy"
+      ],
+      "asset_anchors": [],
+      "collections": [
+        {
+          "id": 9,
+          "name": "Toys",
+          "parent_id": null
+        }
+      ],
+      "folder_tags": [],
+      "environment": false,
+      "search_match": {
+        "score": 70,
+        "name_terms": [],
+        "tag_terms": [
+          "instrument"
+        ],
+        "collections": [],
+        "explanation": [
+          {
+            "term": "musical",
+            "kind": "none",
+            "points": 0,
+            "detail": "\"toy guitar\" does not contain the word \"musical\""
+          },
+          {
+            "term": "instrument",
+            "kind": "tag",
+            "points": 70,
+            "detail": "tagged \"music instrument\" (head match)"
+          }
+        ]
+      },
+      "source_url": "https://clever-hall.fra1.digitaloceanspaces.com/assets/2b8e6e8eda45179f052a7c8bebc69a585aebe885809f8f061862357e1d05ad3f.svg",
+      "source_sha256": "2b8e6e8eda45179f052a7c8bebc69a585aebe885809f8f061862357e1d05ad3f",
+      "original_file": "assets/source/studyjunior/choices/2b8e6e8eda45179f052a7c8bebc69a585aebe885809f8f061862357e1d05ad3f.svg",
+      "retrieved_at": "2026-11-14T11:15:29.354Z",
+      "viewBox": "1441.71170 309.88425 584.49960 451.99575",
+      "display_width": 640,
+      "display_height": 495,
+      "public_file": "/art/studyjunior/choices/2b8e6e8eda45179f052a7c8bebc69a585aebe885809f8f061862357e1d05ad3f.svg",
+      "embedded_raster_images": 0
+    },
+    {
+      "label": "Drum",
+      "query": "musical instrument",
+      "search_record": "refined/instruments.json",
+      "id": "01a18896-daba-70d2-b425-0e5362764111",
+      "hash": "42af943478c5866647b8e2c977ea7fbba9ba01da3f79bda9e6691cb99001ca27",
+      "original_name": "drum-djembe-orange-red.svg",
+      "mime_type": "image/svg+xml",
+      "asset_type": "image",
+      "s3_key": "assets/42af943478c5866647b8e2c977ea7fbba9ba01da3f79bda9e6691cb99001ca27.svg",
+      "width": null,
+      "height": null,
+      "duration_ms": null,
+      "tags": [
+        "djembe",
+        "drum",
+        "african drum",
+        "musical instrument"
+      ],
+      "asset_anchors": [],
+      "collections": [
+        {
+          "id": 38,
+          "name": "Items",
+          "parent_id": null
+        }
+      ],
+      "folder_tags": [],
+      "environment": false,
+      "search_match": {
+        "score": 140,
+        "name_terms": [],
+        "tag_terms": [
+          "instrument"
+        ],
+        "collections": [],
+        "explanation": [
+          {
+            "term": "musical",
+            "kind": "tag",
+            "points": 20,
+            "detail": "tagged \"musical instrument\" (modifier match)"
+          },
+          {
+            "term": "instrument",
+            "kind": "tag",
+            "points": 70,
+            "detail": "tagged \"musical instrument\" (head match)"
+          },
+          {
+            "term": "musical instrument",
+            "kind": "phrase",
+            "points": 50,
+            "detail": "all words appear together in the tag \"musical instrument\""
+          }
+        ]
+      },
+      "source_url": "https://clever-hall.fra1.digitaloceanspaces.com/assets/42af943478c5866647b8e2c977ea7fbba9ba01da3f79bda9e6691cb99001ca27.svg",
+      "source_sha256": "42af943478c5866647b8e2c977ea7fbba9ba01da3f79bda9e6691cb99001ca27",
+      "original_file": "assets/source/studyjunior/choices/42af943478c5866647b8e2c977ea7fbba9ba01da3f79bda9e6691cb99001ca27.svg",
+      "retrieved_at": "2026-11-14T11:15:29.491Z",
+      "viewBox": "135.75 91.75 16.5 34.5",
+      "display_width": 640,
+      "display_height": 1338,
+      "public_file": "/art/studyjunior/choices/42af943478c5866647b8e2c977ea7fbba9ba01da3f79bda9e6691cb99001ca27.svg",
+      "embedded_raster_images": 0
+    },
+    {
+      "label": "Xylophone",
+      "query": "xylophone",
+      "search_record": "search/xylophone.json",
+      "id": "01a160d3-e615-70c6-bf43-699c75f9c973",
+      "hash": "cd941c7bd775cd286b50c5ff67e0dc92b76f2fd7fa2e87568791a6525a561001",
+      "original_name": "xylophone.svg",
+      "mime_type": "image/svg+xml",
+      "asset_type": "image",
+      "s3_key": "assets/cd941c7bd775cd286b50c5ff67e0dc92b76f2fd7fa2e87568791a6525a561001.svg",
+      "width": null,
+      "height": null,
+      "duration_ms": null,
+      "tags": [
+        "xylophone",
+        "colourful xylophone",
+        "rainbow xylophone",
+        "xylophone with mallets",
+        "musical instrument",
+        "music toy",
+        "toy"
+      ],
+      "asset_anchors": [],
+      "collections": [
+        {
+          "id": 9,
+          "name": "Toys",
+          "parent_id": null
+        }
+      ],
+      "folder_tags": [],
+      "environment": false,
+      "search_match": {
+        "score": 100,
+        "name_terms": [
+          "xylophone"
+        ],
+        "tag_terms": [
+          "xylophone"
+        ],
+        "collections": [],
+        "explanation": [
+          {
+            "term": "xylophone",
+            "kind": "exact",
+            "points": 100,
+            "detail": "the file is named \"xylophone\""
+          }
+        ]
+      },
+      "source_url": "https://clever-hall.fra1.digitaloceanspaces.com/assets/cd941c7bd775cd286b50c5ff67e0dc92b76f2fd7fa2e87568791a6525a561001.svg",
+      "source_sha256": "cd941c7bd775cd286b50c5ff67e0dc92b76f2fd7fa2e87568791a6525a561001",
+      "original_file": "assets/source/studyjunior/choices/cd941c7bd775cd286b50c5ff67e0dc92b76f2fd7fa2e87568791a6525a561001.svg",
+      "retrieved_at": "2026-11-14T11:15:29.637Z",
+      "viewBox": "-37.784 -37.2 423.212 398.207",
+      "display_width": 640,
+      "display_height": 602,
+      "public_file": "/art/studyjunior/choices/cd941c7bd775cd286b50c5ff67e0dc92b76f2fd7fa2e87568791a6525a561001.svg",
+      "embedded_raster_images": 0
+    },
+    {
+      "label": "Maracas",
+      "query": "musical instrument",
+      "search_record": "refined/instruments.json",
+      "id": "01a17a1f-27f0-71d0-af8c-679edc9a8e8f",
+      "hash": "0368275f2b891c94e6f039ae0448ccb7489653ae9d0bfa07811af54f2f30ac49",
+      "original_name": "pair-of-red-patterned-maracas.svg",
+      "mime_type": "image/svg+xml",
+      "asset_type": "image",
+      "s3_key": "assets/0368275f2b891c94e6f039ae0448ccb7489653ae9d0bfa07811af54f2f30ac49.svg",
+      "width": null,
+      "height": null,
+      "duration_ms": null,
+      "tags": [
+        "maracas",
+        "red maracas",
+        "musical instrument",
+        "toy"
+      ],
+      "asset_anchors": [],
+      "collections": [
+        {
+          "id": 9,
+          "name": "Toys",
+          "parent_id": null
+        }
+      ],
+      "folder_tags": [],
+      "environment": false,
+      "search_match": {
+        "score": 140,
+        "name_terms": [],
+        "tag_terms": [
+          "instrument"
+        ],
+        "collections": [],
+        "explanation": [
+          {
+            "term": "musical",
+            "kind": "tag",
+            "points": 20,
+            "detail": "tagged \"musical instrument\" (modifier match)"
+          },
+          {
+            "term": "instrument",
+            "kind": "tag",
+            "points": 70,
+            "detail": "tagged \"musical instrument\" (head match)"
+          },
+          {
+            "term": "musical instrument",
+            "kind": "phrase",
+            "points": 50,
+            "detail": "all words appear together in the tag \"musical instrument\""
+          }
+        ]
+      },
+      "source_url": "https://clever-hall.fra1.digitaloceanspaces.com/assets/0368275f2b891c94e6f039ae0448ccb7489653ae9d0bfa07811af54f2f30ac49.svg",
+      "source_sha256": "0368275f2b891c94e6f039ae0448ccb7489653ae9d0bfa07811af54f2f30ac49",
+      "original_file": "assets/source/studyjunior/choices/0368275f2b891c94e6f039ae0448ccb7489653ae9d0bfa07811af54f2f30ac49.svg",
+      "retrieved_at": "2026-11-14T11:15:29.783Z",
+      "viewBox": "0 0 928 831.75553",
+      "display_width": 640,
+      "display_height": 574,
+      "public_file": "/art/studyjunior/choices/0368275f2b891c94e6f039ae0448ccb7489653ae9d0bfa07811af54f2f30ac49.svg",
+      "embedded_raster_images": 0
+    }
+  ],
+  "visual_review": "All 58 originals rendered and visually inspected in four labelled contact sheets. Animals, planets, foods, instruments and objects match their option labels. No answer-bearing text labels were present; embedded raster decoration is retained from the source SVGs."
+}

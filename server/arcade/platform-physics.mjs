@@ -11,22 +11,22 @@ export const BIOMES = [
 ];
 
 const ANIMAL_META = {
-  fish: {label: 'leaping fish', speed: 0, w: 28, h: 28, flying: true},
-  piranha: {label: 'leaping piranha', speed: 0, w: 28, h: 32, flying: true},
-  crab: {label: 'island crab', speed: 80, w: 30, h: 24, flying: false},
-  hog: {label: 'charging boar', speed: 112, w: 32, h: 28, flying: false},
-  penguin: {label: 'sliding penguin', speed: 120, w: 28, h: 30, flying: false},
-  polar: {label: 'polar bear', speed: 94, w: 34, h: 32, flying: false},
-  monkey: {label: 'jungle monkey', speed: 118, w: 30, h: 30, flying: false},
-  tiger: {label: 'citadel tiger', speed: 135, w: 34, h: 30, flying: false},
-  frog: {label: 'leaping frog', speed: 92, w: 28, h: 24, flying: false},
-  slime: {label: 'toxic slime', speed: 72, w: 28, h: 22, flying: false},
-  spider: {label: 'jungle spider', speed: 108, w: 30, h: 24, flying: false},
-  snakeLava: {label: 'lava serpent', speed: 76, w: 26, h: 42, flying: false},
-  barnacle: {label: 'snapping barnacle', speed: 32, w: 28, h: 28, flying: false},
-  bee: {label: 'giant bee', speed: 102, w: 28, h: 28, flying: true},
-  parrot: {label: 'swooping parrot', speed: 118, w: 30, h: 28, flying: true},
-  bat: {label: 'swooping bat', speed: 114, w: 30, h: 26, flying: true},
+  fish: {label: 'leaping fish', speed: 0, w: 25, h: 25, flying: true},
+  piranha: {label: 'leaping piranha', speed: 0, w: 25, h: 28, flying: true},
+  crab: {label: 'island crab', speed: 52, w: 26, h: 22, flying: false},
+  hog: {label: 'charging boar', speed: 70, w: 28, h: 24, flying: false},
+  penguin: {label: 'sliding penguin', speed: 74, w: 26, h: 26, flying: false},
+  polar: {label: 'polar bear', speed: 62, w: 30, h: 28, flying: false},
+  monkey: {label: 'jungle monkey', speed: 72, w: 26, h: 26, flying: false},
+  tiger: {label: 'citadel tiger', speed: 82, w: 30, h: 26, flying: false},
+  frog: {label: 'leaping frog', speed: 58, w: 26, h: 22, flying: false},
+  slime: {label: 'toxic slime', speed: 46, w: 26, h: 20, flying: false},
+  spider: {label: 'jungle spider', speed: 68, w: 26, h: 22, flying: false},
+  snakeLava: {label: 'lava serpent', speed: 54, w: 24, h: 34, flying: false},
+  barnacle: {label: 'snapping barnacle', speed: 24, w: 25, h: 25, flying: false},
+  bee: {label: 'giant bee', speed: 64, w: 26, h: 26, flying: true},
+  parrot: {label: 'swooping parrot', speed: 72, w: 26, h: 26, flying: true},
+  bat: {label: 'swooping bat', speed: 70, w: 26, h: 24, flying: true},
 };
 
 export function biomeForIsland(islandId) {
@@ -50,23 +50,24 @@ export function extendPlatformCourse(s) {
   const lead = Math.max(...s.players.map(p => p.x));
   while (!s.platforms.length || (s.platforms.at(-1).baseX ?? s.platforms.at(-1).x) + s.platforms.at(-1).w < lead + 2600) {
     const i = s.nextIsland++;
-    const prog = Math.min(1, i / 24);
+    // Smooth progressive curve: 0 for the first 5 islands, then gradually ramps up to 1.0 by island 42
+    const prog = Math.min(1, Math.max(0, (i - 4) / 38));
     const r = Math.abs(Math.sin(s.seed + i * 73.17));
     const r2 = Math.abs(Math.cos(s.seed * 0.7 + i * 41.93));
     const biome = biomeForIsland(i);
     const previous = s.platforms.at(-1);
     const prevBaseX = previous ? (previous.baseX ?? previous.x) : 0;
-    const gap = previous ? 52 + Math.round(prog * 32 + r * 12) : 0;
+    const gap = previous ? 48 + Math.round(prog * 34 + r * 10) : 0;
     const baseX = previous ? prevBaseX + previous.w + gap : 0;
-    const baseY = i === 0 ? 460 : [425, 375, 415, 455, 395, 350, 410][(i - 1) % 7];
-    const w = i === 0 ? 440 : Math.round(330 - prog * 68 + r * 34);
+    const baseY = i === 0 ? 460 : [430, 395, 420, 450, 405, 370, 415][(i - 1) % 7];
+    const w = i === 0 ? 460 : Math.round(350 - prog * 65 + r * 30);
 
-    // Fast moving platforms starting from island 2 onwards and scaling hard with progression
+    // Moving platforms start gently from island 6 onwards, ramping speed & range progressively
     let moving = null;
-    if (i >= 2 && (i % 3 === 2 || (prog > 0.25 && i % 2 === 1))) {
-      const axis = i % 2 === 0 ? 'y' : 'x';
-      const range = axis === 'x' ? Math.min(20, Math.round(12 + prog * 10)) : Math.round(20 + prog * 20);
-      const speed = +(1.45 + prog * 1.3 + r2 * 0.35).toFixed(2);
+    if (i >= 6 && (i % 4 === 2 || (prog > 0.45 && i % 3 === 1))) {
+      const axis = i >= 10 && i % 2 === 0 ? 'y' : 'x';
+      const range = axis === 'x' ? Math.round(10 + prog * 10) : Math.round(14 + prog * 22);
+      const speed = +(0.9 + prog * 1.35 + r2 * 0.25).toFixed(2);
       moving = {axis, range, speed, phase: +(r * 6.28).toFixed(2)};
     }
 
@@ -89,21 +90,22 @@ export function extendPlatformCourse(s) {
     // Coins along the platform
     for (let j = 0; j < 3; j++) {
       const cx = baseX + w * (0.26 + j * 0.22);
-      const cy = baseY - (moving?.axis === 'y' ? 72 : 58) - (j === 1 && i % 2 === 1 ? 18 : 0);
-      s.coins.push({id: i * 3 + j, x: cx, y: cy, baseX: cx, baseY: cy, platformId: i, offsetX: w * (0.26 + j * 0.22), offsetY: -58 - (j === 1 && i % 2 === 1 ? 18 : 0), collectedBy: []});
+      const cy = baseY - (moving?.axis === 'y' ? 70 : 56) - (j === 1 && i % 2 === 1 ? 16 : 0);
+      s.coins.push({id: i * 3 + j, x: cx, y: cy, baseX: cx, baseY: cy, platformId: i, offsetX: w * (0.26 + j * 0.22), offsetY: -56 - (j === 1 && i % 2 === 1 ? 16 : 0), collectedBy: []});
     }
 
     // Spring bounce pads before high elevation climbs
-    if (i >= 1 && (i % 4 === 2 || (baseY > 420 && i % 3 === 1))) {
+    if (i >= 2 && (i % 4 === 2 || (baseY > 425 && i % 3 === 1))) {
       const offsetX = Math.round(w * 0.76);
       s.springs.push({id: i, platformId: i, offsetX, x: pose.x + offsetX, y: pose.y});
     }
 
-    // Leaping water fish & piranhas in island gaps (ramping up frequency & speed)
-    if (i >= 2 && previous && (i % 2 === 0 || prog > 0.18)) {
+    // Leaping water fish & piranhas: rare & gentle early on, frequent & high-leaping in deeper zones
+    const spawnWaterEnemy = i >= 4 && previous && (prog < 0.25 ? i % 4 === 0 : prog < 0.55 ? i % 3 === 0 : i % 2 === 0);
+    if (spawnWaterEnemy) {
       const gapCenterX = prevBaseX + previous.w + gap * 0.5;
-      const peakY = Math.min(previous.baseY ?? previous.y, baseY) - (44 + Math.round(r2 * 30));
-      const period = Math.max(1.45, +(2.25 - prog * 0.75).toFixed(2));
+      const peakY = Math.min(previous.baseY ?? previous.y, baseY) - Math.round(20 + prog * 34 + r2 * 18);
+      const period = Math.max(1.55, +(2.85 - prog * 1.15).toFixed(2));
       const waterKind = biome.waterAnimals[i % biome.waterAnimals.length];
       s.enemies.push({
         id: i * 10 + 1,
@@ -125,23 +127,24 @@ export function extendPlatformCourse(s) {
       });
     }
 
-    // Patrolling land & swooping air monsters on islands (scales to double monsters at higher difficulty!)
-    if (i >= 2 && (i % 2 === 0 || prog > 0.12)) {
-      const useAir = i >= 4 && i % 3 === 0;
+    // Patrolling land & swooping air monsters: starts with slow single monsters at island 3, scales up progressively
+    const spawnIslandMonster = i >= 3 && (prog < 0.2 ? !moving && i % 2 === 1 : prog < 0.5 ? i % 2 === 0 || i % 3 === 0 : true);
+    if (spawnIslandMonster) {
+      const useAir = i >= 8 && (prog > 0.4 ? i % 3 === 0 : i % 5 === 0);
       const pool = useAir ? biome.airAnimals : biome.landAnimals;
       const kind = pool[(i + Math.floor(r * 10)) % pool.length];
       const meta = ANIMAL_META[kind];
-      const speed = Math.round(meta.speed * (1 + prog * 0.7));
-      const offsetX = Math.round(w * 0.45);
-      const baseOffsetY = useAir ? -60 : -20;
+      const speed = Math.round(meta.speed * (0.72 + prog * 1.15));
+      const offsetX = Math.round(w * 0.5);
+      const baseOffsetY = useAir ? -62 : -20;
       s.enemies.push({
         id: i * 10 + 2,
         kind,
         label: meta.label,
         biome: biome.id,
         platformId: i,
-        minOffset: 34,
-        maxOffset: Math.max(72, w - 34),
+        minOffset: 40,
+        maxOffset: Math.max(80, w - 40),
         offsetX,
         baseOffsetY,
         x: pose.x + offsetX,
@@ -155,14 +158,14 @@ export function extendPlatformCourse(s) {
         alive: true,
       });
 
-      // Second monster on the same island as difficulty escalates!
-      if (i >= 5 && (i % 2 === 1 || prog > 0.35)) {
-        const secondAir = !useAir && i % 2 === 1;
+      // Double-monster waves unlock in deeper zones (island 18+, Zone 4+)
+      if (i >= 18 && prog > 0.35 && (i % 2 === 0 || prog > 0.65)) {
+        const secondAir = !useAir && i % 2 === 0;
         const pool2 = secondAir ? biome.airAnimals : biome.landAnimals;
         const kind2 = pool2[(i + 2 + Math.floor(r2 * 10)) % pool2.length];
         const meta2 = ANIMAL_META[kind2];
-        const speed2 = Math.round(meta2.speed * (1.1 + prog * 0.75));
-        const offsetX2 = Math.round(w * 0.72);
+        const speed2 = Math.round(meta2.speed * (0.85 + prog * 1.2));
+        const offsetX2 = Math.round(w * 0.74);
         const baseOffsetY2 = secondAir ? -64 : -20;
         s.enemies.push({
           id: i * 10 + 3,
@@ -170,8 +173,8 @@ export function extendPlatformCourse(s) {
           label: meta2.label,
           biome: biome.id,
           platformId: i,
-          minOffset: 34,
-          maxOffset: Math.max(72, w - 34),
+          minOffset: 40,
+          maxOffset: Math.max(80, w - 40),
           offsetX: offsetX2,
           baseOffsetY: baseOffsetY2,
           x: pose.x + offsetX2,
@@ -187,10 +190,10 @@ export function extendPlatformCourse(s) {
       }
     }
 
-    // Frequent spikes, spinning saws, and oscillating spike-blocks
-    if (i >= 3 && (i % 2 === 1 || prog > 0.3)) {
-      const kind = i >= 6 && i % 2 === 0 ? 'orb' : i >= 9 && i % 3 === 0 ? 'spike-block' : 'thorns';
-      const offsetX = Math.round(w * (i % 2 === 0 ? 0.34 : 0.64));
+    // Hazards unlock at island 8 and progressively introduce spinning saws (14+) & spike-blocks (20+)
+    if (i >= 8 && (!moving || prog > 0.55) && (prog < 0.35 ? i % 4 === 1 : i % 2 === 1)) {
+      const kind = i >= 14 && i % 2 === 0 ? 'orb' : i >= 20 && i % 3 === 0 ? 'spike-block' : 'thorns';
+      const offsetX = Math.round(w * (i % 2 === 0 ? 0.35 : 0.65));
       s.hazards.push({
         id: i,
         platformId: i,
@@ -222,9 +225,9 @@ export function stepPlatformWorld(s, cs, DT, finish) {
   if (!s.shots) s.shots = [];
   if (s.nextShot === undefined) s.nextShot = 0;
 
-  // Storm speed scales aggressively as players advance into deeper zones
-  const difficultyBoost = Math.min(115, (s.difficulty - 1) * 14 + Math.min(80, s.elapsed * 0.42));
-  s.stormX = -500 + Math.max(0, s.elapsed - 10) * (95 + difficultyBoost);
+  // Storm starts at a comfortable pace so players can enjoy the opening zones, then ramps up progressively
+  const difficultyBoost = Math.min(95, (s.difficulty - 1) * 10 + Math.min(60, Math.max(0, s.elapsed - 20) * 0.35));
+  s.stormX = -500 + Math.max(0, s.elapsed - 10.5) * (74 + difficultyBoost);
 
   // Create Matter.js physics engine for this authoritative step
   const engine = Engine.create({gravity: {x: 0, y: 0, scale: 0}});
@@ -299,14 +302,14 @@ export function stepPlatformWorld(s, cs, DT, finish) {
     if (!e.alive) continue;
     if (e.kind === 'fish' || e.kind === 'piranha') {
       const cycle = ((s.elapsed + e.phase) % e.period + e.period) % e.period;
-      const leapPortion = 0.62;
+      const leapPortion = 0.48;
       if (cycle < e.period * leapPortion) {
         const u = cycle / (e.period * leapPortion); // 0..1
         const leapH = e.waterY - e.peakY;
         const prevY = e.y;
         const prevX = e.x;
         e.y = e.waterY - 4 * leapH * u * (1 - u);
-        e.x = e.baseX + Math.sin((u - 0.5) * Math.PI) * (e.kind === 'piranha' ? 6 : 16);
+        e.x = e.baseX + Math.sin((u - 0.5) * Math.PI) * (e.kind === 'piranha' ? 5 : 12);
         e.vx = (e.x - prevX) / DT;
         e.vy = (e.y - prevY) / DT;
         e.submerged = false;
@@ -321,7 +324,7 @@ export function stepPlatformWorld(s, cs, DT, finish) {
     } else if (e.platformId !== undefined && platformById.has(e.platformId)) {
       const {floor} = platformById.get(e.platformId);
       const dir = e.facing || 1;
-      const speedMult = 1 + Math.min(0.85, (s.difficulty - 1) * 0.1);
+      const speedMult = 1 + Math.min(0.65, Math.max(0, s.difficulty - 2) * 0.08);
       e.offsetX += dir * e.speed * speedMult * DT;
       if (e.offsetX >= e.maxOffset) {
         e.offsetX = e.maxOffset;

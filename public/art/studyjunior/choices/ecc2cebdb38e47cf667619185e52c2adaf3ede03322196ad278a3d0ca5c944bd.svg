@@ -1,0 +1,60 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 928 830.63576" width="1000" height="895.08164" role="img" aria-labelledby="sj119-title sj119-desc" data-asset-id="119"><title id="sj119-title">Pink Towel</title><desc id="sj119-desc">Pink towel on rail. The hanging object sways gently from side to side. Animation stops when reduced motion is requested.</desc><defs><clipPath id="sj119-crop" clipPathUnits="userSpaceOnUse"><rect x="166" y="113.5" width="6.5" height="5.75"/></clipPath></defs><g id="sj119-artwork" data-original-artwork="true" class="sj119-motion-1 sj-motion"><g transform="translate(64 64) scale(137.85879) translate(-166.30383 -113.93055)"><g clip-path="url(#sj119-crop)"><svg version="1.1" id="sj119-src-Layer_10" x="0" y="0" viewBox="0 0 4000 1703.817" style="x: 0px !important; y: 0px !important; width: 300px !important; height: 128px !important; overflow: hidden !important;" xml:space="preserve" width="300" height="128">
+<g>
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	<g>
+		<path style="fill:#FF85AC;" d="M2293.641,1563.975c-2.806-2.523-5.087-5.559-6.909-8.866    c-6.165-10.832-8.633-24.789-17.168-34.103c-0.145-0.947-0.675-1.709-1.746-2.195c-9.221-4.159-14.722,4.116-24.317,5.01    c-8.404,0.812-17.613-1.993-24.552,3.907c-1.735,1.475-2.276,4.066-0.331,5.689c11.094,9.379,7.049,17.953,11.472,28.984    c1.159,2.953,3.022,5.699,5.044,8.434c3.417,4.475,7.38,8.754,10.008,13.363c1.083,1.841,3.874,1.81,5.206,0.283    c10.601-11.894,29.541-7.999,42.939-15.137C2295.289,1568.253,2295.088,1565.313,2293.641,1563.975z"/>
+		<path style="fill:#CC5071;" d="M2273.929,1551.644c-2.329-0.582-4.145-1.617-6.62-1.68c-2.651-0.067-5.806,0.876-8.342-0.208    c-2.062-0.881-3.573-2.992-4.951-4.622c-4.315-5.109-8.51-9.304-14.877-11.722c-1.719-0.652-3.219,1.363-1.817,2.719    c5.41,5.231,9.605,11.789,15.132,16.786c5.901,5.333,12.152,1.987,18.87,4.664c1.836,0.731,4.264-0.043,4.608-2.252    c0.027-0.178,0.055-0.355,0.083-0.533C2276.245,1553.321,2275.385,1552.006,2273.929,1551.644z"/>
+		<path style="fill:#FFFFFF;" d="M2293.288,1569.346c-13.399,7.138-32.338,3.243-42.939,15.137    c-1.332,1.527-4.123,1.558-5.206-0.283c-2.628-4.609-6.591-8.888-10.008-13.363c0.545-0.197,1.016-0.309,1.562-0.505    c7.417-2.422,16.176-2.699,24.388-3.977c1.222-0.802,2.524-1.609,3.825-2.415c6.799-4.454,14.15-7.828,21.823-8.83    c1.821,3.308,4.103,6.344,6.909,8.866C2295.088,1565.313,2295.289,1568.253,2293.288,1569.346z"/>
+	</g>
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+</g>
+</svg></g></g></g><style data-learning-animation="true">@keyframes sj119-motion-1{0%,100%{transform:rotate(-2.2deg)}50%{transform:rotate(2.2deg)}}
+.sj119-motion-1{animation:sj119-motion-1 5.8s ease-in-out 0s infinite both;transform-box:fill-box;transform-origin:50% 0%;}
+@media(prefers-reduced-motion:reduce){.sj-motion{animation:none!important;transform:none!important}[data-learning-effect]:not([data-still-visible]){display:none}}
+svg[data-paused="true"] .sj-motion{animation-play-state:paused!important}
+svg[data-still="true"] .sj-motion{animation:none!important;transform:none!important}
+svg[data-still="true"] [data-learning-effect]:not([data-still-visible]){display:none}</style></svg>

@@ -1,3 +1,4 @@
+import {withChoiceArt} from './choice-art.mjs';
 import {randomUUID} from 'node:crypto';
 import {amount,UNIT} from './domain.mjs';
 import {games,candidatesFor} from './play.mjs';
@@ -11,7 +12,7 @@ export function createMultiplayer(store,{curate=curateQuestions}={}){
  const debit=(r,id,n)=>{if(BigInt(n)>0n){if(!r.near)throw Error('Sign a NEAR testnet deposit first.');store.reserveNear(r.id,id,n);}};
  function publicRoom(r,user,now=Date.now()){
    const me=r.players.find(p=>p.id===user?.id),game=games.find(g=>g.id===r.game_id);let question=null;
-   if(r.status==='playing'&&now>=r.starts_at&&now<r.ends_at&&me&&!me.left&&me.index<r.questions.length){const {answer,...q}=r.questions[me.index];question=q;}
+   if(r.status==='playing'&&now>=r.starts_at&&now<r.ends_at&&me&&!me.left&&me.index<r.questions.length){const {answer,...q}=r.questions[me.index];question=withChoiceArt(q);}
    return {near:store.nearStatus?.(r.id)||null,id:r.id,game_id:r.game_id,title:game?.title,category:game?.category,label:game?.label,art:game?.art||game?.id,host:r.host,status:r.status,phase:r.status==='playing'&&now<r.starts_at?'countdown':r.status,entry:r.entry,pot:(BigInt(r.entry)*BigInt(r.players.length)).toString(),max_players:r.max_players,starts_at:r.starts_at,ends_at:r.ends_at,expires_at:r.expires_at,total:r.questions.length||game?.rounds,curation:r.curation,visibility:r.visibility,players:r.players.map(p=>({id:p.id,name:store.user(p.id)?.name||p.id,ready:p.ready,left:Boolean(p.left),score:p.score,index:p.index,done:r.status==='finished'||p.index>=r.questions.length&&r.questions.length>0,payout:p.payout||'0'})),me:me?{index:me.index,score:me.score}:null,question,winners:r.winners||[],server_time:now};
  }
  function settle(r,now){
