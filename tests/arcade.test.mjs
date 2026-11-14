@@ -13,7 +13,7 @@ import {initialState,applyMove,legalMoves,ended} from '../server/skill/engines.m
 import {sowingFrames} from '../src/games/sowing-frames.mjs';
 const step=(s,count,advance=advancePuzzle)=>{for(let i=0;i<count;i++)s=advance(s);return s;};
 test('every new title has a unique original simulation and reaches a bounded finish without input',()=>{
- assert.equal(arcadeGames.length,28);assert.equal(freeOnly.size,12);
+ assert.equal(arcadeGames.length,30);assert.equal(freeOnly.size,14);
  for(const g of arcadeGames){let s=worldIds.has(g.id)?newWorld(g.id,g.min_players):puzzleIds.has(g.id)?newPuzzle(g.id,g.min_players):newParty(g.id,g.min_players);
   const advance=worldIds.has(g.id)?s=>advanceWorld(s,[]):puzzleIds.has(g.id)?advancePuzzle:advanceParty;
   for(let i=0;i<12500&&!s.finished;i++)s=advance(s);assert(s.finished,g.id);assert(s.players.length>=g.min_players);assert.doesNotThrow(()=>JSON.stringify(s));
@@ -50,9 +50,6 @@ test('exact expression parsing rejects number reuse and injection; ties score eq
 test('all circuits are solvable through legal rotations and switch actions',()=>{
  let s=newPuzzle('circuit-crew',2);for(let level=0;level<3;level++){for(let i=0;i<16;i++){let remaining=4;while(s.cells[i].rotation!==0&&remaining--&&!s.finished&&s.level===level)puzzleAction(s,0,{cell:i});}if(!s.finished&&s.level===level&&!s.cells[6].on)puzzleAction(s,1,{cell:6,type:'switch'});assert.equal(s.level,level+1);if(!s.finished)s=step(s,21);}
  assert(s.finished);assert.deepEqual(s.winners,[0,1]);
-});
-test('bridges enforce budget, freeze during tests, and cross all three gaps',()=>{
- let s=newPuzzle('bridge-builders',1);for(let level=0;level<3;level++){for(const [a,b,c] of [[0,1,4],[1,2,5],[2,3,6]])for(const [from,to] of [[a,b],[a,c],[b,c]])puzzleAction(s,0,{from,to});puzzleAction(s,0,{type:'test'});assert.throws(()=>puzzleAction(s,0,{from:0,to:1}),/load test/);s=step(s,61);}assert(s.finished);assert.deepEqual(s.winners,[0]);
 });
 test('molecules enforce valence and removable bonds; all five targets complete',()=>{
  const s=newPuzzle('molecule-match',2);puzzleAction(s,0,{from:0,to:1});assert.throws(()=>puzzleAction(s,0,{from:0,to:1}),/spare/);puzzleAction(s,0,{from:0,to:1,remove:true});assert.deepEqual(s.players[0].bonds,[]);

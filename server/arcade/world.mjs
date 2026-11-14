@@ -1,3 +1,4 @@
+import {socialWorldIds,newSocialWorld,advanceSocialWorld,socialWorldAction,socialWorldBot} from './social-worlds.mjs';
 import {extraWorldIds,newExtraWorld,advanceExtraWorld,extraWorldBot} from './extra-worlds.mjs';
 import {resetGolfHole,advanceGolf} from './golf-courses.mjs';
 export const DT=.05;
@@ -5,7 +6,7 @@ export const clamp=(n,a,b)=>Math.max(a,Math.min(b,n));
 export const angle=n=>Math.atan2(Math.sin(n),Math.cos(n));
 export const distance=(a,b)=>Math.hypot(a.x-b.x,a.y-b.y);
 export const controls=d=>Object.fromEntries(['left','right','up','down','attack','block'].map(k=>[k,d?.[k]===true]));
-export const worldIds=new Set([...extraWorldIds,'pocket-racers','stick-rivals','paddle-duel','air-hockey','snake-arena','bomb-maze','mini-golf','marble-knockout','kitchen-rush','paint-tag','platform-relay','orbit-rescue']);
+export const worldIds=new Set([...socialWorldIds,...extraWorldIds,'pocket-racers','stick-rivals','paddle-duel','air-hockey','snake-arena','bomb-maze','mini-golf','marble-knockout','kitchen-rush','paint-tag','platform-relay','orbit-rescue']);
 export function finish(s,winners,reason){s.finished=true;s.winners=winners;s.reason=reason;return s;}
 export function ranked(s,values,reason,low=false){const best=(low?Math.min:Math.max)(...values);return finish(s,values.flatMap((v,i)=>Math.abs(v-best)<1e-7?[i]:[]),reason);}
 function fighter(i,round=0){const side=(i+round)%2;return {x:side?640:320,y:410,vx:0,vy:0,facing:side?-1:1,hp:100,energy:100,cooldown:0,attack:0,hit:false,blocking:false,ground:true,attackKind:'punch',attackSeq:0,stun:0};}
@@ -31,6 +32,7 @@ export function newWorld(game,n){
   extendIslands(s);
  }
  else if(game==='orbit-rescue'){s.players=Array.from({length:n},(_,i)=>({role:['Steering','Thrust','Docking','Navigation'][i]}));s.ship={x:480,y:280,vx:0,vy:0,heading:0,fuel:100};s.probes=[{x:200,y:150,rescued:false},{x:770,y:130,rescued:false},{x:720,y:440,rescued:false}];s.docked=0;}
+ else if(socialWorldIds.has(game))newSocialWorld(s,n);
  else if(extraWorldIds.has(game))newExtraWorld(s,n);
  else throw Error('Unknown shared world.');
  return s;
@@ -55,6 +57,7 @@ function resetMaze(s,n){s.players=Array.from({length:n},(_,i)=>({x:[1,11,1,11][(
 function movement(p,c,speed,dt=DT){let dx=Number(c.right)-Number(c.left),dy=Number(c.down)-Number(c.up),length=Math.hypot(dx,dy)||1;p.x=clamp(p.x+dx/length*speed*dt,30,930);p.y=clamp(p.y+dy/length*speed*dt,30,530);}
 export function worldAction(s,i,d){
  if(s.finished)throw Error('This game has ended.');
+ if(socialWorldIds.has(s.game))return socialWorldAction(s,i,d);
  if(s.game==='mini-golf'){
   if(i!==s.turn||s.moving||s.players[i].sunk)throw Error('Wait for your shot.');
   if(d.type!=='shoot'||!Number.isFinite(d.angle)||!Number.isFinite(d.power)||d.power<.05||d.power>1)throw Error('Choose an aim and power.');
@@ -73,6 +76,7 @@ export function worldAction(s,i,d){
 }
 export function advanceWorld(previous,input){
  if(previous.finished)return previous;const s=structuredClone(previous),cs=s.players.map((_,i)=>controls(input[i]));s.tick++;s.elapsed+=DT;
+ if(socialWorldIds.has(s.game))return advanceSocialWorld(s,cs,DT,finish,ranked);
  if(extraWorldIds.has(s.game))return advanceExtraWorld(s,cs,DT,finish,ranked);
  if(s.game==='pocket-racers'){
   for(let i=0;i<s.players.length;i++){
@@ -167,6 +171,7 @@ export function advanceWorld(previous,input){
 }
 export function worldBot(s,i){
  const p=s.players[i],c=controls({});if(s.finished)return c;
+ if(socialWorldIds.has(s.game))return socialWorldBot(s,i,c);
  if(extraWorldIds.has(s.game))return extraWorldBot(s,i,c);
  if(s.game==='pocket-racers'){
   const next=s.traffic.find(v=>v.distance+v.speed*s.elapsed>p.y-30&&v.distance+v.speed*s.elapsed<p.y+330);

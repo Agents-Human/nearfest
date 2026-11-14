@@ -27,3 +27,11 @@ The per-title source, author, snapshot, licence URL and launch-file SHA-256 are 
 Bundled browser dependencies retain package licence files under `public/library/deps`: crisp-game-lib, sounds-some-sounds, gif-capture-canvas, PixiJS, pixi-filters, lodash.clonedeep and algo-chip. LittleJS retains its MIT engine notice and the Box2D/box2d.js zlib notice in `library/littlejs/dist`.
 
 Integration changes: an isolation/storage adapter is inserted before game scripts; optional remote font links are removed; crisp engines get individual launch pages and local script/audio-worklet paths; animated screenshots become static thumbnails. Source game rules are retained. Generic SVG covers are original slotVend code. Upstream source and author credits remain linked; these games are not represented as original slotVend creations.
+
+### Cat Defense and Pocket Soccer
+
+Cat Defense artwork is from the user-supplied **CraftPix Free Cartoon Cat Defense Game Asset Kit**, used under its Freebie license. Selected original frames are cropped and packed into lossless WebP atlases; the original source files are unchanged. License, source/output hashes and atlas metadata are in `public/models/cats/`.
+
+Pocket Soccer characters, equipment and ball artwork are original vector groups extracted from the supplied **Kenney Sports Pack**, licensed CC0. Exact group IDs and hashes are recorded in `public/models/soccer/provenance.json`; the CC0 license is included there. Articulated motion and the stadium are original code.
+
+Bridge Builders’ hold/release gameplay was referenced from <https://github.com/manumishra12/Stick_Man> by Manu Mishra. No repository code or artwork was copied. The multiplayer simulation, scenery, models and UI were implemented for this project.

@@ -256,7 +256,19 @@ export function createArcadeAudio(game: string): ArcadeAudio {
       // are emitted once per changed tick, never once per rendered frame.
       const now = context?.currentTime ?? 0;
       const ready = now - lastEffect > .07;
-      if (game === 'pocket-racers') {
+      if (game === 'pocket-soccer') {
+        if (mine.kicks > oldMine.kicks) {noise(.06,.1,900);tone(150,.1,.08,'sine',65);}
+        if (state.goalSeq > before.goalSeq) {chime(true);noise(.65,.08,1900);}
+      } else if (game === 'cat-defense') {
+        if (ready && mine.shootTime > oldMine.shootTime) {tone(520,.07,.035,'triangle',220);lastEffect=now;}
+        if (mine.bombs > oldMine.bombs) {noise(.32,.16,450);tone(160,.25,.1,'sine',45);}
+        if (state.wave > before.wave) chime();
+        if (state.gate < before.gate) tone(125,.12,.07,'triangle',75);
+      } else if (game === 'bridge-builders') {
+        if (mine.phase === 'turning' && oldMine.phase !== 'turning') noise(.15,.06,1100);
+        if (mine.phase === 'walking' && oldMine.phase === 'turning') tone(180,.08,.08,'triangle',80);
+        if (mine.phase === 'falling' && oldMine.phase !== 'falling') tone(450,.4,.07,'sine',70);
+      } else if (game === 'pocket-racers') {
         if (mine.crashes > oldMine.crashes) {noise(.2,.15,550);tone(140,.16,.08,'sine',60);}
         if (ready && mine.speed > 145 && Math.abs(angle(mine.heading - oldMine.heading)) > .13) { noise(.12, .045, 2100); lastEffect = now; }
       } else if (game === 'platform-relay' || game === 'stick-rivals') {

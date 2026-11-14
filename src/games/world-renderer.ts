@@ -1,4 +1,7 @@
 import * as T from 'three';
+import {bridgeScene,soccerScene,catsScene} from './social-scenes';
+import type {SoccerAssets} from './soccer-assets';
+import type {CatAssets} from './cat-assets';
 import {RoomEnvironment} from 'three/addons/environments/RoomEnvironment.js';
 import {mergeGeometries} from 'three/addons/utils/BufferGeometryUtils.js';
 import type {RacingAssets} from './racing-assets';
@@ -8,7 +11,7 @@ import type {ActionAssets} from './action-assets';
 import type {GolfAssets} from './golf-assets';
 import type {FighterAssets} from './fighter-assets';
 import {golfCourses} from '../../server/arcade/golf-courses.mjs';
-type WorldAssets={racing?:RacingAssets;platform?:PlatformAssets;scenery?:SceneryAssets;action?:ActionAssets;golf?:GolfAssets;fighters?:FighterAssets};
+type WorldAssets={soccer?:SoccerAssets;cats?:CatAssets;racing?:RacingAssets;platform?:PlatformAssets;scenery?:SceneryAssets;action?:ActionAssets;golf?:GolfAssets;fighters?:FighterAssets};
 import {car,explorer,tree,rock,crystal,coin,island,sign,palette} from './world-models';
 
 type State=any;
@@ -21,7 +24,7 @@ function noise(n:number){return Math.sin(n*127.1+311.7)*43758.5453%1;}
 function random(n:number){return Math.abs(noise(n));}
 
 /** One scene owns all GPU resources. Static scenery is merged by material. */
-class Kit {
+export class Kit {
  scene=new T.Scene();fixed=new T.Group();dynamic=new T.Group();skyDome:T.Mesh|null=null;cleanups:(()=>void)[]=[];
  mats=new Map<string,T.MeshStandardMaterial>();textures:T.Texture[]=[];
  constructor(){this.scene.add(this.fixed,this.dynamic);}
@@ -282,8 +285,8 @@ export class WorldRenderer {
  private aim=0;private power=.65;private guide:T.Line|null=null;private frame=0;private last=0;private samples=0;private sampleAt=0;private elapsed=0;private look=new T.Vector3();private cameraReady=false;private snapshots:{s:State;at:number}[]=[];private resize:ResizeObserver;
  private mode='follow';private seat:number|null;private game:string;private sun:T.DirectionalLight;private visible=true;private observer:IntersectionObserver;private ratio=1;private framesLow=0;private disposed=false;
  constructor(private host:HTMLElement,state:State,seat:number|null,private metrics:(m:WorldMetrics)=>void,assets:WorldAssets={}){
-  this.seat=seat;this.game=state.game;this.host.dataset.assetPack=state.game==='stick-rivals'?'craftpix-yokai':Object.keys(assets).length?'kenney':'original';if(state.game==='stick-rivals')this.fighterCamera=new T.OrthographicCamera(-35,35,20,-20,.1,200);this.renderer=new T.WebGLRenderer({antialias:true,alpha:false,powerPreference:'high-performance'});const environment=new RoomEnvironment(),pmrem=new T.PMREMGenerator(this.renderer);this.environment=pmrem.fromScene(environment,.04);this.k.scene.environment=this.environment.texture;this.k.scene.environmentIntensity=['air-hockey','paddle-duel','orbit-rescue'].includes(state.game)?.55:.3;environment.dispose();pmrem.dispose();this.renderer.outputColorSpace=T.SRGBColorSpace;this.renderer.toneMapping=T.ACESFilmicToneMapping;this.renderer.toneMappingExposure=.95;this.renderer.shadowMap.enabled=true;this.renderer.shadowMap.type=T.PCFShadowMap;this.ratio=Math.min(devicePixelRatio,1.6);this.renderer.setPixelRatio(this.ratio);host.appendChild(this.renderer.domElement);this.renderer.domElement.setAttribute('aria-label',state.game==='stick-rivals'?'Animated Yokai fighting arena':'3D game environment');this.sun=this.k.light(['air-hockey','paddle-duel','orbit-rescue'].includes(this.game));
-  const scenes:Record<string,(k:Kit,s:State)=>Step>={'pocket-racers':(kit,state)=>raceScene(kit,state,assets.racing,assets.scenery),'platform-relay':(kit,state)=>platformScene(kit,state,assets.platform),'stick-rivals':(kit,state)=>fighterScene(kit,state,assets.fighters),'tank-arena':(kit,state)=>tankScene(kit,state,assets.action),'marble-run':(kit,state)=>marbleRunScene(kit,state,assets.action,assets.scenery),'paddle-duel':tableScene,'air-hockey':tableScene,'snake-arena':gridScene,'bomb-maze':gridScene,'mini-golf':(kit,state)=>golfScene(kit,state,assets.scenery,assets.golf),'marble-knockout':(kit,state)=>marbleScene(kit,state,assets.scenery),'paint-tag':paintScene,'kitchen-rush':(kit,state)=>kitchenScene(kit,state,assets.scenery),'orbit-rescue':(kit,state)=>spaceScene(kit,state,assets.scenery)};
+  this.seat=seat;this.game=state.game;this.host.dataset.assetPack=state.game==='stick-rivals'?'craftpix-yokai':state.game==='cat-defense'?'craftpix-cat-defense':Object.keys(assets).length?'kenney':'original';if(['stick-rivals','cat-defense','bridge-builders','pocket-soccer'].includes(state.game))this.fighterCamera=new T.OrthographicCamera(-35,35,20,-20,.1,200);this.renderer=new T.WebGLRenderer({antialias:true,alpha:false,powerPreference:'high-performance'});const environment=new RoomEnvironment(),pmrem=new T.PMREMGenerator(this.renderer);this.environment=pmrem.fromScene(environment,.04);this.k.scene.environment=this.environment.texture;this.k.scene.environmentIntensity=['air-hockey','paddle-duel','orbit-rescue'].includes(state.game)?.55:.3;environment.dispose();pmrem.dispose();this.renderer.outputColorSpace=T.SRGBColorSpace;this.renderer.toneMapping=T.ACESFilmicToneMapping;this.renderer.toneMappingExposure=.95;this.renderer.shadowMap.enabled=true;this.renderer.shadowMap.type=T.PCFShadowMap;this.ratio=Math.min(devicePixelRatio,1.6);this.renderer.setPixelRatio(this.ratio);host.appendChild(this.renderer.domElement);this.renderer.domElement.setAttribute('aria-label',state.game==='stick-rivals'?'Animated Yokai fighting arena':state.game==='cat-defense'?'Cat Defense street battle':state.game==='pocket-soccer'?'3D soccer stadium':state.game==='bridge-builders'?'3D bridge ravine':'3D game environment');this.sun=this.k.light(['pocket-soccer','air-hockey','paddle-duel','orbit-rescue'].includes(this.game));
+  const scenes:Record<string,(k:Kit,s:State)=>Step>={'bridge-builders':bridgeScene,'pocket-soccer':(kit,state)=>soccerScene(kit,state,assets.soccer!),'cat-defense':(kit,state)=>catsScene(kit,state,assets.cats!),'pocket-racers':(kit,state)=>raceScene(kit,state,assets.racing,assets.scenery),'platform-relay':(kit,state)=>platformScene(kit,state,assets.platform),'stick-rivals':(kit,state)=>fighterScene(kit,state,assets.fighters),'tank-arena':(kit,state)=>tankScene(kit,state,assets.action),'marble-run':(kit,state)=>marbleRunScene(kit,state,assets.action,assets.scenery),'paddle-duel':tableScene,'air-hockey':tableScene,'snake-arena':gridScene,'bomb-maze':gridScene,'mini-golf':(kit,state)=>golfScene(kit,state,assets.scenery,assets.golf),'marble-knockout':(kit,state)=>marbleScene(kit,state,assets.scenery),'paint-tag':paintScene,'kitchen-rush':(kit,state)=>kitchenScene(kit,state,assets.scenery),'orbit-rescue':(kit,state)=>spaceScene(kit,state,assets.scenery)};
   this.step=scenes[this.game](this.k,state);this.k.batch();if(this.game==='mini-golf'){const geometry=new T.BufferGeometry().setFromPoints([new T.Vector3(),new T.Vector3()]);this.guide=new T.Line(geometry,new T.LineDashedMaterial({color:'#fff2c4',dashSize:.6,gapSize:.4}));this.k.dynamic.add(this.guide);}this.push(state,seat);
   this.resize=new ResizeObserver(()=>this.size());this.resize.observe(host);this.size();this.observer=new IntersectionObserver(entries=>{this.visible=entries[0].isIntersecting;});this.observer.observe(host);
   this.frame=requestAnimationFrame(this.draw);
@@ -291,6 +294,8 @@ export class WorldRenderer {
  static async prepare(game:string):Promise<WorldAssets>{
   const assets:WorldAssets={};
   await Promise.all([
+   game==='pocket-soccer'?import('./soccer-assets').then(m=>m.loadSoccerAssets()).then(a=>{assets.soccer=a;}):undefined,
+   game==='cat-defense'?import('./cat-assets').then(m=>m.loadCatAssets()).then(a=>{assets.cats=a;}):undefined,
    game==='pocket-racers'?import('./racing-assets').then(m=>m.loadRacingAssets()).then(a=>{assets.racing=a;}):undefined,
    game==='platform-relay'?import('./platform-assets').then(m=>m.loadPlatformAssets()).then(a=>{assets.platform=a;}):undefined,
    ['pocket-racers','mini-golf','marble-knockout','marble-run','kitchen-rush','orbit-rescue'].includes(game)?import('./scenery-assets').then(m=>m.loadSceneryAssets(game==='marble-run'?'marble-knockout':game)).then(a=>{assets.scenery=a;}):undefined,
@@ -307,8 +312,8 @@ export class WorldRenderer {
  private state(now:number){
   const latest=this.snapshots.at(-1)!;if(latest.s.finished||this.snapshots.length<2)return latest.s;
   const tick=latest.s.tick+Math.min(1.5,(now-latest.at)/50)-1;let a=this.snapshots[0],b=latest;for(let i=1;i<this.snapshots.length;i++)if(this.snapshots[i].s.tick>=tick){a=this.snapshots[i-1];b=this.snapshots[i];break;}
-  const f=clamp((tick-a.s.tick)/Math.max(1,b.s.tick-a.s.tick),0,1),blend=(p:any,q:any)=>{if(!p||!q||!Number.isFinite(q.x)||!Number.isFinite(p.x)||Math.hypot(p.x-q.x,p.y-q.y)>130)return q;return {...q,x:T.MathUtils.lerp(p.x,q.x,f),y:T.MathUtils.lerp(p.y,q.y,f),...(Number.isFinite(q.height)?{height:T.MathUtils.lerp(p.height??q.height,q.height,f)}:{}),...(Number.isFinite(q.heading)?{heading:p.heading+Math.atan2(Math.sin(q.heading-p.heading),Math.cos(q.heading-p.heading))*f}:{})};};
-  return {...latest.s,players:b.s.players.map((p:any,i:number)=>blend(a.s.players[i],p)),...(b.s.ball?{ball:blend(a.s.ball,b.s.ball)}:{}),...(b.s.ship?{ship:blend(a.s.ship,b.s.ship)}:{})};
+  const f=clamp((tick-a.s.tick)/Math.max(1,b.s.tick-a.s.tick),0,1),blend=(p:any,q:any)=>{if(!p||!q||!Number.isFinite(q.x)||!Number.isFinite(p.x)||Math.hypot(p.x-q.x,p.y-q.y)>130)return q;return {...q,x:T.MathUtils.lerp(p.x,q.x,f),y:T.MathUtils.lerp(p.y,q.y,f),...(Number.isFinite(q.height)?{height:T.MathUtils.lerp(p.height??q.height,q.height,f)}:{}),...(Number.isFinite(q.heading)?{heading:p.heading+Math.atan2(Math.sin(q.heading-p.heading),Math.cos(q.heading-p.heading))*f}:{}),...(this.game==='bridge-builders'?{length:q.length>=p.length?T.MathUtils.lerp(p.length,q.length,f):q.length,rotation:q.rotation>=p.rotation?T.MathUtils.lerp(p.rotation,q.rotation,f):q.rotation}:{})};};
+  return {...latest.s,players:b.s.players.map((p:any,i:number)=>blend(a.s.players[i],p)),...(b.s.ball?{ball:blend(a.s.ball,b.s.ball)}:{}),...(b.s.ship?{ship:blend(a.s.ship,b.s.ship)}:{}),...(this.game==='cat-defense'?{enemies:b.s.enemies.map((e:any)=>blend(a.s.enemies.find((p:any)=>p.id===e.id),e)),shots:b.s.shots.map((e:any)=>blend(a.s.shots.find((p:any)=>p.id===e.id),e))}:{})};
  }
  private draw=(now:number)=>{
   if(this.disposed)return;this.frame=requestAnimationFrame(this.draw);const dt=Math.min(.05,(now-(this.last||now))/1000);this.last=now;if(document.hidden||!this.visible){this.sampleAt=now;this.samples=0;return;}this.elapsed+=dt;
@@ -317,6 +322,14 @@ export class WorldRenderer {
   else if(this.game==='marble-run'){const x=p.x/10;target.set(x+10,1,0);eye.set(x-17,this.camera.aspect<1?17:12,this.camera.aspect<1?24:18);this.camera.fov=48;this.sun.position.set(x-30,65,35);this.sun.target.position.set(x+20,0,0);}
   else if(this.game==='platform-relay'){const x=Math.max(22,p.x/10+10),y=clamp((435-p.y)/10,0,15);target.set(x,y+3,0);eye.set(x+2,y+12,this.camera.aspect<1?65:46);this.camera.fov=43;this.sun.position.set(x-25,65,30);this.sun.target.position.set(x,0,0);}
 
+  else if(this.game==='cat-defense'||this.game==='bridge-builders'||this.game==='pocket-soccer'){
+   const fc=this.fighterCamera!,aspect=this.camera.aspect;
+   const bridge=this.game==='bridge-builders',soccer=this.game==='pocket-soccer';
+   const height=bridge?Math.max(36,((s.to.x+s.to.w-s.from.x)/10+13)/aspect):soccer?Math.max(67,108/aspect):Math.max(47.6,96/aspect),width=height*aspect;
+   const x=bridge?(s.from.x+s.to.x+s.to.w)/20:0,y=bridge?9:0;
+   const desired=new T.Vector3(x,soccer?85:y,soccer?48:85);fc.position.lerp(desired,this.cameraReady?1-Math.exp(-dt*5):1);fc.lookAt(soccer?0:fc.position.x,soccer?0:fc.position.y-(bridge?6:0),0);if(bridge){this.sun.position.set(x-35,65,30);this.sun.target.position.set(x,0,0);}
+   fc.left=-width/2;fc.right=width/2;fc.top=height/2;fc.bottom=-height/2;fc.far=400;fc.updateProjectionMatrix();target.set(x,y,0);eye.copy(desired);
+  }
   else if(this.game==='mini-golf'){const course=golfCourses[Math.min(s.hole,golfCourses.length-1)],xs=course.cells.map(c=>W(c.x)),zs=course.cells.map(c=>Z(c.y)),width=Math.max(...xs)-Math.min(...xs)+12,depth=Math.max(...zs)-Math.min(...zs)+14,rotate=this.camera.aspect<.8,distance=Math.max(35,(rotate?depth:width)/(2*Math.tan(T.MathUtils.degToRad(21.5))*this.camera.aspect)*1.12,(rotate?width:depth)*1.35);target.set((Math.min(...xs)+Math.max(...xs))/2,0,(Math.min(...zs)+Math.max(...zs))/2);eye.set(target.x+(rotate?distance*.55:0),distance*.84,target.z+(rotate?0:distance*.55));this.camera.fov=43;}
   else if(this.game==='stick-rivals'){
    const a=s.players[0],b=s.players[1],mid=W((a.x+b.x)/2),gap=Math.abs(a.x-b.x)/10,aspect=this.camera.aspect;

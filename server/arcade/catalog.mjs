@@ -1,4 +1,6 @@
 const rows=[
+ ['pocket-soccer','Pocket Soccer','Sports',2,2,150,'Dribble, tackle and shoot in a floodlit stadium. Move with the arrows, press Space to kick. First to five goals.'],
+ ['cat-defense','Cat Defense','Co-op',2,4,0,'Team up as four neighbourhood cats. Switch lanes, auto-fire at the dogs and unleash fish bombs. Collect coins and protect your barricade through five waves.'],
  ['marble-run','Marble Skyway','Racing',2,4,120,'Roll along a floating skyway. Steer for coins, hop the gaps and race your friends to the finish.'],
  ['tank-arena','Toy Tank Arena','Action',2,4,120,'Drive, find cover and fire. Your turret helps you aim. Smash crates, bounce shots and be first to five knockouts.'],
  ['pocket-racers','Pocket Racers','Racing',2,4,120,'A quick coastal sprint. Just steer left or right, dodge traffic, collect gold coins for boost and race to the finish.'],
@@ -23,11 +25,11 @@ const rows=[
  ['equation-forge','Equation Forge','Maths',2,8,240,'Six numbers. One target. Build your best equation.'],
  ['circuit-crew','Circuit Crew','Co-op',2,4,180,'Rotate wires and power every lamp together.'],
  ['orbit-rescue','Orbit Rescue','Co-op',2,4,180,'Share the ship controls. Rescue three stranded probes.'],
- ['bridge-builders','Bridge Builders','Co-op',2,4,240,'Build with a beam budget, then test your bridge.'],
+ ['bridge-builders','Bridge Builders','Action',2,4,0,'Hold to grow your stick, release to drop the bridge and walk across. Hit the gold centre for a bonus. Keep crossing until someone falls.'],
  ['molecule-match','Molecule Match','Science',2,4,180,'Connect atoms with the right bonds to build each target.'],
  ['sudoku-race','Sudoku Race','Puzzles',2,4,300,'One shared puzzle. Private answers. Race to a correct solution.'],
  ['codebreakers','Codebreakers','Puzzles',2,4,180,'Use every clue to deduce a unique four-symbol code.'],
 ];
-export const freeOnly=new Set(['marble-run','tank-arena','draw-guess','category-sprint','clue-crew','bluff-club','deduction-club','kitchen-rush','platform-relay','circuit-crew','orbit-rescue','bridge-builders']);
+export const freeOnly=new Set(['pocket-soccer','cat-defense','marble-run','tank-arena','draw-guess','category-sprint','clue-crew','bluff-club','deduction-club','kitchen-rush','platform-relay','circuit-crew','orbit-rescue','bridge-builders']);
 export const arcadeGames=rows.map(([id,title,genre,min,max,seconds,description])=>({id,title,label:genre,genre,category:['Maths','Science'].includes(genre)?genre:'Gaming',min_players:min,max_players:max,seconds,description,engine:'arcade',kind:'game',solo:true,multiplayer:true,standalone:true,bettable:!freeOnly.has(id),rounds:1,art:id,rules_version:'slotvend-original-1'}));
 export const arcadeGame=id=>arcadeGames.find(g=>g.id===id);

@@ -1,0 +1,1239 @@
+{
+  "author": "CraftPix",
+  "licenseUrl": "https://craftpix.net/file-licenses/",
+  "sourcePack": "assets/new/craftpix-net-397030-free-cartoon-cat-defense-game-asset-kit",
+  "operation": "Frame sampling, transparent union-bound crop/padding and lossless WebP atlas packing only. Original source files remain unchanged.",
+  "atlasEncoding": {
+    "codec": "cwebp 1.6.0",
+    "lossless": true,
+    "method": 6
+  },
+  "files": [
+    {
+      "file": "cat-1.webp",
+      "sha256": "c213890df9d70a80c9fcaca0e40c20f9c98be055307bb20d7a34ebb243e885e2",
+      "bytes": 180596,
+      "sourceFrames": [
+        {
+          "file": "assets/new/craftpix-net-397030-free-cartoon-cat-defense-game-asset-kit/Png/Characters/C1/Idle/Character1-Idle_00.png",
+          "sha256": "48d1b2740169cdb26c96bf37f01eb136f2088e452881673e0ff60adedcae7ea1"
+        },
+        {
+          "file": "assets/new/craftpix-net-397030-free-cartoon-cat-defense-game-asset-kit/Png/Characters/C1/Idle/Character1-Idle_02.png",
+          "sha256": "5907a5e34ee6789cbfdadb9a88c3009e0281308111a08f9c3412bd26e6876398"
+        },
+        {
+          "file": "assets/new/craftpix-net-397030-free-cartoon-cat-defense-game-asset-kit/Png/Characters/C1/Idle/Character1-Idle_04.png",
+          "sha256": "2e1365bc03c4ff92931de8d6aab5d91cdaf8d72cd6f82b47007d42f3e8b3a5d1"
+        },
+        {
+          "file": "assets/new/craftpix-net-397030-free-cartoon-cat-defense-game-asset-kit/Png/Characters/C1/Idle/Character1-Idle_06.png",
+          "sha256": "827e38fe1c6ccb4a7d1a9537e37e5cdca7e4a7c2faaeef7584d4c9fd18b561fc"
+        },
+        {
+          "file": "assets/new/craftpix-net-397030-free-cartoon-cat-defense-game-asset-kit/Png/Characters/C1/Idle/Character1-Idle_08.png",
+          "sha256": "3154c93007d1b5c2446655a4e5884d38aa14a35c67448a1cf34ea7c73995a533"
+        },
+        {
+          "file": "assets/new/craftpix-net-397030-free-cartoon-cat-defense-game-asset-kit/Png/Characters/C1/Idle/Character1-Idle_11.png",
+          "sha256": "beee156ee0f8f363adc8effe84c833eec4927c89941153b050e57ebd526947ad"
+        },
+        {
+          "file": "assets/new/craftpix-net-397030-free-cartoon-cat-defense-game-asset-kit/Png/Characters/C1/Idle/Character1-Idle_13.png",
+          "sha256": "b1a93960fa35b5da3a1126c2b60cef461375d2946d27b82554b3c315f8ffc5a6"
+        },
+        {
+          "file": "assets/new/craftpix-net-397030-free-cartoon-cat-defense-game-asset-kit/Png/Characters/C1/Idle/Character1-Idle_15.png",
+          "sha256": "814bda9a322c0cfa6ef60b019ea8630864cfa280d29d2a040ac70d1c1d92b6c8"
+        },
+        {
+          "file": "assets/new/craftpix-net-397030-free-cartoon-cat-defense-game-asset-kit/Png/Characters/C1/Idle/Character1-Idle_17.png",
+          "sha256": "7076fc84f4a9d71b88df8fd25ee62bbc30f6b698b6c6c6ab1c3be9aebb84908e"
+        },
+        {
+          "file": "assets/new/craftpix-net-397030-free-cartoon-cat-defense-game-asset-kit/Png/Characters/C1/Idle/Character1-Idle_19.png",
+          "sha256": "bfbf8f672dfae153a17dcbdc45b7359c6324b85771d3dc050d320b6efcd46517"
+        },
+        {
+          "file": "assets/new/craftpix-net-397030-free-cartoon-cat-defense-game-asset-kit/Png/Characters/C1/Shoot/Character1-Shoot_00.png",
+          "sha256": "48d1b2740169cdb26c96bf37f01eb136f2088e452881673e0ff60adedcae7ea1"
+        },
+        {
+          "file": "assets/new/craftpix-net-397030-free-cartoon-cat-defense-game-asset-kit/Png/Characters/C1/Shoot/Character1-Shoot_01.png",
+          "sha256": "1fb6b69d0b97841a3a464b49621ea377dd942769ff77754eb3c81d213e0a0f74"
+        },
+        {
+          "file": "assets/new/craftpix-net-397030-free-cartoon-cat-defense-game-asset-kit/Png/Characters/C1/Shoot/Character1-Shoot_02.png",
+          "sha256": "2f7a63222aa4be88cda4a4166a60bae575be817f017c30c00cb64e842b2352ef"
+        },
+        {
+          "file": "assets/new/craftpix-net-397030-free-cartoon-cat-defense-game-asset-kit/Png/Characters/C1/Shoot/Character1-Shoot_03.png",
+          "sha256": "1b4010e63e19b3f248c46e42ae6e75ff53a0b8ed9e30f960afd1e340eb4be131"
+        },
+        {
+          "file": "assets/new/craftpix-net-397030-free-cartoon-cat-defense-game-asset-kit/Png/Characters/C1/Shoot/Character1-Shoot_04.png",
+          "sha256": "b65d6804e096ab03b436191036d4fb707f664863f0c2aeeaeed74df12ef868aa"
+        },
+        {
+          "file": "assets/new/craftpix-net-397030-free-cartoon-cat-defense-game-asset-kit/Png/Characters/C1/Shoot/Character1-Shoot_05.png",
+          "sha256": "906e60c1005e258169024d87d141a279407a58fc268ba3a775b876135a588066"
+        },
+        {
+          "file": "assets/new/craftpix-net-397030-free-cartoon-cat-defense-game-asset-kit/Png/Characters/C1/Shoot/Character1-Shoot_06.png",
+          "sha256": "d216edc94bd1a1e2689177e6b23241501b62e14de5717d9a56575c7d2ea5074c"
+        },
+        {
+          "file": "assets/new/craftpix-net-397030-free-cartoon-cat-defense-game-asset-kit/Png/Characters/C1/Shoot/Character1-Shoot_07.png",
+          "sha256": "1d6c64a6f002175dba24957dac7a087c257fcfd25b18a5c651857166ea00fee2"
+        },
+        {
+          "file": "assets/new/craftpix-net-397030-free-cartoon-cat-defense-game-asset-kit/Png/Characters/C1/Shoot/Character1-Shoot_08.png",
+          "sha256": "623b2d7a33d486f374de3c89a16af196666fb9ff0bd9b001f0f5a658cdbb16a1"
+        },
+        {
+          "file": "assets/new/craftpix-net-397030-free-cartoon-cat-defense-game-asset-kit/Png/Characters/C1/Shoot/Character1-Shoot_09.png",
+          "sha256": "de95b4844c1635d0365a2835fb1f3d0a4bce24c1824eff3612eba026d3ebb6b3"
+        }
+      ],
+      "metadata": {
+        "id": "cat-1",
+        "name": "Mochi",
+        "url": "/models/cats/cat-1.webp",
+        "width": 736,
+        "height": 348,
+        "frameWidth": 92,
+        "frameHeight": 116,
+        "columns": 8,
+        "frameCount": 20,
+        "anchorX": 47.5,
+        "groundY": 112,
+        "bodyHeightPixels": 110,
+        "nativeFacing": 1,
+        "clips": {
+          "idle": {
+            "start": 0,
+            "count": 10,
+            "duration": 0.9,
+            "loop": true
+          },
+          "shoot": {
+            "start": 10,
+            "count": 10,
+            "duration": 0.32,
+            "loop": false
+          }
+        },
+        "originalFrame": [
+          150,
+          150
+        ],
+        "trimBounds": [
+          29,
+          22,
+          117,
+          134
+        ]
+      }
+    },
+    {
+      "file": "cat-2.webp",
+      "sha256": "29425e70f92e69b41ccb60d5b45db6f40b7a3771001fa6d84f4315f3081ca712",
+      "bytes": 191436,
+      "sourceFrames": [
+        {
+          "file": "assets/new/craftpix-net-397030-free-cartoon-cat-defense-game-asset-kit/Png/Characters/C2/Idle/Character2-Idle_00.png",
+          "sha256": "836339df0896470ab740ea11b010a98509e026a6e16241ead29e6e48a0e1c010"
+        },
+        {
+          "file": "assets/new/craftpix-net-397030-free-cartoon-cat-defense-game-asset-kit/Png/Characters/C2/Idle/Character2-Idle_02.png",
+          "sha256": "3894e8a813692b93a496ff5e63b7dca80bc7452c084aac5fe41e4759e7b059f5"
+        },
+        {
+          "file": "assets/new/craftpix-net-397030-free-cartoon-cat-defense-game-asset-kit/Png/Characters/C2/Idle/Character2-Idle_04.png",
+          "sha256": "6b2d8f40758356cf11f9d1351b5b0afb006f669ee059b3ba26b2256964dda7c6"
+        },
+        {
+          "file": "assets/new/craftpix-net-397030-free-cartoon-cat-defense-game-asset-kit/Png/Characters/C2/Idle/Character2-Idle_06.png",
+          "sha256": "e86fe840e0dfc8b43f9e7fcee42e97519d4041513bde07bb459dcb0ccceec384"
+        },
+        {
+          "file": "assets/new/craftpix-net-397030-free-cartoon-cat-defense-game-asset-kit/Png/Characters/C2/Idle/Character2-Idle_08.png",
+          "sha256": "1b6f6d53729b8bc96375e899f1c63b143f8766a874da0984a203ae3e6dacca54"
+        },
+        {
+          "file": "assets/new/craftpix-net-397030-free-cartoon-cat-defense-game-asset-kit/Png/Characters/C2/Idle/Character2-Idle_11.png",
+          "sha256": "91092af0fbf95becb174ec33a5c9a2da117f6194bec781145a71705a0f120e4b"
+        },
+        {
+          "file": "assets/new/craftpix-net-397030-free-cartoon-cat-defense-game-asset-kit/Png/Characters/C2/Idle/Character2-Idle_13.png",
+          "sha256": "b968d07809c06964ed4a2f1a3f985535e9718359110dfb72125942d24d9ec9eb"
+        },
+        {
+          "file": "assets/new/craftpix-net-397030-free-cartoon-cat-defense-game-asset-kit/Png/Characters/C2/Idle/Character2-Idle_15.png",
+          "sha256": "0983584db30c25364a079ac31cbeb255834b8529c99cd2ce793d45a000b5cf24"
+        },
+        {
+          "file": "assets/new/craftpix-net-397030-free-cartoon-cat-defense-game-asset-kit/Png/Characters/C2/Idle/Character2-Idle_17.png",
+          "sha256": "9c287d7424cd42fc5effa29deaf3f78c03a0a614d700460fcd208a1a5860c53e"
+        },
+        {
+          "file": "assets/new/craftpix-net-397030-free-cartoon-cat-defense-game-asset-kit/Png/Characters/C2/Idle/Character2-Idle_19.png",
+          "sha256": "a4eae8edb2a321e0c386a5b9e2209f5b135db7db28659b51bf8d3a8698f25fde"
+        },
+        {
+          "file": "assets/new/craftpix-net-397030-free-cartoon-cat-defense-game-asset-kit/Png/Characters/C2/Shoot/Character2-Shoot_00.png",
+          "sha256": "836339df0896470ab740ea11b010a98509e026a6e16241ead29e6e48a0e1c010"
+        },
+        {
+          "file": "assets/new/craftpix-net-397030-free-cartoon-cat-defense-game-asset-kit/Png/Characters/C2/Shoot/Character2-Shoot_01.png",
+          "sha256": "c839035eb76d27f2d533663dd678c085db8bb02754c526cce6d22f5e4ab766e9"
+        },
+        {
+          "file": "assets/new/craftpix-net-397030-free-cartoon-cat-defense-game-asset-kit/Png/Characters/C2/Shoot/Character2-Shoot_02.png",
+          "sha256": "1b44277c0a8b61459bb9fbbfc24a27b164418e3e82f40116cbc047b78bf8bb82"
+        },
+        {
+          "file": "assets/new/craftpix-net-397030-free-cartoon-cat-defense-game-asset-kit/Png/Characters/C2/Shoot/Character2-Shoot_03.png",
+          "sha256": "266cc9a8fe6efdd129490aa0be29c76d638f13da5cd51f40df5be1c6e73f4970"
+        },
+        {
+          "file": "assets/new/craftpix-net-397030-free-cartoon-cat-defense-game-asset-kit/Png/Characters/C2/Shoot/Character2-Shoot_04.png",
+          "sha256": "a3a11c550c12407dc1155725d459a9fa9d23ea6507fcb255a1517f809cf0f3ca"
+        },
+        {
+          "file": "assets/new/craftpix-net-397030-free-cartoon-cat-defense-game-asset-kit/Png/Characters/C2/Shoot/Character2-Shoot_05.png",
+          "sha256": "cba36211543073daf20d18da7e12e9a854cfce1d1e6c230938a23206f879d04b"
+        },
+        {
+          "file": "assets/new/craftpix-net-397030-free-cartoon-cat-defense-game-asset-kit/Png/Characters/C2/Shoot/Character2-Shoot_06.png",
+          "sha256": "50324be302007cefd1fb401a4c23faedf1c7c79bee398bf86551745bf016b36e"
+        },
+        {
+          "file": "assets/new/craftpix-net-397030-free-cartoon-cat-defense-game-asset-kit/Png/Characters/C2/Shoot/Character2-Shoot_07.png",
+          "sha256": "edd41a3ed758b46a46871b5ba8e230ce9826ceeac1a0ea064086ec2f9c4308ef"
+        },
+        {
+          "file": "assets/new/craftpix-net-397030-free-cartoon-cat-defense-game-asset-kit/Png/Characters/C2/Shoot/Character2-Shoot_08.png",
+          "sha256": "9e5276a5b657b5f5bdcf5d999d071231205b153a021f55a1f99b60fa12cb75b3"
+        },
+        {
+          "file": "assets/new/craftpix-net-397030-free-cartoon-cat-defense-game-asset-kit/Png/Characters/C2/Shoot/Character2-Shoot_09.png",
+          "sha256": "1a4981d6b2075522fbc0014955d0d61f43e130415ec8f3b37c4e0e4fda87ae4a"
+        }
+      ],
+      "metadata": {
+        "id": "cat-2",
+        "name": "Beanie",
+        "url": "/models/cats/cat-2.webp",
+        "width": 744,
+        "height": 348,
+        "frameWidth": 93,
+        "frameHeight": 116,
+        "columns": 8,
+        "frameCount": 20,
+        "anchorX": 48.0,
+        "groundY": 112,
+        "bodyHeightPixels": 110,
+        "nativeFacing": 1,
+        "clips": {
+          "idle": {
+            "start": 0,
+            "count": 10,
+            "duration": 0.9,
+            "loop": true
+          },
+          "shoot": {
+            "start": 10,
+            "count": 10,
+            "duration": 0.32,
+            "loop": false
+          }
+        },
+        "originalFrame": [
+          150,
+          150
+        ],
+        "trimBounds": [
+          29,
+          22,
+          118,
+          134
+        ]
+      }
+    },
+    {
+      "file": "cat-3.webp",
+      "sha256": "2f00f0905d4beccc42ef9d833dd90154965d5766771c3cd15f45db109ca0aa7c",
+      "bytes": 208162,
+      "sourceFrames": [
+        {
+          "file": "assets/new/craftpix-net-397030-free-cartoon-cat-defense-game-asset-kit/Png/Characters/C3/Idle/Character3-Idle_00.png",
+          "sha256": "759e2214ef96a7f57bb3749a8ad5dac7819e3a78461de8fde2aeb64063088b52"
+        },
+        {
+          "file": "assets/new/craftpix-net-397030-free-cartoon-cat-defense-game-asset-kit/Png/Characters/C3/Idle/Character3-Idle_02.png",
+          "sha256": "c33a6add2174abe5f5cea75b3a7d2500d79527fed46bdd8eb380b8b705312693"
+        },
+        {
+          "file": "assets/new/craftpix-net-397030-free-cartoon-cat-defense-game-asset-kit/Png/Characters/C3/Idle/Character3-Idle_04.png",
+          "sha256": "aae4106d58b3488c5b7b4bcc294ee048cf68915a42c6b5a9ace59b0301edd261"
+        },
+        {
+          "file": "assets/new/craftpix-net-397030-free-cartoon-cat-defense-game-asset-kit/Png/Characters/C3/Idle/Character3-Idle_06.png",
+          "sha256": "56207af16fbe03907207dfc2859de75c6b0eaff28c0d057395f268670cc779f2"
+        },
+        {
+          "file": "assets/new/craftpix-net-397030-free-cartoon-cat-defense-game-asset-kit/Png/Characters/C3/Idle/Character3-Idle_08.png",
+          "sha256": "472d6d0dccb06e24c264e9ed0a21cfd90116b4362408b18275701e41071f23fa"
+        },
+        {
+          "file": "assets/new/craftpix-net-397030-free-cartoon-cat-defense-game-asset-kit/Png/Characters/C3/Idle/Character3-Idle_11.png",
+          "sha256": "aae3a3e61d156b24a1945dfb4a7e938e925431ce4ee32a2557284651f92f37b0"
+        },
+        {
+          "file": "assets/new/craftpix-net-397030-free-cartoon-cat-defense-game-asset-kit/Png/Characters/C3/Idle/Character3-Idle_13.png",
+          "sha256": "12337670c0037f9b66dce5d9e300d975ecb678c23a332a2879d07e452c07f1d2"
+        },
+        {
+          "file": "assets/new/craftpix-net-397030-free-cartoon-cat-defense-game-asset-kit/Png/Characters/C3/Idle/Character3-Idle_15.png",
+          "sha256": "6abe9a84302886cc7413bcaba80cc9193a1333d7e608f0ab95da325554094903"
+        },
+        {
+          "file": "assets/new/craftpix-net-397030-free-cartoon-cat-defense-game-asset-kit/Png/Characters/C3/Idle/Character3-Idle_17.png",
+          "sha256": "9aaad1af5ba468d054e994b33724db1ab9889bd980df061692cd1e4d20474491"
+        },
+        {
+          "file": "assets/new/craftpix-net-397030-free-cartoon-cat-defense-game-asset-kit/Png/Characters/C3/Idle/Character3-Idle_19.png",
+          "sha256": "1156230fa26cda9c708cd1ee8a37986ef55c06b05ff7b7d87f80304fb8a87f43"
+        },
+        {
+          "file": "assets/new/craftpix-net-397030-free-cartoon-cat-defense-game-asset-kit/Png/Characters/C3/Shoot/Character3-Shoot_00.png",
+          "sha256": "759e2214ef96a7f57bb3749a8ad5dac7819e3a78461de8fde2aeb64063088b52"
+        },
+        {
+          "file": "assets/new/craftpix-net-397030-free-cartoon-cat-defense-game-asset-kit/Png/Characters/C3/Shoot/Character3-Shoot_01.png",
+          "sha256": "59a4e4e393bc96083f0fa7372b927125dc12c92dcb888fdec3ea4b32af2d14bb"
+        },
+        {
+          "file": "assets/new/craftpix-net-397030-free-cartoon-cat-defense-game-asset-kit/Png/Characters/C3/Shoot/Character3-Shoot_02.png",
+          "sha256": "28abe3708fda3cf247f20d50deb466da34ecb5dcceee1f3f474c3fe43c792687"
+        },
+        {
+          "file": "assets/new/craftpix-net-397030-free-cartoon-cat-defense-game-asset-kit/Png/Characters/C3/Shoot/Character3-Shoot_03.png",
+          "sha256": "3168ad7eceb3e473882813734ecbc6b6087d064b91de82fb38a0d5b560576ab4"
+        },
+        {
+          "file": "assets/new/craftpix-net-397030-free-cartoon-cat-defense-game-asset-kit/Png/Characters/C3/Shoot/Character3-Shoot_04.png",
+          "sha256": "55a8b1d475194246bf6b39889aaac94133e0dffc38032eee8db089c70e1b363e"
+        },
+        {
+          "file": "assets/new/craftpix-net-397030-free-cartoon-cat-defense-game-asset-kit/Png/Characters/C3/Shoot/Character3-Shoot_05.png",
+          "sha256": "a59c90e0f63a632ee7f13662f27fd082553cc5462e04f36b772f39d598ee2d9b"
+        },
+        {
+          "file": "assets/new/craftpix-net-397030-free-cartoon-cat-defense-game-asset-kit/Png/Characters/C3/Shoot/Character3-Shoot_06.png",
+          "sha256": "5cbf422e47eec8b20a2e05f5396290edb468ea87f02798e085b3d4ecfb5237ec"
+        },
+        {
+          "file": "assets/new/craftpix-net-397030-free-cartoon-cat-defense-game-asset-kit/Png/Characters/C3/Shoot/Character3-Shoot_07.png",
+          "sha256": "cbf5f27cb09d0491359a4e9637df7e1c46d9f617703da4e4002fa1d5dcd710a0"
+        },
+        {
+          "file": "assets/new/craftpix-net-397030-free-cartoon-cat-defense-game-asset-kit/Png/Characters/C3/Shoot/Character3-Shoot_08.png",
+          "sha256": "0ef4ee68b784835504a753cc628eadb24ad023802b58538895bad6009193fecd"
+        },
+        {
+          "file": "assets/new/craftpix-net-397030-free-cartoon-cat-defense-game-asset-kit/Png/Characters/C3/Shoot/Character3-Shoot_09.png",
+          "sha256": "ad9c1598083a9f9b389f9768d70ffaa8bd46563a86b04daba141f61da8eba2b6"
+        }
+      ],
+      "metadata": {
+        "id": "cat-3",
+        "name": "Scout",
+        "url": "/models/cats/cat-3.webp",
+        "width": 904,
+        "height": 381,
+        "frameWidth": 113,
+        "frameHeight": 127,
+        "columns": 8,
+        "frameCount": 20,
+        "anchorX": 59.0,
+        "groundY": 123,
+        "bodyHeightPixels": 121,
+        "nativeFacing": 1,
+        "clips": {
+          "idle": {
+            "start": 0,
+            "count": 10,
+            "duration": 0.9,
+            "loop": true
+          },
+          "shoot": {
+            "start": 10,
+            "count": 10,
+            "duration": 0.32,
+            "loop": false
+          }
+        },
+        "originalFrame": [
+          150,
+          150
+        ],
+        "trimBounds": [
+          10,
+          11,
+          119,
+          134
+        ]
+      }
+    },
+    {
+      "file": "cat-4.webp",
+      "sha256": "0bb0607e24bc234371cd2850a77ae33a5d7ec6d2e1b9497f8b77b617938739b8",
+      "bytes": 223184,
+      "sourceFrames": [
+        {
+          "file": "assets/new/craftpix-net-397030-free-cartoon-cat-defense-game-asset-kit/Png/Characters/C4/Idle/Character4-Idle_00.png",
+          "sha256": "111661bc99159442fadc4d7352e49039866b29915f6995404eae83a3b6996694"
+        },
+        {
+          "file": "assets/new/craftpix-net-397030-free-cartoon-cat-defense-game-asset-kit/Png/Characters/C4/Idle/Character4-Idle_02.png",
+          "sha256": "fbd7f9166aa588c6fc15170c6da02047e8f537b6fdfded1401cd86d51958c484"
+        },
+        {
+          "file": "assets/new/craftpix-net-397030-free-cartoon-cat-defense-game-asset-kit/Png/Characters/C4/Idle/Character4-Idle_04.png",
+          "sha256": "a7963f423ed7ed445afef9fd385d238ae0dc958493f7ceb8b491cb8a4cddb952"
+        },
+        {
+          "file": "assets/new/craftpix-net-397030-free-cartoon-cat-defense-game-asset-kit/Png/Characters/C4/Idle/Character4-Idle_06.png",
+          "sha256": "e5b87a4cba9430050e1f2b1bbf358f71514d9c6dd74db3f7dc7653a6301b081c"
+        },
+        {
+          "file": "assets/new/craftpix-net-397030-free-cartoon-cat-defense-game-asset-kit/Png/Characters/C4/Idle/Character4-Idle_08.png",
+          "sha256": "261d9a85772618d001747737a63ed77ed201e64effcf698b54cb1b1c1254883b"
+        },
+        {
+          "file": "assets/new/craftpix-net-397030-free-cartoon-cat-defense-game-asset-kit/Png/Characters/C4/Idle/Character4-Idle_11.png",
+          "sha256": "bed48070bcab03e4db4ca768e942c80d560ee6956122290ef4d638b6dd2996ac"
+        },
+        {
+          "file": "assets/new/craftpix-net-397030-free-cartoon-cat-defense-game-asset-kit/Png/Characters/C4/Idle/Character4-Idle_13.png",
+          "sha256": "b1398bc3f2bbeebbbb1747c73bad6e71d4bb3876e93735db614da35c9c7f7871"
+        },
+        {
+          "file": "assets/new/craftpix-net-397030-free-cartoon-cat-defense-game-asset-kit/Png/Characters/C4/Idle/Character4-Idle_15.png",
+          "sha256": "8bce239432cbac3a243ac2c7cffbda33672c599e5b4b9c56ba47c8fba495dec7"
+        },
+        {
+          "file": "assets/new/craftpix-net-397030-free-cartoon-cat-defense-game-asset-kit/Png/Characters/C4/Idle/Character4-Idle_17.png",
+          "sha256": "8278fc36cbd71ea1c700287ba89ea1fdb04b28b19edabc4b4046a21e8a8a0af5"
+        },
+        {
+          "file": "assets/new/craftpix-net-397030-free-cartoon-cat-defense-game-asset-kit/Png/Characters/C4/Idle/Character4-Idle_19.png",
+          "sha256": "86cd3a8fa16c308c7fe7efab0c0f5c5b327b0f71dc8e35cb3b7c8ede203c0cf1"
+        },
+        {
+          "file": "assets/new/craftpix-net-397030-free-cartoon-cat-defense-game-asset-kit/Png/Characters/C4/Shoot/Character4-Shoot_00.png",
+          "sha256": "111661bc99159442fadc4d7352e49039866b29915f6995404eae83a3b6996694"
+        },
+        {
+          "file": "assets/new/craftpix-net-397030-free-cartoon-cat-defense-game-asset-kit/Png/Characters/C4/Shoot/Character4-Shoot_01.png",
+          "sha256": "16df1528320f65276b8e2f553785fa08dcb1bad6e827c2dfae1d79ea8c58fdda"
+        },
+        {
+          "file": "assets/new/craftpix-net-397030-free-cartoon-cat-defense-game-asset-kit/Png/Characters/C4/Shoot/Character4-Shoot_02.png",
+          "sha256": "499182a85af78cb168b6ba6305b061307cd8d752b98185ec13d86301b3a2de58"
+        },
+        {
+          "file": "assets/new/craftpix-net-397030-free-cartoon-cat-defense-game-asset-kit/Png/Characters/C4/Shoot/Character4-Shoot_03.png",
+          "sha256": "79c1ce8e08b9c92566fb2eae1678f11f15afb01d569e6b1eb2a82e9bc768fa02"
+        },
+        {
+          "file": "assets/new/craftpix-net-397030-free-cartoon-cat-defense-game-asset-kit/Png/Characters/C4/Shoot/Character4-Shoot_04.png",
+          "sha256": "0c2d56f00bb6f0fd2d983827f94b8470a353012121f16ccbc539c5bf0523fd2f"
+        },
+        {
+          "file": "assets/new/craftpix-net-397030-free-cartoon-cat-defense-game-asset-kit/Png/Characters/C4/Shoot/Character4-Shoot_05.png",
+          "sha256": "457041320724f945f57c22422023fdee33d8ad497d8d0bb3cd11caabe56384f3"
+        },
+        {
+          "file": "assets/new/craftpix-net-397030-free-cartoon-cat-defense-game-asset-kit/Png/Characters/C4/Shoot/Character4-Shoot_06.png",
+          "sha256": "48e39238d96da9c8e2d8e12cef0f7fd25e287e7a420de7f5879a89c8f62a9d7a"
+        },
+        {
+          "file": "assets/new/craftpix-net-397030-free-cartoon-cat-defense-game-asset-kit/Png/Characters/C4/Shoot/Character4-Shoot_07.png",
+          "sha256": "288d7841071f1ed25ee026f55e46eeea55aad998dc925ecbe0c094ba7673e264"
+        },
+        {
+          "file": "assets/new/craftpix-net-397030-free-cartoon-cat-defense-game-asset-kit/Png/Characters/C4/Shoot/Character4-Shoot_08.png",
+          "sha256": "061a6ce12b8d0c67db8019a225fff35175d694a1efbc926e4c373577cf3b06ac"
+        },
+        {
+          "file": "assets/new/craftpix-net-397030-free-cartoon-cat-defense-game-asset-kit/Png/Characters/C4/Shoot/Character4-Shoot_09.png",
+          "sha256": "545ebf77d2170e0f5c6fe34dec11ddb20331116a9046f994d0f9712676538d71"
+        }
+      ],
+      "metadata": {
+        "id": "cat-4",
+        "name": "Rosie",
+        "url": "/models/cats/cat-4.webp",
+        "width": 832,
+        "height": 387,
+        "frameWidth": 104,
+        "frameHeight": 129,
+        "columns": 8,
+        "frameCount": 20,
+        "anchorX": 54.0,
+        "groundY": 125,
+        "bodyHeightPixels": 123,
+        "nativeFacing": 1,
+        "clips": {
+          "idle": {
+            "start": 0,
+            "count": 10,
+            "duration": 0.9,
+            "loop": true
+          },
+          "shoot": {
+            "start": 10,
+            "count": 10,
+            "duration": 0.32,
+            "loop": false
+          }
+        },
+        "originalFrame": [
+          150,
+          150
+        ],
+        "trimBounds": [
+          18,
+          9,
+          118,
+          134
+        ]
+      }
+    },
+    {
+      "file": "runner.webp",
+      "sha256": "a7a65ada028441f7fedd78055a54b32a885ee827e789dfb8b371d2c93781ba74",
+      "bytes": 328806,
+      "sourceFrames": [
+        {
+          "file": "assets/new/craftpix-net-397030-free-cartoon-cat-defense-game-asset-kit/Png/Enemies/Enemy Reg 1/Idle/Enemy-Idle_00.png",
+          "sha256": "427a4d166690f3f75351f34d744e74f6e02c193067a4f8cd205a899d83e3972a"
+        },
+        {
+          "file": "assets/new/craftpix-net-397030-free-cartoon-cat-defense-game-asset-kit/Png/Enemies/Enemy Reg 1/Idle/Enemy-Idle_04.png",
+          "sha256": "57fc7c1d0b232dce13fce79a2bf1c9263fb700dfb1eea9f58c1ebdd0146a3281"
+        },
+        {
+          "file": "assets/new/craftpix-net-397030-free-cartoon-cat-defense-game-asset-kit/Png/Enemies/Enemy Reg 1/Idle/Enemy-Idle_08.png",
+          "sha256": "440ef7a9655f98c73a3894cccc291cab4a15d809a28473359da89f4633cace6a"
+        },
+        {
+          "file": "assets/new/craftpix-net-397030-free-cartoon-cat-defense-game-asset-kit/Png/Enemies/Enemy Reg 1/Idle/Enemy-Idle_11.png",
+          "sha256": "032f9f17a534aef02dde3fda5d773801984c8e6ae9a0342b1932645077d3fa7e"
+        },
+        {
+          "file": "assets/new/craftpix-net-397030-free-cartoon-cat-defense-game-asset-kit/Png/Enemies/Enemy Reg 1/Idle/Enemy-Idle_15.png",
+          "sha256": "ed1285d8790e1eb342e1e3d9756a6ba9392e548516dc2dcdc195881180a10749"
+        },
+        {
+          "file": "assets/new/craftpix-net-397030-free-cartoon-cat-defense-game-asset-kit/Png/Enemies/Enemy Reg 1/Idle/Enemy-Idle_19.png",
+          "sha256": "d2e489d84dc50a619ea42702c1d00a45a50b9f6d675b1911c304c73d6350c1e3"
+        },
+        {
+          "file": "assets/new/craftpix-net-397030-free-cartoon-cat-defense-game-asset-kit/Png/Enemies/Enemy Reg 1/Walk/Enemy-Walking_00.png",
+          "sha256": "427a4d166690f3f75351f34d744e74f6e02c193067a4f8cd205a899d83e3972a"
+        },
+        {
+          "file": "assets/new/craftpix-net-397030-free-cartoon-cat-defense-game-asset-kit/Png/Enemies/Enemy Reg 1/Walk/Enemy-Walking_03.png",
+          "sha256": "1deb5148d614a3cf409e9c7cd00185f3baabdd30f99633cfa32cd705bdb7be44"
+        },
+        {
+          "file": "assets/new/craftpix-net-397030-free-cartoon-cat-defense-game-asset-kit/Png/Enemies/Enemy Reg 1/Walk/Enemy-Walking_06.png",
+          "sha256": "6989ee6cabedf3eb853b08fd2aeba761fba71a4438b79c3cdcf371404808b17f"
+        },
+        {
+          "file": "assets/new/craftpix-net-397030-free-cartoon-cat-defense-game-asset-kit/Png/Enemies/Enemy Reg 1/Walk/Enemy-Walking_09.png",
+          "sha256": "96504c67103eb27ec5996bc966f639de81a21d28116234b44928e4bc483ec67f"
+        },
+        {
+          "file": "assets/new/craftpix-net-397030-free-cartoon-cat-defense-game-asset-kit/Png/Enemies/Enemy Reg 1/Walk/Enemy-Walking_12.png",
+          "sha256": "8aac27a784e9ea6dd68ed749edaec39f6b291447cb77381f9c65225eb2331627"
+        },
+        {
+          "file": "assets/new/craftpix-net-397030-free-cartoon-cat-defense-game-asset-kit/Png/Enemies/Enemy Reg 1/Walk/Enemy-Walking_15.png",
+          "sha256": "a7c199c6dd47ae2077f5d0a204e035221158e219b000ddfac2047ee46c4184fc"
+        },
+        {
+          "file": "assets/new/craftpix-net-397030-free-cartoon-cat-defense-game-asset-kit/Png/Enemies/Enemy Reg 1/Walk/Enemy-Walking_19.png",
+          "sha256": "a7c199c6dd47ae2077f5d0a204e035221158e219b000ddfac2047ee46c4184fc"
+        },
+        {
+          "file": "assets/new/craftpix-net-397030-free-cartoon-cat-defense-game-asset-kit/Png/Enemies/Enemy Reg 1/Walk/Enemy-Walking_22.png",
+          "sha256": "d934bb7888070a727679718b5b48fd90246e5537e4e1731305e552a1ff7ab815"
+        },
+        {
+          "file": "assets/new/craftpix-net-397030-free-cartoon-cat-defense-game-asset-kit/Png/Enemies/Enemy Reg 1/Walk/Enemy-Walking_25.png",
+          "sha256": "7846402131d57622ca620ebebad1940113ea7b1c3ca7b3dc91088f48273cb077"
+        },
+        {
+          "file": "assets/new/craftpix-net-397030-free-cartoon-cat-defense-game-asset-kit/Png/Enemies/Enemy Reg 1/Walk/Enemy-Walking_28.png",
+          "sha256": "f3e3f54ec107d6084fa74a5514b25bd8d0acbf8124ccfcd8a70333bb76f05b97"
+        },
+        {
+          "file": "assets/new/craftpix-net-397030-free-cartoon-cat-defense-game-asset-kit/Png/Enemies/Enemy Reg 1/Walk/Enemy-Walking_31.png",
+          "sha256": "b859071d5f0be8547211a8f1fedcf00342236d77d34eeb37bf71d9f83e092783"
+        },
+        {
+          "file": "assets/new/craftpix-net-397030-free-cartoon-cat-defense-game-asset-kit/Png/Enemies/Enemy Reg 1/Walk/Enemy-Walking_34.png",
+          "sha256": "3a0b3f823499f5f9269e6a49c6bdc975fbfd9304b7fb7a16556c57ba3ad462dd"
+        },
+        {
+          "file": "assets/new/craftpix-net-397030-free-cartoon-cat-defense-game-asset-kit/Png/Enemies/Enemy Reg 1/Attack/Enemy-Attack_00.png",
+          "sha256": "427a4d166690f3f75351f34d744e74f6e02c193067a4f8cd205a899d83e3972a"
+        },
+        {
+          "file": "assets/new/craftpix-net-397030-free-cartoon-cat-defense-game-asset-kit/Png/Enemies/Enemy Reg 1/Attack/Enemy-Attack_03.png",
+          "sha256": "7dcfe53ecdddcb489584102fe0eed3ea2103e3285bbb29405ddac3199d10984b"
+        },
+        {
+          "file": "assets/new/craftpix-net-397030-free-cartoon-cat-defense-game-asset-kit/Png/Enemies/Enemy Reg 1/Attack/Enemy-Attack_05.png",
+          "sha256": "8af971033a57ea5333bc321c55ff09c78f917a185221cfbd0ac0e2be76761830"
+        },
+        {
+          "file": "assets/new/craftpix-net-397030-free-cartoon-cat-defense-game-asset-kit/Png/Enemies/Enemy Reg 1/Attack/Enemy-Attack_08.png",
+          "sha256": "a4178d509fd810f1155c11358884dfb4a4953391bf8cf48a2bf16d732fc01285"
+        },
+        {
+          "file": "assets/new/craftpix-net-397030-free-cartoon-cat-defense-game-asset-kit/Png/Enemies/Enemy Reg 1/Attack/Enemy-Attack_11.png",
+          "sha256": "40a5cea453c8da67269285dc277c46980b786e0493eb39f509b833e768ab8179"
+        },
+        {
+          "file": "assets/new/craftpix-net-397030-free-cartoon-cat-defense-game-asset-kit/Png/Enemies/Enemy Reg 1/Attack/Enemy-Attack_13.png",
+          "sha256": "2fe832883fa84204c018aa7279353dc6d4175cf55c5413ee1bb5f6ecd0d57897"
+        },
+        {
+          "file": "assets/new/craftpix-net-397030-free-cartoon-cat-defense-game-asset-kit/Png/Enemies/Enemy Reg 1/Attack/Enemy-Attack_16.png",
+          "sha256": "019ab3adfd10006eeafa74e14e40017bb36b4e38dfad2f10a61befc32bc3b047"
+        },
+        {
+          "file": "assets/new/craftpix-net-397030-free-cartoon-cat-defense-game-asset-kit/Png/Enemies/Enemy Reg 1/Attack/Enemy-Attack_19.png",
+          "sha256": "017376c539c0745960cf18602a210649177ef8544038b75693ba601c406f1735"
+        },
+        {
+          "file": "assets/new/craftpix-net-397030-free-cartoon-cat-defense-game-asset-kit/Png/Enemies/Enemy Reg 1/Attack/Enemy-Attack_21.png",
+          "sha256": "5f9eff65bb98436bbeef913edacb340ca868a8674fbdc160cf64e9a9602ea94d"
+        },
+        {
+          "file": "assets/new/craftpix-net-397030-free-cartoon-cat-defense-game-asset-kit/Png/Enemies/Enemy Reg 1/Attack/Enemy-Attack_24.png",
+          "sha256": "1465db5b5b3accd477c07216fe3b5b7d97007ba32c279e3a4e1bebf5109051c8"
+        },
+        {
+          "file": "assets/new/craftpix-net-397030-free-cartoon-cat-defense-game-asset-kit/Png/Enemies/Enemy Reg 1/Dead/Enemy-Dead_00.png",
+          "sha256": "427a4d166690f3f75351f34d744e74f6e02c193067a4f8cd205a899d83e3972a"
+        },
+        {
+          "file": "assets/new/craftpix-net-397030-free-cartoon-cat-defense-game-asset-kit/Png/Enemies/Enemy Reg 1/Dead/Enemy-Dead_04.png",
+          "sha256": "e483f3ba9a1fd52ed6effd26f56aca52b434447daa64ae6fce39b952a88a518f"
+        },
+        {
+          "file": "assets/new/craftpix-net-397030-free-cartoon-cat-defense-game-asset-kit/Png/Enemies/Enemy Reg 1/Dead/Enemy-Dead_08.png",
+          "sha256": "78b26272e752bd5c425cb7820daa37a24cb29a31cee81798d2d41a339aa04e7f"
+        },
+        {
+          "file": "assets/new/craftpix-net-397030-free-cartoon-cat-defense-game-asset-kit/Png/Enemies/Enemy Reg 1/Dead/Enemy-Dead_13.png",
+          "sha256": "e872c941fde19efbfba57bfca8d73b7e6d24573fc855c382c094ad936d9f0e0b"
+        },
+        {
+          "file": "assets/new/craftpix-net-397030-free-cartoon-cat-defense-game-asset-kit/Png/Enemies/Enemy Reg 1/Dead/Enemy-Dead_17.png",
+          "sha256": "2b904de2af63912614cbe807d30a6ad32e2bed239e79f90d1d8561818b8d3abb"
+        },
+        {
+          "file": "assets/new/craftpix-net-397030-free-cartoon-cat-defense-game-asset-kit/Png/Enemies/Enemy Reg 1/Dead/Enemy-Dead_21.png",
+          "sha256": "d38effb00b797d8cd86d5356956e094c63a4cd9153f4c72a4e622b33332e7ca2"
+        },
+        {
+          "file": "assets/new/craftpix-net-397030-free-cartoon-cat-defense-game-asset-kit/Png/Enemies/Enemy Reg 1/Dead/Enemy-Dead_25.png",
+          "sha256": "c4c7c837552d4cf932e920cf5bca813578123651cf41282c75e12732e3d3f476"
+        },
+        {
+          "file": "assets/new/craftpix-net-397030-free-cartoon-cat-defense-game-asset-kit/Png/Enemies/Enemy Reg 1/Dead/Enemy-Dead_30.png",
+          "sha256": "1893091739c4255d4e366d3d82cfe1f41e78392c7f945a5395d7c59c26695ce5"
+        },
+        {
+          "file": "assets/new/craftpix-net-397030-free-cartoon-cat-defense-game-asset-kit/Png/Enemies/Enemy Reg 1/Dead/Enemy-Dead_34.png",
+          "sha256": "d6956aeed2080df19bac33f0fc63e863c9e64e58093cd8d8542bac14931b8be7"
+        },
+        {
+          "file": "assets/new/craftpix-net-397030-free-cartoon-cat-defense-game-asset-kit/Png/Enemies/Enemy Reg 1/Dead/Enemy-Dead_38.png",
+          "sha256": "a880156f02416fa7efb8a8f2b42d85cdbfda6dede5868f87558bc60406c6d99b"
+        },
+        {
+          "file": "assets/new/craftpix-net-397030-free-cartoon-cat-defense-game-asset-kit/Png/Enemies/Enemy Reg 1/Dead/Enemy-Dead_42.png",
+          "sha256": "4f85159edde61a267d994e6c2376411116a2dbf4eeac51bbee8dceaec43a0e11"
+        },
+        {
+          "file": "assets/new/craftpix-net-397030-free-cartoon-cat-defense-game-asset-kit/Png/Enemies/Enemy Reg 1/Dead/Enemy-Dead_46.png",
+          "sha256": "40f89c7433f2763e92aabb3308b6fac6ac077db74147f41d7628e823a183ba24"
+        },
+        {
+          "file": "assets/new/craftpix-net-397030-free-cartoon-cat-defense-game-asset-kit/Png/Enemies/Enemy Reg 1/Dead/Enemy-Dead_51.png",
+          "sha256": "a2fedaf1426eb9d3b6cab4d3b42f3fc7e848a4bef7630bd3442d945db65ce418"
+        },
+        {
+          "file": "assets/new/craftpix-net-397030-free-cartoon-cat-defense-game-asset-kit/Png/Enemies/Enemy Reg 1/Dead/Enemy-Dead_55.png",
+          "sha256": "bddc0d06acaa6c2287873dbef25ed223f512c19cb3bba77f0dc3106933f8271a"
+        },
+        {
+          "file": "assets/new/craftpix-net-397030-free-cartoon-cat-defense-game-asset-kit/Png/Enemies/Enemy Reg 1/Dead/Enemy-Dead_59.png",
+          "sha256": "af2e9b5552225efd06e06d240af2bfb98e6ad2b6a898b9f0127b8b5e8a64dcaa"
+        }
+      ],
+      "metadata": {
+        "id": "runner",
+        "name": "Scrap dog",
+        "url": "/models/cats/runner.webp",
+        "width": 1512,
+        "height": 846,
+        "frameWidth": 189,
+        "frameHeight": 141,
+        "columns": 8,
+        "frameCount": 43,
+        "anchorX": 74.5,
+        "groundY": 137,
+        "bodyHeightPixels": 106,
+        "nativeFacing": -1,
+        "clips": {
+          "idle": {
+            "start": 0,
+            "count": 6,
+            "duration": 0.8,
+            "loop": true
+          },
+          "walk": {
+            "start": 6,
+            "count": 12,
+            "duration": 0.7,
+            "loop": true
+          },
+          "attack": {
+            "start": 18,
+            "count": 10,
+            "duration": 0.65,
+            "loop": true
+          },
+          "dead": {
+            "start": 28,
+            "count": 15,
+            "duration": 0.85,
+            "loop": false
+          }
+        },
+        "originalFrame": [
+          297,
+          250
+        ],
+        "trimBounds": [
+          67,
+          70,
+          252,
+          207
+        ]
+      }
+    },
+    {
+      "file": "brute.webp",
+      "sha256": "c0525a853644fce4bcb863b6060e316283bdf9dfc5be4118057f27cfea5c2e6c",
+      "bytes": 629658,
+      "sourceFrames": [
+        {
+          "file": "assets/new/craftpix-net-397030-free-cartoon-cat-defense-game-asset-kit/Png/Enemies/Enemy Reg 3/Idle/Enemy-Idle_00.png",
+          "sha256": "32ea769fd4ab3b27070399de724cb430695b6ff76a7ba4813a743e7a67198bb6"
+        },
+        {
+          "file": "assets/new/craftpix-net-397030-free-cartoon-cat-defense-game-asset-kit/Png/Enemies/Enemy Reg 3/Idle/Enemy-Idle_04.png",
+          "sha256": "62da97fef4b8b1f960b0bf6e93ab3786113efd22d267e3bc85f0eb5b800eb619"
+        },
+        {
+          "file": "assets/new/craftpix-net-397030-free-cartoon-cat-defense-game-asset-kit/Png/Enemies/Enemy Reg 3/Idle/Enemy-Idle_08.png",
+          "sha256": "da9406751dcdd1bde3f0050ba2d161dddb24ff025dc5360c02d9a1323ae22b3e"
+        },
+        {
+          "file": "assets/new/craftpix-net-397030-free-cartoon-cat-defense-game-asset-kit/Png/Enemies/Enemy Reg 3/Idle/Enemy-Idle_11.png",
+          "sha256": "484b88e81380dffc8cc80135c9e7600682a9bfc7a576ec30bd3169a4cc113f88"
+        },
+        {
+          "file": "assets/new/craftpix-net-397030-free-cartoon-cat-defense-game-asset-kit/Png/Enemies/Enemy Reg 3/Idle/Enemy-Idle_15.png",
+          "sha256": "409bd0db35a917f97a27afa107a0a2f38ef3fb28dd3c17d3ff56c2bd2a457809"
+        },
+        {
+          "file": "assets/new/craftpix-net-397030-free-cartoon-cat-defense-game-asset-kit/Png/Enemies/Enemy Reg 3/Idle/Enemy-Idle_19.png",
+          "sha256": "aea3c92a348eb0d9ccd9a8522e39167e65848d7c114c01b2a107888cd0caed19"
+        },
+        {
+          "file": "assets/new/craftpix-net-397030-free-cartoon-cat-defense-game-asset-kit/Png/Enemies/Enemy Reg 3/Walk/Enemy-Walking_00.png",
+          "sha256": "32ea769fd4ab3b27070399de724cb430695b6ff76a7ba4813a743e7a67198bb6"
+        },
+        {
+          "file": "assets/new/craftpix-net-397030-free-cartoon-cat-defense-game-asset-kit/Png/Enemies/Enemy Reg 3/Walk/Enemy-Walking_03.png",
+          "sha256": "73d91883d892b7692bd704cb64a7aa7074880f149c07fb8bdd22c40a715e6ee9"
+        },
+        {
+          "file": "assets/new/craftpix-net-397030-free-cartoon-cat-defense-game-asset-kit/Png/Enemies/Enemy Reg 3/Walk/Enemy-Walking_06.png",
+          "sha256": "d8353ea45a50b732ca63e966509e1e9fa5d1873ddaa84095688c31cb69728351"
+        },
+        {
+          "file": "assets/new/craftpix-net-397030-free-cartoon-cat-defense-game-asset-kit/Png/Enemies/Enemy Reg 3/Walk/Enemy-Walking_09.png",
+          "sha256": "7a88ed4c1d96c7e85030343d6d660b385577ae2ed05be63548af4a93d65e8be2"
+        },
+        {
+          "file": "assets/new/craftpix-net-397030-free-cartoon-cat-defense-game-asset-kit/Png/Enemies/Enemy Reg 3/Walk/Enemy-Walking_12.png",
+          "sha256": "b5c032ed8e3d023f235e0a928f89010609be0783220919f16990e0fed909e39b"
+        },
+        {
+          "file": "assets/new/craftpix-net-397030-free-cartoon-cat-defense-game-asset-kit/Png/Enemies/Enemy Reg 3/Walk/Enemy-Walking_15.png",
+          "sha256": "5adc0a38277e6fa10937367932c03ac108eb6a00734f3d142af02d40163d7260"
+        },
+        {
+          "file": "assets/new/craftpix-net-397030-free-cartoon-cat-defense-game-asset-kit/Png/Enemies/Enemy Reg 3/Walk/Enemy-Walking_19.png",
+          "sha256": "5adc0a38277e6fa10937367932c03ac108eb6a00734f3d142af02d40163d7260"
+        },
+        {
+          "file": "assets/new/craftpix-net-397030-free-cartoon-cat-defense-game-asset-kit/Png/Enemies/Enemy Reg 3/Walk/Enemy-Walking_22.png",
+          "sha256": "467e4056162a215760c8e4ae960e11c53d5f0d0df9d2926c4017f18cf890b6e0"
+        },
+        {
+          "file": "assets/new/craftpix-net-397030-free-cartoon-cat-defense-game-asset-kit/Png/Enemies/Enemy Reg 3/Walk/Enemy-Walking_25.png",
+          "sha256": "918aba55aa7c88de2d46c4148f821dd7075e6ed043ae79ee2019804dc60a22c1"
+        },
+        {
+          "file": "assets/new/craftpix-net-397030-free-cartoon-cat-defense-game-asset-kit/Png/Enemies/Enemy Reg 3/Walk/Enemy-Walking_28.png",
+          "sha256": "a5abbdb20e3f34e59d6b5ce91d252fc6792dc8923bed18735bbbe9ac9e7aada5"
+        },
+        {
+          "file": "assets/new/craftpix-net-397030-free-cartoon-cat-defense-game-asset-kit/Png/Enemies/Enemy Reg 3/Walk/Enemy-Walking_31.png",
+          "sha256": "f6e7d70fc8213822a0166517b1e976f129b9a1cb8acbe626f4bac92a4412fbc3"
+        },
+        {
+          "file": "assets/new/craftpix-net-397030-free-cartoon-cat-defense-game-asset-kit/Png/Enemies/Enemy Reg 3/Walk/Enemy-Walking_34.png",
+          "sha256": "778b64766a00bfab7c6579c6a4b7b7d23934867d53389c44f67f9feff1999952"
+        },
+        {
+          "file": "assets/new/craftpix-net-397030-free-cartoon-cat-defense-game-asset-kit/Png/Enemies/Enemy Reg 3/Attack/Enemy-Attack_00.png",
+          "sha256": "32ea769fd4ab3b27070399de724cb430695b6ff76a7ba4813a743e7a67198bb6"
+        },
+        {
+          "file": "assets/new/craftpix-net-397030-free-cartoon-cat-defense-game-asset-kit/Png/Enemies/Enemy Reg 3/Attack/Enemy-Attack_03.png",
+          "sha256": "295ee94a1f58e47915a1e83730ba1f89effca979443bd77c0dadd60ee76b08f6"
+        },
+        {
+          "file": "assets/new/craftpix-net-397030-free-cartoon-cat-defense-game-asset-kit/Png/Enemies/Enemy Reg 3/Attack/Enemy-Attack_05.png",
+          "sha256": "f5c74cdab3b779d933611004447e05ecc146f74f2463d757b115f7339ab0fbd2"
+        },
+        {
+          "file": "assets/new/craftpix-net-397030-free-cartoon-cat-defense-game-asset-kit/Png/Enemies/Enemy Reg 3/Attack/Enemy-Attack_08.png",
+          "sha256": "3ae33dec8de03f56a9cc67d21a2b890089acc350ad0ff3ca89d2bbf19fd7cd76"
+        },
+        {
+          "file": "assets/new/craftpix-net-397030-free-cartoon-cat-defense-game-asset-kit/Png/Enemies/Enemy Reg 3/Attack/Enemy-Attack_11.png",
+          "sha256": "3a9dedba42117b53bff263e05bcd62038244997161b5a257563cecef9f271d21"
+        },
+        {
+          "file": "assets/new/craftpix-net-397030-free-cartoon-cat-defense-game-asset-kit/Png/Enemies/Enemy Reg 3/Attack/Enemy-Attack_13.png",
+          "sha256": "4e4d52fd29089f1e208b544e7eba9d45db42c828dcdc978f300904658b70cc9a"
+        },
+        {
+          "file": "assets/new/craftpix-net-397030-free-cartoon-cat-defense-game-asset-kit/Png/Enemies/Enemy Reg 3/Attack/Enemy-Attack_16.png",
+          "sha256": "bda5a3952c286f7bb1137a3c5298037af5e861b8ab700e50deda9d3e54ed6065"
+        },
+        {
+          "file": "assets/new/craftpix-net-397030-free-cartoon-cat-defense-game-asset-kit/Png/Enemies/Enemy Reg 3/Attack/Enemy-Attack_19.png",
+          "sha256": "6e94c6f7cd32db679e1363412c33d8c862161ad87038a72029028c75274e1838"
+        },
+        {
+          "file": "assets/new/craftpix-net-397030-free-cartoon-cat-defense-game-asset-kit/Png/Enemies/Enemy Reg 3/Attack/Enemy-Attack_21.png",
+          "sha256": "05c6c40f91c59c183544187750fbca6fd5113124b5400866a34157872eff0d49"
+        },
+        {
+          "file": "assets/new/craftpix-net-397030-free-cartoon-cat-defense-game-asset-kit/Png/Enemies/Enemy Reg 3/Attack/Enemy-Attack_24.png",
+          "sha256": "33a10b7c62fbd7ac6066f716d0a3c3ba40077590ca7e53c5736d0ca3d371c48a"
+        },
+        {
+          "file": "assets/new/craftpix-net-397030-free-cartoon-cat-defense-game-asset-kit/Png/Enemies/Enemy Reg 3/Dead/Enemy-Dead_00.png",
+          "sha256": "32ea769fd4ab3b27070399de724cb430695b6ff76a7ba4813a743e7a67198bb6"
+        },
+        {
+          "file": "assets/new/craftpix-net-397030-free-cartoon-cat-defense-game-asset-kit/Png/Enemies/Enemy Reg 3/Dead/Enemy-Dead_04.png",
+          "sha256": "3b2e98b458981f212dcaa1bf85eb2ef19ae7af77656f6129c6f361f7409aeca2"
+        },
+        {
+          "file": "assets/new/craftpix-net-397030-free-cartoon-cat-defense-game-asset-kit/Png/Enemies/Enemy Reg 3/Dead/Enemy-Dead_08.png",
+          "sha256": "5ae99db47e7946d80655dcc90b28a1b6fed1121f8370d00589262550ccb52a34"
+        },
+        {
+          "file": "assets/new/craftpix-net-397030-free-cartoon-cat-defense-game-asset-kit/Png/Enemies/Enemy Reg 3/Dead/Enemy-Dead_13.png",
+          "sha256": "c639df960e5cd729ac328792fdd9557490584f44bb385689430caf2df43c4adc"
+        },
+        {
+          "file": "assets/new/craftpix-net-397030-free-cartoon-cat-defense-game-asset-kit/Png/Enemies/Enemy Reg 3/Dead/Enemy-Dead_17.png",
+          "sha256": "5e17698467e81d0cd03e141003906d1fb3fb96e926f76ce349d3f94991074988"
+        },
+        {
+          "file": "assets/new/craftpix-net-397030-free-cartoon-cat-defense-game-asset-kit/Png/Enemies/Enemy Reg 3/Dead/Enemy-Dead_21.png",
+          "sha256": "8ea3510c32cc67080c38e179614cfba670aca7c9f07275825d46d29c8ee89b63"
+        },
+        {
+          "file": "assets/new/craftpix-net-397030-free-cartoon-cat-defense-game-asset-kit/Png/Enemies/Enemy Reg 3/Dead/Enemy-Dead_25.png",
+          "sha256": "eea1af679a0f0675dcadbc5229f2a64cf5dd13e83ad9535ddce0c5afb794c268"
+        },
+        {
+          "file": "assets/new/craftpix-net-397030-free-cartoon-cat-defense-game-asset-kit/Png/Enemies/Enemy Reg 3/Dead/Enemy-Dead_30.png",
+          "sha256": "eea1af679a0f0675dcadbc5229f2a64cf5dd13e83ad9535ddce0c5afb794c268"
+        },
+        {
+          "file": "assets/new/craftpix-net-397030-free-cartoon-cat-defense-game-asset-kit/Png/Enemies/Enemy Reg 3/Dead/Enemy-Dead_34.png",
+          "sha256": "51bb57eff9c73731320c8cd4fed4dadd6993d4ae6d7e242e6f60fb094d7a15fc"
+        },
+        {
+          "file": "assets/new/craftpix-net-397030-free-cartoon-cat-defense-game-asset-kit/Png/Enemies/Enemy Reg 3/Dead/Enemy-Dead_38.png",
+          "sha256": "b94c233d66f69e06d6083c400aab35e5f1683c494e090700b36f4c0cade18297"
+        },
+        {
+          "file": "assets/new/craftpix-net-397030-free-cartoon-cat-defense-game-asset-kit/Png/Enemies/Enemy Reg 3/Dead/Enemy-Dead_42.png",
+          "sha256": "7fbd18f1db21dbfc4ea13977681ae9adb08040ae0c1d3ddfb04b48fe1837727e"
+        },
+        {
+          "file": "assets/new/craftpix-net-397030-free-cartoon-cat-defense-game-asset-kit/Png/Enemies/Enemy Reg 3/Dead/Enemy-Dead_46.png",
+          "sha256": "8811742dd651a988dd99c739445bb7b3378aa5666a4723e1218dd55f76e26c67"
+        },
+        {
+          "file": "assets/new/craftpix-net-397030-free-cartoon-cat-defense-game-asset-kit/Png/Enemies/Enemy Reg 3/Dead/Enemy-Dead_51.png",
+          "sha256": "02f920e4d279f05c1741932770f895149c2a5efa5a47940353acc6832a4721ce"
+        },
+        {
+          "file": "assets/new/craftpix-net-397030-free-cartoon-cat-defense-game-asset-kit/Png/Enemies/Enemy Reg 3/Dead/Enemy-Dead_55.png",
+          "sha256": "20fe8d070901be65630c99ea6ce5ffa34e3905ccac59ab92bae8806cd3321cb4"
+        },
+        {
+          "file": "assets/new/craftpix-net-397030-free-cartoon-cat-defense-game-asset-kit/Png/Enemies/Enemy Reg 3/Dead/Enemy-Dead_59.png",
+          "sha256": "8a976e877301421ea0382ea5952d9a67e21b368c4d71a38a96dd41d0e0b91c8a"
+        }
+      ],
+      "metadata": {
+        "id": "brute",
+        "name": "Clown hound",
+        "url": "/models/cats/brute.webp",
+        "width": 1768,
+        "height": 1026,
+        "frameWidth": 221,
+        "frameHeight": 171,
+        "columns": 8,
+        "frameCount": 43,
+        "anchorX": 84.5,
+        "groundY": 165,
+        "bodyHeightPixels": 132,
+        "nativeFacing": -1,
+        "clips": {
+          "idle": {
+            "start": 0,
+            "count": 6,
+            "duration": 0.8,
+            "loop": true
+          },
+          "walk": {
+            "start": 6,
+            "count": 12,
+            "duration": 0.85,
+            "loop": true
+          },
+          "attack": {
+            "start": 18,
+            "count": 10,
+            "duration": 0.7,
+            "loop": true
+          },
+          "dead": {
+            "start": 28,
+            "count": 15,
+            "duration": 0.85,
+            "loop": false
+          }
+        },
+        "originalFrame": [
+          350,
+          250
+        ],
+        "trimBounds": [
+          41,
+          46,
+          258,
+          213
+        ]
+      }
+    },
+    {
+      "file": "boss.webp",
+      "sha256": "6afa60a3594c43e82788231373aabe05397b4a9e66f87fd5eb1c03c8d5a6e405",
+      "bytes": 850302,
+      "sourceFrames": [
+        {
+          "file": "assets/new/craftpix-net-397030-free-cartoon-cat-defense-game-asset-kit/Png/Enemies/Enemy Boss 1/Idle/Enemy-Idle_00.png",
+          "sha256": "e5b8c2014d8fd0f100b115fb199669533367bb9cde8016525e40a19ec29e1f43"
+        },
+        {
+          "file": "assets/new/craftpix-net-397030-free-cartoon-cat-defense-game-asset-kit/Png/Enemies/Enemy Boss 1/Idle/Enemy-Idle_04.png",
+          "sha256": "4922604c927536ab2c17f014f4f3310f26bd2f5ac1fd10d909e982ea20e6df5d"
+        },
+        {
+          "file": "assets/new/craftpix-net-397030-free-cartoon-cat-defense-game-asset-kit/Png/Enemies/Enemy Boss 1/Idle/Enemy-Idle_08.png",
+          "sha256": "b626e17551c32abd13575413f2ece6e4b7ce61c87ec591ad9f3b02849fc908a5"
+        },
+        {
+          "file": "assets/new/craftpix-net-397030-free-cartoon-cat-defense-game-asset-kit/Png/Enemies/Enemy Boss 1/Idle/Enemy-Idle_11.png",
+          "sha256": "92cd8172fbdf9964bf6f8a3656f81c5d1976c1f26a1772f300e7e3847fa682dc"
+        },
+        {
+          "file": "assets/new/craftpix-net-397030-free-cartoon-cat-defense-game-asset-kit/Png/Enemies/Enemy Boss 1/Idle/Enemy-Idle_15.png",
+          "sha256": "eed5f384b1ab95751ee7904b8d14fb521c46bba597e2adae8ae12af31c1b74a6"
+        },
+        {
+          "file": "assets/new/craftpix-net-397030-free-cartoon-cat-defense-game-asset-kit/Png/Enemies/Enemy Boss 1/Idle/Enemy-Idle_19.png",
+          "sha256": "c1f6cfa46c65c01fa741856f17becd9fb6c3175ddf5e205b1816dc17838b346e"
+        },
+        {
+          "file": "assets/new/craftpix-net-397030-free-cartoon-cat-defense-game-asset-kit/Png/Enemies/Enemy Boss 1/Walk/Enemy-Walk_00.png",
+          "sha256": "e5b8c2014d8fd0f100b115fb199669533367bb9cde8016525e40a19ec29e1f43"
+        },
+        {
+          "file": "assets/new/craftpix-net-397030-free-cartoon-cat-defense-game-asset-kit/Png/Enemies/Enemy Boss 1/Walk/Enemy-Walk_03.png",
+          "sha256": "65d8a96ed3c0234ce039793a2c5c7add3f6a12f0dbf6cd3c8ef95390344ae91b"
+        },
+        {
+          "file": "assets/new/craftpix-net-397030-free-cartoon-cat-defense-game-asset-kit/Png/Enemies/Enemy Boss 1/Walk/Enemy-Walk_06.png",
+          "sha256": "2d7572d26ca6928f254ec96bd2e20b92e12163960f2b36748c360bfc7ac44485"
+        },
+        {
+          "file": "assets/new/craftpix-net-397030-free-cartoon-cat-defense-game-asset-kit/Png/Enemies/Enemy Boss 1/Walk/Enemy-Walk_09.png",
+          "sha256": "6fba3de9fda36af733f5729b93ba2b313dbd884d1aa9250b5755a61863c414a6"
+        },
+        {
+          "file": "assets/new/craftpix-net-397030-free-cartoon-cat-defense-game-asset-kit/Png/Enemies/Enemy Boss 1/Walk/Enemy-Walk_12.png",
+          "sha256": "d9ecb320103cb878eaae25a4c58983cd80fa52c49495f08b74161058d7dda106"
+        },
+        {
+          "file": "assets/new/craftpix-net-397030-free-cartoon-cat-defense-game-asset-kit/Png/Enemies/Enemy Boss 1/Walk/Enemy-Walk_15.png",
+          "sha256": "b90db8448e91e1294b17ec95f664e83c2ab51b804df260fb9d85a1629acd115e"
+        },
+        {
+          "file": "assets/new/craftpix-net-397030-free-cartoon-cat-defense-game-asset-kit/Png/Enemies/Enemy Boss 1/Walk/Enemy-Walk_19.png",
+          "sha256": "b3f85a5a8cf48cf169679967b95aa7e969bb80fc321b08e0bf55462f7b5bd8f2"
+        },
+        {
+          "file": "assets/new/craftpix-net-397030-free-cartoon-cat-defense-game-asset-kit/Png/Enemies/Enemy Boss 1/Walk/Enemy-Walk_22.png",
+          "sha256": "8bcb1f1a2d84cbebeee2a7b6e32113a35f382cc63482063d1db07ed3879ff11e"
+        },
+        {
+          "file": "assets/new/craftpix-net-397030-free-cartoon-cat-defense-game-asset-kit/Png/Enemies/Enemy Boss 1/Walk/Enemy-Walk_25.png",
+          "sha256": "f40390c2193266dadb7e1ada2048e621d9b950470e441736c5fb38ef94e846f6"
+        },
+        {
+          "file": "assets/new/craftpix-net-397030-free-cartoon-cat-defense-game-asset-kit/Png/Enemies/Enemy Boss 1/Walk/Enemy-Walk_28.png",
+          "sha256": "c22f5faf41f8aa9e017af51ab080420e82cbbd481c1849b5312a18a2b9c960d4"
+        },
+        {
+          "file": "assets/new/craftpix-net-397030-free-cartoon-cat-defense-game-asset-kit/Png/Enemies/Enemy Boss 1/Walk/Enemy-Walk_31.png",
+          "sha256": "d3577a2019dd9ce1e585406a4ba8e8df96cbef499f2f90e1e9c02f106cab1137"
+        },
+        {
+          "file": "assets/new/craftpix-net-397030-free-cartoon-cat-defense-game-asset-kit/Png/Enemies/Enemy Boss 1/Walk/Enemy-Walk_34.png",
+          "sha256": "3e8d183d9ccad81a3b652e457388cd7351d286ee36eca74122649278263736a3"
+        },
+        {
+          "file": "assets/new/craftpix-net-397030-free-cartoon-cat-defense-game-asset-kit/Png/Enemies/Enemy Boss 1/Attack/Enemy-Attack_00.png",
+          "sha256": "e5b8c2014d8fd0f100b115fb199669533367bb9cde8016525e40a19ec29e1f43"
+        },
+        {
+          "file": "assets/new/craftpix-net-397030-free-cartoon-cat-defense-game-asset-kit/Png/Enemies/Enemy Boss 1/Attack/Enemy-Attack_04.png",
+          "sha256": "495114c9303f92204708d95711b3fe37fea81abf0ef4515ecc6ff4addce64225"
+        },
+        {
+          "file": "assets/new/craftpix-net-397030-free-cartoon-cat-defense-game-asset-kit/Png/Enemies/Enemy Boss 1/Attack/Enemy-Attack_07.png",
+          "sha256": "8ebbd2a4cc89aef7eb578e4281dd2db5d4c259fd66878ffd3ca9806d9644e4f4"
+        },
+        {
+          "file": "assets/new/craftpix-net-397030-free-cartoon-cat-defense-game-asset-kit/Png/Enemies/Enemy Boss 1/Attack/Enemy-Attack_11.png",
+          "sha256": "418e64390cca86ce81d4282f5f1c755a4f00835ba617147031d75ea0093cb38e"
+        },
+        {
+          "file": "assets/new/craftpix-net-397030-free-cartoon-cat-defense-game-asset-kit/Png/Enemies/Enemy Boss 1/Attack/Enemy-Attack_14.png",
+          "sha256": "c901b72561ebb213f92cda1a3ac52429a03cbcd42038a7d1aa6c8a274d477b11"
+        },
+        {
+          "file": "assets/new/craftpix-net-397030-free-cartoon-cat-defense-game-asset-kit/Png/Enemies/Enemy Boss 1/Attack/Enemy-Attack_18.png",
+          "sha256": "37501cd3875aa473b771a3a0d90f69d46603f81a381dbf97b912dd81b7cd840d"
+        },
+        {
+          "file": "assets/new/craftpix-net-397030-free-cartoon-cat-defense-game-asset-kit/Png/Enemies/Enemy Boss 1/Attack/Enemy-Attack_21.png",
+          "sha256": "936065230f62daaab5bd213108ed15d389e002a7b5cbf3ea15dddeaa6e751880"
+        },
+        {
+          "file": "assets/new/craftpix-net-397030-free-cartoon-cat-defense-game-asset-kit/Png/Enemies/Enemy Boss 1/Attack/Enemy-Attack_25.png",
+          "sha256": "48859f10a7ed5185894ea527958773ed3a298427b51a9ef6baa91b5581119188"
+        },
+        {
+          "file": "assets/new/craftpix-net-397030-free-cartoon-cat-defense-game-asset-kit/Png/Enemies/Enemy Boss 1/Attack/Enemy-Attack_28.png",
+          "sha256": "293be312f57ac4246606ae1b648b8d1079dcdd350fc28edac0ac41723a04aef7"
+        },
+        {
+          "file": "assets/new/craftpix-net-397030-free-cartoon-cat-defense-game-asset-kit/Png/Enemies/Enemy Boss 1/Attack/Enemy-Attack_32.png",
+          "sha256": "b9f2de32e5db0a55d9678ce03e8d15c1db45ea60b971bbd471f2ac52f8991156"
+        },
+        {
+          "file": "assets/new/craftpix-net-397030-free-cartoon-cat-defense-game-asset-kit/Png/Enemies/Enemy Boss 1/Attack/Enemy-Attack_35.png",
+          "sha256": "29e6d83cf0aea0e7a9634d3d6233beb99c361db7f08c3008b34a9540892c1a29"
+        },
+        {
+          "file": "assets/new/craftpix-net-397030-free-cartoon-cat-defense-game-asset-kit/Png/Enemies/Enemy Boss 1/Attack/Enemy-Attack_39.png",
+          "sha256": "6950c9c9fb11f13c042c16d4335cdf4005c20c320ba4e06e80ae8cbb5587e796"
+        },
+        {
+          "file": "assets/new/craftpix-net-397030-free-cartoon-cat-defense-game-asset-kit/Png/Enemies/Enemy Boss 1/Dead/Enemy-Dead_00.png",
+          "sha256": "e5b8c2014d8fd0f100b115fb199669533367bb9cde8016525e40a19ec29e1f43"
+        },
+        {
+          "file": "assets/new/craftpix-net-397030-free-cartoon-cat-defense-game-asset-kit/Png/Enemies/Enemy Boss 1/Dead/Enemy-Dead_04.png",
+          "sha256": "9c115fab2facf762fcec62693b756b112e992ebae49dbabb5c5e2ed8906353e0"
+        },
+        {
+          "file": "assets/new/craftpix-net-397030-free-cartoon-cat-defense-game-asset-kit/Png/Enemies/Enemy Boss 1/Dead/Enemy-Dead_07.png",
+          "sha256": "c4d5f805cb3c7b72266c0d40eb79d0d0c97d1f404f51104ac6b98e173c18b5d3"
+        },
+        {
+          "file": "assets/new/craftpix-net-397030-free-cartoon-cat-defense-game-asset-kit/Png/Enemies/Enemy Boss 1/Dead/Enemy-Dead_10.png",
+          "sha256": "803ddd02fd30e724d4f16412c1df1c359f5822d7bdd4927ea17223c6d03da694"
+        },
+        {
+          "file": "assets/new/craftpix-net-397030-free-cartoon-cat-defense-game-asset-kit/Png/Enemies/Enemy Boss 1/Dead/Enemy-Dead_14.png",
+          "sha256": "b1449062940f8ac4057b1827ce181959fbcad988b0d042bc4d262df42608dde6"
+        },
+        {
+          "file": "assets/new/craftpix-net-397030-free-cartoon-cat-defense-game-asset-kit/Png/Enemies/Enemy Boss 1/Dead/Enemy-Dead_18.png",
+          "sha256": "95ce4a1dbecd6ddb4a5f18878999b43c5c88fb3140ce4ffc657a285643fa42dc"
+        },
+        {
+          "file": "assets/new/craftpix-net-397030-free-cartoon-cat-defense-game-asset-kit/Png/Enemies/Enemy Boss 1/Dead/Enemy-Dead_21.png",
+          "sha256": "d259c797959be8086e6b6d0493c69603cbd8dbd7f3855d8fd7d570e8a44c5561"
+        },
+        {
+          "file": "assets/new/craftpix-net-397030-free-cartoon-cat-defense-game-asset-kit/Png/Enemies/Enemy Boss 1/Dead/Enemy-Dead_24.png",
+          "sha256": "61779c1ba6c9308dd6cca5e408743f0f2525a32d1154c5a3e413590289767977"
+        },
+        {
+          "file": "assets/new/craftpix-net-397030-free-cartoon-cat-defense-game-asset-kit/Png/Enemies/Enemy Boss 1/Dead/Enemy-Dead_28.png",
+          "sha256": "8dc80b63879e789276e2cb41c3c910b2064d60208f8f04b2ffbc2af66dad642c"
+        },
+        {
+          "file": "assets/new/craftpix-net-397030-free-cartoon-cat-defense-game-asset-kit/Png/Enemies/Enemy Boss 1/Dead/Enemy-Dead_32.png",
+          "sha256": "f091e1a1527d5ae72889ec85c2add1fdc860b29a0c969c215e7b4cf3b31adf35"
+        },
+        {
+          "file": "assets/new/craftpix-net-397030-free-cartoon-cat-defense-game-asset-kit/Png/Enemies/Enemy Boss 1/Dead/Enemy-Dead_35.png",
+          "sha256": "d36dddfd199b5082b02db98f7cab9316d6c5a12d5dc61e9bd5e9f7cad89c4c6b"
+        },
+        {
+          "file": "assets/new/craftpix-net-397030-free-cartoon-cat-defense-game-asset-kit/Png/Enemies/Enemy Boss 1/Dead/Enemy-Dead_38.png",
+          "sha256": "a3a5c4686a5072baf66dc0cd4471dfefb32a12edd816019387c3dc647b68161b"
+        },
+        {
+          "file": "assets/new/craftpix-net-397030-free-cartoon-cat-defense-game-asset-kit/Png/Enemies/Enemy Boss 1/Dead/Enemy-Dead_42.png",
+          "sha256": "28f612c52f9b25589c9c753ef63badb308eee2a6caebe999ae072528061d3b9e"
+        },
+        {
+          "file": "assets/new/craftpix-net-397030-free-cartoon-cat-defense-game-asset-kit/Png/Enemies/Enemy Boss 1/Dead/Enemy-Dead_46.png",
+          "sha256": "e187be48260a772a94077c3b6631ace2a6b786250cde6a4d26a1c7df5da990e7"
+        },
+        {
+          "file": "assets/new/craftpix-net-397030-free-cartoon-cat-defense-game-asset-kit/Png/Enemies/Enemy Boss 1/Dead/Enemy-Dead_49.png",
+          "sha256": "e187be48260a772a94077c3b6631ace2a6b786250cde6a4d26a1c7df5da990e7"
+        }
+      ],
+      "metadata": {
+        "id": "boss",
+        "name": "Bucket boss",
+        "url": "/models/cats/boss.webp",
+        "width": 2608,
+        "height": 1392,
+        "frameWidth": 326,
+        "frameHeight": 232,
+        "columns": 8,
+        "frameCount": 45,
+        "anchorX": 174.5,
+        "groundY": 223,
+        "bodyHeightPixels": 166,
+        "nativeFacing": -1,
+        "clips": {
+          "idle": {
+            "start": 0,
+            "count": 6,
+            "duration": 0.9,
+            "loop": true
+          },
+          "walk": {
+            "start": 6,
+            "count": 12,
+            "duration": 0.95,
+            "loop": true
+          },
+          "attack": {
+            "start": 18,
+            "count": 12,
+            "duration": 0.85,
+            "loop": true
+          },
+          "dead": {
+            "start": 30,
+            "count": 15,
+            "duration": 1.1,
+            "loop": false
+          }
+        },
+        "originalFrame": [
+          372,
+          320
+        ],
+        "trimBounds": [
+          34,
+          43,
+          356,
+          271
+        ]
+      }
+    },
+    {
+      "file": "street.webp",
+      "source": "assets/new/craftpix-net-397030-free-cartoon-cat-defense-game-asset-kit/Png/Area/Area4.png",
+      "sourceSha256": "6ba537ae420a78d469398d2ef6366aaba9cb1bd1db76dea9773eac214395d3f8",
+      "sha256": "e394cf8c88525cc04444f1186baa0933bc415072bb3e4c0bae5caf9158a8365b",
+      "encoding": {
+        "quality": 92,
+        "method": 6,
+        "dimensionsUnchanged": true
+      },
+      "bytes": 83828
+    },
+    {
+      "file": "coin.png",
+      "source": "assets/new/craftpix-net-397030-free-cartoon-cat-defense-game-asset-kit/Png/Ui/CoinIcon.png",
+      "sha256": "c3b7dcf21b98639142ac7a398c6a59d70e38344b97a8cc2a7f17504f4378aadf",
+      "bytes": 2235
+    },
+    {
+      "file": "projectile.png",
+      "source": "assets/new/craftpix-net-397030-free-cartoon-cat-defense-game-asset-kit/Png/Bullets/Artboard 1.png",
+      "sha256": "bd932b50fd6e226d0818d30575459c2a36029896437bdb187018946de5c9126a",
+      "bytes": 1406
+    }
+  ]
+}

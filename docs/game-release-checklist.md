@@ -1,6 +1,6 @@
 # NearFest game delivery checklist
 
-The catalogue currently exposes 55 original entries. All expose solo and independent online modes. Topic packs are catalogue entries, not claims of distinct engines. Imported titles, Ludo and the duplicate Kalah title stay out of discovery.
+The catalogue currently exposes 57 original entries. All expose solo and independent online modes. Topic packs are catalogue entries, not claims of distinct engines. Imported titles, Ludo and the duplicate Kalah title stay out of discovery.
 
 ## Current catalogue
 
@@ -42,6 +42,8 @@ The catalogue currently exposes 55 original entries. All expose solo and indepen
 | Equation Forge | equation-forge | arcade | NEAR testnet + free |
 | Circuit Crew | circuit-crew | arcade | Free |
 | Orbit Rescue | orbit-rescue | arcade | Free |
+| Pocket Soccer | pocket-soccer | arcade | Free |
+| Cat Defense | cat-defense | arcade | Free |
 | Bridge Builders | bridge-builders | arcade | Free |
 | Molecule Match | molecule-match | arcade | NEAR testnet + free |
 | Sudoku Race | sudoku-race | arcade | NEAR testnet + free |
@@ -85,3 +87,10 @@ The catalogue currently exposes 55 original entries. All expose solo and indepen
 Physical multi-device play, sustained production load, latency fairness across regions and an independent contract audit are not certified by these automated checks. Most action games have bounded authored content; Platform Relay generates an endless course. A catalogue count does not imply unlimited levels for every game. Mainnet stays disabled. The game server remains the trusted outcome signer. Live NEAR AI inference is not configured.
 
 See [the game requirements](multiplayer-game-rebuild.md) and [testnet architecture](near-testnet.md).
+
+### Soccer, cats and bridge gameplay
+
+- Pocket Soccer: one-on-one, first to five, automatic dribbling/steals, assisted shots and a golden-goal tiebreak. Original Kenney Sports Pack vector groups, animated limbs and a textured 3D ball.
+- Cat Defense: supplied CraftPix cats, dog enemies and street background; three lanes, five waves, automatic fire, fish bombs, collectible coins and weapon upgrades. Shared barricade health and player-count scaling.
+- Bridge Builders: hold to grow, release to drop, automatic walk and scrolling towers. Matching multiplayer gaps, perfect bonuses, undershoot/overshoot falls and a finite input window. Original implementation based on the user-provided Stick Man gameplay reference.
+- All three use the existing authoritative multiplayer room/input/broadcast system and support free solo practice.

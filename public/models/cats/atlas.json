@@ -1,0 +1,352 @@
+{
+  "author": "CraftPix",
+  "license": "CraftPix Freebie Products license",
+  "licenseUrl": "https://craftpix.net/file-licenses/",
+  "characters": {
+    "cat-1": {
+      "id": "cat-1",
+      "name": "Mochi",
+      "url": "/models/cats/cat-1.webp",
+      "width": 736,
+      "height": 348,
+      "frameWidth": 92,
+      "frameHeight": 116,
+      "columns": 8,
+      "frameCount": 20,
+      "anchorX": 47.5,
+      "groundY": 112,
+      "bodyHeightPixels": 110,
+      "nativeFacing": 1,
+      "clips": {
+        "idle": {
+          "start": 0,
+          "count": 10,
+          "duration": 0.9,
+          "loop": true
+        },
+        "shoot": {
+          "start": 10,
+          "count": 10,
+          "duration": 0.32,
+          "loop": false
+        }
+      },
+      "originalFrame": [
+        150,
+        150
+      ],
+      "trimBounds": [
+        29,
+        22,
+        117,
+        134
+      ]
+    },
+    "cat-2": {
+      "id": "cat-2",
+      "name": "Beanie",
+      "url": "/models/cats/cat-2.webp",
+      "width": 744,
+      "height": 348,
+      "frameWidth": 93,
+      "frameHeight": 116,
+      "columns": 8,
+      "frameCount": 20,
+      "anchorX": 48.0,
+      "groundY": 112,
+      "bodyHeightPixels": 110,
+      "nativeFacing": 1,
+      "clips": {
+        "idle": {
+          "start": 0,
+          "count": 10,
+          "duration": 0.9,
+          "loop": true
+        },
+        "shoot": {
+          "start": 10,
+          "count": 10,
+          "duration": 0.32,
+          "loop": false
+        }
+      },
+      "originalFrame": [
+        150,
+        150
+      ],
+      "trimBounds": [
+        29,
+        22,
+        118,
+        134
+      ]
+    },
+    "cat-3": {
+      "id": "cat-3",
+      "name": "Scout",
+      "url": "/models/cats/cat-3.webp",
+      "width": 904,
+      "height": 381,
+      "frameWidth": 113,
+      "frameHeight": 127,
+      "columns": 8,
+      "frameCount": 20,
+      "anchorX": 59.0,
+      "groundY": 123,
+      "bodyHeightPixels": 121,
+      "nativeFacing": 1,
+      "clips": {
+        "idle": {
+          "start": 0,
+          "count": 10,
+          "duration": 0.9,
+          "loop": true
+        },
+        "shoot": {
+          "start": 10,
+          "count": 10,
+          "duration": 0.32,
+          "loop": false
+        }
+      },
+      "originalFrame": [
+        150,
+        150
+      ],
+      "trimBounds": [
+        10,
+        11,
+        119,
+        134
+      ]
+    },
+    "cat-4": {
+      "id": "cat-4",
+      "name": "Rosie",
+      "url": "/models/cats/cat-4.webp",
+      "width": 832,
+      "height": 387,
+      "frameWidth": 104,
+      "frameHeight": 129,
+      "columns": 8,
+      "frameCount": 20,
+      "anchorX": 54.0,
+      "groundY": 125,
+      "bodyHeightPixels": 123,
+      "nativeFacing": 1,
+      "clips": {
+        "idle": {
+          "start": 0,
+          "count": 10,
+          "duration": 0.9,
+          "loop": true
+        },
+        "shoot": {
+          "start": 10,
+          "count": 10,
+          "duration": 0.32,
+          "loop": false
+        }
+      },
+      "originalFrame": [
+        150,
+        150
+      ],
+      "trimBounds": [
+        18,
+        9,
+        118,
+        134
+      ]
+    },
+    "runner": {
+      "id": "runner",
+      "name": "Scrap dog",
+      "url": "/models/cats/runner.webp",
+      "width": 1512,
+      "height": 846,
+      "frameWidth": 189,
+      "frameHeight": 141,
+      "columns": 8,
+      "frameCount": 43,
+      "anchorX": 74.5,
+      "groundY": 137,
+      "bodyHeightPixels": 106,
+      "nativeFacing": -1,
+      "clips": {
+        "idle": {
+          "start": 0,
+          "count": 6,
+          "duration": 0.8,
+          "loop": true
+        },
+        "walk": {
+          "start": 6,
+          "count": 12,
+          "duration": 0.7,
+          "loop": true
+        },
+        "attack": {
+          "start": 18,
+          "count": 10,
+          "duration": 0.65,
+          "loop": true
+        },
+        "dead": {
+          "start": 28,
+          "count": 15,
+          "duration": 0.85,
+          "loop": false
+        }
+      },
+      "originalFrame": [
+        297,
+        250
+      ],
+      "trimBounds": [
+        67,
+        70,
+        252,
+        207
+      ]
+    },
+    "brute": {
+      "id": "brute",
+      "name": "Clown hound",
+      "url": "/models/cats/brute.webp",
+      "width": 1768,
+      "height": 1026,
+      "frameWidth": 221,
+      "frameHeight": 171,
+      "columns": 8,
+      "frameCount": 43,
+      "anchorX": 84.5,
+      "groundY": 165,
+      "bodyHeightPixels": 132,
+      "nativeFacing": -1,
+      "clips": {
+        "idle": {
+          "start": 0,
+          "count": 6,
+          "duration": 0.8,
+          "loop": true
+        },
+        "walk": {
+          "start": 6,
+          "count": 12,
+          "duration": 0.85,
+          "loop": true
+        },
+        "attack": {
+          "start": 18,
+          "count": 10,
+          "duration": 0.7,
+          "loop": true
+        },
+        "dead": {
+          "start": 28,
+          "count": 15,
+          "duration": 0.85,
+          "loop": false
+        }
+      },
+      "originalFrame": [
+        350,
+        250
+      ],
+      "trimBounds": [
+        41,
+        46,
+        258,
+        213
+      ]
+    },
+    "boss": {
+      "id": "boss",
+      "name": "Bucket boss",
+      "url": "/models/cats/boss.webp",
+      "width": 2608,
+      "height": 1392,
+      "frameWidth": 326,
+      "frameHeight": 232,
+      "columns": 8,
+      "frameCount": 45,
+      "anchorX": 174.5,
+      "groundY": 223,
+      "bodyHeightPixels": 166,
+      "nativeFacing": -1,
+      "clips": {
+        "idle": {
+          "start": 0,
+          "count": 6,
+          "duration": 0.9,
+          "loop": true
+        },
+        "walk": {
+          "start": 6,
+          "count": 12,
+          "duration": 0.95,
+          "loop": true
+        },
+        "attack": {
+          "start": 18,
+          "count": 12,
+          "duration": 0.85,
+          "loop": true
+        },
+        "dead": {
+          "start": 30,
+          "count": 15,
+          "duration": 1.1,
+          "loop": false
+        }
+      },
+      "originalFrame": [
+        372,
+        320
+      ],
+      "trimBounds": [
+        34,
+        43,
+        356,
+        271
+      ]
+    }
+  },
+  "background": {
+    "url": "/models/cats/street.webp",
+    "width": 2143,
+    "height": 1062,
+    "playableRect": {
+      "left": 730,
+      "top": 220,
+      "right": 2070,
+      "bottom": 855
+    },
+    "barrierX": 680,
+    "catX": 475,
+    "lanesY": [
+      350,
+      550,
+      750
+    ],
+    "healthBar": {
+      "x": 672,
+      "y": 274,
+      "width": 17,
+      "height": 398
+    }
+  },
+  "icons": {
+    "coin": {
+      "url": "/models/cats/coin.png",
+      "width": 59,
+      "height": 56
+    },
+    "projectile": {
+      "url": "/models/cats/projectile.png",
+      "width": 113,
+      "height": 86
+    }
+  }
+}
