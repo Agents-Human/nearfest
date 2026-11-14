@@ -325,8 +325,8 @@ export class WorldRenderer {
   else if(this.game==='cat-defense'||this.game==='bridge-builders'||this.game==='pocket-soccer'){
    const fc=this.fighterCamera!,aspect=this.camera.aspect;
    const bridge=this.game==='bridge-builders',soccer=this.game==='pocket-soccer';
-   const height=bridge?Math.max(36,((s.to.x+s.to.w-s.from.x)/10+13)/aspect):soccer?Math.max(67,108/aspect):Math.max(47.6,96/aspect),width=height*aspect;
-   const x=bridge?(s.from.x+s.to.x+s.to.w)/20:0,y=bridge?9:0;
+   const height=bridge?Math.max(36,((s.to.x+s.to.w-s.from.x)/10+13)/aspect,(s.to.x+s.to.w/2-s.from.x-s.from.w)/10*1.65+4):soccer?Math.max(67,108/aspect):Math.max(47.6,96/aspect),width=height*aspect;
+   const x=bridge?(s.from.x+s.to.x+s.to.w)/20:0,y=bridge?height*.22:0;
    const desired=new T.Vector3(x,soccer?85:y,soccer?48:85);fc.position.lerp(desired,this.cameraReady?1-Math.exp(-dt*5):1);fc.lookAt(soccer?0:fc.position.x,soccer?0:fc.position.y-(bridge?6:0),0);if(bridge){this.sun.position.set(x-35,65,30);this.sun.target.position.set(x,0,0);}
    fc.left=-width/2;fc.right=width/2;fc.top=height/2;fc.bottom=-height/2;fc.far=400;fc.updateProjectionMatrix();target.set(x,y,0);eye.copy(desired);
   }

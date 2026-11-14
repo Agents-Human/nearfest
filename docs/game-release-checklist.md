@@ -94,3 +94,4 @@ See [the game requirements](multiplayer-game-rebuild.md) and [testnet architectu
 - Cat Defense: supplied CraftPix cats, dog enemies and street background; three lanes, five waves, automatic fire, fish bombs, collectible coins and weapon upgrades. Shared barricade health and player-count scaling.
 - Bridge Builders: hold to grow, release to drop, automatic walk and scrolling towers. Matching multiplayer gaps, perfect bonuses, undershoot/overshoot falls and a finite input window. Original implementation based on the user-provided Stick Man gameplay reference.
 - All three use the existing authoritative multiplayer room/input/broadcast system and support free solo practice.
+- Final checks: the 99-test suite, production build, actual browser play of all three games and 390×844 layout checks. Screenshots are in `evidence/gameplay`; catalogue covers come from the production renderer. Local preview measurements were approximately 120 FPS.

@@ -1,0 +1,29 @@
+{
+  "captured": "2026-11-14",
+  "renderer": "src/games/social-scenes.ts",
+  "simulation": "server/arcade/social-worlds.mjs",
+  "assets": [
+    "public/models/cats/provenance.json",
+    "public/models/soccer/provenance.json"
+  ],
+  "entries": [
+    {
+      "game": "cat-defense",
+      "file": "cat-defense-gameplay.jpg",
+      "kind": "Actual production renderer and authoritative simulation screenshot",
+      "sha256": "76c32bf261e1a973506e200075e669d9ffda08f7aad1a072c15b54ed71f9138e"
+    },
+    {
+      "game": "pocket-soccer",
+      "file": "pocket-soccer-gameplay.jpg",
+      "kind": "Actual production renderer and authoritative simulation screenshot",
+      "sha256": "e57bfa5394088304cdd80e654f72049e83b47241537b1839bbf4b87374520caf"
+    },
+    {
+      "game": "bridge-builders",
+      "file": "bridge-builders-gameplay.jpg",
+      "kind": "Actual production renderer and authoritative simulation screenshot",
+      "sha256": "93fbd1f7af70130b5a6b9b2fe93cdfa60d5f605c5636128db77ee4e6e97f5404"
+    }
+  ]
+}
