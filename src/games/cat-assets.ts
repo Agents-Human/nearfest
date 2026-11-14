@@ -25,8 +25,7 @@ export type CatSprite = {
 export type CatBackground = {
   url: string; width: number; height: number;
   playableRect: {left: number; top: number; right: number; bottom: number};
-  barrierX: number; catX: number; lanesY: number[];
-  healthBar: {x: number; y: number; width: number; height: number};
+  catX: number; lanesY: number[];
 };
 type CatIcon = {url: string; width: number; height: number};
 type Manifest = {characters: Record<string, CatSpriteMetadata>; background: CatBackground; icons: Record<'coin' | 'projectile', CatIcon>};

@@ -46,11 +46,13 @@ export class Kit {
  }
  dispose(){this.cleanups.forEach(fn=>fn());const gs=new Set<T.BufferGeometry>(),ms=new Set<T.Material>(),ts=new Set<T.Texture>(this.textures);this.scene.traverse(o=>{const m=o as T.Mesh;if(m.geometry)gs.add(m.geometry);if(m.material)for(const mat of Array.isArray(m.material)?m.material:[m.material]){ms.add(mat);for(const value of Object.values(mat))if(value instanceof T.Texture)ts.add(value);}});gs.forEach(g=>g.dispose());ms.forEach(m=>m.dispose());ts.forEach(t=>t.dispose());this.scene.traverse(o=>{if(o instanceof T.DirectionalLight||o instanceof T.SpotLight||o instanceof T.PointLight){o.shadow.map?.dispose();o.shadow.mapPass?.dispose();}});}
 }
-export function particles(k:Kit){
+export function particles(k:Kit,options:{size?:number;maxScreenSize?:number}={}){
  const count=180,positions=new Float32Array(count*3),color=new Float32Array(count*3),life=new Float32Array(count),vel=new Float32Array(count*3),base=new T.Color();positions.fill(-1000);let next=0;
  const geometry=new T.BufferGeometry();geometry.setAttribute('position',new T.BufferAttribute(positions,3));geometry.setAttribute('color',new T.BufferAttribute(color,3));
  const sprite=document.createElement('canvas');sprite.width=sprite.height=32;const ctx=sprite.getContext('2d')!,gradient=ctx.createRadialGradient(16,16,0,16,16,16);gradient.addColorStop(0,'#fff');gradient.addColorStop(.3,'#fff');gradient.addColorStop(1,'#fff0');ctx.fillStyle=gradient;ctx.fillRect(0,0,32,32);const texture=new T.CanvasTexture(sprite);k.textures.push(texture);
- const points=new T.Points(geometry,new T.PointsMaterial({size:.6,map:texture,vertexColors:true,transparent:true,depthWrite:false,blending:T.AdditiveBlending}));points.frustumCulled=false;k.dynamic.add(points);
+ const material=new T.PointsMaterial({size:options.size??.6,map:texture,vertexColors:true,transparent:true,depthWrite:false,blending:T.AdditiveBlending});
+ if(options.maxScreenSize){const limit=options.maxScreenSize.toFixed(1);material.onBeforeCompile=shader=>{shader.vertexShader=shader.vertexShader.replace('#include <fog_vertex>',`gl_PointSize=min(gl_PointSize,${limit});\n#include <fog_vertex>`);};material.customProgramCacheKey=()=>`particle-cap-${limit}`;}
+ const points=new T.Points(geometry,material);points.frustumCulled=false;k.dynamic.add(points);
  return {burst(x:number,y:number,z:number,tint='#ffd360',amount=14){base.set(tint);for(let j=0;j<amount;j++){const i=next++%count;life[i]=.7+random(next)*.5;positions.set([x,y,z],i*3);color.set([base.r,base.g,base.b],i*3);vel.set([(random(next+4)-.5)*8,2+random(next+7)*7,(random(next+11)-.5)*6],i*3);}},update(dt:number){for(let i=0;i<count;i++){if(life[i]<=0)continue;life[i]-=dt;for(let j=0;j<3;j++)positions[i*3+j]+=vel[i*3+j]*dt;vel[i*3+1]-=10*dt;if(life[i]<=0)positions[i*3+1]=-1000;}(geometry.attributes.position as T.BufferAttribute).needsUpdate=true;(geometry.attributes.color as T.BufferAttribute).needsUpdate=true;}};
 }
 

@@ -40,7 +40,7 @@ const tracks = {
 };
 
 export function arcadeMusicCredit(game: string): ArcadeMusicCredit {
-  if (['pocket-racers', 'stick-rivals', 'tank-arena', 'paint-tag', 'bomb-maze'].includes(game)) return tracks.action;
+  if (['pocket-racers', 'stick-rivals', 'tank-arena', 'paint-tag', 'bomb-maze', 'cat-defense'].includes(game)) return tracks.action;
   if (['platform-relay', 'mini-golf', 'marble-knockout', 'marble-run', 'orbit-rescue'].includes(game)) return tracks.island;
   return tracks.groove;
 }
@@ -173,7 +173,7 @@ export function createArcadeAudio(game: string): ArcadeAudio {
     const player = game === 'orbit-rescue' ? state?.ship : state?.players?.[seat ?? 0];
     if (!player) return;
     const speed = Math.abs(player.speed ?? Math.hypot(player.vx || 0, player.vy || 0));
-    const power = clamp(speed / 230);
+    const power = clamp(speed / (game==='pocket-racers'?800:230));
     const rpm = 42 + power * 100 + Math.sin(power * Math.PI * 5) * 8;
     const now = context.currentTime;
     engine.frequency.setTargetAtTime(rpm, now, .09);
@@ -260,16 +260,27 @@ export function createArcadeAudio(game: string): ArcadeAudio {
         if (mine.kicks > oldMine.kicks) {noise(.06,.1,900);tone(150,.1,.08,'sine',65);}
         if (state.goalSeq > before.goalSeq) {chime(true);noise(.65,.08,1900);}
       } else if (game === 'cat-defense') {
-        if (ready && mine.shootTime > oldMine.shootTime) {tone(520,.07,.035,'triangle',220);lastEffect=now;}
-        if (mine.bombs > oldMine.bombs) {noise(.32,.16,450);tone(160,.25,.1,'sine',45);}
+        if (ready && ((mine.shotsFired || 0) > (oldMine.shotsFired || 0) || mine.shootTime > oldMine.shootTime)) {tone(640, .065, .045, 'triangle', 210); noise(.03, .035, 1800); lastEffect = now;}
+        if ((state.kills || 0) > (before.kills || 0)) {noise(.08, .06, 850); tone(290, .09, .05, 'sawtooth', 120);}
+        if (mine.bombs > oldMine.bombs) {noise(.32, .16, 450); tone(160, .25, .1, 'sine', 45);}
         if (state.wave > before.wave) chime();
-        if (state.gate < before.gate) tone(125,.12,.07,'triangle',75);
+        if ((state.hp ?? 100) < (before.hp ?? 100)) {noise(.14, .09, 520); tone(125, .12, .07, 'triangle', 75);}
       } else if (game === 'bridge-builders') {
         if (mine.phase === 'turning' && oldMine.phase !== 'turning') noise(.15,.06,1100);
         if (mine.phase === 'walking' && oldMine.phase === 'turning') tone(180,.08,.08,'triangle',80);
         if (mine.phase === 'falling' && oldMine.phase !== 'falling') tone(450,.4,.07,'sine',70);
       } else if (game === 'pocket-racers') {
+        if ((mine.jumps||0) > (oldMine.jumps||0)) {tone(180,.3,.06,'triangle',640);noise(.18,.045,2500);}
+        if ((mine.landings||0) > (oldMine.landings||0)) {noise(.15,.08,650);tone(90,.15,.08,'sine',55);tone(520,.2,.04,'triangle',840);}
+
+        if ((mine.shotsFired||0) > (oldMine.shotsFired||0)) {tone(920,.13,.065,'triangle',260);}
+        if ((mine.hits||0) > (oldMine.hits||0)) {tone(440,.12,.07,'sine',880);tone(880,.18,.045,'triangle',1100);}
+        if ((mine.hitTimer||0) > (oldMine.hitTimer||0)) {noise(.18,.12,1100);tone(170,.2,.08,'triangle',70);}
+        if ((mine.splashes||0) > (oldMine.splashes||0)) {noise(.55,.11,2900);}
+
         if (mine.crashes > oldMine.crashes) { sample('bump', .38); noise(.26, .18, 480); tone(135, .22, .1, 'sawtooth', 48); }
+        if ((mine.nearMisses || 0) > (oldMine.nearMisses || 0)) {tone(580,.12,.07,'sine',880);}
+        if ((mine.driftBursts || 0) > (oldMine.driftBursts || 0)) {tone(240,.25,.08,'triangle',740);}
         if ((mine.padBoost || 0) > (oldMine.padBoost || 0) + .1) { tone(280, .2, .08, 'triangle', 640); }
         if (ready && mine.speed > 145 && Math.abs((mine.vx || 0) - (oldMine.vx || 0)) > 45) { noise(.1, .04, 2100); lastEffect = now; }
       } else if (game === 'platform-relay' || game === 'stick-rivals') {
@@ -280,8 +291,27 @@ export function createArcadeAudio(game: string): ArcadeAudio {
         if (game === 'platform-relay' && (mine.lives ?? 3) < (oldMine.lives ?? 3)) { if (!sample('hurt',.35)) tone(220, .28, .095, 'triangle', 75); }
         if (!oldMine.ground && mine.ground && oldMine.vy > 40 && !sample('bump',.1)) noise(.1, .07, 220);
         if (state.checkpoint > before.checkpoint || state.baton !== before.baton && state.baton != null) chime();
-        if (mine.attack > (oldMine.attack || 0)) noise(.12, .09, 1600);
-        if (state.players.some((p: any, i: number) => p.hp < before.players[i]?.hp)) { noise(.16, .18, 420); tone(95, .14, .12, 'sine', 40); }
+        if (mine.attack > (oldMine.attack || 0)) {
+          const heavy = mine.attackKind === 'uppercut' || mine.attackKind === 'kick' || mine.attackKind === 'divekick';
+          noise(heavy ? .16 : .11, heavy ? .13 : .09, heavy ? 1100 : 1700);
+          if (mine.attackKind === 'uppercut') tone(220, .16, .08, 'triangle', 620);
+          else if (mine.attackKind === 'divekick') tone(520, .18, .08, 'sawtooth', 140);
+        }
+        if(game==='stick-rivals'){
+          const last=Math.max(0,...(before.impacts||[]).map((i:any)=>i.id));
+          for(const impact of state.impacts||[])if(impact.id>last){
+            if(impact.kind==='parry'){tone(880,.18,.10,'triangle',1660);noise(.09,.09,4200);}
+            if(impact.kind==='block'){noise(.07,.08,2600);tone(330,.08,.07,'square',180);}
+            if(impact.kind==='dash')noise(.13,.06,2600);
+            if(impact.kind==='blast'){tone(180,.2,.06,'sawtooth',700);noise(.15,.06,1800);}
+          }
+        }
+        if (game === 'stick-rivals' && mine.weapon && mine.weapon !== oldMine.weapon) chime();
+        if (state.players.some((p: any, i: number) => p.hp < before.players[i]?.hp)) {
+          const ko = state.players.some((p: any, i: number) => p.hp <= 0 && before.players[i]?.hp > 0);
+          noise(ko ? .28 : .16, ko ? .22 : .18, ko ? 320 : 420);
+          tone(ko ? 130 : 95, ko ? .26 : .14, .13, 'sine', 35);
+        }
         if (game === 'platform-relay' && Math.abs(mine.x - oldMine.x) > 160) tone(360, .25, .075, 'triangle', 100);
       } else if (game === 'paddle-duel' || game === 'air-hockey') {
         if (state.players.some((p: any, i: number) => p.score > before.players[i]?.score)) chime();
@@ -289,10 +319,22 @@ export function createArcadeAudio(game: string): ArcadeAudio {
           tone(game === 'air-hockey' ? 740 : 430, .075, .09, 'triangle', 280); lastEffect = now;
         }
       } else if (game === 'marble-run') {
-        if(oldMine.ground&&!mine.ground&&mine.vz>0)tone(240,.15,.06,'sine',520);if(mine.lives<oldMine.lives)tone(360,.3,.09,'triangle',90);
+        if(oldMine.ground&&!mine.ground&&mine.vz>0)tone(mine.vz>350?320:240,.16,.07,'sine',mine.vz>350?680:520);
+        else if(!oldMine.ground&&!mine.ground&&oldMine.airHop&&!mine.airHop)tone(380,.14,.065,'triangle',640);
+        if((mine.padBoost||0)>(oldMine.padBoost||0)+.1)chime();
+        if(mine.lives<oldMine.lives)tone(360,.3,.09,'triangle',90);
       } else if (game === 'paint-tag' || game === 'tank-arena') {
-        if (mine.cooldown > oldMine.cooldown) tone(760, .09, .07, 'triangle', 140);
-        if (state.players.some((p: any, i: number) => p.score > before.players[i]?.score)) { noise(.12, .12, 1600); chime(); }
+        if (mine.cooldown > oldMine.cooldown) {
+          if (game === 'tank-arena') { noise(.08, .11, 950); tone(220, .09, .08, 'triangle', 85); }
+          else tone(760, .09, .07, 'triangle', 140);
+        }
+        if (game === 'tank-arena' && (state.nextExplosion || 0) > (before.nextExplosion || 0)) {
+          noise(.22, .16, 520); tone(125, .18, .09, 'sine', 42);
+        }
+        if (game === 'tank-arena' && ((mine.weapon && mine.weapon !== oldMine.weapon) || (mine.shield || 0) > (oldMine.shield || 0) || (mine.boostTimer || 0) > (oldMine.boostTimer || 0) + .5)) {
+          chime();
+        }
+        if (state.players.some((p: any, i: number) => p.score > before.players[i]?.score)) { noise(.14, .14, 1400); chime(); }
       } else if (game === 'snake-arena') {
         if (mine.body.length > oldMine.body.length) chime();
         if (oldMine.alive && !mine.alive) { noise(.2, .13, 800); tone(240, .3, .07, 'triangle', 60); }

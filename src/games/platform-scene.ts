@@ -1,8 +1,11 @@
 import * as T from 'three';
 import {Kit,particles,random,animateExplorer} from './world-kit';
-import {explorer,tree,coin,island,sign,palette as colors} from './world-models';
+import {explorer,tree,coin,island,sign} from './world-models';
 import type {PlatformAssets} from './platform-assets';
 import {createPlatformStorm} from './platform-storm';
+import {createPlatformMountains} from './platform-mountains';
+import {PlatformLifeFeedback} from './platform-life-feedback';
+import {platformCharacter,PLATFORM_TINTS} from '../../shared/platform-options.mjs';
 type State=any;
 type Step=(s:State,dt:number,time:number)=>void;
 const clamp=T.MathUtils.clamp;
@@ -24,7 +27,7 @@ export function platformScene(k:Kit,s:State,assets?:PlatformAssets):Step{
  const sunlight=k.scene.children.find(o=>o instanceof T.DirectionalLight&&o.castShadow) as T.DirectionalLight|undefined;
  // The scenery moves with the visible part of the endless shared course.
  const backdrop=new T.Group();k.dynamic.add(backdrop);
- for(let i=0;i<17;i++){const x=-150+i*28,h=18+random(i)*44;const mountain=k.mesh(new T.ConeGeometry(18,h,5),k.mat(i%2?'#6d959a':'#8caaab'),backdrop,x,h/2-8,-85-random(i+6)*35);mountain.rotation.y=i;}
+ const mountains=createPlatformMountains();k.dynamic.add(mountains.root);
  for(let i=0;i<20;i++){
   const x=-120+i*22,y=18+random(i)*15,z=-35-random(i+9)*25;
   const cloudSprite=assets?.bgElement(['cloud1','cloud2','cloud3'][i%3]);
@@ -37,10 +40,11 @@ export function platformScene(k:Kit,s:State,assets?:PlatformAssets):Step{
  const fx=particles(k);const chunks=new Map<number,T.Group>(),gems=new Map<number,T.Group>(),hazards=new Map<number,T.Group>(),springs=new Map<number,T.Group>(),shots=new Map<number,T.Group>(),activeExplosions:T.Group[]=[],enemies=new Map<number,{g:T.Group;submerged?:boolean;ring?:T.Mesh}>();
  const spawnExplosion=(x:number,y:number,z:number)=>{if(!assets)return;const exp=assets.explosionEffect();exp.position.set(x,y,z);k.dynamic.add(exp);activeExplosions.push(exp);};
  const retire=(g:T.Group)=>{if(g.userData.disposeAnimations)g.userData.disposeAnimations();const owned=new Set<T.Material>(),shared=new Set(k.mats.values());g.traverse(o=>{if(o instanceof T.Mesh){o.geometry.dispose();for(const m of Array.isArray(o.material)?o.material:[o.material])if(!shared.has(m))owned.add(m);}});for(const m of owned){for(const value of Object.values(m))if(value instanceof T.Texture&&!k.textures.includes(value))value.dispose();m.dispose();}g.removeFromParent();};
- const crew=s.players.map((_:any,i:number)=>{const g=assets?.character(i)||explorer(colors[i%colors.length]);if(!assets)g.scale.setScalar(.85);if(g.userData.disposeAnimations)k.cleanups.push(g.userData.disposeAnimations);return k.add(g,0,0,i*.8,k.dynamic);});
- const markers=s.players.map((_:any,i:number)=>k.ring(1.1,.08,colors[i%colors.length],0,0,0,k.dynamic));
+ const crew=s.players.map((p:any,i:number)=>{const color=platformCharacter(p.character,i),g=assets?.character(color)||explorer(PLATFORM_TINTS[color]);if(!assets)g.scale.setScalar(.85);if(g.userData.disposeAnimations)k.cleanups.push(g.userData.disposeAnimations);return k.add(g,0,0,i*.8,k.dynamic);});
+ const markers=s.players.map((p:any,i:number)=>k.ring(1.1,.08,PLATFORM_TINTS[platformCharacter(p.character,i)],0,0,0,k.dynamic));
  const shields=s.players.map(()=>{const shield=k.mesh(new T.SphereGeometry(2.8,16,10),new T.MeshBasicMaterial({color:'#8fe7ef',transparent:true,opacity:.14,depthWrite:false}),k.dynamic);shield.castShadow=shield.receiveShadow=false;shield.visible=false;return shield;});
  const lastBounced=s.players.map(()=>0);
+ const lifeFeedback=s.players.map((p:any)=>new PlatformLifeFeedback(p));
  const shotPool:T.Group[]=[];
  // Pooled projectiles stay attached (invisible), so scene disposal owns them too.
  k.cleanups.push(()=>{for(const g of [...shots.values(),...shotPool,...activeExplosions,...[...enemies.values()].map(e=>e.g)])g.userData.disposeAnimations?.();});
@@ -51,6 +55,7 @@ export function platformScene(k:Kit,s:State,assets?:PlatformAssets):Step{
   const biomeKey=activePlatform?.biome||state.biome||'grove',theme=platformBiomes[biomeKey]||platformBiomes.grove;
   const weather=clamp(1-(viewer.x-state.stormX)/400,0,1);
   const blendRate=Math.min(1,dt*2.4);
+  mountains.update(px,weather,dt);
   skyMat.uniforms.top.value.lerp(targetTop.set(theme.skyTop).lerp(stormSky,weather*.7),blendRate);
   skyMat.uniforms.bottom.value.lerp(targetBottom.set(theme.skyBottom).lerp(stormHorizon,weather*.55),blendRate);
   fog.color.lerp(targetFog.set(theme.fog).lerp(stormHorizon,weather*.6),blendRate);
@@ -184,7 +189,9 @@ export function platformScene(k:Kit,s:State,assets?:PlatformAssets):Step{
 
   state.players.forEach((p:any,i:number)=>{
    const g=crew[i];g.position.set(p.x/10,(435-p.y)/10,i===(state.viewSeat??0)?1.2:-1.5-i*.9);
-   g.visible=true;
+   g.visible=lifeFeedback[i].update(p,dt);
+   // A final sea fall still leaves a readable death pose above the water.
+   if(!p.alive)g.position.y=Math.max(.1,g.position.y);
    shields[i].visible=p.alive&&(p.invulnerable||0)>0;shields[i].position.copy(g.position);shields[i].position.y+=2;
    if(p.bouncedAt&&p.bouncedAt!==lastBounced[i]){lastBounced[i]=p.bouncedAt;fx.burst(g.position.x,g.position.y,g.position.z,'#72f2eb',16);}
    if(p.vx)g.rotation.y=p.vx>0?0:Math.PI;

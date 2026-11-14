@@ -369,8 +369,9 @@ export function stepPlatformWorld(s, cs, DT, finish) {
   s.shots = s.shots.filter(sh => sh.life > 0);
 
   function loseLife(p, reason, respawnOnIsland = false) {
-    if (p.lives === undefined) p.lives = 3;
+    if (p.lives === undefined) p.lives = p.maxLives ?? s.startingLives ?? 3;
     p.lives = Math.max(0, p.lives - 1);
+    p.damageCount = (p.damageCount || 0) + 1;
     if (p.lives <= 0) {
       p.alive = false;
       p.deathReason = reason;
@@ -398,8 +399,8 @@ export function stepPlatformWorld(s, cs, DT, finish) {
   // 3. Step players and query contacts against the shared sensor bodies.
   s.players.forEach((p, i) => {
     if (!p.alive) return;
-    if (p.lives === undefined) p.lives = 3;
-    if (p.maxLives === undefined) p.maxLives = 3;
+    if (p.lives === undefined) p.lives = p.maxLives ?? s.startingLives ?? 3;
+    if (p.maxLives === undefined) p.maxLives = s.startingLives ?? 3;
     p.invulnerable = Math.max(0, (p.invulnerable || 0) - DT);
     p.shootCooldown = Math.max(0, (p.shootCooldown || 0) - DT);
 

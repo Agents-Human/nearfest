@@ -6,6 +6,8 @@ import {mergeGeometries} from 'three/addons/utils/BufferGeometryUtils.js';
 export type ActionAssets = {
   prop(id: string): THREE.Group | null;
   tank(color: THREE.ColorRepresentation): THREE.Group;
+  texture(name: string): THREE.Texture | null;
+  textures: Map<string, THREE.Texture>;
   propIds: string[];
   dimensions: Record<string, {x: number; y: number; z: number}>;
 };
@@ -16,12 +18,47 @@ const specs: Record<string, Spec> = {
   'arena-arch': {group: 'building', scale: 5, rotate: quarter},
   'arena-wall': {group: 'building', scale: 5, rotate: quarter},
   'arena-stairs': {group: 'building', scale: 5, rotate: quarter},
-  'arena-floor': {group: 'building', scale: 5, rotate: quarter},
+  'arena-floor': {group: 'building', scale: 10, rotate: quarter},
+  'border-high': {group: 'building', scale: 5, rotate: quarter},
+  'border-high-corner': {group: 'building', scale: 5, rotate: quarter},
+  'barricade-window-b': {group: 'building', scale: 5, rotate: quarter},
+  'wall-window-square-detailed': {group: 'building', scale: 5, rotate: quarter},
+  'plating-detailed-wide': {group: 'building', scale: 5, rotate: quarter},
   crate: {group: 'factory', axis: 'x', size: 3.6},
+  'box-large': {group: 'factory', axis: 'x', size: 3.6},
+  'box-wide': {group: 'factory', axis: 'x', size: 4.2},
+  'box-small': {group: 'factory', axis: 'x', size: 1.5},
   beacon: {group: 'factory', axis: 'y', size: 4.5},
-  checker: {group: 'factory', axis: 'x', size: 12},
+  checker: {group: 'factory', axis: 'x', size: 10},
+  'floor-large': {group: 'factory', axis: 'x', size: 10},
+  'indicator-special-area': {group: 'factory', axis: 'x', size: 6.2},
+  'button-floor-round': {group: 'factory', axis: 'x', size: 4.4},
+  'conveyor-long-stripe-sides': {group: 'factory', axis: 'x', size: 12},
+  'catwalk-straight': {group: 'factory', axis: 'x', size: 10},
   machine: {group: 'factory', axis: 'y', size: 7, url: '/models/scenery/factory/machine.glb'},
+  'machine-fortified': {group: 'factory', axis: 'y', size: 6.5},
   screen: {group: 'factory', axis: 'x', size: 6, url: '/models/scenery/factory/screen.glb'},
+  crane: {group: 'factory', axis: 'y', size: 13, url: '/models/scenery/factory/crane.glb'},
+  'robot-arm': {group: 'factory', axis: 'y', size: 7.5, url: '/models/scenery/factory/robot-arm.glb'},
+  pipe: {group: 'factory', axis: 'y', size: 6.5, url: '/models/scenery/factory/pipe.glb'},
+  'scanner-high': {group: 'factory', axis: 'y', size: 6.2},
+  'piston-round': {group: 'factory', axis: 'y', size: 6},
+  'hopper-round': {group: 'factory', axis: 'y', size: 5.8},
+  'warning-orange': {group: 'factory', axis: 'y', size: 3.4},
+  'warning-traffic': {group: 'factory', axis: 'y', size: 3.8},
+  cone: {group: 'factory', axis: 'y', size: 1.8},
+  'structure-yellow-high': {group: 'factory', axis: 'y', size: 9},
+  barrel: {group: 'survival', axis: 'y', size: 3.1},
+  'barrel-open': {group: 'survival', axis: 'y', size: 3.0},
+  chest: {group: 'survival', axis: 'x', size: 3.5},
+  'fence-fortified': {group: 'survival', axis: 'x', size: 6.5},
+  'structure-metal-wall': {group: 'survival', axis: 'x', size: 7.8},
+  'metal-panel-screws': {group: 'survival', axis: 'x', size: 5.5},
+  'workbench-anvil': {group: 'survival', axis: 'x', size: 5.2},
+  'rock-flat-grass': {group: 'survival', axis: 'x', size: 16},
+  'rock-flat': {group: 'survival', axis: 'x', size: 14},
+  'arrow-basic': {group: 'factory', axis: 'x', size: 4.4, rotate: quarter},
+  'indicator-special-arrow': {group: 'factory', axis: 'x', size: 4.6, rotate: quarter},
   'track-straight': {group: 'marble', scale: 10, rotate: quarter},
   'track-wide': {group: 'marble', scale: 10, rotate: quarter},
   'track-curve': {group: 'marble', scale: 10, rotate: quarter},
@@ -30,12 +67,37 @@ const specs: Record<string, Spec> = {
   'track-gate': {group: 'marble', scale: 10, rotate: quarter},
   'track-fan': {group: 'marble', scale: 10, rotate: quarter, url: '/models/scenery/marble/fan.glb'},
   'track-end': {group: 'marble', scale: 10, rotate: quarter},
+  tunnel: {group: 'marble', scale: 13, rotate: quarter},
+  'banner-double-high': {group: 'marble', scale: 11, rotate: quarter},
+  'banner-hanging-double-high': {group: 'marble', scale: 11, rotate: quarter},
+  'helix-large-left': {group: 'marble', scale: 8.5, rotate: quarter},
+  'helix-large-right': {group: 'marble', scale: 8.5, rotate: quarter},
+  'funnel-long': {group: 'marble', scale: 9.5, rotate: quarter},
+  's-curve-left-large': {group: 'marble', scale: 8.5, rotate: quarter},
+  'support-color-four-top': {group: 'marble', scale: 10, rotate: quarter},
+  'support-color-four-middle': {group: 'marble', scale: 10, rotate: quarter},
+  'support-color-four-bottom': {group: 'marble', scale: 10, rotate: quarter},
+  'fan-standing-four': {group: 'marble', scale: 9.5, rotate: quarter},
+  'fan-four': {group: 'marble', scale: 8.5, rotate: quarter},
+  'tree-large': {group: 'marble', scale: 9},
+  'tree-tall-large': {group: 'marble', scale: 10},
 };
 export const actionAssetGroups: Readonly<Record<string, readonly string[]>> = {
   'stick-rivals': ['arena-column', 'arena-arch', 'arena-wall', 'arena-stairs', 'arena-floor', 'crate', 'beacon', 'checker'],
-  'marble-run': ['track-straight', 'track-wide', 'track-curve', 'track-ramp', 'track-support', 'track-gate', 'track-fan', 'track-end'],
-  'tank-arena': ['arena-wall', 'arena-column', 'crate', 'beacon', 'machine', 'screen'],
+  'marble-run': [
+    'track-straight', 'track-wide', 'track-curve', 'track-ramp', 'track-support', 'track-gate', 'track-fan', 'track-end',
+    'tunnel', 'banner-double-high', 'banner-hanging-double-high', 'helix-large-left', 'helix-large-right', 'funnel-long', 's-curve-left-large',
+    'support-color-four-top', 'support-color-four-middle', 'support-color-four-bottom', 'fan-standing-four', 'fan-four', 'tree-large', 'tree-tall-large',
+    'arrow-basic', 'indicator-special-arrow', 'button-floor-round', 'piston-round', 'warning-orange', 'cone', 'beacon', 'rock-flat-grass', 'rock-flat',
+  ],
+  // Tank scenery is code-authored; only the combat effect textures are loaded.
+  'tank-arena': [],
 };
+const tankTextureFiles = [
+  'tank_explosion1.png', 'tank_explosion2.png', 'tank_explosion3.png', 'tank_explosion4.png',
+  'explosion1.png', 'explosion2.png', 'explosion3.png', 'explosion4.png', 'explosion5.png',
+  'shotLarge.png', 'shotOrange.png', 'tank_bulletFly3.png', 'tracksDouble.png',
+];
 export const tankHudIcons = ['/models/action/icons/tank-blue.png', '/models/action/icons/tank-red.png'];
 
 /** Measured from the original mesh vertices; +X is travel after normalization.
@@ -216,19 +278,19 @@ export function tank(color: THREE.ColorRepresentation): THREE.Group {
   const turret = new THREE.Group(); turret.name = 'turret'; turret.position.set(-.35, 1.72, 0); root.add(turret);
   box(1.75, .68, 1.6, paint, -.08, .35, 0, turret, .16);
   box(.42, .45, .65, darkPaint, .82, .38, 0, turret, .08);
-  const barrel = cylinder(.15, 1.65, steel, 1.6, .4, 0, turret); barrel.rotation.z = -Math.PI / 2;
-  const muzzle = cylinder(.205, .4, darkPaint, 2.45, .4, 0, turret); muzzle.rotation.z = -Math.PI / 2;
-  const bore = cylinder(.116, .012, rubber, 2.647, .4, 0, turret); bore.rotation.z = -Math.PI / 2;
   cylinder(.38, .12, darkPaint, -.36, .75, 0, turret);
   box(.3, .13, .15, glass, .23, .74, -.37, turret);
   box(.1, .1, .42, steel, -.35, .84, 0, turret);
-  // Short aerial, tow points and side armour bolts make the scale readable.
   cylinder(.025, .65, steel, -.67, 1, .52, turret);
   for (const z of [-.82, .82]) for (const x of [-.62, 0, .58]) {
     const bolt = cylinder(.045, .025, steel, x, .34, z, turret); bolt.rotation.x = Math.PI / 2;
   }
-  mergeAssembly(hull); mergeAssembly(turret);
-  const muzzlePoint = new THREE.Object3D(); muzzlePoint.name = 'muzzle'; muzzlePoint.position.set(2.65, .4, 0); turret.add(muzzlePoint);
+  const barrelGroup = new THREE.Group(); barrelGroup.name = 'barrelGroup'; turret.add(barrelGroup);
+  const barrel = cylinder(.15, 1.65, steel, 1.6, .4, 0, barrelGroup); barrel.rotation.z = -Math.PI / 2;
+  const muzzle = cylinder(.205, .4, darkPaint, 2.45, .4, 0, barrelGroup); muzzle.rotation.z = -Math.PI / 2;
+  const bore = cylinder(.116, .012, rubber, 2.647, .4, 0, barrelGroup); bore.rotation.z = -Math.PI / 2;
+  mergeAssembly(hull); mergeAssembly(turret); mergeAssembly(barrelGroup);
+  const muzzlePoint = new THREE.Object3D(); muzzlePoint.name = 'muzzle'; muzzlePoint.position.set(2.65, .4, 0); barrelGroup.add(muzzlePoint);
   // Fit the complete forward-facing model (including muzzle and hub caps) to
   // the gameplay footprint without moving its useful turret/muzzle pivots.
   root.updateMatrixWorld(true);
@@ -238,11 +300,28 @@ export function tank(color: THREE.ColorRepresentation): THREE.Group {
   normalized.scale.set(4.6 / size.x, 1, 3 / size.z);
   normalized.position.set(-center.x * normalized.scale.x, -bounds.min.y, -center.z * normalized.scale.z);
   root.add(normalized);
+  const shieldDome = new THREE.Mesh(
+    new THREE.SphereGeometry(2.65, 20, 14),
+    new THREE.MeshStandardMaterial({color: '#6ce8ff', emissive: '#35bfff', emissiveIntensity: .65, transparent: true, opacity: .28, roughness: .15, depthWrite: false})
+  );
+  shieldDome.position.set(0, 1.35, 0);
+  shieldDome.scale.set(1.1, .75, .92);
+  shieldDome.visible = false;
+  root.add(shieldDome);
   root.userData.dimensions = {x: 4.6, y: size.y, z: 3};
-  root.userData.turret = turret; root.userData.muzzle = muzzlePoint;
+  root.userData.turret = turret; root.userData.barrelGroup = barrelGroup; root.userData.muzzle = muzzlePoint; root.userData.shieldDome = shieldDome;
   root.userData.assetSource = 'Original code-authored 3D tank';
   root.userData.forward = '+X'; root.userData.pivot = 'bottom-center';
   return root;
+}
+
+function loadTex(url: string): Promise<THREE.Texture | null> {
+  return new Promise<THREE.Texture | null>(resolve => {
+    new THREE.TextureLoader().load(url, tex => {
+      tex.colorSpace = THREE.SRGBColorSpace;
+      resolve(tex);
+    }, undefined, () => resolve(null));
+  });
 }
 
 /** Lazy per-game props. Fighter characters use the existing loadPlatformAssets()
@@ -252,8 +331,14 @@ export function loadActionAssets(game: string): Promise<ActionAssets> {
   const cached = gameCache.get(game);
   if (cached) return cached;
   const ids = actionAssetGroups[game] || [];
-  const pending = Promise.all(ids.map(async id => [id, await loadTemplate(id)] as const)).then(entries => {
+  const texFiles = game === 'tank-arena' ? tankTextureFiles : [];
+  const pending = Promise.all([
+    Promise.all(ids.map(async id => [id, await loadTemplate(id)] as const)),
+    Promise.all(texFiles.map(async name => [name, await loadTex(`/models/action/tanks/${name}`)] as const)),
+  ]).then(([entries, texEntries]) => {
     const templates = new Map(entries);
+    const textures = new Map<string, THREE.Texture>();
+    for (const [name, tex] of texEntries) if (tex) textures.set(name, tex);
     const dimensions: ActionAssets['dimensions'] = {};
     // Determine normalized bounds without creating GPU resources.
     for (const [id, source] of entries) {
@@ -265,7 +350,11 @@ export function loadActionAssets(game: string): Promise<ActionAssets> {
     }
     return {
       prop(id: string) {const source = templates.get(id); return source ? instantiate(id, source) : null;},
-      tank, propIds: [...ids], dimensions,
+      tank,
+      texture(name: string) {return textures.get(name) || null;},
+      textures,
+      propIds: [...ids],
+      dimensions,
     } satisfies ActionAssets;
   }).catch(error => {gameCache.delete(game); throw error;});
   gameCache.set(game, pending);

@@ -26,23 +26,31 @@ test('tanks respect walls, fire with server cooldowns, break crates and award on
  let s=newWorld('tank-arena',2);Object.assign(s.players[0],{x:260,y:170});s=advance(s,20,[{right:true,attack:true},{}]);assert(s.players[0].x<=262);assert(s.nextShot<=2);assert(s.shots.every(b=>Number.isFinite(b.x)&&Number.isFinite(b.y)));
  s=newWorld('tank-arena',2);s.shots=[{id:0,owner:0,x:200,y:250,vx:0,vy:330,life:2,bounces:0}];s=advance(s,2);assert.equal(s.crates[0].hp,1);
  s=newWorld('tank-arena',2);Object.assign(s.players[1],{x:800,y:450,hp:1,invulnerable:0});s.shots=[{id:0,owner:0,x:775,y:450,vx:330,vy:0,life:2,bounces:0}];s=advance(s,2);assert.equal(s.players[0].score,1);assert.equal(s.players[1].hp,0);assert(s.players[1].respawn>0);s=advance(s,40);assert.equal(s.players[0].score,1);assert.equal(s.players[1].hp,3);assert(s.players[1].invulnerable>0);assert.throws(()=>worldAction(s,0,{type:'score',score:99}),/supported/);
+ s=newWorld('tank-arena',2);const barrel=s.barrels[0];Object.assign(s.players[1],{x:barrel.x+45,y:barrel.y,hp:2,invulnerable:0});s.shots=[{id:0,owner:0,x:barrel.x-15,y:barrel.y,vx:330,vy:0,life:2,bounces:0}];s=advance(s,2);assert.equal(s.barrels[0].hp,0);assert.equal(s.players[1].hp,1);assert(s.explosions.some(e=>e.kind==='barrel'));
+ s=newWorld('tank-arena',2);Object.assign(s.players[0],{x:s.powerups[0].x,y:s.powerups[0].y,cooldown:0});s=advance(s,2,[{attack:true},{}]);assert.equal(s.players[0].weapon,'spread');assert.equal(s.shots.length,3);
 });
 test('fighter kicks spend more energy and reach farther than punches',()=>{
  const s=newWorld('stick-rivals',2);s.players[0].x=410;s.players[1].x=495;const punch=advance(s,7,[{attack:true},{}]),kick=advance(s,7,[{down:true},{}]);assert.equal(punch.players[1].hp,100);assert(kick.players[1].hp<100);assert(kick.players[0].energy<punch.players[0].energy);
+ const upper=newWorld('stick-rivals',2);upper.players[0].x=435;upper.players[1].x=495;const launched=advance(upper,6,[{up:true,attack:true},{}]);assert(launched.players[1].hp<100);assert(launched.players[1].y<410,'rising uppercut launches rival into the air');
+ const dive=newWorld('stick-rivals',2);Object.assign(dive.players[0],{x:410,y:320,ground:false,vy:-60});dive.players[1].x=485;const slammed=advance(dive,8,[{down:true},{}]);assert(slammed.players[1].hp<100,'airborne meteor divekick connects on descent');
+ const armory=newWorld('stick-rivals',2);armory.weapons=[{id:0,x:480,y:410,kind:'sword',active:true}];Object.assign(armory.players[0],{x:armory.weapons[0].x,y:armory.weapons[0].y});const armed=advance(armory,2,[{},{}]);assert(armed.players[0].weapon,'stepping onto an arena weapon equips it');
+ const judo=newWorld('stick-rivals',2);judo.players[0].x=435;judo.players[1].x=495;const thrown=advance(judo,4,[{fire:true},{}]);assert.equal(thrown.players[0].attackKind,'throw');assert(thrown.players[1].hp<100&&thrown.players[1].y<410,'close-range F performs a judo overhead throw');
+ const beam=newWorld('stick-rivals',2);beam.players[0].x=320;beam.players[1].x=520;const blasted=advance(beam,12,[{fire:true},{}]);assert.equal(blasted.players[0].attackKind,'blast');assert(blasted.players[1].hp<100,'ranged F fires a Ki energy beam across the stage');
 });
 test('marble bumpers reward steering or jumping, while coins provide sustained acceleration',()=>{
  let s=newWorld('marble-run',2);Object.assign(s.players[0],{x:1090,y:0,vx:205});s=advance(s,1);assert.equal(s.players[0].collisions,1);assert(s.players[0].vx<100);
  s=newWorld('marble-run',2);Object.assign(s.players[0],{x:1090,y:0,vx:205,height:35,ground:false,vz:100});s=advance(s,1);assert.equal(s.players[0].collisions,0);
  s=newWorld('marble-run',2);s.players[0].x=s.pickups[0].x-5;s.players[0].y=s.pickups[0].y;s.players[0].vx=205;s=advance(s,1);assert(s.players[0].boost>0);s=advance(s,8);assert(s.players[0].vx>220);
+ s=newWorld('marble-run',2);Object.assign(s.players[0],{x:s.boostPads[0].x-5,y:s.boostPads[0].y,vx:205});s=advance(s,1);assert(s.players[0].padBoost>0);assert(s.players[0].vx>=270);
+ s=newWorld('marble-run',2);Object.assign(s.players[0],{x:s.jumpPads[0].x-5,y:s.jumpPads[0].y,vx:205});s=advance(s,1);assert(!s.players[0].ground);assert(s.players[0].vz>=300);
 });
 
 
-test('fighter practice leaves time to react and simple strikes can win',async()=>{
- const {worldBot}=await import('../server/arcade/world.mjs');
- let learning=newWorld('stick-rivals',2);
- for(let tick=0;tick<160;tick++)learning=advanceWorld(learning,[{},worldBot(learning,1)]);
- assert.equal(learning.round,0);assert(learning.players[0].hp>=50,'A new player gets at least eight seconds to learn the controls.');
- let playing=newWorld('stick-rivals',2);
- for(let tick=0;tick<900&&!playing.finished;tick++)playing=advanceWorld(playing,[{attack:true},worldBot(playing,1)]);
- assert(playing.finished);assert(playing.scores[0]>playing.scores[1],'Holding the basic strike must be a viable way to learn against the practice bot.');
+test('fighter practice rewards movement, defense and counterattacks over standing and mashing',()=>{
+ const duel=smart=>{let s=newWorld('stick-rivals',2);for(let t=0;t<1200&&!s.finished;t++){
+  const p=s.players[0],q=s.players[1],d=q.x-p.x,dist=Math.abs(d);
+  const c=smart?{right:d>62,left:d< -62,attack:dist<86,down:dist<110&&q.cooldown>.16,fire:(q.blocking&&dist<85)||(dist>140&&p.energy>45),block:q.attack>0&&q.attackKind!=='punch'&&p.cooldown<=0}:{attack:true};
+  if(c.block)c.left=c.right=false;s=advanceWorld(s,[c,worldBot(s,1)]);
+ }return s;};
+ const mash=duel(false),tactics=duel(true);assert(mash.finished&&tactics.finished);assert(mash.scores[0]<mash.scores[1],'stationary button mashing should be punishable');assert(tactics.scores[0]>tactics.scores[1],'simple movement, guard and counters can win');
 });

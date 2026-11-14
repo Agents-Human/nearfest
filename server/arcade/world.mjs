@@ -2,28 +2,29 @@ import {socialWorldIds,newSocialWorld,advanceSocialWorld,socialWorldAction,socia
 import {extraWorldIds,newExtraWorld,advanceExtraWorld,extraWorldBot} from './extra-worlds.mjs';
 import {resetGolfHole,advanceGolf} from './golf-courses.mjs';
 import {extendPlatformCourse,stepPlatformWorld,platformBotControls} from './platform-physics.mjs';
-import {KART_ROSTER,createRaceTraffic,createRaceBoostPads,stepRaceWorld,raceBotControls} from './race-physics.mjs';
+import {roadHeight} from './race-course.mjs';
+import {KART_ROSTER,extendRaceCourse,stepRaceWorld,raceBotControls} from './race-physics.mjs';
+import {initStickWorld,stepStickWorld,stickBotControls} from './stick-physics.mjs';
 import {newTappyWorld,advanceTappyWorld,tappyAction,tappyBot} from './tappy-plane.mjs';
+import {platformCharacter,platformLives} from '../../shared/platform-options.mjs';
 export const DT=.05;
 export const clamp=(n,a,b)=>Math.max(a,Math.min(b,n));
 export const angle=n=>Math.atan2(Math.sin(n),Math.cos(n));
 export const distance=(a,b)=>Math.hypot(a.x-b.x,a.y-b.y);
-export const controls=d=>Object.fromEntries(['left','right','up','down','attack','block'].map(k=>[k,d?.[k]===true]));
+export const controls=d=>Object.fromEntries(['left','right','up','down','attack','block','fire'].map(k=>[k,d?.[k]===true]));
 export const worldIds=new Set(['tappy-plane',...socialWorldIds,...extraWorldIds,'pocket-racers','stick-rivals','paddle-duel','air-hockey','snake-arena','bomb-maze','mini-golf','marble-knockout','kitchen-rush','paint-tag','platform-relay','orbit-rescue']);
 export function finish(s,winners,reason){s.finished=true;s.winners=winners;s.reason=reason;return s;}
 export function ranked(s,values,reason,low=false){const best=(low?Math.min:Math.max)(...values);return finish(s,values.flatMap((v,i)=>Math.abs(v-best)<1e-7?[i]:[]),reason);}
 function fighter(i,round=0){const side=(i+round)%2;return {x:side?640:320,y:410,vx:0,vy:0,facing:side?-1:1,hp:100,energy:100,cooldown:0,attack:0,hit:false,blocking:false,ground:true,attackKind:'punch',attackSeq:0,stun:0};}
-export function newWorld(game,n){
+export function newWorld(game,n,options={}){
  const s={game,tick:0,elapsed:0,finished:false,winners:[],reason:'',players:[],round:0};
  if(game==='tappy-plane')newTappyWorld(s,n);
  else if(game==='pocket-racers'){
-  s.courseLength=9000;
-  s.players=Array.from({length:n},(_,i)=>({x:480,y:0,vx:0,heading:0,steer:0,drift:0,speed:0,boost:100,boosting:false,padBoost:0,progress:0,finish:null,coins:0,collected:[],crashes:0,crashTimer:0,invulnerable:0,kart:KART_ROSTER[i%KART_ROSTER.length]}));
-  s.traffic=createRaceTraffic();
-  s.boostPads=createRaceBoostPads();
-  s.pickups=Array.from({length:45},(_,i)=>({id:i,x:[570,390,480][Math.floor(i/3)%3],distance:550+i*175}));
+  s.timeLimit=120;s.raceSeed=Math.floor(Math.random()*1000000);s.shots=[];s.nextShot=0;s.raceChunks=[];s.traffic=[];s.boostPads=[];s.pickups=[];
+  s.players=Array.from({length:n},(_,i)=>({x:480+(i-(n-1)/2)*60,y:0,vx:0,heading:0,steer:0,drift:0,drifting:false,driftCharge:0,driftBoost:0,speed:0,boost:0,boosting:false,padBoost:0,finish:null,coins:0,collected:[],usedPads:[],passedTraffic:[],nearMisses:0,nearMissTimer:0,crashes:0,crashTimer:0,invulnerable:0,ammo:3,reload:0,fireCooldown:0,shotsFired:0,hits:0,hitConfirm:0,hitTimer:0,shield:0,spin:0,takedowns:0,water:false,splashes:0,height:0,elevation:roadHeight(0),verticalSpeed:0,airborne:false,airTime:0,jumps:0,landings:0,landingTimer:0,airBoost:0,kart:KART_ROSTER[i%KART_ROSTER.length]}));
+  extendRaceCourse(s);
  }
- else if(game==='stick-rivals'){s.players=Array.from({length:n},(_,i)=>fighter(i));s.scores=Array(n).fill(0);s.roundTime=0;s.breakTime=0;}
+ else if(game==='stick-rivals'){initStickWorld(s,n);}
  else if(game==='paddle-duel'||game==='air-hockey'){s.players=Array.from({length:n},(_,i)=>({x:i?880:80,y:280,score:0,vx:0,vy:0}));s.ball={x:480,y:280,vx:game==='paddle-duel'?260:190,vy:game==='paddle-duel'?90:60};s.serve=0;s.reset=1;}
  else if(game==='marble-knockout'){s.players=Array.from({length:n},(_,i)=>({x:480+180*Math.cos(i*2*Math.PI/n),y:280+180*Math.sin(i*2*Math.PI/n),vx:0,vy:0,alive:true}));s.radius=245;}
  else if(game==='paint-tag'){s.players=Array.from({length:n},(_,i)=>({x:[120,840,120,840][i],y:[100,460,460,100][i],vx:0,vy:0,aim:i%2?Math.PI:0,score:0,cooldown:0,invulnerable:1}));s.shots=[];s.nextShot=0;s.walls=[{x:300,y:130,w:60,h:180},{x:600,y:250,w:60,h:180}];}
@@ -32,8 +33,9 @@ export function newWorld(game,n){
  else if(game==='mini-golf'){s.hole=0;s.turn=0;s.players=Array.from({length:n},()=>({total:0,holes:[]}));s.moving=false;s.shots=[];resetGolfHole(s);}
  else if(game==='kitchen-rush'){s.players=Array.from({length:n},(_,i)=>({x:260+i*100,y:300,carrying:null,cooldown:0}));s.stations=[{x:130,y:110,kind:'tomato',item:null},{x:130,y:430,kind:'lettuce',item:null},{x:460,y:110,kind:'chop',item:null,progress:0},{x:460,y:430,kind:'cook',item:null,progress:0},{x:830,y:280,kind:'serve',item:null}];s.orders=['salad','soup','salad','soup','soup','salad'];s.served=0;}
  else if(game==='platform-relay'){
+  s.startingLives=platformLives(options.lives);
   s.seed=Math.floor(Math.random()*1000000);s.nextIsland=0;s.platforms=[];s.coins=[];s.hazards=[];s.springs=[];s.enemies=[];s.shots=[];s.nextShot=0;s.stormX=-500;s.difficulty=1;s.biome='grove';
-  s.players=Array.from({length:n},()=>({x:65,y:435,vx:0,vy:0,facing:1,ground:true,platformId:0,alive:true,lives:3,maxLives:3,invulnerable:0,shootCooldown:0,coyote:.22,jumpBuffer:0,jumpHeld:false,coins:0,airJumps:0,stomps:0,score:0,deathReason:null}));
+  s.players=Array.from({length:n},(_,i)=>({character:platformCharacter(options.characters?.[i],i),x:65,y:435,vx:0,vy:0,facing:1,ground:true,platformId:0,alive:true,lives:s.startingLives,maxLives:s.startingLives,damageCount:0,invulnerable:0,shootCooldown:0,coyote:.22,jumpBuffer:0,jumpHeld:false,coins:0,airJumps:0,stomps:0,score:0,deathReason:null}));
   extendPlatformCourse(s);
  }
  else if(game==='orbit-rescue'){s.players=Array.from({length:n},(_,i)=>({role:['Steering','Thrust','Docking','Navigation'][i]}));s.ship={x:480,y:280,vx:0,vy:0,heading:0,fuel:100};s.probes=[{x:200,y:150,rescued:false},{x:770,y:130,rescued:false},{x:720,y:440,rescued:false}];s.docked=0;}
@@ -88,18 +90,7 @@ export function advanceWorld(previous,input){
  if(s.game==='pocket-racers'){
   stepRaceWorld(s,cs,DT,clamp,ranked);
  } else if(s.game==='stick-rivals'){
-  if(s.breakTime>0){s.breakTime-=DT;if(s.breakTime<=0){s.round++;s.roundTime=0;s.players=s.players.map((_,i)=>fighter(i,s.round));}return s;}
-  s.roundTime+=DT;const hits=[];
-  s.players.forEach((p,i)=>{const c=cs[i];p.cooldown=Math.max(0,p.cooldown-DT);p.energy=clamp(p.energy+(c.block?7:14)*DT,0,100);p.blocking=c.block&&p.energy>1;p.energy-=p.blocking?5*DT:0;
-   p.stun=Math.max(0,(p.stun||0)-DT);const dx=Number(c.right)-Number(c.left),rival=s.players[1-i];if(dx)p.facing=dx;else if(!p.attack)p.facing=rival.x>=p.x?1:-1;p.vx=p.stun>0?0:dx*(p.blocking?85:230);if(c.up&&p.ground){p.vy=-460;p.ground=false;}
-   p.vy+=1150*DT;p.x=clamp(p.x+p.vx*DT,55,905);p.y+=p.vy*DT;if(p.y>=410){p.y=410;p.vy=0;p.ground=true;}
-   if((c.attack||c.down)&&!p.blocking&&p.cooldown===0&&p.stun===0&&p.energy>=(c.down?22:10)){p.attackKind=c.down?'kick':'punch';p.attack=c.down?.4:.27;p.cooldown=c.down?.78:.42;p.energy-=c.down?22:10;p.attackSeq=(p.attackSeq||0)+1;p.hit=false;}
-   p.attack=Math.max(0,p.attack-DT);
-   if(p.attack>0&&p.attack<.16&&!p.hit){p.hit=true;s.players.forEach((other,j)=>{if(i!==j&&Math.abs(other.y-p.y)<85&&(other.x-p.x)*p.facing>=-15&&Math.abs(other.x-p.x)<(p.attackKind==='kick'?95:72))hits.push({from:i,to:j,kind:p.attackKind});});}
-  });
-  for(const hit of hits){const p=s.players[hit.to],attacker=s.players[hit.from],blocked=p.blocking&&(attacker.x-p.x)*p.facing>0;p.hp=Math.max(0,p.hp-(blocked?2:hit.kind==='kick'?18:10));p.x=clamp(p.x+attacker.facing*(blocked?4:hit.kind==='kick'?34:13),55,905);p.stun=blocked?0:.12;if(blocked)p.energy=Math.max(0,p.energy-9);}
-  const [left,right]=[...s.players].sort((a,b)=>a.x-b.x);if(right.x-left.x<54&&Math.abs(right.y-left.y)<70){const overlap=(54-(right.x-left.x))/2;left.x=clamp(left.x-overlap,55,905);right.x=clamp(right.x+overlap,55,905);}
-  if(s.players.some(p=>p.hp<=0)||s.roundTime>=60){const max=Math.max(...s.players.map(p=>p.hp));s.players.forEach((p,i)=>{if(p.hp===max)s.scores[i]+=s.players.filter(q=>q.hp===max).length===1?1:.5;});s.reason='Round complete';if(s.round>=2||s.scores.some(n=>n>=2))ranked(s,s.scores,'Best score across three rounds.');else s.breakTime=2;}
+  stepStickWorld(s,cs,DT,ranked);
  } else if(s.game==='paddle-duel'||s.game==='air-hockey'){
   const hockey=s.game==='air-hockey',ball=s.ball;
   s.players.forEach((p,i)=>{const old={x:p.x,y:p.y};if(hockey){movement(p,cs[i],320);p.x=clamp(p.x,i?505:35,i?925:455);}else p.y=clamp(p.y+(Number(cs[i].down)-Number(cs[i].up))*360*DT,55,505);p.vx=(p.x-old.x)/DT;p.vy=(p.y-old.y)/DT;});
@@ -150,7 +141,7 @@ export function worldBot(s,i){
  if(s.game==='pocket-racers'){
   raceBotControls(s,i,c);
  }
- else if(s.game==='stick-rivals'){const q=s.players[1-i],d=q.x-p.x,beat=(s.tick+i*7)%56;c.right=d>60;c.left=d< -60;c.attack=Math.abs(d)<75&&beat>=5&&beat<7;c.down=Math.abs(d)<95&&Math.floor(s.tick/56)%3===2&&beat>=20&&beat<22;c.block=q.attack>.16&&beat<5;c.up=Math.abs(d)>160&&s.tick%110<2;}
+ else if(s.game==='stick-rivals'){stickBotControls(s,i,c);}
  else if(['paddle-duel','air-hockey'].includes(s.game)){const target=s.game==='paddle-duel'?s.ball:{x:s.ball.x<(i?480:960)&&s.ball.x>(i?0:480)?i?880:80:s.ball.x,y:s.ball.y};c.up=target.y<p.y-10;c.down=target.y>p.y+10;if(s.game==='air-hockey'){c.left=target.x<p.x-10;c.right=target.x>p.x+10;}}
  else if(s.game==='marble-knockout'){c.left=p.x>480;c.right=p.x<480;c.up=p.y>280;c.down=p.y<280;}
  else if(s.game==='paint-tag'){const q=s.players[(i+1)%s.players.length];c.left=q.x<p.x-60;c.right=q.x>p.x+60;c.up=q.y<p.y-50;c.down=q.y>p.y+50;c.attack=true;}

@@ -1,0 +1,16 @@
+<!doctype html><html lang="en"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Tappy Plane visual playtest</title>
+<style>body{margin:0;background:#f5f3e9;color:#254d49;font:14px system-ui}header{padding:12px 22px;display:flex;flex-wrap:wrap;align-items:center;gap:14px}header b{margin-right:auto}header button{border:1px solid #92a99a;border-radius:6px;background:#fffdf1;padding:8px 12px;color:#254d49}main{max-width:1240px;margin:0 auto;padding:8px 20px 24px;box-sizing:border-box}#status{font-size:11px;color:#527363}button{font:inherit}.cover main{max-width:1000px}.cover .tappy-stage{height:600px}</style>
+<header><b>Tappy Plane · visual playtest</b><span id="status"></span><button id="restart">Restart flight</button><button id="pause">Pause flight</button><label><input id="auto" type="checkbox" checked>Autopilot</label></header><main id="root"></main>
+<script type="module">
+// Local visual harness, using the production component and flight rules.
+import React from 'react';import {createRoot} from 'react-dom/client';
+import TappyPlane from '/src/TappyPlane.tsx';
+import {newTappyWorld,advanceTappyWorld,tappyAction,tappyBot} from '/server/arcade/tappy-plane.mjs';
+const query=new URLSearchParams(location.search),n=Number(query.get('players')||1);if(query.get('cover')==='1')document.body.classList.add('cover');
+let s,paused=false,render;function start(){s={game:'tappy-plane',tick:0,elapsed:0,finished:false,winners:[],reason:'',players:[]};newTappyWorld(s,n);render?.();}
+function App(){const [revision,setRevision]=React.useState(0);render=()=>setRevision(v=>v+1);return React.createElement(TappyPlane,{key:s.key,s,seat:0,names:s.players.map((_,i)=>['Pilot','Blue pilot','Green pilot','Gold pilot'][i]),active:!paused&&!s.finished,action:async d=>{if(s.finished)return;tappyAction(s,0,d);s={...s};render();}});}
+start();createRoot(document.getElementById('root')).render(React.createElement(App));
+const finish=(state,winners,reason)=>Object.assign(state,{finished:true,winners,reason});
+setInterval(()=>{if(paused||s.finished)return;const next=structuredClone(s);next.tick++;next.elapsed+=.05;const controls=next.players.map((_,i)=>document.getElementById('auto').checked||i>0?tappyBot(next,i,{attack:false,up:false}):{attack:false,up:false});s=advanceTappyWorld(next,controls,.05,finish);render?.();document.getElementById('status').textContent=`${s.elapsed.toFixed(1)}s · ${s.players[0].gates} gates · ${s.players[0].stars} stars`;},50);
+document.getElementById('restart').onclick=()=>{start();s.key=Date.now();render?.();};document.getElementById('pause').onclick=e=>{paused=!paused;e.target.textContent=paused?'Resume flight':'Pause flight';render?.();};
+</script></html>

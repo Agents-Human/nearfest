@@ -20,10 +20,9 @@ test('every new title has a unique original simulation and reaches a bounded fin
   for(let i=0;i<19000&&!s.finished;i++)s=advance(s);assert(s.finished,g.id);assert(s.players.length>=g.min_players);assert.doesNotThrow(()=>JSON.stringify(s));
  }
 });
-test('coastal sprint auto-accelerates to a finish, ties equivalent controls and rejects client scores',()=>{
- let s=newWorld('pocket-racers',2);const original=structuredClone(s);for(let i=0;i<2400&&!s.finished;i++)s=advanceWorld(s,[worldBot(s,0),worldBot(s,1)]);
- assert.equal(original.players[0].progress,0);assert(s.finished);assert(s.players[0].y>=s.courseLength);assert(s.players[0].finish<120);assert.deepEqual(s.winners,[0,1]);
- assert.throws(()=>worldAction(newWorld('pocket-racers',2),0,{score:100,progress:100}),/supported/);
+test('timed racing rejects client scores and leaves its previous world untouched',()=>{
+ const s=newWorld('pocket-racers',2),original=structuredClone(s);advanceWorld(s,[worldBot(s,0),worldBot(s,1)]);assert.deepEqual(s,original);
+ assert.throws(()=>worldAction(s,0,{score:100,progress:100}),/supported/);
 });
 test('fighter blocks reduce damage; jump physics lands; simultaneous knockouts tie',()=>{
  let attack=newWorld('stick-rivals',2);attack.players[0].x=430;attack.players[1].x=500;const normal=step(attack,5,s=>advanceWorld(s,[{attack:true},{}])),blocked=step(attack,5,s=>advanceWorld(s,[{attack:true},{block:true}]));assert(normal.players[1].hp<blocked.players[1].hp);
@@ -107,9 +106,9 @@ test('survival grants three lives per player, respawns while lives remain, and e
  const result=advanceWorld(start,[{},{}]);assert(result.finished);assert.deepEqual(result.winners,[1]);assert.equal(result.players[0].lives,0);assert.equal(result.players[0].alive,false);assert(start.players[0].alive);
  start.players[1].lives=1;start.players[1].y=625;start.players[1].vy=150;start.players[1].ground=false;const tie=advanceWorld(start,[]);assert(tie.finished);assert.deepEqual(tie.winners,[]);
 });
-test('gold coins are collected once per seat, while race pickups recharge boost',()=>{
+test('gold coins are collected once per seat and do not refill nitro',()=>{
  let s=newWorld('platform-relay',2);s.coins=[{id:7,x:65,y:435,collectedBy:[]}];s=advanceWorld(s,[]);assert.deepEqual(s.players.map(p=>p.coins),[1,1]);s=advanceWorld(s,[]);assert.deepEqual(s.players.map(p=>p.coins),[1,1]);
- let race=newWorld('pocket-racers',2);race.players[0].boost=10;race.pickups=[{id:1,x:480,distance:1}];race=advanceWorld(race,[]);assert.equal(race.players[0].coins,1);assert(race.players[0].boost>=18);race=advanceWorld(race,[]);assert.equal(race.players[0].coins,1);
+ let race=newWorld('pocket-racers',2);race.players[0].x=480;race.players[0].boost=10;race.pickups=[{id:1,x:480,distance:1}];race=advanceWorld(race,[]);assert.equal(race.players[0].coins,1);assert.equal(race.players[0].boost,10);race=advanceWorld(race,[]);assert.equal(race.players[0].coins,1);
 });
 test('endless terrain extends past the former finish with bounded memory, valid gaps, and no auto-jump',()=>{
  let noJump=newWorld('platform-relay',2);for(let i=0;i<360&&!noJump.finished;i++){noJump.hazards=[];noJump.enemies=[];noJump=advanceWorld(noJump,[{right:true},{}]);}
@@ -151,17 +150,17 @@ test('survival hazards cost lives until eliminated, the storm prevents stalling,
  s=newWorld('platform-relay',2);for(let i=0;i<1000&&!s.finished;i++)s=advanceWorld(s,[]);assert(s.finished);assert(s.players.every(p=>p.lives===0&&p.deathReason==='was caught by the storm'));
  const store=openStore(':memory:');try{const rooms=createArcadeRooms(store),user=store.ensureUser('survival-solo','Runner','practice'),r=rooms.create({game_id:'platform-relay',solo:true,entry:'0'},user,1000);assert.equal(r.players.length,2);assert(r.players[1].bot);assert.equal(r.ends_at,null);}finally{store.db.close();}
 });
-test('sprint traffic penalizes speed without resetting the player, and steering is direct',()=>{
+test('race traffic penalizes speed without resetting the player, and steering eases in',()=>{
  let s=newWorld('pocket-racers',2);
- assert.equal(s.players[0].kart,'race');assert.equal(s.players[1].kart,'race-future');
- s.traffic=[{id:0,x:480,distance:30,speed:0,kind:'car',model:'police'}];s.players[0].speed=235;
- s=advanceWorld(s,[{}, {right:true}]);
- assert(s.players[0].crashes===1);assert(s.players[0].speed<150);assert(s.players[0].crashTimer>0);assert(s.players[0].y>0);assert(s.players[1].x>480);assert(s.players[1].vx>0);
- // Releasing steering glides smoothly with tire grip decay instead of snapping to zero immediately
- const vxBefore=s.players[1].vx;s=advanceWorld(s,[{},{}]);assert(s.players[1].vx>0&&s.players[1].vx<vxBefore);
- // Driving over a turbo boost pad grants speed and boost charge
+ assert.equal(s.players[0].kart,'sedan-sports');assert.equal(s.players[1].kart,'hatchback-sports');
+ s.players[0].x=480;s.players[1].x=570;s.traffic=[{id:0,x:480,distance:30,speed:0,kind:'car',model:'police'}];s.players[0].speed=235;
+ s=advanceWorld(s,[{}, {up:true,right:true}]);
+ assert(s.players[0].crashes===1);assert(s.players[0].speed<235);assert(s.players[0].crashTimer>0);assert(s.players[0].y>0);assert(s.players[1].x>570);assert(s.players[1].vx>0);
+ // Releasing steering settles gradually, preserving momentum without a position snap.
+ const xBefore=s.players[1].x;s=advanceWorld(s,[{}, {up:true}]);assert(s.players[1].vx>0);assert(s.players[1].x-xBefore<3);
+ // Driving over a fuel pickup grants limited nitro without activating it
  s.boostPads=[{id:99,x:s.players[1].x,distance:s.players[1].y+5}];s.players[1].boost=50;const spdBefore=s.players[1].speed;
- s=advanceWorld(s,[{},{}]);assert(s.players[1].padBoost>0);assert(s.players[1].speed>spdBefore);assert(s.players[1].boost>50);
+ s=advanceWorld(s,[{}, {up:true}]);assert.equal(s.players[1].nitroPickups,1);assert(!s.players[1].boosting);assert(s.players[1].speed>spdBefore);assert(s.players[1].boost>50);
 });
 
 

@@ -7,6 +7,7 @@ body{margin:0;background:#142b32;color:#e8f0e0;font:13px system-ui}header{displa
 </style>
 <header><b>Action world playtest</b><select aria-label="Preview game" id="game"></select>
 <select aria-label="Playtest controls" id="controls"><option value="bots">Practice bots</option><option value="keyboard">Keyboard · WASD / Space</option><option value="effects">Fire & bat drill</option><option value="storm">Storm approach</option></select>
+<label>Color <select aria-label="Character color" id="character"></select></label><label>Lives <select aria-label="Starting lives" id="lives"></select></label><button id="damage">Test life loss</button>
 <label><input type="checkbox" id="jitter">Network jitter</label>
 <button id="pause">Pause simulation</button><button id="restart">Restart</button><button id="camera">Change camera</button><button id="hole">Next golf hole</button><span id="metrics"></span></header>
 <div id="world"></div><footer><span id="status">Loading…</span><span id="resources"></span><span>Keyboard: A / D move · W jump · Space fire. Fire & bat drill uses the production effects and physics.</span></footer>
@@ -14,16 +15,20 @@ body{margin:0;background:#142b32;color:#e8f0e0;font:13px system-ui}header{displa
 // Local-only harness: production rendering and simulation, no account or wallet calls.
 import {WorldRenderer} from '/src/games/world-renderer.ts';
 import {newWorld,advanceWorld,worldBot,worldAction,worldIds} from '/server/arcade/world.mjs';
+import {PLATFORM_CHARACTERS} from '/shared/platform-options.mjs';
 import {resetGolfHole,golfCourses} from '/server/arcade/golf-courses.mjs';
 const select=document.querySelector('#game'),host=document.querySelector('#world'),status=document.querySelector('#status'),metric=document.querySelector('#metrics'),controlMode=document.querySelector('#controls');
 for(const id of worldIds){const o=document.createElement('option');o.value=id;o.textContent=id;select.append(o);}
+const characterSelect=document.querySelector('#character'),livesSelect=document.querySelector('#lives');
+for(const color of PLATFORM_CHARACTERS){const o=document.createElement('option');o.value=color;o.textContent=color;characterSelect.append(o);}
+for(let lives=1;lives<=9;lives++){const o=document.createElement('option');o.value=String(lives);o.textContent=String(lives);livesSelect.append(o);}livesSelect.value='3';
 const query=new URLSearchParams(location.search);
 select.value=query.get('game')||sessionStorage.getItem('world-preview-game')||'platform-relay';
 controlMode.value=query.get('controls')||'bots';
 let engine,state,paused=false,mode='follow',generation=0,held={},edges={},pending=[];
 async function start(){
  sessionStorage.setItem('world-preview-game',select.value);const current=++generation;engine?.dispose();engine=null;pending=[];held={};edges={};
- state=newWorld(select.value,['snake-arena','marble-knockout','cat-defense'].includes(select.value)?4:2);
+ state=newWorld(select.value,['snake-arena','marble-knockout','cat-defense'].includes(select.value)?4:2,{lives:Number(livesSelect.value),characters:[characterSelect.value,'purple']});
  if(state.game==='platform-relay'&&['effects','storm'].includes(controlMode.value)){
   state.players[1].x=140;
   if(controlMode.value==='storm'){state.elapsed=17.4;state.stormX=10.6;}
@@ -40,6 +45,12 @@ const keys={ArrowLeft:'left',KeyA:'left',ArrowRight:'right',KeyD:'right',ArrowUp
 for(const type of ['keydown','keyup'])window.addEventListener(type,e=>{if(e.target.closest('input,select,button')||!keys[e.code])return;e.preventDefault();const key=keys[e.code];if(type==='keydown'&&!held[key])edges[key]=true;held[key]=type==='keydown';});
 window.addEventListener('blur',()=>{held={};edges={};});
 document.querySelector('#hole').addEventListener('click',()=>{if(state.game!=='mini-golf')return;state.hole=(state.hole+1)%golfCourses.length;state.moving=false;resetGolfHole(state);state={...state,tick:state.tick+1};engine.push(state,0);});
+characterSelect.addEventListener('change',start);livesSelect.addEventListener('change',start);
+document.querySelector('#damage').addEventListener('click',()=>{
+ if(state.game!=='platform-relay'||state.finished)return;
+ const p=state.players[0];p.y=800;p.ground=false;p.invulnerable=0;state=advanceWorld(state,[{},{}]);pending=[];engine.push(state,0);
+ status.textContent=`Life lost · ${state.players[0].lives} / ${state.players[0].maxLives} lives · ${state.players[0].alive?'Respawned':'Final death'}`;
+});
 select.addEventListener('change',start);controlMode.addEventListener('change',start);
 document.querySelector('#restart').addEventListener('click',start);
 document.querySelector('#camera').addEventListener('click',()=>{mode=mode==='follow'?'overview':'follow';engine.setCamera(mode);});
@@ -51,7 +62,7 @@ setInterval(()=>{
  if(state.game==='mini-golf'&&!state.moving&&!state.finished)worldAction(state,state.turn,{type:'shoot',angle:0,power:.65});
  const now=performance.now(),delay=document.querySelector('#jitter').checked?[0,18,65,0,30][state.tick%5]:0;
  pending.push({state,at:now+delay});const ready=pending.filter(p=>p.at<=now);pending=pending.filter(p=>p.at>now);for(const p of ready)engine.push(p.state,0);
- status.textContent=`${state.game} · ${state.elapsed.toFixed(1)}s · ${state.finished?state.reason:'Playing'} · coins: ${state.players[0].coins||0} · shots: ${state.shots?.length||0} · bats: ${state.enemies?.filter(e=>e.kind==='bat'&&e.alive).length||0}`;
+ status.textContent=`${state.game} · ${state.elapsed.toFixed(1)}s · ${state.finished?state.reason:'Playing'} · ${state.players[0].character||''} · lives: ${state.players[0].lives??'–'} / ${state.players[0].maxLives??'–'} · coins: ${state.players[0].coins||0} · shots: ${state.shots?.length||0} · bats: ${state.enemies?.filter(e=>e.kind==='bat'&&e.alive).length||0}`;
 },50);
 start();
 </script>

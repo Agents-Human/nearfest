@@ -1,0 +1,76 @@
+/* Toy Tank Arena: a quiet frame around a readable tabletop. */
+.world-tank-arena{background:#f6f2e8;border:1px solid #c9cabc;color:#293d37;border-radius:18px;box-shadow:0 12px 36px #23392d10}
+.world-tank-arena .world-toolbar{height:46px;background:#f6f2e8;border-bottom:1px solid #deded0;padding:0 18px}
+.world-tank-arena .world-toolbar>div:first-child{font-size:10px;letter-spacing:1.3px;color:#586951}
+.world-tank-arena .world-toolbar i{background:#709474;box-shadow:none}
+.world-tank-arena .world-toolbar button{color:#43594e;border-color:#d7dace;min-height:30px;border-radius:7px}
+.world-tank-arena .world-toolbar button:hover{background:#e7eadd;border-color:#9ba993}
+.world-tank-arena .world-toolbar button:focus-visible,.tank-guide summary:focus-visible,.tank-control:focus-visible{outline:3px solid #bd681d;outline-offset:3px}
+.world-tank-arena .world-performance,.world-tank-arena .world-location,.world-tank-arena .world-hud,.world-tank-arena .world-vignette{display:none}
+.world-tank-arena .world-viewport{width:100%;height:auto;min-height:0;max-height:max(280px,calc(100svh - 355px));aspect-ratio:1.8;background:#d9dfcc}
+.tank-status{display:grid;grid-template-columns:1fr 1fr auto;align-items:center;gap:24px;padding:12px 20px;background:#f6f2e8;border-bottom:1px solid #d4d8c8;font-variant-numeric:tabular-nums}
+.tank-status small{display:block;font-size:9px;font-weight:700;letter-spacing:1.3px;color:#718071;line-height:1.5}
+.tank-status b{font-size:14px;line-height:1.4;font-weight:650}
+.tank-armour{display:flex;align-items:center;gap:11px}
+.tank-player-dot{width:18px;height:18px;border-radius:6px;background:var(--tank-color);border:2px solid #fff9ec;box-shadow:0 0 0 1px #394d382e}
+.tank-armour-pips{display:flex;align-items:center;gap:4px;height:20px}
+.tank-armour-pips>i{width:24px;height:8px;border-radius:3px;background:#dbe0d1}
+.tank-armour-pips>i.filled{background:#658569}
+.tank-shield{font-size:10px;color:#347b93;margin-left:5px;white-space:nowrap}
+.tank-loadout{text-align:center}
+.tank-loadout b>span{font-size:10px;color:#6f786a;margin-left:8px;font-weight:500}
+.tank-dash{min-width:62px;text-align:right}
+.tank-dash b{color:#7e8276}
+.tank-dash.is-ready b{color:#4a7456}
+.tank-dash b>span{margin-left:8px}
+.tank-guide{border-top:1px solid #d4d8c8;background:#f6f2e8;color:#637365}
+.tank-guide summary{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:12px 18px;cursor:pointer;font-size:11px;list-style:none}
+.tank-guide summary::-webkit-details-marker{display:none}
+.tank-guide summary>span:first-child{font-weight:650;color:#354d40}
+.tank-guide summary>span:last-child{display:flex;gap:14px;align-items:center}
+.tank-guide summary i{font-size:18px;font-style:normal;font-weight:400;line-height:1}
+.tank-guide[open] summary i{transform:rotate(45deg)}
+.tank-guide>div{padding:0 18px 14px;max-width:660px;font-size:12px;line-height:1.65}
+.tank-guide p{margin:5px 0 9px}
+.tank-guide p:last-child{margin-bottom:0}
+.tank-guide kbd,.tank-keyboard kbd{font:600 10px Inter,Arial,sans-serif;padding:4px 6px;border:1px solid #d3d7c9;border-radius:5px;background:#faf8f0;box-shadow:0 2px 0 #d8ddcc;color:#415447;margin-right:4px}
+.tank-controls{padding:12px 2px;font-family:Inter,Arial,sans-serif;color:#6a7969}
+.tank-keyboard{display:flex;justify-content:center;gap:24px;font-size:11px;margin:0;line-height:24px}
+.tank-keyboard>span{white-space:nowrap}
+.tank-touch{display:none;align-items:center;justify-content:space-between;gap:20px}
+.tank-dpad{display:grid;grid-template-columns:repeat(3,48px);grid-template-rows:repeat(2,44px);gap:5px}
+.tank-control{display:flex;align-items:center;justify-content:center;gap:5px;border:1px solid #c7cebc;border-radius:12px;background:#eeeede;color:#3e5545;box-shadow:0 3px 0 #cbd1bd;font:500 21px Inter,Arial,sans-serif;cursor:pointer;touch-action:none;user-select:none;-webkit-user-select:none;-webkit-touch-callout:none}
+.tank-control-up{grid-area:1/2}.tank-control-left{grid-area:2/1}.tank-control-down{grid-area:2/2}.tank-control-right{grid-area:2/3}
+.tank-actions{display:flex;gap:10px;align-items:flex-end}
+.tank-control b{font-size:11px;font-weight:650}
+.tank-control-block{width:58px;height:58px;flex-direction:column;background:#e5e9db}
+.tank-control-attack{width:74px;height:74px;flex-direction:column;background:#365d4a;color:#fff8e7;border-color:#284c39;box-shadow:0 3px 0 #203e30;border-radius:50%}
+.tank-control-attack>span{font-size:26px;line-height:1}
+.tank-control:active{transform:translateY(2px);box-shadow:0 1px 0 #a6b395;background:#d7dfca}
+.tank-control-attack:active{background:#294b39;color:#fff8e7}
+.world-tank-arena .world-loading{background:#e0e4d5;color:#3c5647}
+.world-tank-arena .world-spectating{background:#f6f2e8ed;color:#43594e;border-color:#aab9a2;font-size:9px;bottom:10px}
+.world-tank-arena.world-expanded .world-viewport{flex:1;aspect-ratio:auto;min-height:0;max-height:none}
+.world-tank-arena.world-expanded .tank-status,.world-tank-arena.world-expanded .tank-guide,.world-tank-arena.world-expanded .tank-controls{flex-shrink:0}
+.world-tank-arena.world-expanded .tank-controls{padding:12px 20px;background:#f6f2e8}
+.arena-room:has(.world-tank-arena) .arena-scoreboard{background:transparent;border:0;border-bottom:1px solid #d7dbcd;border-radius:0;padding:4px 0 10px;margin-bottom:12px}
+.arena-room:has(.world-tank-arena) .arena-scoreboard .is-you{background:#e6ebdd;border-radius:9px}
+@media(pointer:coarse),(max-width:700px){
+ .tank-keyboard{display:none}.tank-touch{display:flex}
+ .tank-controls{padding:14px 6px 8px}
+ .world-tank-arena .world-viewport{aspect-ratio:1.5;max-height:none}
+ .world-tank-arena .world-toolbar{height:42px;padding:0 12px}
+ .world-tank-arena .world-toolbar>div:first-child{font-size:8px;letter-spacing:.9px}
+ .world-tank-arena .world-toolbar button{padding:5px 7px;font-size:10px}
+ .tank-status{padding:10px 12px;gap:10px}
+ .tank-status small{font-size:8px;letter-spacing:.8px}
+ .tank-status b{font-size:12px}
+ .tank-armour{gap:7px}.tank-player-dot{width:14px;height:14px;border-radius:5px}
+ .tank-armour-pips{gap:3px}.tank-armour-pips>i{width:17px;height:7px}
+ .tank-shield{font-size:9px;margin-left:2px}.tank-dash{min-width:48px}
+ .tank-guide summary{padding:11px 12px;font-size:10px}
+ .tank-guide>div{padding:0 12px 12px;font-size:11px}
+ .world-tank-arena.world-expanded .world-viewport{flex:0 0 auto;aspect-ratio:1.5;margin-block:auto}
+}
+@media(max-width:360px){.tank-status{gap:6px}.tank-shield{font-size:8px}.tank-player-dot{display:none}.tank-actions{gap:7px}.tank-control-block{width:48px;height:54px}.tank-control-attack{width:62px;height:62px}.tank-dpad{grid-template-columns:repeat(3,44px)}.tank-touch{gap:10px}}
+@media(max-height:500px) and (orientation:landscape){.world-tank-arena.world-expanded .tank-touch{position:absolute;inset:auto 16px 12px;pointer-events:none;opacity:.85}.world-tank-arena.world-expanded .tank-touch button{pointer-events:auto}.world-tank-arena.world-expanded .tank-controls{padding:0}.world-tank-arena.world-expanded .tank-guide{display:none}}

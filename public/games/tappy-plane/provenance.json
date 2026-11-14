@@ -96,8 +96,19 @@
     }
   ],
   "cover": {
+    "source": "Original Three.js flight renderer, captured from tests/tappy-preview.html",
+    "file": "/art/action-games/tappy-plane-gameplay.jpg",
+    "sha256": "29e5c1a9ed67fbe72bbbc9dbc5068402000375849df8002bab5c7a2820688bca"
+  },
+  "original_cover": {
     "source": "Sample.png",
     "file": "/art/action-games/tappy-plane.png",
     "sha256": "47380589cea1eea9ff3ff8e35974b69e62d5097ab4cfaeb6c11cc2d78ff4592c"
+  },
+  "rendering": {
+    "implementation": "src/games/tappy-renderer.ts",
+    "technique": "Original 3D geometry for aircraft, canyon, scenery and stars. No raster textures or blur filters in the flight scene.",
+    "design_reference": "The supplied Kenney Tappy Plane CC0 biplane design and palette. Original pack files are preserved unchanged below.",
+    "capture": "Native browser capture of the production renderer and HUD; local autopilot preview, paused at 42.9 seconds."
   }
 }

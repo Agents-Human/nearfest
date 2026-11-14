@@ -1,0 +1,107 @@
+{
+  "description": "Original Kenney architecture; facade and roof colour variants applied by the racing renderer.",
+  "assets": [
+    {
+      "file": "suburban/building-type-c.glb",
+      "source": "assets/new/kenney_city-kit-suburban_20/Models/GLB format/building-type-c.glb",
+      "sha256": "86a69f30f1a09461283e158514945ae5cc9d56357b0ddc83a9a3f0eecd113591",
+      "license": "CC0-1.0"
+    },
+    {
+      "file": "suburban/building-type-e.glb",
+      "source": "assets/new/kenney_city-kit-suburban_20/Models/GLB format/building-type-e.glb",
+      "sha256": "9ec43994c8c332b1ae5b058d8b9646255831fd91047c1a35b1fc1ecae4c082fc",
+      "license": "CC0-1.0"
+    },
+    {
+      "file": "suburban/building-type-j.glb",
+      "source": "assets/new/kenney_city-kit-suburban_20/Models/GLB format/building-type-j.glb",
+      "sha256": "fbdce9cb6bb6cf60a861bab36a896403aff604afbf2cb2b86676ae6f49fa2de3",
+      "license": "CC0-1.0"
+    },
+    {
+      "file": "suburban/building-type-l.glb",
+      "source": "assets/new/kenney_city-kit-suburban_20/Models/GLB format/building-type-l.glb",
+      "sha256": "5f03bf2e65a3a795afc18f7e56a5da891908d59d937e660be8478b66905d2cee",
+      "license": "CC0-1.0"
+    },
+    {
+      "file": "suburban/building-type-n.glb",
+      "source": "assets/new/kenney_city-kit-suburban_20/Models/GLB format/building-type-n.glb",
+      "sha256": "f2a29ececcca4a27bbef187caba0e7bb0e35de7a0de9742a8b8440ce6874c48c",
+      "license": "CC0-1.0"
+    },
+    {
+      "file": "suburban/building-type-t.glb",
+      "source": "assets/new/kenney_city-kit-suburban_20/Models/GLB format/building-type-t.glb",
+      "sha256": "3b729b473fc995a632ebc4d96cc8f18ef9d43bdc1a6c26010a02ec0b298c34e7",
+      "license": "CC0-1.0"
+    },
+    {
+      "file": "commercial/building-b.glb",
+      "source": "assets/new/kenney_city-kit-commercial_2.1/Models/GLB format/building-b.glb",
+      "sha256": "3b5d3ac0799c024781d92bb15971d42f4f8e380554dc5cf6a40c2f07d948947a",
+      "license": "CC0-1.0"
+    },
+    {
+      "file": "commercial/building-d.glb",
+      "source": "assets/new/kenney_city-kit-commercial_2.1/Models/GLB format/building-d.glb",
+      "sha256": "40605608e9aca0c98e294acff4af0f74afa417a51d589be490ca98f33ce4c2f5",
+      "license": "CC0-1.0"
+    },
+    {
+      "file": "commercial/building-e.glb",
+      "source": "assets/new/kenney_city-kit-commercial_2.1/Models/GLB format/building-e.glb",
+      "sha256": "edbe5b49858a3c83e72d3cf496129c06082ef3a3d6005769f8883138e275b456",
+      "license": "CC0-1.0"
+    },
+    {
+      "file": "commercial/building-g.glb",
+      "source": "assets/new/kenney_city-kit-commercial_2.1/Models/GLB format/building-g.glb",
+      "sha256": "9a28fa2fdfac07492ee95589882213cfd6eb32d6752cb3b2f5404604c676d27a",
+      "license": "CC0-1.0"
+    },
+    {
+      "file": "commercial/building-h.glb",
+      "source": "assets/new/kenney_city-kit-commercial_2.1/Models/GLB format/building-h.glb",
+      "sha256": "6881613ce218bb33a0f56137d4d33b00d307c47e518fbb21ccba1083efbea896",
+      "license": "CC0-1.0"
+    },
+    {
+      "file": "commercial/building-i.glb",
+      "source": "assets/new/kenney_city-kit-commercial_2.1/Models/GLB format/building-i.glb",
+      "sha256": "3e572277d3eead30e24668a653ec6a11a488228a219d4902f08638cbca7c3dfe",
+      "license": "CC0-1.0"
+    },
+    {
+      "file": "commercial/building-k.glb",
+      "source": "assets/new/kenney_city-kit-commercial_2.1/Models/GLB format/building-k.glb",
+      "sha256": "afd36f573b9d6a6a890675aa0fbe762b29efb6258f322990752d79d9f0da42c6",
+      "license": "CC0-1.0"
+    },
+    {
+      "file": "commercial/building-m.glb",
+      "source": "assets/new/kenney_city-kit-commercial_2.1/Models/GLB format/building-m.glb",
+      "sha256": "1cdc717ac86a0479043ff0d0146142f5dfc2622c0e3aaac484fad5807f94d580",
+      "license": "CC0-1.0"
+    },
+    {
+      "file": "commercial/building-n.glb",
+      "source": "assets/new/kenney_city-kit-commercial_2.1/Models/GLB format/building-n.glb",
+      "sha256": "35dc225d48516ead483a49e90dd164f1bc62b1ad75d3095488bd404cad1848b0",
+      "license": "CC0-1.0"
+    },
+    {
+      "file": "commercial/building-skyscraper-d.glb",
+      "source": "assets/new/kenney_city-kit-commercial_2.1/Models/GLB format/building-skyscraper-d.glb",
+      "sha256": "5c524ec13be53fff85ace8b328bc2587cba4e93962230e4a0ba98998e53d30b5",
+      "license": "CC0-1.0"
+    },
+    {
+      "file": "commercial/building-skyscraper-e.glb",
+      "source": "assets/new/kenney_city-kit-commercial_2.1/Models/GLB format/building-skyscraper-e.glb",
+      "sha256": "21b58a2f2b18d6a7cf8915e8b947bdb6a6a0706da6cffb5a01677c29f03b5935",
+      "license": "CC0-1.0"
+    }
+  ]
+}

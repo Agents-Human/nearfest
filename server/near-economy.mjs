@@ -1,3 +1,4 @@
+import {RACE_SECONDS,DEFAULT_RACE_SECONDS} from './arcade/race-course.mjs';
 import {randomUUID,createHash} from 'node:crypto';
 import {amount,UNIT,shortText,moderate} from './domain.mjs';
 import {publishedGame} from './game-catalog.mjs';
@@ -29,6 +30,7 @@ export function createNearEconomy(store,{chain=near,services}={}){
    const g=publishedGame(d.game_id),a=arcadeGame(d.game_id),b=getSkillGame(d.game_id);if(!g||d.solo||freeOnly.has(d.game_id))throw Error('Choose a competitive multiplayer game for stakes.');
    if(a&&db.prepare('SELECT json FROM arcade_rooms').all().some(x=>{const r=JSON.parse(x.json);return !['finished','cancelled'].includes(r.status)&&r.players.some(p=>p.id===u.id&&!p.left);}))throw Error('Finish or end your current game before funding another.');
    entry=amount(String(d.entry));max=b?2:Number(d.max_players??a?.max_players??8);if(!Number.isInteger(max)||max<(a?.min_players??2)||max>(b?2:a?.max_players??16))throw Error('Choose a supported room size.');
+   if(d.game_id==='pocket-racers'){data.race_seconds=Number(d.race_seconds??DEFAULT_RACE_SECONDS);if(!RACE_SECONDS.includes(data.race_seconds))throw Error('Choose a race duration of 1, 2, 3, 5 or 10 minutes.');}
    data.max_players=max;id=(a?'arena-':b?'board-':'party-')+randomUUID();join=now+1800000;refund=join+3600000;
   }else{
    data.title=shortText(d.title,8,90,'Title');data.rules=shortText(d.rules,30,1200,'Rules');moderate(data.title+' '+data.rules);if(!['Sports','Gaming','Life','Crypto','Facts','Science','Maths'].includes(d.category))throw Error('Choose a category.');

@@ -277,11 +277,7 @@ export function loadRacingAssets(): Promise<RacingAssets> {
   const loader = new GLTFLoader();
   const texLoader = new THREE.TextureLoader();
 
-  const glbTasks = [
-    ...variants.map(id => ({id: 'vehicle:' + id, url: '/models/racing/vehicles/' + id + '.glb'})),
-    ...debrisList.map(id => ({id: 'debris:' + id, url: '/models/racing/vehicles/' + id + '.glb'})),
-    ...Object.keys(props).map(id => ({id: 'prop:' + id, url: '/models/racing/props/' + id + '.glb'})),
-  ];
+  const glbTasks = ['race','race-future','sedan-sports','hatchback-sports','sedan','taxi','suv'].map(id => ({id:'vehicle:'+id,url:'/models/racing/vehicles/'+id+'.glb'}));
 
   const loadTex = (url: string): Promise<THREE.Texture | null> =>
     texLoader.loadAsync(url).then((tex): THREE.Texture => {
@@ -291,8 +287,8 @@ export function loadRacingAssets(): Promise<RacingAssets> {
 
   cached = Promise.all([
     Promise.all(glbTasks.map(async task => [task.id, (await loader.loadAsync(task.url)).scene] as const)),
-    Promise.all(spriteIds.map(async id => [id, await loadTex(`/models/racing/objects/${id}.png`)] as const)),
-    Promise.all([1, 2, 3, 4, 5].map(i => loadTex(`/models/platform/fx/explosion-${i}.png`))),
+    Promise.resolve([] as (readonly [string, THREE.Texture | null])[]),
+    Promise.resolve([] as (THREE.Texture | null)[]),
   ]).then(([glbEntries, spriteEntries, expFrames]): RacingAssets => {
     const templates = new Map(glbEntries);
     const sprites = new Map<string, THREE.Texture>();

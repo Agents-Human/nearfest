@@ -65,3 +65,19 @@ test('tab resume discards accumulated presentation lag and a disconnected world 
   const resumed=buffer.sample(5000);assert(resumed.tick>=97);assert(resumed.tick<=99);
   assert.equal(buffer.sample(10000).tick,99);
 });
+
+
+test('racing pulse bolts share the smooth player timeline and impact membership boundary',()=>{
+ const buffer=new WorldSnapshots();
+ for(let tick=0;tick<3;tick++)buffer.push({game:'pocket-racers',tick,elapsed:tick*.05,finished:false,players:[{x:480,y:tick*28,speed:560}],shots:tick<2?[{id:7,x:480,y:32+tick*83,life:1.45-tick*.05}]:[]},tick*50);
+ buffer.sample(100);const midway=buffer.sample(125);assert(midway.tick>0&&midway.tick<1);assert(midway.shots[0].y>32&&midway.shots[0].y<115);assert(Math.abs(midway.shots[0].y-(32+midway.tick*83))<1e-8);
+ assert.equal(buffer.sample(250).shots.length,0);
+});
+
+
+test('racing stays continuous across a 250ms snapshot gap at full speed',()=>{
+ const buffer=new WorldSnapshots();
+ for(const tick of [0,5,10])buffer.push({game:'pocket-racers',tick,elapsed:tick*.05,finished:false,players:[{x:480,y:tick*40,speed:800}],shots:[{id:1,x:480,y:32+tick*95,life:1.45-tick*.05}]},tick*50);
+ let last=0;
+ for(let now=500;now<=580;now+=8){const s=buffer.sample(now);assert(Math.abs(s.players[0].y-s.tick*40)<1e-8);assert(Math.abs(s.shots[0].y-(32+s.tick*95))<1e-8);assert(s.shots[0].y>last);last=s.shots[0].y;}
+});

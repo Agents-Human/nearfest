@@ -161,7 +161,7 @@
     },
     "runner": {
       "id": "runner",
-      "name": "Scrap dog",
+      "name": "Mouse zombie",
       "url": "/models/cats/runner.webp",
       "width": 1512,
       "height": 846,
@@ -212,7 +212,7 @@
     },
     "brute": {
       "id": "brute",
-      "name": "Clown hound",
+      "name": "Armored mouse zombie",
       "url": "/models/cats/brute.webp",
       "width": 1768,
       "height": 1026,
@@ -263,7 +263,7 @@
     },
     "boss": {
       "id": "boss",
-      "name": "Bucket boss",
+      "name": "Mutant rat boss",
       "url": "/models/cats/boss.webp",
       "width": 2608,
       "height": 1392,
@@ -318,24 +318,17 @@
     "width": 2143,
     "height": 1062,
     "playableRect": {
-      "left": 730,
+      "left": 120,
       "top": 220,
       "right": 2070,
       "bottom": 855
     },
-    "barrierX": 680,
-    "catX": 475,
+    "catX": 340,
     "lanesY": [
       350,
       550,
       750
-    ],
-    "healthBar": {
-      "x": 672,
-      "y": 274,
-      "width": 17,
-      "height": 398
-    }
+    ]
   },
   "icons": {
     "coin": {

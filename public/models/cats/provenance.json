@@ -1213,15 +1213,15 @@
     },
     {
       "file": "street.webp",
-      "source": "assets/new/craftpix-net-397030-free-cartoon-cat-defense-game-asset-kit/Png/Area/Area4.png",
-      "sourceSha256": "6ba537ae420a78d469398d2ef6366aaba9cb1bd1db76dea9773eac214395d3f8",
-      "sha256": "e394cf8c88525cc04444f1186baa0933bc415072bb3e4c0bae5caf9158a8365b",
+      "source": "assets/new/craftpix-net-397030-free-cartoon-cat-defense-game-asset-kit/Ai/Other/Area.ai",
+      "sourceSha256": "bb5eae323eb6a85385bb0469619e488e8729c92389a122919e7584ce4b3b5bb0",
+      "sha256": "fde3a06ce103d9d7f66bf9e98c807325fac7dbfd2e454b89fe9aba79d4fef855",
       "encoding": {
         "quality": 92,
         "method": 6,
         "dimensionsUnchanged": true
       },
-      "bytes": 83828
+      "bytes": 68884
     },
     {
       "file": "coin.png",

@@ -31,9 +31,14 @@ test('soccer has a five-goal finish, a golden-goal tiebreak and an active, beata
  s=newWorld('pocket-soccer',2);s.reset=0;s.matchTime=150;s=advanceWorld(s,[]);assert(s.overtime);assert(!s.finished);Object.assign(s.ball,{x:45,y:280,vx:-600,vy:0,owner:null,lock:1});s=advanceWorld(s,[]);assert(s.finished);assert.deepEqual(s.winners,[1]);
  s=ticks(newWorld('pocket-soccer',2),1800,state=>[{right:true,attack:true},worldBot(state,1)]);assert(s.finished);assert(s.players[0].score>s.players[1].score,'basic movement + kick is a viable beginner strategy');s=ticks(newWorld('pocket-soccer',2),1600,state=>[{},worldBot(state,1)]);assert(s.players[1].kicks>0&&s.players[1].score>0,'bot must participate against a waiting player');
 });
-test('cats switch all three lanes, spend bomb cooldown, collect coins and scale five waves for a crew',()=>{
- let s=newWorld('cat-defense',1);worldAction(s,0,{type:'lane',lane:2});assert.equal(s.players[0].lane,2);assert.throws(()=>worldAction(s,0,{type:'lane',lane:4}),/controls/);s=advanceWorld(s,[{up:true,attack:true}]);assert.equal(s.players[0].lane,1);assert.equal(s.players[0].bombs,1);s=advanceWorld(s,[{up:true,attack:true}]);assert.equal(s.players[0].lane,1);assert.equal(s.players[0].bombs,1);
- for(const n of [1,4]){s=ticks(newWorld('cat-defense',n),4000,state=>state.players.map((_,i)=>worldBot(state,i)));assert(s.finished);assert.equal(s.wave,5);assert.equal(s.winners.length,n);assert(s.gold>50);assert(s.players.some(p=>p.level>1));assert.equal(s.enemies.length,0);assert(s.elapsed<180);}
+test('cats shoot manually without auto-fire, move across the barrier-free street, and clear five mouse zombie waves',()=>{
+ let s=newWorld('cat-defense',1);worldAction(s,0,{type:'lane',lane:2});assert.equal(s.players[0].lane,2);assert.throws(()=>worldAction(s,0,{type:'lane',lane:4}),/controls/);
+ // Idle cat never shoots automatically even when mouse zombies advance past the old barrier line.
+ s=ticks(newWorld('cat-defense',1),250,()=>[{}]);assert.equal(s.players[0].shotsFired,0);assert.equal(s.shots.length,0);assert(s.enemies.some(e=>e.x<300),'mouse zombies advance freely across the street without a barrier');
+ // Manual shooting (attack control or shoot action) and shockwave (block control) work on demand.
+ s=newWorld('cat-defense',1);s=advanceWorld(s,[{down:true,right:true,attack:true,block:true}]);assert.equal(s.players[0].lane,1);assert(s.players[0].x>195);assert.equal(s.players[0].shotsFired,1);assert.equal(s.shots.length,1);assert.equal(s.players[0].bombs,1);
+ s=advanceWorld(s,[{down:true,attack:true,block:true}]);assert.equal(s.players[0].lane,1);assert.equal(s.players[0].shotsFired,1,'fire cooldown prevents instant double fire');assert.equal(s.players[0].bombs,1);
+ for(const n of [1,4]){s=ticks(newWorld('cat-defense',n),4000,state=>state.players.map((_,i)=>worldBot(state,i)));assert(s.finished);assert.equal(s.wave,5);assert.equal(s.winners.length,n);assert(s.kills>0);assert(s.gold>50);assert(s.players.some(p=>p.level>1));assert.equal(s.enemies.length,0);assert(s.elapsed<180);}
 });
 test('new games use real multiplayer rooms, free entry and server-owned held input',()=>{
  const store=openStore(':memory:');try{const rooms=createArcadeRooms(store),a=store.ensureUser('social-a','Alice','practice'),b=store.ensureUser('social-b','Bob','practice');
@@ -41,7 +46,7 @@ test('new games use real multiplayer rooms, free entry and server-owned held inp
    assert.throws(()=>rooms.create({game_id:id,entry:'5'},a,1000),/free play/);
    let r=rooms.create({game_id:id,entry:'0'},a,1000);rooms.action(r.id,b,{type:'join'},null,1001);for(const user of [a,b])rooms.action(r.id,user,{type:'ready',ready:true},null,1002);r=rooms.start(r.id,a,null,1003);assert.equal(r.state.players.length,2);
    if(id!=='pocket-soccer')assert.equal(r.ends_at,null);
-   rooms.input(r.id,a,{seq:1,controls:{attack:true},score:999},null,4004);rooms.input(r.id,a,{seq:2,controls:{}},null,4005);rooms.tick(4053);r=rooms.get(r.id,a);assert.equal(r.state.players[0].score,0);if(id==='bridge-builders')assert(r.state.players[0].length>0,'quick taps survive the network tick');if(id==='cat-defense')assert.equal(r.state.players[0].bombs,1);
+   rooms.input(r.id,a,{seq:1,controls:{attack:true},score:999},null,4004);rooms.input(r.id,a,{seq:2,controls:{}},null,4005);rooms.tick(4053);r=rooms.get(r.id,a);assert.equal(r.state.players[0].score,0);if(id==='bridge-builders')assert(r.state.players[0].length>0,'quick taps survive the network tick');if(id==='cat-defense')assert.equal(r.state.players[0].shotsFired,1);
    rooms.action(r.id,a,{type:'resign'},null,4055);
   }
  }finally{store.db.close();}

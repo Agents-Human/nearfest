@@ -1,4 +1,5 @@
 import * as THREE from 'three';
+import {PLATFORM_CHARACTERS,PLATFORM_TINTS} from '../../shared/platform-options.mjs';
 import {GLTFLoader, type GLTF} from 'three/addons/loaders/GLTFLoader.js';
 import {clone as cloneSkeleton} from 'three/addons/utils/SkeletonUtils.js';
 
@@ -96,8 +97,8 @@ const bgElementSpecs: Record<string, {file: string; width: number; height: numbe
   moon: {file: 'moon.png', width: 5.8, height: 5.8, anchor: 'center'},
   moonFull: {file: 'moonFull.png', width: 6.2, height: 6.2, anchor: 'center'},
 };
-const variants = ['pink', 'purple', 'teal', 'gold'];
-const colors = ['#e88470', '#a18acb', '#72b59a', '#e6bb58'];
+const variants = [...PLATFORM_CHARACTERS];
+const colors = variants.map(color => PLATFORM_TINTS[color]);
 let pending: Promise<PlatformAssets> | undefined;
 
 /** Texture clones deliberately share the immutable image Source, allowing static
@@ -130,8 +131,8 @@ function ownResources(model: THREE.Object3D) {
 }
 
 function seatIndex(seatOrColor: number | string) {
-  if (typeof seatOrColor === 'number') return ((Math.floor(seatOrColor) % 4) + 4) % 4;
-  const named = variants.indexOf(seatOrColor);
+  if (typeof seatOrColor === 'number') return ((Math.floor(seatOrColor) % variants.length) + variants.length) % variants.length;
+  const named = variants.findIndex(color => color === seatOrColor);
   if (named >= 0) return named;
   const target = new THREE.Color(seatOrColor);
   let best = 0, distance = Infinity;
@@ -143,9 +144,31 @@ function seatIndex(seatOrColor: number | string) {
   return best;
 }
 
-function characterInstance(source: GLTF, seat: number) {
+export function characterInstance(source: GLTF, seat: number) {
   const model = cloneSkeleton(source.scene) as THREE.Group;
   ownResources(model);
+  const tint = new THREE.Color(colors[seat]);
+  // One rig for every color: tint only chromatic pixels, preserving white eyes
+  // and the dark face. Uniforms vary per character; the GPU program is shared.
+  model.traverse(object => {
+    if (!(object instanceof THREE.Mesh)) return;
+    for (const material of Array.isArray(object.material) ? object.material : [object.material]) {
+      if (!(material instanceof THREE.MeshStandardMaterial)) continue;
+      material.userData.characterTint = tint;
+      material.onBeforeCompile = shader => {
+        shader.uniforms.runnerTint = {value: tint};
+        shader.fragmentShader = 'uniform vec3 runnerTint;\n' + shader.fragmentShader;
+        shader.fragmentShader = shader.fragmentShader.replace('#include <map_fragment>', `
+          #include <map_fragment>
+          float chroma = max(max(diffuseColor.r, diffuseColor.g), diffuseColor.b) - min(min(diffuseColor.r, diffuseColor.g), diffuseColor.b);
+          float bodyMask = smoothstep(0.06, 0.18, chroma);
+          float brightness = max(max(diffuseColor.r, diffuseColor.g), diffuseColor.b);
+          diffuseColor.rgb = mix(diffuseColor.rgb, runnerTint * brightness, bodyMask);
+        `);
+      };
+      material.customProgramCacheKey = () => 'platform-character-tint-v1';
+    }
+  });
   const root = new THREE.Group();root.name = 'kenney-runner-' + variants[seat];
   const pivot = new THREE.Group();pivot.name = 'character-orientation';pivot.add(model);root.add(pivot);
   const original = new THREE.Box3().setFromObject(model);
@@ -170,7 +193,7 @@ function characterInstance(source: GLTF, seat: number) {
   }
   root.userData.assetSource = 'Kenney Platformer Kit 4.1 / CC0';
   root.userData.characterVariant = variants[seat];
-  root.userData.portrait = '/models/platform/icons/character-' + variants[seat] + '.png';
+  root.userData.portrait = '/models/platform/icons/character-pink.png';
   root.userData.mixer = mixer;
   root.userData.playAnimation = playAnimation;
   root.userData.animationNames = [...actions.keys()];
@@ -372,13 +395,13 @@ function bgElementInstance(sourceTex: THREE.Texture, id: string): THREE.Group {
   return root;
 }
 
-/** Four full rigs, twenty-two scene props, nine 3D animals, seven extended enemy sprites, tank fire FX, and remastered background elements. */
+/** One shared rig in ten colors, twenty-two scene props, nine 3D animals, seven extended enemy sprites, tank fire FX, and remastered background elements. */
 export function loadPlatformAssets(): Promise<PlatformAssets> {
   if (pending) return pending;
   const loader = new GLTFLoader();
   const texLoader = new THREE.TextureLoader();
   const glbTasks = [
-    ...variants.map(name => ['character-' + name, '/models/platform/character-' + name + '.glb'] as const),
+    ['character-pink', '/models/platform/character-pink.glb'] as const,
     ...Object.keys(specs).map(id => [id, '/models/platform/' + id + '.glb'] as const),
     ...Object.keys(animalSpecs).map(id => ['animal-' + id, '/models/platform/animals/' + id + '.glb'] as const),
   ];
@@ -402,7 +425,7 @@ export function loadPlatformAssets(): Promise<PlatformAssets> {
     return {
       prop(id: string) {return specs[id] ? propInstance(sources.get(id)!, id) : null;},
       character(seatOrColor: number | string = 0) {
-        const seat = seatIndex(seatOrColor);return characterInstance(sources.get('character-' + variants[seat])!, seat);
+        const seat = seatIndex(seatOrColor);return characterInstance(sources.get('character-pink')!, seat);
       },
       animal(id: string) {
         if (animalSpecs[id]) return animalInstance(sources.get('animal-' + id)!, id);
@@ -421,7 +444,7 @@ export function loadPlatformAssets(): Promise<PlatformAssets> {
       propIds: Object.keys(specs),
       animalIds: [...Object.keys(animalSpecs), ...Object.keys(spriteEnemySpecs)],
       bgIds: Object.keys(bgElementSpecs),
-      portraits: variants.map(name => '/models/platform/icons/character-' + name + '.png'),
+      portraits: variants.map(() => '/models/platform/icons/character-pink.png'),
     };
   }).catch(error => {pending = undefined;throw error;});
   return pending;
