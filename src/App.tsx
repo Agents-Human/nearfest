@@ -55,9 +55,23 @@ function SocialShell({ immersive = false, view, navigate, openTool, children, sp
     <div className="header-actions"><button className="header-balance" onClick={account}><Icon name="wallet" size={17}/>{balance==='INSERT PLAYER'?'Join':balance}</button><button className="header-create" onClick={create}><Icon name="plus" size={17}/>Create a challenge</button></div></header><div className="site-content" id="machine-base-screen">{children}</div><div id="machine-overlays"/>{spinning&&<div className="match-loading" role="status"><Suspense fallback={<span>✦</span>}><ArcadeScene/></Suspense><b>Finding a challenge…</b></div>}{error&&<div role="alert" className="machine-feedback error"><span>{error}</span><button aria-label="Dismiss error" onClick={dismissError}><Icon name="close" size={16}/></button></div>}{toast&&<div role="status" className="machine-feedback success"><Icon name="check" size={17}/>{toast}</div>}<footer className="site-footer"><span><i className={live?'connected':''}/>{live?'Live updates connected':'Reconnecting'} · {count} open challenges</span><button onClick={spin} disabled={spinning}>Surprise me ↗</button><SoundControls effects={sound} toggleEffects={toggleSound}/><b>Built on NEAR</b></footer></div>;
 }
 
+const GameCardSkeleton = () => (
+  <div className="play-card-skeleton" aria-hidden="true">
+    <div className="play-card-skeleton-art"/>
+    <div className="play-card-skeleton-copy">
+      <span className="play-card-skeleton-line is-kicker"/>
+      <span className="play-card-skeleton-line is-title"/>
+      <div className="play-card-skeleton-footer">
+        <span className="play-card-skeleton-line is-meta"/>
+        <span className="play-card-skeleton-circle"/>
+      </div>
+    </div>
+  </div>
+);
+
 export default function App() {
   const [config, setConfig] = useState<Config | null>(null), [user, setUser] = useState<User | null>(null), [bets, setBets] = useState<Bet[]>([]), [mode, setMode] = useState<'practice' | 'live'>('live');
-  const [parties,setParties]=useState<Party[]>([]),[partyId,setPartyId]=useState<string|null>(new URLSearchParams(location.search).get('party')),[partyGame,setPartyGame]=useState<Game|null>(null),[pageSize,setPageSize]=useState(24);
+  const [parties,setParties]=useState<Party[]>([]),[partyId,setPartyId]=useState<string|null>(new URLSearchParams(location.search).get('party')),[partyGame,setPartyGame]=useState<Game|null>(null),[pageSize,setPageSize]=useState(24),[loadingMoreGames,setLoadingMoreGames]=useState(false);
   const [resultId,setResultId]=useState<string|null>(new URLSearchParams(location.search).get('result'));
   const [pickerIntent,setPickerIntent]=useState<ChallengeFormat|undefined>(),[creationActivity,setCreationActivity]=useState<Activity|null>(null),[partyEntry,setPartyEntry]=useState('0.1');
   const [gameGenre,setGameGenre]=useState('All genres'),[linkedGame,setLinkedGame]=useState<Game|null>(null);
@@ -72,8 +86,8 @@ export default function App() {
   const selectedRef = useRef(selected), modeRef = useRef(mode); selectedRef.current = selected; modeRef.current = mode;
   const [access,setAccess]=useState<AccessRequest>({}),[myParties,setMyParties]=useState<Party[]>([]);
   const [soloRoom,setSoloRoom]=useState(false);
-  const toastTimer = useRef<ReturnType<typeof setTimeout>>();
-  const chatEnd = useRef<HTMLDivElement>(null), pageRef=useRef<HTMLDivElement>(null);
+  const toastTimer = useRef<ReturnType<typeof setTimeout>>(), loadMoreTimer = useRef<ReturnType<typeof setTimeout>>();
+  const chatEnd = useRef<HTMLDivElement>(null), pageRef=useRef<HTMLDivElement>(null), loadMoreRef=useRef<HTMLDivElement>(null), prevCardLayout=useRef({key:'',count:0});
   function notify(message: string) { setToast(message); clearTimeout(toastTimer.current); toastTimer.current = setTimeout(() => setToast(''), 5500); }
   async function run(fn: () => Promise<void>) { setBusy(true); setError(''); try { await fn(); } catch (e) { setError((e as Error).message); } finally { setBusy(false); } }
   async function refresh() { const [b,u,c,p,m]=await Promise.all([api<Bet[]>('/bets'),api<User|null>('/me'),api<Club[]>('/community'),api<Party[]>('/parties'),api<Party[]>('/parties?mine=1')]);setBets(b);setUser(u);setClubs(c);setParties(p);setMyParties(m); if (selectedRef.current) setMessages(await api<Message[]>(`/bets/${selectedRef.current}/messages`)); }
@@ -101,7 +115,7 @@ export default function App() {
     Promise.all([api<Config>('/config').then(setConfig),api<Game[]>('/play').then(games=>setGames(games.filter(game=>!hiddenGameIds.has(game.id)))), refresh()]).catch(e => setError(e.message)).finally(() => setLoading(false));
     const stream = new EventSource('/api/events'); stream.addEventListener('ready', () => setLive(true)); stream.addEventListener('update', () => { refresh().catch(() => setLive(false)); }); stream.onerror = () => setLive(false);
     const interval = setInterval(() => setTick(t => t + 1), 15000);
-    return () => { stream.close(); clearInterval(interval); clearTimeout(toastTimer.current); };
+    return () => { stream.close(); clearInterval(interval); clearTimeout(toastTimer.current); clearTimeout(loadMoreTimer.current); };
   }, []);
   useEffect(() => { if (!selected) { setMessages([]); return; } api<Message[]>(`/bets/${selected}/messages`).then(setMessages).catch(e => setError(e.message)); const url = new URL(location.href); url.searchParams.set('room', selected); history.replaceState({}, '', url); }, [selected]);
   useEffect(() => { chatEnd.current?.scrollIntoView({ behavior: 'smooth', block: 'nearest' }); }, [messages.length]);
@@ -134,17 +148,53 @@ export default function App() {
     setTimeout(() => { setSpinning(false); const available = bets.filter(b => b.mode === mode && b.status === 'open' && b.creator !== user?.id && b.join_before > Date.now()); if (available.length) openRoom(available[Math.floor(Math.random() * available.length)].id); else if(games.length){setGameId(games[Math.floor(Math.random()*games.length)].id);} else { const ideas = ['Can you beat your friend at chess in 10 minutes?', 'Will NEAR finish above your target price?', 'Can your group settle a science fact?', 'Who can solve the maths puzzle first?']; setSuggestion(ideas[Math.floor(Math.random() * ideas.length)]); requireUser(() => setModal('choose-create')); } }, 1400);
   }
   const visible = bets.filter(b => b.mode === mode && (category === 'All challenges' || b.category === category) && (`${b.title} ${b.creator_name} ${b.category}`.toLowerCase().includes(query.toLowerCase())) && (view !== 'mine' || b.creator === user?.id || b.opponent === user?.id || b.referee === user?.id) && (filter === 'all' ? !['settled','refunded','cancelled'].includes(b.status) : filter === 'open' ? b.status === 'open' && b.join_before > Date.now() : filter === 'live' ? ['matched','proposed','disputed'].includes(b.status) : ['settled','refunded','cancelled'].includes(b.status))).sort((a, b) => sort === 'pot' ? Number(BigInt(b.stake) - BigInt(a.stake)) : sort === 'ending' ? a.ends_at - b.ends_at : b.created_at - a.created_at);
-  useEffect(()=>setPageSize(24),[category,gameKind,gameGenre,query,format,gameSort]);
+  useEffect(()=>{clearTimeout(loadMoreTimer.current);setLoadingMoreGames(false);setPageSize(24);},[category,gameKind,gameGenre,query,format,gameSort]);
   const availableParties=(view==='mine'?myParties:parties).filter(p=>(category==='All challenges'||p.category===category)&&(`${p.title} ${p.label}`.toLowerCase().includes(query.toLowerCase()))&&(view!=='mine'||p.players.some(player=>player.id===user?.id))&&(filter==='settled'?['finished','cancelled'].includes(p.status):filter==='live'?p.status==='playing':filter==='open'?p.status==='lobby':view==='mine'||['lobby','playing'].includes(p.status)));
   const gameGenres=Array.from(new Set(games.map(g=>g.genre||g.category))).sort();
   const availableGames=games.filter(g=>(gameGenre==='All genres'||g.genre===gameGenre||g.category===gameGenre||(gameGenre==='Online multiplayer'&&g.multiplayer)||(gameGenre==='Same device'&&(g.local_players||0)>1))&&(gameKind==='all'||gameKind==='online'&&g.multiplayer||gameKind==='solo'&&g.solo)&&(category==='All challenges'||g.category===category)&&(`${g.title} ${g.label} ${g.category} ${g.level||''} ${g.pace||''}`.toLowerCase().includes(query.toLowerCase()))).sort((a,b)=>gameSort==='short'?(a.seconds||Infinity)-(b.seconds||Infinity):gameSort==='long'?b.seconds-a.seconds:gameSort==='az'?a.title.localeCompare(b.title):0);
   const availableClubs=clubs.filter(c=>(category==='All challenges'||c.category===category)&&(['all','groups'].includes(format)||format===c.kind)&&(`${c.title} ${c.category}`.toLowerCase().includes(query.toLowerCase()))&&(view!=='mine'||c.creator===user?.id||c.members.some(m=>m.id===user?.id))&&(filter==='settled'?['settled','refunded','cancelled'].includes(c.status):filter==='live'?['active','review'].includes(c.status):!['settled','refunded','cancelled'].includes(c.status)));
   const showGames=view==='lobby'&&['all','play'].includes(format)&&['all','open'].includes(filter);
+  const hasMoreGames=showGames&&availableGames.length>pageSize;
+  useEffect(()=>{
+    if(!hasMoreGames||loadingMoreGames)return;
+    const target=loadMoreRef.current;
+    if(!target)return;
+    const trigger=()=>{
+      setLoadingMoreGames(true);
+      clearTimeout(loadMoreTimer.current);
+      loadMoreTimer.current=setTimeout(()=>{setPageSize(n=>n+24);setLoadingMoreGames(false);},260);
+    };
+    if(typeof IntersectionObserver!=='undefined'){
+      const observer=new IntersectionObserver(entries=>{if(entries.some(entry=>entry.isIntersecting)){observer.disconnect();trigger();}},{rootMargin:'240px 0px'});
+      observer.observe(target);
+      return()=>observer.disconnect();
+    }
+    const onScroll=()=>{if(target.getBoundingClientRect().top<=window.innerHeight+240){window.removeEventListener('scroll',onScroll);trigger();}};
+    onScroll();
+    window.addEventListener('scroll',onScroll,{passive:true});
+    return()=>window.removeEventListener('scroll',onScroll);
+  },[hasMoreGames,loadingMoreGames,pageSize,availableGames.length]);
   const ownCount = bets.filter(b => (b.creator === user?.id || b.opponent === user?.id) && ['open', 'matched', 'proposed', 'disputed'].includes(b.status)).length;
   void betIndex;
   const modeBets=bets.filter(b=>b.mode===mode&&(view!=='mine'||b.creator===user?.id||b.opponent===user?.id||b.referee===user?.id));
   const counts={all:modeBets.length,open:modeBets.filter(b=>b.status==='open'&&b.join_before>Date.now()).length,live:modeBets.filter(b=>['matched','proposed','disputed'].includes(b.status)).length,settled:modeBets.filter(b=>['settled','refunded','cancelled'].includes(b.status)).length};
-  useLayoutEffect(()=>{if(matchMedia('(prefers-reduced-motion: reduce)').matches)return;const ctx=gsap.context(()=>{const cards=pageRef.current?.querySelectorAll('.event-card,.play-card,.club-card,.club-invite-card');if(cards?.length)gsap.from(cards,{y:18,opacity:0,stagger:{amount:.3},duration:.45,ease:'power3.out'});},pageRef);return()=>ctx.revert();},[view,filter,category,format,games.length,clubs.length,gameKind,pageSize]);
+  useLayoutEffect(()=>{
+    const layoutKey=`${view}|${filter}|${category}|${format}|${games.length}|${clubs.length}|${gameKind}|${gameGenre}|${gameSort}`;
+    const previous=prevCardLayout.current;
+    const appendedOnly=previous.key===layoutKey&&pageSize>previous.count;
+    prevCardLayout.current={key:layoutKey,count:pageSize};
+    if(matchMedia('(prefers-reduced-motion: reduce)').matches)return;
+    const ctx=gsap.context(()=>{
+      if(appendedOnly){
+        const added=Array.from(pageRef.current?.querySelectorAll('.play-card')||[]).slice(previous.count);
+        if(added.length)gsap.from(added,{y:18,opacity:0,stagger:{amount:.22},duration:.35,ease:'power3.out'});
+        return;
+      }
+      const cards=pageRef.current?.querySelectorAll('.event-card,.play-card,.club-card,.club-invite-card');
+      if(cards?.length)gsap.from(cards,{y:18,opacity:0,stagger:{amount:.3},duration:.45,ease:'power3.out'});
+    },pageRef);
+    return()=>ctx.revert();
+  },[view,filter,category,format,games.length,clubs.length,gameKind,gameGenre,gameSort,pageSize]);
   useLayoutEffect(()=>{if(matchMedia('(prefers-reduced-motion: reduce)').matches)return;const ctx=gsap.context(()=>{gsap.from('.site-header',{y:-16,opacity:0,duration:.6,ease:'power3.out'});gsap.from('.welcome-copy,.welcome-art,.challenge-board',{y:15,opacity:0,stagger:.1,duration:.6,delay:.15,ease:'power3.out'});},pageRef);return()=>ctx.revert();},[]);
   void tick;
   useEffect(()=>{if(!partyId?.startsWith('arena-'))return;let cancelled=false;const invite=new URLSearchParams(location.search).get('invite');api<Party>(`/arcade/${partyId}${invite?'?invite='+encodeURIComponent(invite):''}`).then(r=>{if(!cancelled){setGameId(r.game_id);setSoloRoom(Boolean(r.solo));}}).catch(()=>{});return()=>{cancelled=true;};},[partyId,user?.id]);
@@ -185,11 +235,11 @@ export default function App() {
           {view==='lobby'?<div className="discovery-tabs" role="tablist" aria-label="Explore NearFest">{[['play','games','Games'],['groups','people','Groups']].map(([id,icon,label])=><button key={id} role="tab" aria-selected={format===id} className={format===id?'active':''} onClick={()=>changeSection(id)}><UiIcon name={icon}/>{label}</button>)}</div>:<span className="my-challenges-label">Your games, challenges & group pots</span>}
           <label className="discovery-search"><UiIcon name="search" size={18}/><input aria-label="Search challenges" placeholder={format==='groups'?'Find a group…':'Find your game…'} value={query} onChange={e=>setQuery(e.target.value)}/>{query&&<button aria-label="Clear search" onClick={()=>setQuery('')}><Icon name="close" size={16}/></button>}</label>
         </div>
-        <div className="discovery-toolbar"><span>{showGames?`${availableGames.length.toLocaleString()} games · solo & multiplayer`:format==='groups'?'Group pots & community bounties':'Your challenges'}</span><div>{showGames&&<Select aria-label="Play mode" value={gameKind} onChange={e=>setGameKind(e.target.value)}><option value="all">All games</option><option value="solo">Play solo</option><option value="online">Online multiplayer</option></Select>}{showGames?(gameGenres.length>1?<Select aria-label="Game category" value={gameGenre} onChange={e=>setGameGenre(e.target.value)}><option value="All genres">All categories</option>{gameGenres.map(genre=><option key={genre} value={genre}>{genre}</option>)}</Select>:null):<Select aria-label="Challenge status" value={filter} onChange={e=>setFilter(e.target.value)}><option value="all">{view==='mine'?'All rooms':'Active & open'}</option><option value="open">Open to join</option><option value="live">In progress</option><option value="settled">Finished</option></Select>}<Select aria-label="Sort challenges" value={showGames?gameSort:sort} onChange={e=>showGames?setGameSort(e.target.value):setSort(e.target.value)}>{showGames?<><option value="featured">Our picks</option><option value="short">Quick rounds</option><option value="az">A to Z</option></>:<><option value="new">Newest first</option><option value="pot">Biggest pots</option><option value="ending">Ending soon</option></>}</Select></div></div>
+        <div className="discovery-toolbar"><span>{showGames?(loading&&games.length===0?'Loading games…':`${availableGames.length.toLocaleString()} games · solo & multiplayer`):format==='groups'?'Group pots & community bounties':'Your challenges'}</span><div>{showGames&&<Select aria-label="Play mode" value={gameKind} onChange={e=>setGameKind(e.target.value)}><option value="all">All games</option><option value="solo">Play solo</option><option value="online">Online multiplayer</option></Select>}{showGames?(gameGenres.length>1?<Select aria-label="Game category" value={gameGenre} onChange={e=>setGameGenre(e.target.value)}><option value="All genres">All categories</option>{gameGenres.map(genre=><option key={genre} value={genre}>{genre}</option>)}</Select>:null):<Select aria-label="Challenge status" value={filter} onChange={e=>setFilter(e.target.value)}><option value="all">{view==='mine'?'All rooms':'Active & open'}</option><option value="open">Open to join</option><option value="live">In progress</option><option value="settled">Finished</option></Select>}<Select aria-label="Sort challenges" value={showGames?gameSort:sort} onChange={e=>showGames?setGameSort(e.target.value):setSort(e.target.value)}>{showGames?<><option value="featured">Our picks</option><option value="short">Quick rounds</option><option value="az">A to Z</option></>:<><option value="new">Newest first</option><option value="pot">Biggest pots</option><option value="ending">Ending soon</option></>}</Select></div></div>
         {['all','groups','pot','bounty'].includes(format)&&<div className="club-card-grid">{availableClubs.map(club=><ClubCard key={club.id} club={club} open={()=>{setClubId(club.id);const url=new URL(location.href);url.searchParams.set('club',club.id);history.replaceState({},'',url);}}/>)}{['all','groups','pot'].includes(format)&&view==='lobby'&&filter!=='settled'&&<button className="club-invite-card pot-invite" onClick={()=>openPicker('pot')}><span className="club-illustration" aria-hidden="true">◡</span><span>GROUP POTS</span><h3>One group. One prize pot.</h3><p>Chess nights, tournaments, group challenges.</p><b>Create a group pot ↗</b></button>}{['all','groups','bounty'].includes(format)&&view==='lobby'&&filter!=='settled'&&<button className="club-invite-card bounty-invite" onClick={()=>openPicker('bounty')}><span className="club-illustration" aria-hidden="true">⚑</span><span>COMMUNITY BOUNTIES</span><h3>Back a challenge. Reward a doer.</h3><p>Pool a reward. Review the proof together.</p><b>Post a bounty ↗</b></button>}</div>}
         {view==='mine'&&<p className="room-return-note">Returning to a room keeps your seat and never charges a second entry. Live games and clocks continue while you’re away. Finished rooms keep their results.</p>}{view==='mine'&&!user&&<div className="my-room-empty"><p>Sign in to find your rooms and test NEAR balance on any device.</p><button className="primary" onClick={()=>beginSetup()}>Find my rooms →</button></div>}{['all','play'].includes(format)&&availableParties.length>0&&<div className="live-party-shelf"><h3>{view==='mine'?'Your game rooms':filter==='settled'?'Rounds remembered':'People to play with'} <span>{availableParties.length} rooms</span></h3><div>{(view==='mine'?availableParties:availableParties.slice(0,6)).map(p=><PartyCard key={p.id} room={p} mine={view==='mine'} open={()=>openParty(p)}/>)}</div></div>}
-{showGames&&availableGames.length===0&&<div className="no-games"><h3>Nothing here… yet.</h3><button className="text-button" onClick={()=>{setQuery('');setCategory('All challenges');setGameKind('all');setGameGenre('All genres');}}>Show all games ↗</button></div>}{showGames&&availableGames.length>0&&<div className="play-card-grid">{availableGames.slice(0,pageSize).map(game=><GameCard key={game.id} game={game} open={()=>{setGameId(game.id);const url=new URL(location.href);url.searchParams.set('game',game.id);history.replaceState({},'',url);}}/>)}</div>}
-        {showGames&&availableGames.length>pageSize&&<div className="load-games"><span>Showing {Math.min(pageSize,availableGames.length)} of {availableGames.length.toLocaleString()} games & quizzes</span><button className="secondary" onClick={()=>setPageSize(n=>n+24)}>There’s more. Keep exploring ↓</button></div>}
+{showGames&&loading&&games.length===0&&<div className="play-card-grid play-card-skeletons" aria-busy="true"><span className="sr-only" role="status">Loading games…</span>{Array.from({length:10},(_,i)=><GameCardSkeleton key={i}/>)}</div>}{showGames&&!loading&&availableGames.length===0&&<div className="no-games"><h3>Nothing here… yet.</h3><button className="text-button" onClick={()=>{setQuery('');setCategory('All challenges');setGameKind('all');setGameGenre('All genres');}}>Show all games ↗</button></div>}{showGames&&availableGames.length>0&&<div className="play-card-grid">{availableGames.slice(0,pageSize).map(game=><GameCard key={game.id} game={game} open={()=>{setGameId(game.id);const url=new URL(location.href);url.searchParams.set('game',game.id);history.replaceState({},'',url);}}/>)}{loadingMoreGames&&Array.from({length:Math.min(5,availableGames.length-pageSize)},(_,i)=><GameCardSkeleton key={`skeleton-${i}`}/>)}</div>}
+        {hasMoreGames&&<div ref={loadMoreRef} className="load-games" role="status" aria-live="polite" aria-busy={loadingMoreGames}>{loadingMoreGames&&<span className="load-games-status"><i className="load-games-spinner" aria-hidden="true"/>Loading more games…</span>}<span>Showing {Math.min(pageSize,availableGames.length)} of {availableGames.length.toLocaleString()} games & quizzes</span></div>}
         {['all','duel'].includes(format)&&(visible.length>0?<div className="event-card-grid">{visible.map(b=><article className={`event-card category-${b.category.toLowerCase()}`} key={b.id}>
           <button className="event-card-open" onClick={()=>openRoom(b.id)} aria-label={`Open challenge: ${b.title}`}><div className="event-card-image"><img src={coverFor(b)} alt={`${b.category} challenge artwork`} loading="lazy"/><span className="category-chip">{b.category}</span>{b.stream&&<span className="card-stream">▶ {b.stream.platform}</span>}<Tag bet={b}/></div><div className="event-card-body"><span className="card-host"><Avatar name={b.creator_name} small/>{b.creator==='house.practice'?'Practice demo':b.creator_name}</span><h3>{b.title}</h3><div className="card-sides"><span>{b.side_a}</span><b>vs</b><span>{b.side_b}</span></div><div className="card-details"><strong>{money(b.stake)} <small>{currency} / player</small></strong><span>{['settled','refunded','cancelled'].includes(b.status)?'Finished':remaining(b.status==='open'?b.join_before:b.ends_at)}</span></div></div></button>
           <div className="card-bottom"><button onClick={()=>openRoom(b.id,true)}><Icon name="chat" size={17}/>{b.chat_count||'Join'} chat</button><button onClick={()=>openRoom(b.id)}>{b.status==='open'?'You in?':'View room'} <Icon name="arrow" size={18}/></button></div>

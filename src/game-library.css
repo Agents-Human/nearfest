@@ -14,6 +14,17 @@
 .illustrated-card .play-card-copy>div>b{display:flex;align-items:center;gap:5px;color:#68695e;font-weight:500}
 .card-launch{display:grid;place-items:center;width:31px;height:31px;flex-shrink:0;background:#f7e663;border:1px solid #292820;border-radius:50%;font:20px/1 'DM Sans',sans-serif;transition:background .2s,transform .2s}
 .illustrated-card:hover .card-launch{background:#c7b2ee;transform:rotate(10deg)}
+.play-card-skeleton{display:flex;flex-direction:column;border:1px solid #29282030;border-radius:19px;background:#fffdf6;overflow:hidden;box-shadow:0 3px 0 #2928200a}
+.play-card-skeleton-art{aspect-ratio:16/11;background:#ebe4d3;animation:skeleton-breathe 1.1s ease-in-out infinite alternate}
+.play-card-skeleton-copy{padding:16px 16px 13px;display:grid;gap:10px}
+.play-card-skeleton-line{display:block;height:11px;border-radius:999px;background:#e8e1d1;animation:skeleton-breathe 1.1s ease-in-out infinite alternate}
+.play-card-skeleton-line.is-kicker{width:42%;height:9px}
+.play-card-skeleton-line.is-title{width:78%;height:19px;margin:2px 0 6px}
+.play-card-skeleton-footer{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-top:4px}
+.play-card-skeleton-line.is-meta{width:54%;height:10px}
+.play-card-skeleton-circle{width:31px;height:31px;border-radius:50%;background:#ebe4d3;flex-shrink:0;animation:skeleton-breathe 1.1s ease-in-out infinite alternate}
+.load-games-status{display:inline-flex;align-items:center;gap:10px;padding:9px 16px;border:1px solid #29282026;border-radius:999px;background:#fffdf5;font-size:12px;font-weight:700;color:var(--ink)}
+.load-games-spinner{width:15px;height:15px;border:2px solid #ded1b5;border-top-color:#8a72af;border-radius:50%;animation:arena-spin .8s linear infinite}
 /* A game opens like a little record sleeve, with a quiet close control. */
 .modal.game-modal{position:relative;width:min(900px,calc(100% - 48px));border:1.5px solid #292820;border-radius:26px;box-shadow:0 16px 70px #17161336,0 5px 0 #29282025;overflow:auto;background:#fffdf5}
 .game-modal>.modal-head{position:absolute;z-index:4;top:14px;right:14px;padding:0;min-height:0;background:none;border:0;display:block}
@@ -98,5 +109,8 @@
  .embedded .library-art{height:150px}
  .embedded .library-art>img{display:block}
  .game-modal .play-intro-art{width:240px;height:165px;object-fit:cover;border-radius:16px}
+ .play-card-skeleton{border-radius:15px}
+ .play-card-skeleton-copy{padding:12px 12px 10px}
+ .play-card-skeleton-circle{width:27px;height:27px}
 }
-@media(prefers-reduced-motion:reduce){.play-card.illustrated-card,.illustrated-card .play-card-art>img,.card-launch,.game-modal>.modal-head>.icon-button,.library-intro .library-play{transition:none}.play-card.illustrated-card:hover,.illustrated-card:hover .play-card-art>img{transform:none}}
+@media(prefers-reduced-motion:reduce){.play-card.illustrated-card,.illustrated-card .play-card-art>img,.card-launch,.game-modal>.modal-head>.icon-button,.library-intro .library-play{transition:none}.play-card.illustrated-card:hover,.illustrated-card:hover .play-card-art>img{transform:none}.play-card-skeleton-art,.play-card-skeleton-line,.play-card-skeleton-circle,.load-games-spinner{animation:none}}
