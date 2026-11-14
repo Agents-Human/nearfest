@@ -27,10 +27,13 @@
 .platform-character>input:disabled+span{opacity:.65;cursor:wait}
 .platform-menu .platform-lives{margin-top:19px;padding-top:16px;border-top:1px solid #31544722}
 .platform-lives-row{display:flex;align-items:center;gap:16px;flex-wrap:wrap}
-.platform-lives-picker{display:flex;gap:0;align-items:stretch;border:1px solid #31544740;border-radius:10px;overflow:hidden;background:#fffdf6}
-.platform-menu .platform-lives-picker button{margin:0;border:0;border-radius:0;padding:5px 12px;min-width:36px;min-height:40px;background:transparent;font-size:20px;color:inherit;box-shadow:none;cursor:pointer}
-.platform-menu .platform-lives-picker select{font-family:inherit;font-size:13px;font-weight:700;color:inherit;border:0;border-left:1px solid #31544720;border-right:1px solid #31544720;min-width:85px;background:transparent;padding:7px;cursor:pointer}
-.platform-lives-picker button:disabled{opacity:.3;cursor:default}
+.platform-lives-picker{display:flex;gap:6px;align-items:stretch}
+.platform-lives-picker .select-field{min-width:116px}
+.platform-menu .platform-lives-picker>button{display:grid;place-items:center;margin:0;border:1.5px solid #819386;border-radius:12px;padding:0;width:44px;min-height:46px;background:#edf2e7;font-size:22px;font-weight:600;color:inherit;box-shadow:0 2px #31544718;cursor:pointer;transition:background .15s,border-color .15s}
+.platform-menu .platform-lives-picker>button:hover:enabled{background:#dce9d2;border-color:#315447}
+.platform-lives-picker .select-trigger{font-size:13px;font-weight:800;color:#283c35;border-color:#819386}
+.platform-lives-picker .select-trigger>span{text-align:center}
+.platform-lives-picker>button:disabled{opacity:.35;cursor:default;box-shadow:none}
 .platform-life-mode{font-size:11px;color:#68766b}
 .platform-menu .platform-menu-note{margin:12px 0 0}
 .arena-lobby>.platform-menu{margin:22px auto}

@@ -1,0 +1,12 @@
+.game-info-tabs{margin:0 0 22px;min-width:0;text-align:left}
+.game-info-tablist{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:4px;width:100%;max-width:370px;padding:4px;border:1px solid #d7d1bf;border-radius:15px;background:#eae6da}
+.game-info-tablist>[role=tab]{min-height:40px;padding:9px 12px;border:1px solid transparent;border-radius:11px;font-size:13px;font-weight:700;line-height:1.35;color:#6c6657;transition:background .15s,color .15s,border-color .15s}
+.game-info-tablist>[role=tab]:hover{background:#f7f4e8;color:var(--ink)}
+.game-info-tablist>[role=tab][aria-selected=true]{border-color:#b4a1ce;background:#eee5fa;color:#3c314f;box-shadow:0 2px #3c314f15}
+.game-info-tablist>[role=tab]:focus-visible{outline:3px solid #8b70bb;outline-offset:2px}
+.game-info-panel{padding:16px 2px 0;color:var(--ink);border-radius:8px}
+.game-info-panel[hidden]{display:none}
+.game-info-tabs .game-info-panel p{margin:0;font-size:14px;line-height:1.7;color:inherit}
+.game-info-tabs .game-info-panel p+p{margin-top:12px}
+.game-info-panel:focus-visible{outline:2px solid #8b70bb;outline-offset:5px}
+@media(max-width:480px){.game-info-tablist{max-width:none}.game-info-tablist>[role=tab]{font-size:12px;min-height:42px;padding:9px 8px}}

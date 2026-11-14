@@ -1,8 +1,16 @@
 import {gameCover} from './game-art';
+import GameInfoTabs from './GameInfoTabs';
 import {useEffect,useRef,useState} from 'react';
 import type {Game} from './PlayRoom';
 import GameManager from './vendor/2048/game_manager';
 import {shuffle,lightBoard,toggleLights,slideBoard,slideTile,solvedSlide,codeClue} from './games/puzzles.mjs';
+const casualHints:Record<string,string>={
+ '2048':'Use the arrow keys, swipe the board, or tap a direction button. Matching numbered tiles merge when they meet. Build a 2048 tile before the board fills up; keep your largest tiles together to leave room for merges.',
+ memory:'Reveal two cards at a time. Matching symbols stay face up; different symbols flip back. Find all six pairs in as few turns as possible, and remember the positions you have already seen.',
+ lights:'Tap a light to toggle it and its neighbours. Turn every light off to solve the board. Watch which neighbours change before choosing your next move.',
+ slide:'Tap a numbered tile next to the empty space to slide it. Arrange 1–8 in order, leaving the empty space last. Plan how to move the empty space around a tile before placing it.',
+ codebreaker:'Choose four colours and check your guess. A filled dot means the right colour in the right position; an empty dot means the right colour elsewhere. Repeats are allowed. Crack the code in six guesses.',
+};
 const symbols=['✦','●','▲','♥','☀','◆'];
 function Result({text}:{text:string}){return <div className="puzzle-result" role="status"><span>✦</span><h3>{text}</h3><p>Nice work. Fancy another round?</p></div>;}
 function Memory(){
@@ -29,5 +37,5 @@ function Tiles2048(){
 }
 export default function CasualGames({game,createGroup}:{game:Game;createGroup:()=>void}){
  const [started,setStarted]=useState(false),[round,setRound]=useState(0),[copied,setCopied]=useState(false);
- return <div className={`casual-room casual-${game.id}`}><div className="casual-title"><span className="eyebrow">{game.label} · FREE PLAY</span><h2>{game.title}</h2><p>{game.description}</p></div>{!started?<div className="casual-intro"><img src={gameCover(game)} alt=""/><button className="primary" onClick={()=>setStarted(true)}>Let’s play →</button><p>No signup. No timer. Just one more go.</p></div>:<><div key={round} className="casual-game">{game.id==='2048'?<Tiles2048/>:game.id==='memory'?<Memory/>:game.id==='lights'?<Lights/>:game.id==='slide'?<Slide/>:<Codebreaker/>}</div><div className="casual-actions"><button className="secondary" onClick={()=>setRound(r=>r+1)}>New game ↻</button><button className="text-button" onClick={async()=>{try{await navigator.clipboard.writeText(`${location.origin}/?game=${game.id}`);setCopied(true);}catch{setCopied(false);}}}>{copied?'Copied ✓':'Invite someone ↗'}</button></div><button className="text-button" onClick={createGroup}>Play for a group pot →</button><p className="fine-print">Free practice. These scores stay on your device; group results need player review.</p></>}</div>;
+ return <div className={`casual-room casual-${game.id}`}><div className="casual-title"><span className="eyebrow">{game.label} · FREE PLAY</span><h2>{game.title}</h2>{!started&&<GameInfoTabs title={game.title} description={game.description}><p>{casualHints[game.id]}</p></GameInfoTabs>}</div>{!started?<div className="casual-intro"><img src={gameCover(game)} alt=""/><button className="primary" onClick={()=>setStarted(true)}>Let’s play →</button><p>No signup. No timer. Just one more go.</p></div>:<><div key={round} className="casual-game">{game.id==='2048'?<Tiles2048/>:game.id==='memory'?<Memory/>:game.id==='lights'?<Lights/>:game.id==='slide'?<Slide/>:<Codebreaker/>}</div><div className="casual-actions"><button className="secondary" onClick={()=>setRound(r=>r+1)}>New game ↻</button><button className="text-button" onClick={async()=>{try{await navigator.clipboard.writeText(`${location.origin}/?game=${game.id}`);setCopied(true);}catch{setCopied(false);}}}>{copied?'Copied ✓':'Invite someone ↗'}</button></div><button className="text-button" onClick={createGroup}>Play for a group pot →</button><p className="fine-print">Free practice. These scores stay on your device; group results need player review.</p></>}</div>;
 }

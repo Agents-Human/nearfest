@@ -8,79 +8,79 @@
   "bytes": 67349,
   "files": [
     {
-      "source": "assets/new/kenney_minigolf-kit/Models/GLB format/open.glb",
+      "source": "assets/golf/open.glb",
       "file": "open.glb",
       "sha256": "0f08543959329e6120c4e866245bb795d4a2d453ed32783a4739e6f5b5931b8f",
       "bytes": 2884
     },
     {
-      "source": "assets/new/kenney_minigolf-kit/Models/GLB format/straight.glb",
+      "source": "assets/golf/straight.glb",
       "file": "straight.glb",
       "sha256": "bac7537b2ef4ea22439a5b88126f9c2f5eeed2a9eda00bf7ad7142aab2b38e7a",
       "bytes": 4096
     },
     {
-      "source": "assets/new/kenney_minigolf-kit/Models/GLB format/corner.glb",
+      "source": "assets/golf/corner.glb",
       "file": "corner.glb",
       "sha256": "cefbd1036aacccaa09336de0161e792e680cfe5cb41a982ce94f709dc2d3263c",
       "bytes": 3792
     },
     {
-      "source": "assets/new/kenney_minigolf-kit/Models/GLB format/start.glb",
+      "source": "assets/golf/start.glb",
       "file": "start.glb",
       "sha256": "97995260cf02910b459541846c23375713bbb91dba35f9fa6b2ada0cf5d5f79c",
       "bytes": 5088
     },
     {
-      "source": "assets/new/kenney_minigolf-kit/Models/GLB format/end.glb",
+      "source": "assets/golf/end.glb",
       "file": "end.glb",
       "sha256": "e0e29245ca4edbeacca4aaa62ec9e6176037d7d638d68547c5c0138fbf913edc",
       "bytes": 4080
     },
     {
-      "source": "assets/new/kenney_minigolf-kit/Models/GLB format/hole-open.glb",
+      "source": "assets/golf/hole-open.glb",
       "file": "hole-open.glb",
       "sha256": "dfb3f7654386ab7987015065c6d9bf0bf2c3dd89e6ba790514bf9b6361885984",
       "bytes": 5304
     },
     {
-      "source": "assets/new/kenney_minigolf-kit/Models/GLB format/side.glb",
+      "source": "assets/golf/side.glb",
       "file": "side.glb",
       "sha256": "10a63603a748e0461d14c5164c29bec729e00a13a4ce7cab88e198347d306102",
       "bytes": 3484
     },
     {
-      "source": "assets/new/kenney_minigolf-kit/Models/GLB format/obstacle-triangle.glb",
+      "source": "assets/golf/obstacle-triangle.glb",
       "file": "obstacle-triangle.glb",
       "sha256": "5f13d3b6d5a4b3a28a7e235e83068f9e6f2bcf98bc123468c60672ed2b7a91af",
       "bytes": 5904
     },
     {
-      "source": "assets/new/kenney_minigolf-kit/Models/GLB format/obstacle-diamond.glb",
+      "source": "assets/golf/obstacle-diamond.glb",
       "file": "obstacle-diamond.glb",
       "sha256": "01d1bb45d2412d843f4160528461f238f98ac08974e952ec9a9cf9bd180cd123",
       "bytes": 4912
     },
     {
-      "source": "assets/new/kenney_minigolf-kit/Models/GLB format/tunnel-wide.glb",
+      "source": "assets/golf/tunnel-wide.glb",
       "file": "tunnel-wide.glb",
       "sha256": "420042f3e77f93d75882bcfb3c21baefac2ba739783be859ec4970ed7f4224f8",
       "bytes": 7020
     },
     {
-      "source": "assets/new/kenney_minigolf-kit/Models/GLB format/bump.glb",
+      "source": "assets/golf/bump.glb",
       "file": "bump.glb",
       "sha256": "ef0d7190783d0fd5a4445628fecd3141f41391cc57cc8568f6aab5522f96c4b9",
       "bytes": 11364
     },
     {
-      "source": "assets/new/kenney_minigolf-kit/Models/GLB format/Textures/colormap.png",
+      "source": "assets/golf/Textures/colormap.png",
       "file": "Textures/colormap.png",
       "sha256": "0d4947d34ff32acf4a359c7f22ca784e057e7e72f622170a9a77b6fc88fdb70e",
       "bytes": 8706
     },
     {
-      "source": "assets/new/kenney_minigolf-kit/License.txt",
+      "source": "assets/golf/license.txt",
       "file": "License.txt",
       "sha256": "1921de0377e3912e14fd2b9c76f92c530bd63794caabc3e411b97672d5a3951c",
       "bytes": 715

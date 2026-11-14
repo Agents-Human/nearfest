@@ -3,7 +3,7 @@
   "author": "Kenney",
   "license": "CC0-1.0",
   "license_url": "https://creativecommons.org/publicdomain/zero/1.0/",
-  "origin": "User-provided source archives extracted under assets/new in this checkout. Selected bytes copied without modification. Runtime transforms and body-atlas recolouring are described in src/games/racing-assets.ts.",
+  "origin": "User-provided source archives extracted under assets in this checkout. Selected bytes copied without modification. Runtime transforms and body-atlas recolouring are described in src/games/racing-assets.ts.",
   "packages": [
     {
       "id": "car-kit",
@@ -23,7 +23,7 @@
   "files": [
     {
       "path": "public/models/racing/vehicles/race.glb",
-      "source_path": "assets/new/kenney_car-kit/Models/GLB format/race.glb",
+      "source_path": "assets/vehicles/race.glb",
       "package": "car-kit",
       "source_url": "https://kenney.nl/assets/car-kit",
       "bytes": 167272,
@@ -32,7 +32,7 @@
     },
     {
       "path": "public/models/racing/vehicles/sedan.glb",
-      "source_path": "assets/new/kenney_car-kit/Models/GLB format/sedan.glb",
+      "source_path": "assets/vehicles/sedan.glb",
       "package": "car-kit",
       "source_url": "https://kenney.nl/assets/car-kit",
       "bytes": 172216,
@@ -41,7 +41,7 @@
     },
     {
       "path": "public/models/racing/vehicles/truck.glb",
-      "source_path": "assets/new/kenney_car-kit/Models/GLB format/truck.glb",
+      "source_path": "assets/vehicles/truck.glb",
       "package": "car-kit",
       "source_url": "https://kenney.nl/assets/car-kit",
       "bytes": 176360,
@@ -50,7 +50,7 @@
     },
     {
       "path": "public/models/racing/vehicles/van.glb",
-      "source_path": "assets/new/kenney_car-kit/Models/GLB format/van.glb",
+      "source_path": "assets/vehicles/van.glb",
       "package": "car-kit",
       "source_url": "https://kenney.nl/assets/car-kit",
       "bytes": 175664,
@@ -59,7 +59,7 @@
     },
     {
       "path": "public/models/racing/props/cone.glb",
-      "source_path": "assets/new/kenney_car-kit/Models/GLB format/cone.glb",
+      "source_path": "assets/vehicles/cone.glb",
       "package": "car-kit",
       "source_url": "https://kenney.nl/assets/car-kit",
       "bytes": 16696,
@@ -68,7 +68,7 @@
     },
     {
       "path": "public/models/racing/vehicles/Textures/colormap.png",
-      "source_path": "assets/new/kenney_car-kit/Models/GLB format/Textures/colormap.png",
+      "source_path": "assets/vehicles/Textures/colormap.png",
       "package": "car-kit",
       "source_url": "https://kenney.nl/assets/car-kit",
       "bytes": 12371,
@@ -77,7 +77,7 @@
     },
     {
       "path": "public/models/racing/props/Textures/colormap.png",
-      "source_path": "assets/new/kenney_car-kit/Models/GLB format/Textures/colormap.png",
+      "source_path": "assets/vehicles/Textures/colormap.png",
       "package": "car-kit",
       "source_url": "https://kenney.nl/assets/car-kit",
       "bytes": 12371,
@@ -86,7 +86,7 @@
     },
     {
       "path": "public/models/racing/licenses/car-kit.txt",
-      "source_path": "assets/new/kenney_car-kit/License.txt",
+      "source_path": "assets/vehicles/license.txt",
       "package": "car-kit",
       "source_url": "https://kenney.nl/assets/car-kit",
       "bytes": 696,
@@ -95,7 +95,7 @@
     },
     {
       "path": "public/models/racing/props/barrier.glb",
-      "source_path": "assets/new/kenney_racing-kit/Models/GLTF format/barrierRed.glb",
+      "source_path": "assets/racing/barrierRed.glb",
       "package": "racing-kit",
       "source_url": "https://kenney.nl/assets/racing-kit",
       "bytes": 3244,
@@ -104,7 +104,7 @@
     },
     {
       "path": "public/models/racing/props/rail.glb",
-      "source_path": "assets/new/kenney_racing-kit/Models/GLTF format/rail.glb",
+      "source_path": "assets/racing/rail.glb",
       "package": "racing-kit",
       "source_url": "https://kenney.nl/assets/racing-kit",
       "bytes": 5940,
@@ -113,7 +113,7 @@
     },
     {
       "path": "public/models/racing/props/grandstand.glb",
-      "source_path": "assets/new/kenney_racing-kit/Models/GLTF format/grandStandCovered.glb",
+      "source_path": "assets/racing/grandStandCovered.glb",
       "package": "racing-kit",
       "source_url": "https://kenney.nl/assets/racing-kit",
       "bytes": 15200,
@@ -122,7 +122,7 @@
     },
     {
       "path": "public/models/racing/props/garage.glb",
-      "source_path": "assets/new/kenney_racing-kit/Models/GLTF format/pitsGarage.glb",
+      "source_path": "assets/racing/pitsGarage.glb",
       "package": "racing-kit",
       "source_url": "https://kenney.nl/assets/racing-kit",
       "bytes": 13028,
@@ -131,7 +131,7 @@
     },
     {
       "path": "public/models/racing/props/gantry.glb",
-      "source_path": "assets/new/kenney_racing-kit/Models/GLTF format/overheadLights.glb",
+      "source_path": "assets/racing/overheadLights.glb",
       "package": "racing-kit",
       "source_url": "https://kenney.nl/assets/racing-kit",
       "bytes": 26068,
@@ -140,7 +140,7 @@
     },
     {
       "path": "public/models/racing/props/flag.glb",
-      "source_path": "assets/new/kenney_racing-kit/Models/GLTF format/flagCheckers.glb",
+      "source_path": "assets/racing/flagCheckers.glb",
       "package": "racing-kit",
       "source_url": "https://kenney.nl/assets/racing-kit",
       "bytes": 15188,
@@ -149,7 +149,7 @@
     },
     {
       "path": "public/models/racing/props/billboard.glb",
-      "source_path": "assets/new/kenney_racing-kit/Models/GLTF format/billboard.glb",
+      "source_path": "assets/racing/billboard.glb",
       "package": "racing-kit",
       "source_url": "https://kenney.nl/assets/racing-kit",
       "bytes": 14520,
@@ -158,7 +158,7 @@
     },
     {
       "path": "public/models/racing/props/lamp.glb",
-      "source_path": "assets/new/kenney_racing-kit/Models/GLTF format/lightPostModern.glb",
+      "source_path": "assets/racing/lightPostModern.glb",
       "package": "racing-kit",
       "source_url": "https://kenney.nl/assets/racing-kit",
       "bytes": 16584,
@@ -167,7 +167,7 @@
     },
     {
       "path": "public/models/racing/licenses/racing-kit.txt",
-      "source_path": "assets/new/kenney_racing-kit/License.txt",
+      "source_path": "assets/racing/license.txt",
       "package": "racing-kit",
       "source_url": "https://kenney.nl/assets/racing-kit",
       "bytes": 611,
@@ -176,7 +176,7 @@
     },
     {
       "path": "public/models/racing/icons/racer-red.png",
-      "source_path": "assets/new/kenney_racing-pack/PNG/Characters/racer_red.png",
+      "source_path": "assets/racing/icons/racer-red.png",
       "package": "racing-pack",
       "source_url": "https://kenney.nl/assets/racing-pack",
       "bytes": 1515,
@@ -185,7 +185,7 @@
     },
     {
       "path": "public/models/racing/icons/racer-blue.png",
-      "source_path": "assets/new/kenney_racing-pack/PNG/Characters/racer_blue.png",
+      "source_path": "assets/racing/icons/racer-blue.png",
       "package": "racing-pack",
       "source_url": "https://kenney.nl/assets/racing-pack",
       "bytes": 1464,
@@ -194,7 +194,7 @@
     },
     {
       "path": "public/models/racing/icons/racer-green.png",
-      "source_path": "assets/new/kenney_racing-pack/PNG/Characters/racer_green.png",
+      "source_path": "assets/racing/icons/racer-green.png",
       "package": "racing-pack",
       "source_url": "https://kenney.nl/assets/racing-pack",
       "bytes": 1464,
@@ -203,7 +203,7 @@
     },
     {
       "path": "public/models/racing/icons/racer-yellow.png",
-      "source_path": "assets/new/kenney_racing-pack/PNG/Characters/racer_yellow.png",
+      "source_path": "assets/racing/icons/racer-yellow.png",
       "package": "racing-pack",
       "source_url": "https://kenney.nl/assets/racing-pack",
       "bytes": 1458,
@@ -212,7 +212,7 @@
     },
     {
       "path": "public/models/racing/licenses/racing-pack.txt",
-      "source_path": "assets/new/kenney_racing-pack/License.txt",
+      "source_path": "assets/racing/licenses/sprites.txt",
       "package": "racing-pack",
       "source_url": "https://kenney.nl/assets/racing-pack",
       "bytes": 572,

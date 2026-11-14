@@ -1,15 +1,15 @@
 import {initialChess,chessMoves,applyChess} from './chess.mjs';
 // Deterministic, perfect-information rules. Randomness is never used by these engines.
 export const skillGames=[
- ['chess-online','Chess','A good move changes everything.','Play a full chess game: castling, promotion, en passant and proper draw rules.'],
- ['oware','Mancala','Sow. Capture. Think ahead.','Sow seeds around twelve houses. Capture pairs and triples. Feed your rival when their row is empty.'],
- ['checkers','Checkers','Make your next move count.','Jump, capture and crown your pieces. Captures are compulsory; a blocked opponent loses.'],
- ['connect-four','Connect Four','Four in a row. One big grin.','Drop a disc into a column. Connect four horizontally, vertically or diagonally.'],
- ['dots-boxes','Dots and Boxes','Little lines. Big plans.','Join dots to claim boxes. Complete a box and take another turn. Most boxes wins.'],
- ['reversi','Reversi','Turn the whole thing around.','Bracket opposing discs to flip them. The player with the most discs at the end wins.'],
- ['kalah','Kalah','A handful of possibilities.','Sow stones into your pits and store. Land in your store for another turn. Most stones wins.'],
- ['hex','Hex','Find your own way across.','Connect your two edges on a eleven-by-eleven hex board. The second player may swap colours after the opening.'],
- ['nine-mens-morris','Nine Men’s Morris','Three in line. A clever little trap.','Place nine pieces, then move along the lines. Form a mill to capture a piece. At three pieces, you may fly.'],
+ ['chess-online','Chess','A good move changes everything.','A classic contest of strategy on a carved board. Build a plan, read your opponent, and find the move that changes everything.'],
+ ['oware','Mancala','Sow. Capture. Think ahead.','The West African strategy classic, brought to a carved wooden board. A handful of seeds can open a world of possibilities.'],
+ ['checkers','Checkers','Make your next move count.','A familiar board with plenty of room for clever traps. Turn a simple move into a winning sequence.'],
+ ['connect-four','Connect Four','Four in a row. One big grin.','A quick rivalry of bright discs and almost-finished lines. Every turn brings a new chance to spot what your opponent missed.'],
+ ['dots-boxes','Dots and Boxes','Little lines. Big plans.','A page of dots becomes a contest of small decisions and big chains. The quietest line can change the whole board.'],
+ ['reversi','Reversi','Turn the whole thing around.','A board that can change colour in a single turn. Patient positioning and well-timed moves keep the outcome uncertain.'],
+ ['kalah','Kalah','A handful of possibilities.','A calm-looking board with a surprising amount of strategy. Every handful of stones creates a new set of choices.'],
+ ['hex','Hex','Find your own way across.','Two colours, one crowded board, and a path waiting to be found. Every stone changes the shape of the contest.'],
+ ['nine-mens-morris','Nine Men’s Morris','Three in line. A clever little trap.','An ancient strategy game of shifting lines and clever traps. Nine pieces are all you need to make a plan.'],
 ].map(([id,title,label,description])=>({id,title,label,description,category:'Gaming',kind:'game',engine:'skill',multiplayer:true,standalone:true,min_players:2,max_players:2,rounds:2,seconds:600,art:id,skill_only:true,rules_version:'slotvend-1',genre:'Board games'}));
 export const getSkillGame=id=>skillGames.find(g=>g.id===id);
 const own=(v,p)=>v!==0&&(v>0?0:1)===p;

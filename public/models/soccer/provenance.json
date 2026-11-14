@@ -4,7 +4,7 @@
   "license": "CC0-1.0",
   "license_url": "https://creativecommons.org/publicdomain/zero/1.0/",
   "source_url": "https://kenney.nl/assets/sports-pack",
-  "source_collection": "User-provided assets/new/kenney_sports-pack",
+  "source_collection": "User-provided assets/soccer",
   "notes": [
     "The pack contains static body/skin variants and separate arms, not running or kicking frame sequences. Runtime articulation supplies movement.",
     "Source body sprites face image-right: the skin-coloured nose extends to the right of the brown hair. Standalone arm sprites also extend their hand to image-right.",
@@ -13,11 +13,11 @@
   "files": [
     {
       "path": "public/models/soccer/players/blue-body.svg",
-      "source_path": "assets/new/kenney_sports-pack/Vector/charactersEquipment.svg",
+      "source_path": "assets/soccer/characters-equipment.svg",
       "source_sha256": "4ef1a5c3db051b6da10d8e266185081875d997e392a7b0804e68957949302f1d",
       "source_group": "Layer0_18_FILL",
       "source_url": "https://kenney.nl/assets/sports-pack",
-      "matching_png_reference": "assets/new/kenney_sports-pack/PNG/Blue/characterBlue (1).png",
+      "matching_png_reference": "assets/soccer/players/blue-body.png",
       "matching_png_sha256": "bce841c1363e7424c31927a13f0d269a02458a2721bd0b7810118bd7cbd5ed7f",
       "transformation": "Extracted the named original vector group. Paths and fills unchanged; standalone viewBox and 256px raster width added.",
       "viewBox": [
@@ -32,11 +32,11 @@
     },
     {
       "path": "public/models/soccer/players/blue-arm.svg",
-      "source_path": "assets/new/kenney_sports-pack/Vector/charactersEquipment.svg",
+      "source_path": "assets/soccer/characters-equipment.svg",
       "source_sha256": "4ef1a5c3db051b6da10d8e266185081875d997e392a7b0804e68957949302f1d",
       "source_group": "Layer0_95_FILL",
       "source_url": "https://kenney.nl/assets/sports-pack",
-      "matching_png_reference": "assets/new/kenney_sports-pack/PNG/Blue/characterBlue (11).png",
+      "matching_png_reference": "assets/soccer/players/blue-arm.png",
       "matching_png_sha256": "1bb068150fcb4ead3d1ab0b6b44029a7ff8a627081ded22aa25d2275944a7d68",
       "transformation": "Extracted the named original vector group. Paths and fills unchanged; standalone viewBox and 256px raster width added.",
       "viewBox": [
@@ -51,11 +51,11 @@
     },
     {
       "path": "public/models/soccer/players/red-body.svg",
-      "source_path": "assets/new/kenney_sports-pack/Vector/charactersEquipment.svg",
+      "source_path": "assets/soccer/characters-equipment.svg",
       "source_sha256": "4ef1a5c3db051b6da10d8e266185081875d997e392a7b0804e68957949302f1d",
       "source_group": "Layer0_17_FILL",
       "source_url": "https://kenney.nl/assets/sports-pack",
-      "matching_png_reference": "assets/new/kenney_sports-pack/PNG/Red/characterRed (1).png",
+      "matching_png_reference": "assets/soccer/players/red-body.png",
       "matching_png_sha256": "20fb45714dc27d5b66e5d77d09a020dc84433d6f6755e19ea7dce5b35ec82c18",
       "transformation": "Extracted the named original vector group. Paths and fills unchanged; standalone viewBox and 256px raster width added.",
       "viewBox": [
@@ -70,11 +70,11 @@
     },
     {
       "path": "public/models/soccer/players/red-arm.svg",
-      "source_path": "assets/new/kenney_sports-pack/Vector/charactersEquipment.svg",
+      "source_path": "assets/soccer/characters-equipment.svg",
       "source_sha256": "4ef1a5c3db051b6da10d8e266185081875d997e392a7b0804e68957949302f1d",
       "source_group": "Layer0_99_FILL",
       "source_url": "https://kenney.nl/assets/sports-pack",
-      "matching_png_reference": "assets/new/kenney_sports-pack/PNG/Red/characterRed (11).png",
+      "matching_png_reference": "assets/soccer/players/red-arm.png",
       "matching_png_sha256": "159fc23140941ac848dd26466c0d53e5b4832d0da973ee7bbacd364a26be4265",
       "transformation": "Extracted the named original vector group. Paths and fills unchanged; standalone viewBox and 256px raster width added.",
       "viewBox": [
@@ -89,11 +89,11 @@
     },
     {
       "path": "public/models/soccer/players/yellow-body.svg",
-      "source_path": "assets/new/kenney_sports-pack/Vector/charactersEquipment.svg",
+      "source_path": "assets/soccer/characters-equipment.svg",
       "source_sha256": "4ef1a5c3db051b6da10d8e266185081875d997e392a7b0804e68957949302f1d",
       "source_group": "Layer0_71_FILL",
       "source_url": "https://kenney.nl/assets/sports-pack",
-      "matching_png_reference": "assets/new/kenney_sports-pack/PNG/Special/characterSpecial (1).png",
+      "matching_png_reference": "assets/soccer/players/special-body.png",
       "matching_png_sha256": "78359348c477b3dc3ff8f6961a8e63db7994d52ecdc214d05e7491604ff1656d",
       "transformation": "Extracted the named original vector group. Paths and fills unchanged; standalone viewBox and 256px raster width added.",
       "viewBox": [
@@ -108,11 +108,11 @@
     },
     {
       "path": "public/models/soccer/players/yellow-arm.svg",
-      "source_path": "assets/new/kenney_sports-pack/Vector/charactersEquipment.svg",
+      "source_path": "assets/soccer/characters-equipment.svg",
       "source_sha256": "4ef1a5c3db051b6da10d8e266185081875d997e392a7b0804e68957949302f1d",
       "source_group": "Layer0_83_FILL",
       "source_url": "https://kenney.nl/assets/sports-pack",
-      "matching_png_reference": "assets/new/kenney_sports-pack/PNG/Special/characterSpecial (11).png",
+      "matching_png_reference": "assets/soccer/players/special-arm.png",
       "matching_png_sha256": "9e5f6f7bfc42bdee919c4215c71d112a9802be4a13d32c1ff2f0f0caa8c7befc",
       "transformation": "Extracted the named original vector group. Paths and fills unchanged; standalone viewBox and 256px raster width added.",
       "viewBox": [
@@ -127,11 +127,11 @@
     },
     {
       "path": "public/models/soccer/players/green-body.svg",
-      "source_path": "assets/new/kenney_sports-pack/Vector/charactersEquipment.svg",
+      "source_path": "assets/soccer/characters-equipment.svg",
       "source_sha256": "4ef1a5c3db051b6da10d8e266185081875d997e392a7b0804e68957949302f1d",
       "source_group": "Layer0_23_FILL",
       "source_url": "https://kenney.nl/assets/sports-pack",
-      "matching_png_reference": "assets/new/kenney_sports-pack/PNG/Green/characterGreen (1).png",
+      "matching_png_reference": "assets/soccer/players/green-body.png",
       "matching_png_sha256": "66bb0d719d8f8e87cb6896f910a6559897662296c2d82efedc603af1fa4b27fd",
       "transformation": "Extracted the named original vector group. Paths and fills unchanged; standalone viewBox and 256px raster width added.",
       "viewBox": [
@@ -146,11 +146,11 @@
     },
     {
       "path": "public/models/soccer/players/green-arm.svg",
-      "source_path": "assets/new/kenney_sports-pack/Vector/charactersEquipment.svg",
+      "source_path": "assets/soccer/characters-equipment.svg",
       "source_sha256": "4ef1a5c3db051b6da10d8e266185081875d997e392a7b0804e68957949302f1d",
       "source_group": "Layer0_91_FILL",
       "source_url": "https://kenney.nl/assets/sports-pack",
-      "matching_png_reference": "assets/new/kenney_sports-pack/PNG/Green/characterGreen (11).png",
+      "matching_png_reference": "assets/soccer/players/green-arm.png",
       "matching_png_sha256": "eb7f63e9cb29ebd933717dc9afffc1040f22fc12cdccf3922d1ecc29804ee156",
       "transformation": "Extracted the named original vector group. Paths and fills unchanged; standalone viewBox and 256px raster width added.",
       "viewBox": [
@@ -165,11 +165,11 @@
     },
     {
       "path": "public/models/soccer/equipment/ball.svg",
-      "source_path": "assets/new/kenney_sports-pack/Vector/charactersEquipment.svg",
+      "source_path": "assets/soccer/characters-equipment.svg",
       "source_sha256": "4ef1a5c3db051b6da10d8e266185081875d997e392a7b0804e68957949302f1d",
       "source_group": "Layer0_2_FILL",
       "source_url": "https://kenney.nl/assets/sports-pack",
-      "matching_png_reference": "assets/new/kenney_sports-pack/PNG/Equipment/ball_soccer2.png",
+      "matching_png_reference": "assets/soccer/equipment/ball.png",
       "matching_png_sha256": "444f45a9b96d7ab85c8af638454de8b9c4fb16fda514a1b3332c0df62d62a85c",
       "transformation": "Extracted the named original vector group. Paths and fills unchanged; standalone viewBox and 256px raster width added.",
       "viewBox": [
@@ -184,11 +184,11 @@
     },
     {
       "path": "public/models/soccer/equipment/flag-green.svg",
-      "source_path": "assets/new/kenney_sports-pack/Vector/charactersEquipment.svg",
+      "source_path": "assets/soccer/characters-equipment.svg",
       "source_sha256": "4ef1a5c3db051b6da10d8e266185081875d997e392a7b0804e68957949302f1d",
       "source_group": "Layer0_78_FILL",
       "source_url": "https://kenney.nl/assets/sports-pack",
-      "matching_png_reference": "assets/new/kenney_sports-pack/PNG/Equipment/flag_green.png",
+      "matching_png_reference": "assets/soccer/equipment/flag-green.png",
       "matching_png_sha256": "da01a1c87c730153354b8ee37b5e07cbd2469057380797a3627522d82ddab5c3",
       "transformation": "Extracted the named original vector group. Paths and fills unchanged; standalone viewBox and 256px raster width added.",
       "viewBox": [
@@ -203,11 +203,11 @@
     },
     {
       "path": "public/models/soccer/equipment/flag-white.svg",
-      "source_path": "assets/new/kenney_sports-pack/Vector/charactersEquipment.svg",
+      "source_path": "assets/soccer/characters-equipment.svg",
       "source_sha256": "4ef1a5c3db051b6da10d8e266185081875d997e392a7b0804e68957949302f1d",
       "source_group": "Layer0_77_FILL",
       "source_url": "https://kenney.nl/assets/sports-pack",
-      "matching_png_reference": "assets/new/kenney_sports-pack/PNG/Equipment/flag_white.png",
+      "matching_png_reference": "assets/soccer/equipment/flag-white.png",
       "matching_png_sha256": "8a51550aaf089ae86b30f5a03ee78e8610f5389d709d5b5a6c27174ca2fd38fc",
       "transformation": "Extracted the named original vector group. Paths and fills unchanged; standalone viewBox and 256px raster width added.",
       "viewBox": [
@@ -222,11 +222,11 @@
     },
     {
       "path": "public/models/soccer/equipment/card-yellow.svg",
-      "source_path": "assets/new/kenney_sports-pack/Vector/charactersEquipment.svg",
+      "source_path": "assets/soccer/characters-equipment.svg",
       "source_sha256": "4ef1a5c3db051b6da10d8e266185081875d997e392a7b0804e68957949302f1d",
       "source_group": "Layer0_81_FILL",
       "source_url": "https://kenney.nl/assets/sports-pack",
-      "matching_png_reference": "assets/new/kenney_sports-pack/PNG/Equipment/card_yellow.png",
+      "matching_png_reference": "assets/soccer/equipment/card-yellow.png",
       "matching_png_sha256": "0a4fe5cb5b8a412247f5c7507c67ad01435039d8ef7e8297e43a3d59523ce805",
       "transformation": "Extracted the named original vector group. Paths and fills unchanged; standalone viewBox and 256px raster width added.",
       "viewBox": [
@@ -241,11 +241,11 @@
     },
     {
       "path": "public/models/soccer/equipment/card-red.svg",
-      "source_path": "assets/new/kenney_sports-pack/Vector/charactersEquipment.svg",
+      "source_path": "assets/soccer/characters-equipment.svg",
       "source_sha256": "4ef1a5c3db051b6da10d8e266185081875d997e392a7b0804e68957949302f1d",
       "source_group": "Layer0_82_FILL",
       "source_url": "https://kenney.nl/assets/sports-pack",
-      "matching_png_reference": "assets/new/kenney_sports-pack/PNG/Equipment/card_red.png",
+      "matching_png_reference": "assets/soccer/equipment/card-red.png",
       "matching_png_sha256": "9e605ed37b1280b9b5040941e906e38cef06414104977ff63ec99c981c4ac67f",
       "transformation": "Extracted the named original vector group. Paths and fills unchanged; standalone viewBox and 256px raster width added.",
       "viewBox": [
@@ -260,7 +260,7 @@
     },
     {
       "path": "public/models/soccer/LICENSE.txt",
-      "source_path": "assets/new/kenney_sports-pack/License.txt",
+      "source_path": "assets/soccer/license.txt",
       "source_url": "https://kenney.nl/assets/sports-pack",
       "copied_without_changes": true,
       "bytes": 480,

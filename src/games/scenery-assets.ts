@@ -1,7 +1,7 @@
 import * as THREE from 'three';
 import {GLTFLoader} from 'three/addons/loaders/GLTFLoader.js';
 
-/** Hand-selected original Kenney CC0 models, supplied in assets/new.
+/** Hand-selected original Kenney CC0 models, supplied in assets.
  * Original files, hashes and licenses: /models/scenery/provenance.json.
  * Each game loads only its own small model group; no asset-pack bulk imports.
  */

@@ -1,5 +1,6 @@
 import {useId, useState} from 'react';
 import {PLATFORM_CHARACTERS, PLATFORM_DEFAULT_LIVES, PLATFORM_MAX_LIVES, platformCharacter, platformLives, type PlatformCharacter} from '../shared/platform-options.mjs';
+import Select from './Select';
 import './platform-menu.css';
 
 const storageKey = 'nearfest-platform-options';
@@ -44,7 +45,7 @@ export default function PlatformMenu({character, lives, onCharacter, onLives, di
   online?: boolean;
 }) {
   const id = useId();
-  return <section className="platform-menu" aria-label="Platform Relay game menu">
+  return <section className="platform-menu" aria-label="Astro Climb game menu">
     <div className="platform-menu-heading"><span>YOUR ADVENTURE</span><b>Make it your run.</b></div>
     <fieldset disabled={disabled}>
       <legend>Choose your color</legend>
@@ -60,9 +61,9 @@ export default function PlatformMenu({character, lives, onCharacter, onLives, di
       <legend>Starting lives</legend>
       <div className="platform-lives-row"><div className="platform-lives-picker">
         <button type="button" aria-label="Fewer starting lives" disabled={lives <= 1} onClick={() => onLives?.(lives - 1)}>−</button>
-        <select aria-label="Starting lives" value={lives} onChange={e => onLives?.(Number(e.target.value))}>
+        <Select aria-label="Starting lives" disabled={disabled || !onLives} value={lives} onChange={e => onLives?.(Number(e.target.value))}>
           {Array.from({length: PLATFORM_MAX_LIVES}, (_, i) => i + 1).map(n => <option key={n} value={n}>{n} {n === 1 ? 'life' : 'lives'}</option>)}
-        </select>
+        </Select>
         <button type="button" aria-label="More starting lives" disabled={lives >= PLATFORM_MAX_LIVES} onClick={() => onLives?.(lives + 1)}>+</button>
       </div><span className="platform-life-mode">{lives === 1 ? 'One shot. Make it count.' : lives <= 3 ? 'The classic challenge.' : lives <= 6 ? 'A little room to explore.' : 'A longer adventure.'}</span></div>
     </fieldset>

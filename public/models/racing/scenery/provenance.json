@@ -1,65 +1,65 @@
 {
   "author": "Kenney",
   "license": "CC0-1.0",
-  "source": "User-supplied assets/new/kenney_nature-kit; original model bytes.",
+  "source": "User-supplied assets/nature; original model bytes.",
   "assets": [
     {
       "file": "tree_palmDetailedShort.glb",
-      "original": "assets/new/kenney_nature-kit/Models/GLTF format/tree_palmDetailedShort.glb",
+      "original": "assets/nature/tree_palmDetailedShort.glb",
       "sha256": "bc1013aaacca3bdd116ad1cded4f9499f008fe3056e760f3238be05aa21ff9f2",
       "bytes": 28212
     },
     {
       "file": "tree_palmTall.glb",
-      "original": "assets/new/kenney_nature-kit/Models/GLTF format/tree_palmTall.glb",
+      "original": "assets/nature/tree_palmTall.glb",
       "sha256": "cbd2c2ea7d0316be7514d44699527c566ce91e0542e8b6c6bf431a155e5655f6",
       "bytes": 15592
     },
     {
       "file": "tree_pineTallA.glb",
-      "original": "assets/new/kenney_nature-kit/Models/GLTF format/tree_pineTallA.glb",
+      "original": "assets/nature/tree_pineTallA.glb",
       "sha256": "e0a56eb196d8a64ba86c7304d607136e17e6f9ad748dffcf86bd53b18b91b196",
       "bytes": 7200
     },
     {
       "file": "tree_pineTallC_detailed.glb",
-      "original": "assets/new/kenney_nature-kit/Models/GLTF format/tree_pineTallC_detailed.glb",
+      "original": "assets/nature/tree_pineTallC_detailed.glb",
       "sha256": "b538e229a9fb8cbbb579fa2a0df784d5354c8a70faa115fa80f8190f2e6bef47",
       "bytes": 11588
     },
     {
       "file": "tree_oak.glb",
-      "original": "assets/new/kenney_nature-kit/Models/GLTF format/tree_oak.glb",
+      "original": "assets/nature/tree_oak.glb",
       "sha256": "d7fd8773674928c50c11b66d12c636d49bdcc15a8b1c7fbb98e6f63a3439a3f3",
       "bytes": 14644
     },
     {
       "file": "plant_bushLarge.glb",
-      "original": "assets/new/kenney_nature-kit/Models/GLTF format/plant_bushLarge.glb",
+      "original": "assets/nature/plant_bushLarge.glb",
       "sha256": "10e1d9fbf29d96d1d1a56fb2ce25ae66537505101759229afe01ae22c6c45e02",
       "bytes": 6436
     },
     {
       "file": "rock_tallA.glb",
-      "original": "assets/new/kenney_nature-kit/Models/GLTF format/rock_tallA.glb",
+      "original": "assets/nature/rock_tallA.glb",
       "sha256": "88250f236a3b75f8b55c1d8afb6af020f8a91b1e81f9fb51f7ef513420d45a2d",
       "bytes": 12072
     },
     {
       "file": "rock_largeA.glb",
-      "original": "assets/new/kenney_nature-kit/Models/GLTF format/rock_largeA.glb",
+      "original": "assets/nature/rock_largeA.glb",
       "sha256": "6dd15390fd96501dcd1454765a17ba61dbbd8d47705dfe5149c8dd92b353ce25",
       "bytes": 7552
     },
     {
       "file": "cactus_tall.glb",
-      "original": "assets/new/kenney_nature-kit/Models/GLTF format/cactus_tall.glb",
+      "original": "assets/nature/cactus_tall.glb",
       "sha256": "d43a1aca5952e1f8a104d64a0edfec09c39f15102ca6bdc531460dd5a2c53d25",
       "bytes": 9668
     },
     {
       "file": "cactus_short.glb",
-      "original": "assets/new/kenney_nature-kit/Models/GLTF format/cactus_short.glb",
+      "original": "assets/nature/cactus_short.glb",
       "sha256": "81ac9fc4c66eacceaf4aebcb6df3468ea450a2f5081151bb11400282efbc51bd",
       "bytes": 8844
     }

@@ -6,6 +6,7 @@ import {api,money,type User,type Message} from './api';
 import type {Game} from './PlayRoom';
 import type {Party} from './Multiplayer';
 import Select from './Select';
+import GameInfoTabs from './GameInfoTabs';
 import UiIcon from './UiIcon';
 import {gameCover,gameCoverById} from './game-art';
 import './skill-games.css';
@@ -30,7 +31,7 @@ const rules:Record<string,string>={
 export function SkillIntro({game,play}:{game:Game;play:(entry:string)=>void}){
  const [solo,setSolo]=useState(false);
  if(solo)return <SkillPractice game={game} back={()=>setSolo(false)} together={play}/>;
- return <div className="skill-intro"><img src={gameCover(game)} alt={`${game.title} board illustration`}/><div><span className="skill-kicker">YOUR NEXT GOOD GAME.</span><h3>{game.label}</h3><p>{game.description}</p><div className="skill-tags"><span>Solo vs computer</span><span>2 online players</span></div><div className="play-mode-actions"><button className="primary" onClick={()=>play('0.1')}>Play for stakes <UiIcon name="arrow"/></button><button className="secondary" onClick={()=>play('0')}>Play free with people</button><button className="text-button" onClick={()=>setSolo(true)}>Try solo</button></div><details className="skill-rules"><summary>How to play</summary><p>{rules[game.id]}</p><p>Solo is a free game against the computer. Online matches play two games with starting sides swapped. Five minutes per player per game. Most game points wins; tied matches return entries.</p></details></div></div>;
+ return <div className="skill-intro"><img src={gameCover(game)} alt={`${game.title} board illustration`}/><div><span className="skill-kicker">YOUR NEXT GOOD GAME.</span><h3>{game.label}</h3><GameInfoTabs title={game.title} description={game.description}><p>{rules[game.id]}</p><p>Solo is a free game against the computer. Online matches play two games with starting sides swapped. Five minutes per player per game. Most game points wins; tied matches return entries.</p></GameInfoTabs><div className="skill-tags"><span>Solo vs computer</span><span>2 online players</span></div><div className="play-mode-actions"><button className="primary" onClick={()=>play('0.1')}>Play for stakes <UiIcon name="arrow"/></button><button className="secondary" onClick={()=>play('0')}>Play free with friends</button><button className="secondary play-solo-button" onClick={()=>setSolo(true)}>Play solo</button></div></div></div>;
 }
 function SkillPractice({game,back,together}:{game:Game;back:()=>void;together:(entry:string)=>void}){
  const [board,setBoard]=useState<BoardState>(()=>initialState(game.id)),[human,setHuman]=useState(0),[round,setRound]=useState(0);

@@ -2,138 +2,138 @@
   "author": "Kenney",
   "license": "CC0-1.0",
   "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
-  "source": "User-supplied packs under assets/new.",
+  "source": "User-supplied packs under assets.",
   "modifications": "GLB/PNG bytes unchanged; runtime transforms normalize dimensions/orientation. The tank is original code-authored 3D geometry, not an imported Kenney model.",
   "assets": [
     {
       "id": "arena-column",
-      "original": "assets/new/kenney_building-kit/Models/GLB format/column-wide.glb",
+      "original": "assets/buildings/modular/column-wide.glb",
       "file": "/models/action/building/arena-column.glb",
       "bytes": 4344,
       "sha256": "9cc036176e9b23aeb906dbae798c24b19fc6a1a64879ccbc6e0c7ea6514ca910"
     },
     {
       "id": "building-atlas",
-      "original": "assets/new/kenney_building-kit/Models/GLB format/Textures/colormap.png",
+      "original": "assets/buildings/modular/Textures/colormap.png",
       "file": "/models/action/building/Textures/colormap.png",
       "bytes": 10051,
       "sha256": "01741a46a279bef667de3143ee653d0073ed7cae925d88341281391d9220092b"
     },
     {
       "id": "arena-arch",
-      "original": "assets/new/kenney_building-kit/Models/GLB format/wall-doorway-wide-round.glb",
+      "original": "assets/buildings/modular/wall-doorway-wide-round.glb",
       "file": "/models/action/building/arena-arch.glb",
       "bytes": 11696,
       "sha256": "88bb60fe71b2fb91ea796b2bca12999eabd06368d9e331fd8cdf64b8d9039bec"
     },
     {
       "id": "arena-wall",
-      "original": "assets/new/kenney_building-kit/Models/GLB format/wall.glb",
+      "original": "assets/buildings/modular/wall.glb",
       "file": "/models/action/building/arena-wall.glb",
       "bytes": 2664,
       "sha256": "769a02a70327132ba864c04299631c65fb08e96e01e1796ba73ddf7f44679a36"
     },
     {
       "id": "arena-stairs",
-      "original": "assets/new/kenney_building-kit/Models/GLB format/stairs-sides.glb",
+      "original": "assets/buildings/modular/stairs-sides.glb",
       "file": "/models/action/building/arena-stairs.glb",
       "bytes": 18268,
       "sha256": "dfcc73a19a4e60cf7b5233c49132718c78bf5fe89432a4b75a16dd979a0cf977"
     },
     {
       "id": "arena-floor",
-      "original": "assets/new/kenney_building-kit/Models/GLB format/floor.glb",
+      "original": "assets/buildings/modular/floor.glb",
       "file": "/models/action/building/arena-floor.glb",
       "bytes": 2832,
       "sha256": "fbe8e907e502381db5d9f87676ef9e34522e35fc95a401a754d3e4984819338b"
     },
     {
       "id": "crate",
-      "original": "assets/new/kenney_factory-kit_3.0/Models/GLB format/box-large.glb",
+      "original": "assets/factory/box-large.glb",
       "file": "/models/action/factory/crate.glb",
       "bytes": 7496,
       "sha256": "f5c7a7b4d7ec48c2695dc5241d62a38dbb54b487e6be0f089548582c91bacdfd"
     },
     {
       "id": "factory-atlas",
-      "original": "assets/new/kenney_factory-kit_3.0/Models/GLB format/Textures/colormap.png",
+      "original": "assets/factory/Textures/colormap.png",
       "file": "/models/action/factory/Textures/colormap.png",
       "bytes": 11813,
       "sha256": "35d7bd6900dde0208429eeaec87fa17fbf024ed59f3f4eab54bc92802eba9dd7"
     },
     {
       "id": "beacon",
-      "original": "assets/new/kenney_factory-kit_3.0/Models/GLB format/warning-orange.glb",
+      "original": "assets/factory/warning-orange.glb",
       "file": "/models/action/factory/beacon.glb",
       "bytes": 16136,
       "sha256": "07974e9e78c2b2d2ed8198461a7fbac86d1744490ab687817543a07f163aa7d0"
     },
     {
       "id": "checker",
-      "original": "assets/new/kenney_factory-kit_3.0/Models/GLB format/top-large-checkerboard.glb",
+      "original": "assets/factory/top-large-checkerboard.glb",
       "file": "/models/action/factory/checker.glb",
       "bytes": 2444,
       "sha256": "128d0adf75b59e55339b6dbb6ad09c20dd30595eec2eb17f6a43c40119d3b49a"
     },
     {
       "id": "track-straight",
-      "original": "assets/new/kenney_marble-kit/Models/GLB format/straight.glb",
+      "original": "assets/marble/straight.glb",
       "file": "/models/action/marble/track-straight.glb",
       "bytes": 4636,
       "sha256": "ddb371f9278f0161e3175274555bcacf31cea773733137bb8a90090ce5d4cdd6"
     },
     {
       "id": "marble-atlas",
-      "original": "assets/new/kenney_marble-kit/Models/GLB format/Textures/colormap.png",
+      "original": "assets/marble/Textures/colormap.png",
       "file": "/models/action/marble/Textures/colormap.png",
       "bytes": 8534,
       "sha256": "a802b8c02c0b0cc07654cd8edca30439a9e9d505b10088502169ab3b9cf5e94f"
     },
     {
       "id": "track-wide",
-      "original": "assets/new/kenney_marble-kit/Models/GLB format/straight-wide.glb",
+      "original": "assets/marble/straight-wide.glb",
       "file": "/models/action/marble/track-wide.glb",
       "bytes": 4684,
       "sha256": "19ef4b485d369f5839a0f0b76e71335cfbd71517b0596fef038782dc0cc70845"
     },
     {
       "id": "track-curve",
-      "original": "assets/new/kenney_marble-kit/Models/GLB format/curve.glb",
+      "original": "assets/marble/curve.glb",
       "file": "/models/action/marble/track-curve.glb",
       "bytes": 14216,
       "sha256": "d3add8738fb7dab6a9a5d2912f2ce49796d77416e2ac1b0da84d7b50be7fa92d"
     },
     {
       "id": "track-ramp",
-      "original": "assets/new/kenney_marble-kit/Models/GLB format/ramp-long-a.glb",
+      "original": "assets/marble/ramp-long-a.glb",
       "file": "/models/action/marble/track-ramp.glb",
       "bytes": 19584,
       "sha256": "7ceadcbc20d9e0fa527bf4d1460c7b76de3e929f3d155eaf682fb37e220d6a14"
     },
     {
       "id": "track-support",
-      "original": "assets/new/kenney_marble-kit/Models/GLB format/support-two-top.glb",
+      "original": "assets/marble/support-two-top.glb",
       "file": "/models/action/marble/track-support.glb",
       "bytes": 9364,
       "sha256": "3119b7250fd506c26f89353546b1bb7914966212f3e5818df1d6880f6a144ea9"
     },
     {
       "id": "track-gate",
-      "original": "assets/new/kenney_marble-kit/Models/GLB format/banner-high.glb",
+      "original": "assets/marble/banner-high.glb",
       "file": "/models/action/marble/track-gate.glb",
       "bytes": 7104,
       "sha256": "0b0ce1324b3cc22e8c9b81ebd3063fc674ea369e4cc56358ccc910802485a491"
     },
     {
       "id": "track-end",
-      "original": "assets/new/kenney_marble-kit/Models/GLB format/end-rounded.glb",
+      "original": "assets/marble/end-rounded.glb",
       "file": "/models/action/marble/track-end.glb",
       "bytes": 5948,
       "sha256": "274fe8ab56bbbff017226a6462fc09a74efb43921de92f71935aa9ee6ce62270"
     },
     {
       "id": "track-fan",
-      "original": "assets/new/kenney_marble-kit/Models/GLB format/fan-standing-four.glb",
+      "original": "assets/marble/fan-standing-four.glb",
       "file": "/models/scenery/marble/fan.glb",
       "bytes": 20104,
       "sha256": "52ff576494131f8c16c396f5302b690070defed4d41a92e15eb13070de825c02",
@@ -141,7 +141,7 @@
     },
     {
       "id": "machine",
-      "original": "assets/new/kenney_factory-kit_3.0/Models/GLB format/machine.glb",
+      "original": "assets/factory/machine.glb",
       "file": "/models/scenery/factory/machine.glb",
       "bytes": 25620,
       "sha256": "a39e3042bcb7789274428357383317d70e1c31906e5301c99e7d9e90ac584863",
@@ -149,7 +149,7 @@
     },
     {
       "id": "screen",
-      "original": "assets/new/kenney_factory-kit_3.0/Models/GLB format/screen-wide.glb",
+      "original": "assets/factory/screen-wide.glb",
       "file": "/models/scenery/factory/screen.glb",
       "bytes": 13904,
       "sha256": "220211ee38d51a521475caec06bb27aa231f5b1d43fd74cb93393cca47edfda3",
@@ -157,7 +157,7 @@
     },
     {
       "id": "tank-blue-hud",
-      "original": "assets/new/kenney_top-down-tanks-remastered/PNG/Default size/tank_blue.png",
+      "original": "assets/tanks/top-down/tank_blue.png",
       "file": "/models/action/icons/tank-blue.png",
       "bytes": 15149,
       "sha256": "3d672a9f8361fc2214552a66b291aadf4365b2d8426a13da2931039d4f81f5ba",
@@ -165,7 +165,7 @@
     },
     {
       "id": "tank-red-hud",
-      "original": "assets/new/kenney_top-down-tanks-remastered/PNG/Default size/tank_red.png",
+      "original": "assets/tanks/top-down/tank_red.png",
       "file": "/models/action/icons/tank-red.png",
       "bytes": 15121,
       "sha256": "9b2a3f9da6253214ecf548e1d1bd37bf43688f666d2e4f94215cee23feaeae9c",

@@ -103,5 +103,11 @@ test('room sessions preserve shared state, redact personal memories, deduplicate
 test('selected original asset bytes, textures and licences are present with recorded hashes',async()=>{
  const root=new URL('../public/models/simulation/',import.meta.url),manifest=JSON.parse(await readFile(new URL('manifest.json',root),'utf8'));
  for(const f of manifest.files){const data=await readFile(new URL(f.url.slice('/models/simulation/'.length),root));assert.equal(createHash('sha256').update(data).digest('hex'),f.sha256,f.url);}
+ const projectRoot=new URL('../',import.meta.url),published=new Set(manifest.files.map(f=>f.url));
+ for(const asset of Object.values(manifest.assets)){
+  const source=await readFile(new URL(asset.source,projectRoot));
+  assert.equal(createHash('sha256').update(source).digest('hex'),asset.sha256,asset.source);
+  for(const dependency of asset.dependencies)assert(published.has(dependency),`Unpublished dependency: ${dependency}`);
+ }
  for(const n of ['player-0','player-3','npc-0','npc-5']){assert(manifest.assets[n].animations.includes('walk'));assert(manifest.assets[n].animations.includes('emote-no'));}
 });
