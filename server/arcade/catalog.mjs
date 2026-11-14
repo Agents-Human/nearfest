@@ -1,5 +1,5 @@
 const rows=[
- ['pocket-racers','Pocket Racers','Racing',2,4,120,'A quick coastal sprint. Just steer left or right, dodge traffic, collect turbo and race to the finish.'],
+ ['pocket-racers','Pocket Racers','Racing',2,4,120,'A quick coastal sprint. Just steer left or right, dodge traffic, collect gold coins for boost and race to the finish.'],
  ['stick-rivals','Stick Rivals','Action',2,2,180,'Jump, block and land your punches. Three rounds in a shared arena.'],
  ['paddle-duel','Paddle Duel','Sports',2,2,180,'Move your paddle, read the bounce. First to seven.'],
  ['air-hockey','Air Hockey','Sports',2,2,180,'Guard your goal and strike the puck. First to five.'],

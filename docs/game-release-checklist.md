@@ -68,8 +68,18 @@ The catalogue currently exposes 53 original entries. All expose solo and indepen
 - Actual wallet sign-in, deposits, result settlement, independent group approvals and withdrawal: npm run test:testnet; see evidence/nearfest-testnet.json. A completed_at timestamp is required for a completed run.
 - A published game must have an authoritative multiplayer state, solo path, reconnect behavior, legal-input checks, explicit outcome rules and illustrated gameplay.
 
+## Action-game environments and survival
+
+- Twelve action titles render through the continuous Three.js scene loop, with interpolation of authoritative 20 Hz snapshots, adaptive resolution, shadows, environment lighting and per-scene cleanup.
+- Pocket Racers is a 900 m point-to-point coastal sprint with automatic acceleration, direct steering, traffic, optional boost/braking, and gold coins that refill boost. Imported cars face the road tangent and actual steering motion. Both chase and overview cameras were checked.
+- Platform Relay is an endless competitive survival course, with one life per player and no fixed finish or round timer. The first death ends the round, surviving players win, and simultaneous deaths tie. The shared seeded course adds grass/snow islands, traps, moving saws and an advancing storm. Eight coins charge an extra air jump (maximum two); coins never add lives.
+- Selected user-supplied Kenney assets are loaded per game: cars/track/city scenery, four animated platformer rigs, terrain and hazards, golf props, food/cookware, marble props and an orbital station. Original CC0 licenses, source paths and hashes are retained in `public/models/racing`, `public/models/platform` and `public/models/scenery`.
+- Licensed local music and supplied platformer sound effects have gesture unlock, volume/mute controls, background-tab suspension and credits. Long music streams as compressed audio. A codec fallback supplies synthesized short effects.
+- Browser checks cover actual steering, boosting, coin collection, jumping, touch movement, replay, desktop and 390×844 layouts. Local previews ran at about 120 FPS; this is a measurement on the development machine, not a device guarantee. Captures are in `evidence/gameplay`. Physical multi-device performance and subjective audio listening remain separate checks.
+- `tests/survival-api.test.mjs` verifies two independent HTTP clients receive the same course and the same first-death outcome. The full application suite and production build must pass before release.
+
 ## Remaining verification limits
 
-Physical multi-device play, sustained production load, latency fairness across regions and an independent contract audit are not certified by these automated checks. Individual action games have bounded authored content; a catalogue count does not imply unlimited levels. Mainnet stays disabled. The game server remains the trusted outcome signer. Live NEAR AI inference is not configured.
+Physical multi-device play, sustained production load, latency fairness across regions and an independent contract audit are not certified by these automated checks. Most action games have bounded authored content; Platform Relay generates an endless course. A catalogue count does not imply unlimited levels for every game. Mainnet stays disabled. The game server remains the trusted outcome signer. Live NEAR AI inference is not configured.
 
 See [the game requirements](multiplayer-game-rebuild.md) and [testnet architecture](near-testnet.md).

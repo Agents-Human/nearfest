@@ -168,6 +168,7 @@ export function loadSceneryAssets(game: string): Promise<SceneryAssets> {
               // Golf's source atlas is solid red; replace only that ball's colour
               // map to preserve its real dimple geometry in every player colour.
               if (id === 'golf-ball') {material.map?.dispose(); material.map = null; material.roughness = .38;}
+              if(id==='marble'){material.transparent=false;material.opacity=1;material.depthWrite=true;material.roughness=.18;material.metalness=.2;}
               material.color.set(color);
               material.needsUpdate = true;
             }

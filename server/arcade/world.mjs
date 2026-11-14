@@ -42,7 +42,7 @@ function extendIslands(s){
   const y=i===0?460:[420,370,410,460,400,350,410][(i-1)%7],w=i===0?440:Math.round(340-difficulty*60+r*35);
   const floor={id:i,x,y,w,h:85};s.platforms.push(floor);
   for(let j=0;j<3;j++)s.coins.push({id:i*3+j,x:x+w*(.28+j*.22),y:y-58,collectedBy:[]});
-  if(i>=7&&i%3===1)s.hazards.push({id:i,kind:i>=12&&i%2===0?'orb':'thorns',x:x+w*.48,y,phase:r*6.28});
+  if(i>=7&&i%3===1)s.hazards.push({id:i,kind:i>=12&&i%2===0?'orb':'thorns',x:x+w*.62,y,phase:r*6.28});
  }
  const behind=Math.min(...s.players.filter(p=>p.alive).map(p=>p.x))-700;
  s.platforms=s.platforms.filter(p=>p.x+p.w>behind);s.coins=s.coins.filter(p=>p.x>behind);s.hazards=s.hazards.filter(p=>p.x>behind);
@@ -151,7 +151,7 @@ export function advanceWorld(previous,input){
    p.jumpHeld=jump;p.vy+=1050*DT;p.x=Math.max(20,p.x+p.vx*DT);p.y+=p.vy*DT;p.ground=false;
    for(const floor of s.platforms)if(p.x>floor.x-8&&p.x<floor.x+floor.w+8&&oldY+25<=floor.y+.1&&p.y+25>=floor.y&&p.vy>=0){p.y=floor.y-25;p.vy=0;p.ground=true;p.autoJump=false;}
    for(const coin of s.coins)if(!coin.collectedBy.includes(i)&&Math.hypot(p.x-coin.x,p.y-coin.y)<43){coin.collectedBy.push(i);p.coins++;if(p.coins%8===0)p.airJumps=Math.min(2,(p.airJumps||0)+1);}
-   for(const hazard of s.hazards){const hit=hazard.kind==='thorns'?Math.abs(p.x-hazard.x)<28&&p.y+23>hazard.y-27&&p.y-20<hazard.y:Math.hypot(p.x-hazard.x,p.y-(hazard.y-65+Math.sin(s.elapsed*2+hazard.phase)*25))<32;if(hit){p.alive=false;p.deathReason=hazard.kind==='thorns'?'hit the thorns':'hit a storm orb';}}
+   for(const hazard of s.hazards){const hit=hazard.kind==='thorns'?Math.abs(p.x-hazard.x)<28&&p.y+23>hazard.y-27&&p.y-20<hazard.y:Math.hypot(p.x-hazard.x,p.y-(hazard.y-65+Math.sin(s.elapsed*2+hazard.phase)*25))<32;if(hit){p.alive=false;p.deathReason=hazard.kind==='thorns'?'hit the spikes':'hit a moving saw';}}
    if(p.y>620){p.alive=false;p.deathReason='fell into the sea';}else if(p.x<s.stormX){p.alive=false;p.deathReason='was caught by the storm';}
    p.score=Math.floor(p.x/10)+p.coins*10;
   });
@@ -180,7 +180,7 @@ export function worldBot(s,i){
  else if(s.game==='platform-relay'){
   c.right=true;
   const danger=s.hazards.find(h=>h.x>p.x&&h.x-p.x<100);
-  c.up=Boolean(p.ground&&danger||!p.ground&&(p.vy<0||p.y>480&&p.airJumps>0));
+  c.up=Boolean(p.ground&&danger&&!p.jumpHeld||!p.ground&&(p.jumpHeld&&p.vy< -30||!p.jumpHeld&&p.airJumps>0&&(p.y>480||danger&&p.vy>0&&p.y>danger.y-150)));
  }
  else if(s.game==='orbit-rescue'){const ship=s.ship,target=s.probes.find(p=>!p.rescued)||ship,d=distance(ship,target);if(i===1){c.up=d>65&&Math.hypot(ship.vx,ship.vy)<100;c.down=d<100;}if(i>=2)c.attack=d<55;}
  return c;

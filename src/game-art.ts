@@ -2,7 +2,8 @@ import type {Game} from './PlayRoom';
 
 const paintedBoards = new Set(['oware', 'checkers', 'connect-four', 'dots-boxes', 'reversi', 'kalah', 'hex', 'nine-mens-morris']);
 const arcadeCovers=new Set(['chess-online','pocket-racers','stick-rivals','paddle-duel','air-hockey','snake-arena','bomb-maze','mini-golf','marble-knockout','kitchen-rush','paint-tag','platform-relay','draw-guess','word-hunt','word-relay','category-sprint','clue-crew','bluff-club','deduction-club','maths-tug','equation-forge','circuit-crew','orbit-rescue','bridge-builders','molecule-match','sudoku-race','codebreakers']);
-export const gameCoverById = (id: string) => arcadeCovers.has(id)?`/art/action-games/${id}.svg`:paintedBoards.has(id)
+const gameplayCovers=new Set(['pocket-racers','platform-relay']);
+export const gameCoverById = (id: string) => gameplayCovers.has(id)?`/art/action-games/${id}-gameplay.jpg`:arcadeCovers.has(id)?`/art/action-games/${id}.svg`:paintedBoards.has(id)
   ? `/art/skill-games/${id}.webp`
   : `/art/game-covers/${id}.svg`;
 export const gameCover = (game: Game) => gameCoverById(game.art || game.id);

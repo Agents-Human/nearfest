@@ -1,0 +1,18 @@
+{
+  "kind": "Actual locally rendered gameplay captures",
+  "models": "Kenney, CC0; manifests under public/models/{racing,platform,scenery}/provenance.json",
+  "captures": [
+    {
+      "game": "pocket-racers",
+      "file": "pocket-racers-gameplay.jpg",
+      "sha256": "2e9bece3090a81a4922321c89a37baca770060f3f915b94f7fb9fe4804ec6373",
+      "bytes": 67666
+    },
+    {
+      "game": "platform-relay",
+      "file": "platform-relay-gameplay.jpg",
+      "sha256": "486ff9ea4a8baa573f7db71d1d491960ec363c62bab83cd48e5f16fcd57cd019",
+      "bytes": 45358
+    }
+  ]
+}

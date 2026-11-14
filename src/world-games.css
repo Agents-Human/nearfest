@@ -8,3 +8,14 @@
 .world-racer-avatar{width:23px;height:30px;object-fit:contain;image-rendering:auto;filter:drop-shadow(0 2px 1px #173b3526)}.world-audio-panel .world-asset-credit{font-size:9px;padding-top:10px;border-top:1px solid #ffffff20;color:#aac5bc}.world-audio-panel .world-asset-credit a{font-size:9px;margin:0}
 
 .world-platform-avatar{width:30px;height:30px;object-fit:contain;filter:drop-shadow(0 2px 1px #173b3526)}
+@media(max-width:700px){
+ .world-viewport{height:clamp(260px,calc(100svh - 410px),520px);min-height:260px}
+ .world-kitchen-rush .world-viewport,.world-mini-golf .world-viewport{height:clamp(240px,calc(100svh - 460px),490px);min-height:240px}
+ .world-controls{gap:8px!important;padding:9px 0!important}
+ .world-controls button{height:46px!important;min-width:54px!important}
+ .world-controls>span{font-size:8px!important}
+ .world-expanded .world-viewport{height:auto;min-height:0}
+ .world-expanded .world-controls{padding:10px!important}
+ .world-racer-avatar{width:20px;height:25px}
+ .world-platform-avatar{width:25px;height:25px}
+}
