@@ -95,9 +95,9 @@ const server = createServer(async (req, res) => {
   const url = new URL(req.url, origin), path = url.pathname;
   try {
     if (req.method === 'POST') { if (req.headers.origin !== origin) { json(res, { error: 'This request must come from the NearFest application.' }, 403); return; } if(!/^\/api\/arcade\/[^/]+\/input$/.test(path))rate('ip:' + req.socket.remoteAddress, (await current(req))?1000:120); }
-    if((path==='/api/session/register'||path==='/api/session/login')&&req.method==='POST'){
+    if((path==='/api/session/account'||path==='/api/session/register'||path==='/api/session/login')&&req.method==='POST'){
       rate('account-auth:'+req.socket.remoteAddress,15);const data=await body(req);
-      const u=await (path.endsWith('/register')?managedAccounts.register(data):managedAccounts.authenticate(data));
+      const u=await (path.endsWith('/login')?managedAccounts.authenticate(data):managedAccounts.register(data));
       await login(res,u);let account_funding_error=null;
       if(!(await managedAccounts.info(u)).starter_funded)try{await managedAccounts.fund(u,req.socket.remoteAddress||'unknown');}catch(error){account_funding_error=error.message;}
       return json(res,{...await profile(u),account_funding_error});

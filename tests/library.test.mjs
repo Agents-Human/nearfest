@@ -14,6 +14,10 @@ import {createPlay} from '../server/play.mjs';
 test('featured collection follows the selected order without duplicates',()=>{
  assert.deepEqual(discoveryGames.slice(0,5).map(g=>g.id),['platform-relay','pocket-racers','stick-rivals','tappy-plane','bridge-builders']);
  assert.equal(new Set(discoveryGames.map(g=>g.id)).size,discoveryGames.length);
+ const firstTrivial=discoveryGames.findIndex(g=>!g.engine);
+ assert(firstTrivial>0);
+ assert(discoveryGames.slice(0,firstTrivial).every(g=>Boolean(g.engine)));
+ assert(discoveryGames.slice(firstTrivial).every(g=>!g.engine));
 });
 
 test('1000+ separately sourced titles have unique identities, real entry files, covers and licence notices',()=>{

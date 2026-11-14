@@ -49,15 +49,21 @@ export function createManagedAccounts(store,{faucet,key=accountKey(),chain=liveM
   return store.user(row.user_id);
  }
  async function register(data){
-  available();const name=username(data.username);await review(name);const hashed=await passwordHash(data.password);
+  available();const name=username(data.username);
+  const existing=await db.prepare('SELECT * FROM managed_accounts WHERE username=$1').get(name);
+  if(existing){
+   if(!await passwordMatches(data.password,existing.password_hash))throw Error('That username is already taken, or the password is incorrect.');
+   return store.user(existing.user_id);
+  }
+  await review(name);const hashed=await passwordHash(data.password);
   const pair=KeyPair.fromRandom('ed25519'),id='nf-'+randomBytes(12).toString('hex')+'.testnet',encrypted=encryptKey(pair.toString(),id,key);
   try{return await db.transaction(async()=>{
    const user=await store.ensureUser(id,name,'wallet');
    await db.prepare('INSERT INTO managed_accounts(user_id,username,password_hash,encrypted_key,created) VALUES($1,$2,$3,$4,$5)').run(id,name,hashed,encrypted,now());return user;
   });}catch(error){
    if(error.code!=='23505')throw error;
-   // A retried registration with the same credentials resumes its original account.
-   try{return await authenticate(data);}catch{throw Error('That username is taken. Sign in or choose another.');}
+   // A concurrent registration with the same credentials resumes its original account.
+   try{return await authenticate(data);}catch{throw Error('That username is already taken, or the password is incorrect.');}
   }
  }
  async function fund(user,ip){

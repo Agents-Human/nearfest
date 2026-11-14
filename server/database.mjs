@@ -17,9 +17,11 @@ export function databaseConfig(connectionString=process.env.DATABASE_URL,environ
  const namespace=environment.DATABASE_SCHEMA||'public';
  if(!/^[a-z_][a-z0-9_]*$/.test(namespace))throw Error('Invalid DATABASE_SCHEMA.');
  return {connectionString,namespace,
-  poolMax:setting(environment,'DATABASE_POOL_MAX',2,1,100),
+  poolMax:setting(environment,'DATABASE_POOL_MAX',5,1,100),
   connectionTimeoutMillis:setting(environment,'DATABASE_CONNECTION_TIMEOUT_MS',10000,100,60000),
   idleTimeoutMillis:setting(environment,'DATABASE_IDLE_TIMEOUT_MS',5000,100,60000),
+  lockPoolMax:setting(environment,'DATABASE_LOCK_POOL_MAX',4,1,50),
+  lockWaitMillis:setting(environment,'DATABASE_LOCK_WAIT_MS',90000,1000,600000),
   startupTimeoutMillis:setting(environment,'DATABASE_STARTUP_TIMEOUT_MS',30000,0,300000),
  };
 }
@@ -30,10 +32,12 @@ export async function openDatabase(connectionString,options={}){
 }
 async function connectDatabase(config,namespace){
  const shared={connectionString:config.connectionString,connectionTimeoutMillis:config.connectionTimeoutMillis,idleTimeoutMillis:config.idleTimeoutMillis,application_name:'nearfest',options:'-c search_path='+namespace+' -c lock_timeout=5000 -c idle_in_transaction_session_timeout=15000'};
- // Per process: two query connections by default, plus at most one sponsor lock.
+ // Per process: a few query connections, plus a separate small pool for advisory locks.
  const pool=new Pool({...shared,max:config.poolMax,types:parsers});
  pool.on('error',error=>console.error('PostgreSQL connection error:',error.message));
- const lockPool=new Pool({...shared,max:1,idleTimeoutMillis:1000});
+ // Advisory locks are held across NEAR broadcasts (several seconds). They get their own small pool so a
+ // slow signer never starves queries, and different accounts can sign in parallel.
+ const lockPool=new Pool({...shared,max:config.lockPoolMax??4,idleTimeoutMillis:1000,connectionTimeoutMillis:config.lockWaitMillis??90000});
  lockPool.on('error',error=>console.error('PostgreSQL lock connection error:',error.message));
  const context=new AsyncLocalStorage();
  const query=(sql,params=[])=>{
@@ -57,10 +61,27 @@ async function connectDatabase(config,namespace){
   for(const callback of active.afterCommit)try{await callback();}catch(error){console.error('Post-commit notification failed:',error.message);}
   return value;
  }
+ // Same-key callers in this process queue in memory instead of each holding a connection while they wait.
+ const localLocks=new Map();
  async function withLock(key,fn){
+  const previous=localLocks.get(key)||Promise.resolve();let release;
+  const current=new Promise(resolve=>{release=resolve;}),tail=previous.then(()=>current);
+  localLocks.set(key,tail);
+  try{await previous;return await withSharedLock(key,fn);}
+  finally{release();if(localLocks.get(key)===tail)localLocks.delete(key);}
+ }
+ async function withSharedLock(key,fn){
+  const deadline=Date.now()+(config.lockWaitMillis??90000);
   const client=await lockPool.connect();let locked=false,releaseError;
-  try{try{await client.query('SELECT pg_advisory_lock(hashtext(current_schema()),hashtext($1))',[key]);locked=true;}catch(error){releaseError=error;throw error;}return await fn();}
-  finally{try{if(locked)await client.query('SELECT pg_advisory_unlock(hashtext(current_schema()),hashtext($1))',[key]);}catch(error){releaseError=error;throw error;}finally{client.release(releaseError);}}
+  try{
+   // Poll with try-lock so waiting on another replica never trips lock_timeout or pins a blocked statement.
+   while(!locked){
+    locked=(await client.query('SELECT pg_try_advisory_lock(hashtext(current_schema()),hashtext($1)) AS locked',[key])).rows[0].locked;
+    if(!locked){if(Date.now()>=deadline)throw Error('This account is busy finishing another action. Try again in a moment.');await new Promise(resolve=>setTimeout(resolve,200));}
+   }
+   return await fn();
+  }catch(error){if(!locked&&error.code)releaseError=error;throw error;}
+  finally{try{if(locked)await client.query('SELECT pg_advisory_unlock(hashtext(current_schema()),hashtext($1))',[key]);}catch(error){releaseError=error;}finally{client.release(releaseError);}}
  }
  const db={query,transaction,withLock,namespace,inTransaction:()=>Boolean(context.getStore()),
   afterCommit:callback=>{const active=context.getStore();if(active){active.afterCommit.push(callback);return;}return callback();},

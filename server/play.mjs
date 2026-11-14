@@ -11,15 +11,58 @@ function choice(prompt,answer,wrong){const choices=shuffle([String(answer),...wr
 export function candidatesFor(id,difficulty='mixed') {
  const game=games.find(g=>g.id===id);if(game?.recipe)return recipeQuestions(game,choice);
  if(id==='chess')return [{type:'chess',prompt:'White to move. Find checkmate in one.',pieces:{f6:'K',g6:'Q',h8:'k'},answer:'g6g7',hint:'Select a white piece, then its destination.'}];
- if(['maths','times','fractions','sequence'].includes(id))return Array.from({length:16},(_,i)=>{
-   const a=randomInt(3,difficulty==='brainy'?40:22),b=randomInt(2,13),c=randomInt(2,8);let prompt,answer;
-   if(id==='times'){answer=a*b;prompt=`${a} × ${b} = ?`;}
-   else if(id==='fractions'){const denominator=[2,4,5,10][i%4],whole=a*denominator;answer=a;prompt=`What is 1/${denominator} of ${whole}?`;}
-   else if(id==='sequence'){answer=a+4*b;prompt=`${a}, ${a+b}, ${a+2*b}, ${a+3*b}, ?`;}
-   else {answer=i%3===0?a*b:i%3===1?a+b+c:(a+b)*c;prompt=i%3===0?`${a} × ${b} = ?`:i%3===1?`${a} + ${b} + ${c} = ?`:`(${a} + ${b}) × ${c} = ?`;}
-   return choice(prompt,answer,[answer+c,answer-c,answer+randomInt(9,17)]);
- });
- if(id==='words'){const words=['PLANET','ORANGE','BRIDGE','GARDEN','ROCKET','CASTLE','PURPLE','MARKET','FOREST','POCKET','SILVER','BASKET'];return words.map(word=>{let scrambled=shuffle([...word]).join('');if(scrambled===word)scrambled=word.slice(1)+word[0];return choice(`Unscramble: ${scrambled}`,word,shuffle(words.filter(w=>w!==word)).slice(0,3));});}
+ if(['maths','times','fractions','sequence'].includes(id)){
+  const generated=[],seenPrompts=new Set();
+  for(let i=0;generated.length<30&&i<300;i++){
+   const hard=difficulty==='brainy';
+   const a=randomInt(3,hard?45:24),b=randomInt(2,hard?15:13),c=randomInt(2,9);let prompt,answer;
+   if(id==='times'){
+    const x=randomInt(hard?6:2,hard?25:15),y=randomInt(hard?4:2,hard?19:13);
+    answer=x*y;prompt=`${x} × ${y} = ?`;
+   }
+   else if(id==='fractions'){
+    const mode=i%3;
+    if(mode===0){const denominator=[2,3,4,5,6,8,10][i%7],whole=a*denominator;answer=a;prompt=`What is 1/${denominator} of ${whole}?`;}
+    else if(mode===1){const denominator=[4,5,8,10][i%4],num=randomInt(2,denominator-1),whole=a*denominator;answer=a*num;prompt=`What is ${num}/${denominator} of ${whole}?`;}
+    else{const pct=[10,20,25,50,75][i%5],base=pct===25||pct===75?randomInt(2,24)*4:randomInt(2,30)*10;answer=Math.round((pct/100)*base);prompt=`What is ${pct}% of ${base}?`;}
+   }
+   else if(id==='sequence'){
+    if(i%4===0){answer=a+4*b;prompt=`${a}, ${a+b}, ${a+2*b}, ${a+3*b}, ?`;}
+    else if(i%4===1){const start=a+4*b;answer=start-4*c;prompt=`${start}, ${start-c}, ${start-2*c}, ${start-3*c}, ?`;}
+    else if(i%4===2){const r=randomInt(2,4),s0=randomInt(2,6);answer=s0*r**4;prompt=`${s0}, ${s0*r}, ${s0*r**2}, ${s0*r**3}, ?`;}
+    else{const base=randomInt(2,hard?10:7);answer=(base+4)**2;prompt=`${base**2}, ${(base+1)**2}, ${(base+2)**2}, ${(base+3)**2}, ?`;}
+   }
+   else {
+    const mode=i%5;
+    if(mode===0){answer=a*b;prompt=`${a} × ${b} = ?`;}
+    else if(mode===1){answer=a+b+c;prompt=`${a} + ${b} + ${c} = ?`;}
+    else if(mode===2){answer=(a+b)*c;prompt=`(${a} + ${b}) × ${c} = ?`;}
+    else if(mode===3){const total=a*b+c;answer=total-c;prompt=`${total} − ${c} = ?`;}
+    else{const prod=a*b;answer=a;prompt=`${prod} ÷ ${b} = ?`;}
+   }
+   if(seenPrompts.has(prompt))continue;
+   seenPrompts.add(prompt);
+   const distractors=[];const used=new Set([answer]);
+   for(const delta of [c,-c,randomInt(10,19),-randomInt(2,9),b+1,answer>12?-b:b+4]){
+    const candidate=answer+delta;
+    if(candidate!==answer&&!used.has(candidate)&&(answer<0||candidate>=0)){used.add(candidate);distractors.push(candidate);}
+    if(distractors.length===3)break;
+   }
+   while(distractors.length<3){const fallback=answer+distractors.length+2;if(!used.has(fallback)){used.add(fallback);distractors.push(fallback);}}
+   generated.push(choice(prompt,answer,distractors));
+  }
+  return generated;
+ }
+ if(id==='words'){
+  const words=['PLANET','ORANGE','BRIDGE','GARDEN','ROCKET','CASTLE','PURPLE','MARKET','FOREST','POCKET','SILVER','BASKET','LANTERN','ANCHOR','HARBOUR','COMPASS','CRYSTAL','DESERT','MEADOW','VALLEY','THUNDER','HORIZON','COBALT','VELVET','QUARTZ','SAFARI','CANOPY','GALAXY','GLACIER','ISLAND','JUNGLE','KERNEL','MAGNET','NEBULA','ORACLE','PUZZLE','QUIVER','RIBBON','SUMMIT','TIMBER','TROPHY','VOYAGE'];
+  return shuffle(words).map(word=>{
+   let scrambled=shuffle([...word]).join('');
+   if(scrambled===word)scrambled=word.slice(1)+word[0];
+   const sameLen=words.filter(w=>w!==word&&w.length===word.length);
+   const pool=sameLen.length>=3?sameLen:words.filter(w=>w!==word);
+   return choice(`Unscramble: ${scrambled}`,word,shuffle(pool).slice(0,3));
+  });
+ }
  return shuffle(banks[id]||banks.trivia).map(([q,a,...wrong])=>choice(q,a,wrong));
 }
 export function createPlay(store,{curate=curateQuestions}={}) {

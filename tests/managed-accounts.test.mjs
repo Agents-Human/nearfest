@@ -38,6 +38,7 @@ test('duplicate registration resumes the original account; wrong credentials can
  await assert.rejects(()=>x.accounts.authenticate({...credentials,password:'incorrect password'}),/incorrect/);
  await assert.rejects(()=>x.accounts.authenticate({username:'missing',password}),/incorrect/);
  await assert.rejects(()=>x.accounts.register({...credentials,password:'other private password'}),/taken/);
+ await assert.rejects(()=>x.accounts.register({...credentials,password:'short'}),/taken/);
  await assert.rejects(()=>x.accounts.register({username:'abc',password:'short'}),/10–128/);
 });
 test('starter funding waits for a full 10 NEAR grant instead of creating a partial starting balance',async t=>{

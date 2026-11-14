@@ -35,12 +35,13 @@ export const games=[...arcadeGames,...skillGames,...library,...originals.map(g=>
 
 // Published games are our own implementations with both solo and online play.
 // Imported sources, older solo prototypes and generated configurations stay archived.
-const featuredIds=['platform-relay','pocket-racers','stick-rivals','tappy-plane','bridge-builders','oware','checkers','chess-online','maths','science','trivia','chess','connect-four','dots-boxes','reversi','hex','nine-mens-morris'];
+const featuredIds=['platform-relay','pocket-racers','stick-rivals','tappy-plane','bridge-builders','oware','checkers','chess-online','connect-four','dots-boxes','reversi','hex','nine-mens-morris','maths','science','trivia','chess'];
 // Removed from the product catalogue and new-room creation. Keep engine metadata
 // available so existing room history and pending settlements can still be read.
 const retiredGameIds=new Set(['pocket-soccer','marble-run']);
 const published=games.filter(g=>!retiredGameIds.has(g.id)&&!g.pack&&(g.engine==='arcade'||g.engine==='skill'&&g.id!=='kalah'||!g.engine));
 const byId=new Map(published.map(g=>[g.id,g]));
-export const discoveryGames=[...featuredIds.map(id=>byId.get(id)),...published.filter(g=>!featuredIds.includes(g.id))]
- .filter(Boolean).map(g=>({...g,solo:true,bettable:g.bettable!==false}));
+const orderedPublished=[...featuredIds.map(id=>byId.get(id)),...published.filter(g=>!featuredIds.includes(g.id))].filter(Boolean);
+export const discoveryGames=[...orderedPublished.filter(g=>g.engine),...orderedPublished.filter(g=>!g.engine)]
+ .map(g=>({...g,solo:true,bettable:g.bettable!==false}));
 export const publishedGame=id=>discoveryGames.find(g=>g.id===id);
