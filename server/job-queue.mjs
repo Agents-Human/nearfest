@@ -56,13 +56,17 @@ export async function createJobQueue(store,{pollingIntervalSeconds=1,paymentPoll
    if(workers.size)return;
    for(const name of [ROOM_QUEUE,QUEUE]){
     const interval=name===ROOM_QUEUE?pollingIntervalSeconds:paymentPollingIntervalSeconds;
-    const worker=await boss.work(name,{batchSize:1,localConcurrency:1,pollingIntervalSeconds:interval},async entries=>{
+    const worker=await boss.work(name,{batchSize:name===ROOM_QUEUE?10:5,localConcurrency:1,pollingIntervalSeconds:interval,burstWhenBatchFull:true,perJobResults:true},async entries=>{
+     const results=[];
      for(const job of entries){
-      const handler=handlers[job.data.type];
-      if(job.data.version!==1||!handler)throw Error('Unsupported job: '+job.data.type);
-      // Room deadlines have their own worker, so an external RPC cannot delay clocks.
-      await handler(job.data,job);
+      try{
+       const handler=handlers[job.data.type];
+       if(job.data.version!==1||!handler)throw Error('Unsupported job: '+job.data.type);
+       // An RPC does not delay room clocks; one failed job does not fail its batch.
+       await handler(job.data,job);results.push({id:job.id,status:'completed'});
+      }catch(error){results.push({id:job.id,status:'failed',output:{message:error.message}});}
      }
+     return results;
     });
     workers.set(name,worker);
    }

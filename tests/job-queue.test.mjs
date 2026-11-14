@@ -3,6 +3,9 @@ import assert from 'node:assert/strict';
 import {setTimeout as delay} from 'node:timers/promises';
 import {openStore} from './helpers/store.mjs';
 import {createJobQueue,roomDeadline} from '../server/job-queue.mjs';
+import {createBoardRooms} from '../server/skill/rooms.mjs';
+import {createArcadeRooms} from '../server/arcade/rooms.mjs';
+import {startJobs} from '../server/jobs.mjs';
 
 test('job deadlines follow the active player clock and ignore finished rooms',()=>{
  assert.equal(roomDeadline('board',{status:'playing',starts_at:3000,clock_at:4000,clocks:[100,200],board:{turn:1}}),4200);
@@ -38,5 +41,60 @@ test('a queued job survives process restart and the worker retries a failed hand
   for(let i=0;i<80;i++){completed=await queue.boss.getJobById('maintenance',id);if(completed.state==='completed')break;await delay(50);}
   assert.equal(completed.state,'completed');assert.equal(attempts,2);
   assert(store.db.connectionStats().queries.total<=2);assert.equal(store.db.connectionStats().locks.total,0);
+ }finally{if(queue)await queue.stop();await store.db.close();}
+});
+
+
+test('a room deadline is dispatched by ID and survives a restart',async()=>{
+ const store=await openStore(':memory:');let queue;
+ try{
+  queue=await createJobQueue(store,{pollingIntervalSeconds:.5,paymentPollingIntervalSeconds:.5});
+  const rooms=createBoardRooms(store),host=await store.ensureUser('host','Host','practice');
+  const room=await rooms.create({game_id:'connect-four',entry:'0'},host,Date.now()-1800000+800);
+  await queue.stop();queue=await createJobQueue(store,{pollingIntervalSeconds:.5,paymentPollingIntervalSeconds:.5});
+  await queue.start({room:data=>rooms.expire(data.roomId)});
+  let result;for(let i=0;i<60;i++){result=JSON.parse((await store.db.prepare('SELECT json FROM skill_rooms WHERE id=$1').get(room.id)).json);if(result.status==='cancelled')break;await delay(50);}
+  assert.equal(result.status,'cancelled');
+ }finally{if(queue)await queue.stop();await store.db.close();}
+});
+
+test('a slow payment handler does not delay the room deadline worker',async()=>{
+ const store=await openStore(':memory:');let queue,release;
+ try{
+  queue=await createJobQueue(store,{pollingIntervalSeconds:.5,paymentPollingIntervalSeconds:.5});
+  let began,deadline=false;const started=new Promise(resolve=>{began=resolve;}),gate=new Promise(resolve=>{release=resolve;});
+  await queue.schedule('payment','one');
+  await queue.start({payment:async()=>{began();await gate;},room:async()=>{deadline=true;}});
+  await started;await queue.schedule('room','board:one',Date.now(),{kind:'board',roomId:'one'});
+  for(let i=0;i<40&&!deadline;i++)await delay(25);
+  assert(deadline,'An RPC must not block room deadlines');release();
+ }finally{release?.();if(queue)await queue.stop();await store.db.close();}
+});
+
+test('live snapshots and physics frames do not read or checkpoint PostgreSQL',async()=>{
+ const store=await openStore(':memory:');
+ try{
+  const rooms=await createArcadeRooms(store),host=await store.ensureUser('runner','Runner','practice');
+  const room=await rooms.create({game_id:'pocket-racers',entry:'0',solo:true},host);
+  let queries=0,frames=0;const query=store.db.query,prepare=store.db.prepare;
+  store.db.query=(...args)=>{queries++;return query(...args);};store.db.prepare=(...args)=>{queries++;return prepare(...args);};
+  const unsubscribe=await rooms.subscribe(room.id,host,null,()=>{frames++;});
+  for(let i=1;i<=60;i++)await rooms.tick(room.starts_at+i*50);
+  unsubscribe();assert(frames>20);assert.equal(queries,0);
+  store.db.query=query;store.db.prepare=prepare;
+  await rooms.action(room.id,host,{type:'resign'});
+  const saved=await store.db.prepare('SELECT json FROM arcade_rooms WHERE id=$1').get(room.id);assert.equal(JSON.parse(saved.json).status,'cancelled');
+ }finally{await store.db.close();}
+});
+
+
+test('the deadline worker drains a backlog in batches instead of one job per polling interval',async()=>{
+ const store=await openStore(':memory:');let queue;
+ try{
+  queue=await createJobQueue(store);let completed=0;
+  for(let i=0;i<25;i++)await queue.schedule('room','board:'+i,Date.now(),{kind:'board',roomId:String(i)});
+  await queue.start({room:async()=>{completed++;}});
+  for(let i=0;i<60&&completed<25;i++)await delay(25);
+  assert.equal(completed,25);
  }finally{if(queue)await queue.stop();await store.db.close();}
 });

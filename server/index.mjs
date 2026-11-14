@@ -52,7 +52,12 @@ let lastPruned=0;
 function rate(key, max, ms = 60000) { const t = Date.now();if(t-lastPruned>60000){for(const [id,value]of limits)if(value.until<t)limits.delete(id);lastPruned=t;} let v = limits.get(key); if (!v || v.until < t) { v = { count: 0, until: t + ms }; limits.set(key, v); } if (++v.count > max) throw Error('A little too fast. Please try again shortly.'); }
 function json(res, data, status = 200) { const serialized=JSON.stringify(data); res.writeHead(status, { 'content-type': 'application/json', 'cache-control': 'no-store', 'x-content-type-options': 'nosniff' }); res.end(serialized); }
 async function body(req) { let data = ''; for await (const chunk of req) { data += chunk; if (Buffer.byteLength(data) > 16000) throw Error('Request is too large.'); } try { return JSON.parse(data || '{}'); } catch { throw Error('Invalid request body.'); } }
-async function current(req) { const token = /(?:^|;\s*)slotvend=([^;]+)/.exec(req.headers.cookie || '')?.[1]; if (!token) return null; const s = (await db.prepare('SELECT user_id FROM sessions WHERE token=$1 AND expires>$2').get(hash(token), Date.now())); return s ? (await store.user(s.user_id)) : null; }
+const requestUsers=new WeakMap();
+function current(req){
+ if(requestUsers.has(req))return requestUsers.get(req);
+ const user=(async()=>{const token=/(?:^|;\s*)slotvend=([^;]+)/.exec(req.headers.cookie||'')?.[1];if(!token)return null;return await db.prepare('SELECT u.* FROM sessions s JOIN users u ON u.id=s.user_id WHERE s.token=$1 AND s.expires>$2').get(hash(token),Date.now())||null;})();
+ requestUsers.set(req,user);return user;
+}
 async function login(res, user) { const token = randomBytes(32).toString('hex'); (await db.prepare('INSERT INTO sessions VALUES($1,$2,$3)').run(hash(token), user.id, Date.now() + 7 * 86400000)); res.setHeader('set-cookie', `slotvend=${token}; Path=/; HttpOnly; SameSite=Strict; Max-Age=604800${origin.startsWith('https:') ? '; Secure' : ''}`); }
 async function review(text) { moderate(text); if (process.env.REQUIRE_SEMANTIC_MODERATION === 'true' && !hasAI) throw Error('Content creation is paused until the moderation service is configured.'); await semanticModerate(text); }
 async function required(req) { const u = (await current(req)); if (!u) throw Error('Choose a practice name or connect your NEAR wallet first.'); return u; }

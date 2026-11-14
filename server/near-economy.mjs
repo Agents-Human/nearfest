@@ -196,6 +196,7 @@ export async function createNearEconomy(store,{chain=near,services}={}){
    }
   }
   if(p.method==='create_room'&&Date.now()>=p.args.join_until)throw Error('This room request has expired. We’re clearing it automatically.');
+  await store.jobs?.schedule('near-intent',iid,Date.now()+20000);
   return {intent_id:iid,transaction:{...chain.transaction(p.method,p.args,p.deposit),signerId:u.id}};
  }
  async function recoverIntent(id){
