@@ -5,7 +5,7 @@ export async function openStore(connectionString=process.env.DATABASE_URL,option
   const profiles=new Map();
   const user = async (id,{lock=false}={}) => {const row=await db.prepare('SELECT * FROM users WHERE id=$1'+(lock?' FOR UPDATE':'')).get(id);if(row)profiles.set(id,row);return row;};
   const loadUsers=async ids=>{const unique=[...new Set(ids)].filter(id=>id&&!id.startsWith('bot:'));if(unique.length)for(const row of (await db.query('SELECT * FROM users WHERE id=ANY($1::text[])',[unique])).rows)profiles.set(row.id,row);};
-  const updateName=async(id,name)=>{await db.prepare('UPDATE users SET name=$1 WHERE id=$2').run(name,id);if(profiles.has(id))profiles.set(id,{...profiles.get(id),name});};
+  const updateName=async(id,name)=>{await db.prepare('UPDATE users SET name=$1 WHERE id=$2').run(name,id);await db.afterCommit(()=>{if(profiles.has(id))profiles.set(id,{...profiles.get(id),name});});};
   const bet = async id => { const row = (await db.prepare('SELECT json FROM bets WHERE id=$1'+(db.inTransaction()?' FOR UPDATE':'')).get(id)); return row ? JSON.parse(row.json) : null; };
   const save = async b => db.transaction(async()=>{await db.prepare('INSERT INTO bets(id,mode,json) VALUES($1,$2,$3) ON CONFLICT(id) DO UPDATE SET json=excluded.json').run(b.id,b.mode,JSON.stringify(b));await store.jobs?.scheduleBet(b);});
   const all = async () => (await db.prepare('SELECT json FROM bets ORDER BY created_order DESC LIMIT 1000').all()).map(r => JSON.parse(r.json));
@@ -25,6 +25,6 @@ export async function openStore(connectionString=process.env.DATABASE_URL,option
   async function create(b) { return (await transaction(async () => { debit(b.creator, b.stake); (await save(b)); return b; })); }
   function collect(){throw Error('Collect NEAR testnet rewards through your wallet.');}
 
-  const store={ db, user, cachedUser:id=>profiles.get(id),loadUsers,updateName,bet, save, all, transaction, ensureUser, move, create, collect, reserveNear:()=>{throw Error('Confirm a NEAR testnet deposit first.');} };
+  const store={ db, user, cachedUser:id=>profiles.get(id),loadUsers,hydrateRooms:async rooms=>{await loadUsers(rooms.flatMap(room=>room.players.map(player=>player.id)));await store.loadNear?.(rooms.map(room=>room.id));},updateName,bet, save, all, transaction, ensureUser, move, create, collect, reserveNear:()=>{throw Error('Confirm a NEAR testnet deposit first.');} };
   return store;
 }

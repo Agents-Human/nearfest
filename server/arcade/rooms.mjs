@@ -12,10 +12,11 @@ import {platformCharacter,platformLives,platformSettings} from '../../shared/pla
 const terminal=r=>['finished','cancelled'].includes(r.status);
 const sameKey=(a,b)=>typeof a==='string'&&typeof b==='string'&&a.length===b.length&&timingSafeEqual(Buffer.from(a),Buffer.from(b));
 export async function createArcadeRooms(store){
- const {db}=store,rooms=new Map(),inputs=new Map(),subscribers=new Map();
+ const {db}=store,rooms=new Map(),inputs=new Map(),subscribers=new Map(),watched=new Set(),playing=new Set(),activity=new Set();
+ function remember(room){rooms.set(room.id,room);if(terminal(room))watched.delete(room.id);else watched.add(room.id);if(room.status==='playing')playing.add(room.id);else playing.delete(room.id);for(const fn of activity)fn(playing.size>0);}
  let queued=Promise.resolve();
  const serial=fn=>{const next=queued.then(fn);queued=next.catch(()=>{});return next;};
- const save=async r=>(await db.prepare('INSERT INTO arcade_rooms(id,json) VALUES($1,$2) ON CONFLICT(id) DO UPDATE SET json=excluded.json').run(r.id,JSON.stringify(r)));
+ const save=async r=>{await db.prepare('INSERT INTO arcade_rooms(id,json) VALUES($1,$2) ON CONFLICT(id) DO UPDATE SET json=excluded.json').run(r.id,JSON.stringify(r));if(r.status!=='playing')await store.jobs?.scheduleRoom('arcade',r);};
  const credit=(r,id,n)=>{}; // Settlement is performed by NEAR escrow, never by a local balance.
  const debit=async (r,id,n)=>{if(BigInt(n)>0n){if(!r.near)throw Error('Sign a NEAR testnet deposit first.');(await store.reserveNear(r.id,id,n));}};
  async function close(r,winners,reason,now,status='finished'){
@@ -26,17 +27,22 @@ export async function createArcadeRooms(store){
   (await save(r));
  }
  // A restart must never replay an unfinished money result from an old snapshot.
- (await store.transaction(async ()=>{for(const row of (await db.prepare('SELECT json FROM arcade_rooms').all())){const r=JSON.parse(row.json);if(r.status==='playing')(await close(r,[],'Server restarted. All entries returned.',Date.now(),'cancelled'));rooms.set(r.id,r);}}));
- const read=async id=>{const r=(await rooms.get(id));if(!r)throw Error('Game room not found.');return r;};
+ (await store.transaction(async ()=>{for(const row of (await db.prepare("SELECT json FROM arcade_rooms WHERE json::jsonb->>'status' IN ('lobby','playing')").all())){const r=JSON.parse(row.json);if(r.status==='playing')(await close(r,[],'Server restarted. All entries returned.',Date.now(),'cancelled'));remember(r);}}));
+ await store.loadUsers([...rooms.values()].flatMap(room=>room.players.map(player=>player.id)));
+ const read=async id=>{
+  let room=rooms.get(id);
+  if(!room){const row=await db.prepare('SELECT json FROM arcade_rooms WHERE id=$1').get(id);if(!row)throw Error('Game room not found.');room=JSON.parse(row.json);await store.loadUsers(room.players.map(player=>player.id));await store.loadNear?.([id]);remember(room);}
+  return room;
+ };
  function access(r,user,key){if(r.visibility==='invite'&&!r.players.some(p=>p.id===user?.id)&&!sameKey(key,r.invite_key))throw Error('Open the full invitation link to access this private room.');}
  function available(user,except){if([...rooms.values()].some(r=>r.id!==except&&!terminal(r)&&r.players.some(p=>p.id===user.id&&!p.left)))throw Error('Finish or end your current game before starting another.');}
  async function view(r,user,now=Date.now()){
   const g=arcadeGame(r.game_id),seat=r.players.findIndex(p=>p.id===user?.id),me=seat<0?null:r.players[seat],state=r.state?(simulationIds.has(g.id)?simulationView(r.state,seat):worldIds.has(g.id)?r.state:puzzleIds.has(g.id)?puzzleView(r.state,seat):partyView(r.state,seat)):null;
-  return {near:(await store.nearStatus?.(r.id))||null,id:r.id,engine:'arcade',game_id:g.id,title:g.title,label:g.label,art:g.id,category:g.category,description:g.description,status:r.status,phase:r.status==='playing'&&now<r.starts_at?'countdown':r.status,host:r.host,solo:r.solo,race_seconds:r.race_seconds,...(g.id==='platform-relay'?{settings:platformSettings(r.settings)}:{}),entry:r.entry,pot:(BigInt(r.entry)*BigInt(r.players.filter(p=>!p.bot).length)).toString(),min_players:g.min_players,max_players:r.max_players,visibility:r.visibility,...(me&&r.visibility==='invite'?{invite_key:r.invite_key}:{}),starts_at:r.starts_at,ends_at:r.ends_at,expires_at:r.expires_at,server_time:now,total:1,curation:'deterministic',question:null,players:(await Promise.all(r.players.map(async (p,i)=>({...p,name:p.bot?p.name:(await store.user(p.id))?.name||'Player',score:r.state?.players[i]?.score??r.state?.scores?.[i]??0,index:0,done:terminal(r),payout:p.payout||'0'})))),me:me?{index:seat,score:r.state?.players[seat]?.score||0}:null,my_side:seat<0?null:seat,state,winners:r.winners||[],reason:r.reason||'',input_seq:me?inputs.get(r.id)?.[seat]?.seq??-1:-1,revision:r.revision,bettable:g.bettable};
+  return {near:store.cachedNearStatus?.(r.id,r.players)||null,id:r.id,engine:'arcade',game_id:g.id,title:g.title,label:g.label,art:g.id,category:g.category,description:g.description,status:r.status,phase:r.status==='playing'&&now<r.starts_at?'countdown':r.status,host:r.host,solo:r.solo,race_seconds:r.race_seconds,...(g.id==='platform-relay'?{settings:platformSettings(r.settings)}:{}),entry:r.entry,pot:(BigInt(r.entry)*BigInt(r.players.filter(p=>!p.bot).length)).toString(),min_players:g.min_players,max_players:r.max_players,visibility:r.visibility,...(me&&r.visibility==='invite'?{invite_key:r.invite_key}:{}),starts_at:r.starts_at,ends_at:r.ends_at,expires_at:r.expires_at,server_time:now,total:1,curation:'deterministic',question:null,players:(await Promise.all(r.players.map(async (p,i)=>({...p,name:p.bot?p.name:store.cachedUser(p.id)?.name||'Player',score:r.state?.players[i]?.score??r.state?.scores?.[i]??0,index:0,done:terminal(r),payout:p.payout||'0'})))),me:me?{index:seat,score:r.state?.players[seat]?.score||0}:null,my_side:seat<0?null:seat,state,winners:r.winners||[],reason:r.reason||'',input_seq:me?inputs.get(r.id)?.[seat]?.seq??-1:-1,revision:r.revision,bettable:g.bettable};
  }
  async function publish(r){for(const item of subscribers.get(r.id)||[]){try{item.send((await view(r,item.user)));}catch{}}}
- async function commit(r){(await save(r));rooms.set(r.id,r);(await publish(r));}
- async function mutate(id,user,key,fn){const result=(await store.transaction(async ()=>{const old=await read(id);access(old,user,key);const r=structuredClone(old);await fn(r);r.revision++;(await save(r));return r;}));rooms.set(id,result);(await publish(result));return (await view(result,user));}
+ async function commit(r){(await save(r));remember(r);(await publish(r));}
+ async function mutate(id,user,key,fn){const result=(await store.transaction(async ()=>{const old=await read(id);access(old,user,key);const r=structuredClone(old);await fn(r);await store.loadUsers(r.players.map(player=>player.id));r.revision++;(await save(r));return r;}));remember(result);(await publish(result));return (await view(result,user));}
  function startState(r,now){
   const n=r.players.length;r.state=simulationIds.has(r.game_id)?newSimulation(r.game_id,n):worldIds.has(r.game_id)?newWorld(r.game_id,n,{...r.settings,characters:r.players.map(p=>p.character)}):puzzleIds.has(r.game_id)?newPuzzle(r.game_id,n):newParty(r.game_id,n,r.solo);
   if(r.game_id==='pocket-racers')r.state.timeLimit=r.race_seconds??DEFAULT_RACE_SECONDS;
@@ -45,14 +51,25 @@ export async function createArcadeRooms(store){
  function botCount(id){if(simulationIds.has(id))return 0;if(['tappy-plane','kitchen-rush','orbit-rescue','mini-golf','word-hunt','category-sprint','equation-forge','circuit-crew','cat-defense','bridge-builders','molecule-match','sudoku-race','codebreakers'].includes(id))return 0;return {'draw-guess':1,'clue-crew':3,'bluff-club':2,'deduction-club':4,'snake-arena':3,'marble-knockout':3,'paint-tag':2,'bomb-maze':2}[id]??1;}
  const api={
   notify:async id=>{if(rooms.has(id))(await publish((await rooms.get(id))));},
-  list:async (user,{mine=false}={})=>(await Promise.all([...rooms.values()].reverse().filter(r=>BigInt(r.entry)===0n||r.near).filter(r=>!r.solo&&(mine?r.players.some(p=>p.id===user?.id):(r.visibility==='public'||r.players.some(p=>p.id===user?.id))&&(!terminal(r)||r.players.some(p=>p.id===user?.id)))).filter((_,i)=>mine||i<100).map(async r=>(await view(r,user))))),
-  get:async (id,user,key)=>{const r=(await read(id));access(r,user,key);return (await view(r,user));},
+  list:async (user,{mine=false}={})=>{
+   if(mine&&!user)return [];
+   const member=JSON.stringify([{id:user?.id||''}]);
+   const membership="(json::jsonb->'players') @> $1::jsonb";
+   const scope=mine?membership:"((json::jsonb->>'visibility'='public' AND json::jsonb->>'status' NOT IN ('finished','cancelled')) OR "+membership+")";
+   const rows=(await db.query("SELECT json FROM arcade_rooms WHERE COALESCE(json::jsonb->>'solo','false')<>'true' AND ((json::jsonb->>'entry')::numeric=0 OR json::jsonb->>'near'='true') AND "+scope+' ORDER BY created_order DESC LIMIT $2',[member,mine?1000:100])).rows;
+   const found=rows.map(row=>JSON.parse(row.json));await store.loadUsers(found.flatMap(room=>room.players.map(player=>player.id)));await store.loadNear?.(found.map(room=>room.id));
+   return Promise.all(found.map(room=>view(rooms.get(room.id)||room,user)));
+  },
+  get:async (id,user,key)=>{const r=await read(id);access(r,user,key);return view(r,user);},
+  hasActiveGames:()=>playing.size>0,
+  onActivity:fn=>{activity.add(fn);fn(playing.size>0);return()=>activity.delete(fn);},
+  expire:async(id,now=Date.now())=>serial(async()=>{const r=await read(id);if(r.status!=='lobby'||now<r.expires_at)return false;await mutate(id,{id:r.host},r.invite_key,room=>close(room,[],'Lobby expired. Entries returned.',now,'cancelled'));return true;}),
   create:async (d,user,now=Date.now(),funding=null)=>serial(async ()=>{available(user);const g=arcadeGame(d.game_id);if(!g)throw Error('Choose an original arcade game.');const solo=d.solo===true,entry=amount(String(d.entry??'0')),max=Number(d.max_players??g.max_players);
    if(entry>0n&&solo)throw Error('Stakes require a multiplayer room.');if(!Number.isInteger(max)||max<g.min_players||max>g.max_players)throw Error('Choose a supported room size.');
    const raceSeconds=Number(d.race_seconds??DEFAULT_RACE_SECONDS);if(g.id==='pocket-racers'&&!RACE_SECONDS.includes(raceSeconds))throw Error('Choose a race duration of 1, 2, 3, 5 or 10 minutes.');
    const r={...(g.id==='pocket-racers'?{race_seconds:raceSeconds}:{}),id:funding?.id||'arena-'+randomUUID(),game_id:g.id,host:user.id,status:'lobby',solo,entry:entry.toString(),near:entry>0n,visibility:solo?'invite':d.visibility==='invite'?'invite':'public',invite_key:randomBytes(24).toString('hex'),max_players:max,created_at:now,expires_at:funding?.expires_at||now+1800000,starts_at:null,ends_at:null,...(g.id==='platform-relay'?{settings:platformSettings(d.settings)}:{}),players:[{id:user.id,ready:solo,bot:false,...(g.id==='platform-relay'?{character:platformCharacter(d.character)}:{})}],revision:0,receipts:[],state:null};
    if(solo){for(let i=0;i<botCount(g.id);i++)r.players.push({id:`bot:${i}`,name:`Practice bot ${i+1}`,bot:true,ready:true,...(g.id==='platform-relay'?{character:platformCharacter(undefined,i+1)}:{})});startState(r,now);}
-   (await store.transaction(async ()=>{(await debit(r,user.id,entry));(await save(r));}));rooms.set(r.id,r);return (await view(r,user,now));
+   (await store.transaction(async ()=>{(await debit(r,user.id,entry));(await save(r));}));remember(r);return (await view(r,user,now));
   }),
   start:async (id,user,key,now=Date.now())=>(await mutate(id,user,key,r=>{const g=arcadeGame(r.game_id);if(r.host!==user.id||r.status!=='lobby'||now>=r.expires_at||r.players.length<g.min_players||r.players.some(p=>!p.ready))throw Error('Everyone must be ready before the host starts.');if(['maths-tug','clue-crew'].includes(g.id)&&r.players.length%2)throw Error('Use an even number of players for equal teams.');startState(r,now);})),
   action:async (id,user,d,key,now=Date.now())=>(await mutate(id,user,key||d.invite_key,async r=>{const seat=r.players.findIndex(p=>p.id===user.id),p=r.players[seat];
@@ -84,10 +101,10 @@ export async function createArcadeRooms(store){
   subscribe:async (id,user,key,send)=>{const r=(await read(id));access(r,user,key);const set=subscribers.get(id)||new Set();if(set.size>=100)throw Error('This room has too many viewers.');const entry={user,send};set.add(entry);subscribers.set(id,set);send((await view(r,user)));return()=>{set.delete(entry);if(!set.size)subscribers.delete(id);};},
   messages:async (id,user,key)=>{const r=(await read(id));access(r,user,key);const seat=r.players.findIndex(p=>p.id===user?.id),bench=r.game_id==='deduction-club'&&r.status==='playing'&&(seat<0||!r.state.players[seat]?.alive),channel=bench?'bench':'players';return (await db.prepare('SELECT c.id,c.text,c.at AS created_at,u.name,c.user_id FROM arcade_chat c LEFT JOIN users u ON u.id=c.user_id WHERE c.room=$1 AND c.channel=$2 ORDER BY c.id DESC LIMIT 100').all(id,channel)).reverse();},
   chat:async (id,user,text,key)=>{const r=(await read(id));access(r,user,key);const seat=r.players.findIndex(p=>p.id===user.id);if(seat<0)throw Error('Join before chatting.');if(r.game_id==='deduction-club'&&r.status==='playing'&&r.state.players[seat].alive&&r.state.phase==='night')throw Error('The night phase is quiet. Discuss in the morning.');const channel=r.game_id==='deduction-club'&&r.status==='playing'&&!r.state.players[seat].alive?'bench':'players';(await db.prepare('INSERT INTO arcade_chat(room,user_id,text,channel,at) VALUES($1,$2,$3,$4,$5)').run(id,user.id,text,channel,Date.now()));return {ok:true};},
-  tick:async (now=Date.now())=>{let changed=false;for(const old of rooms.values()){
-   if(old.status==='lobby'&&now>=old.expires_at){const r=structuredClone(old);(await store.transaction(async ()=>(await close(r,[],'Lobby expired. Entries returned.',now,'cancelled'))));rooms.set(r.id,r);(await publish(r));changed=true;continue;}
+  tick:async (now=Date.now())=>{let changed=false;for(const id of [...watched]){const old=rooms.get(id);
+   if(old.status==='lobby'&&now>=old.expires_at){const r=structuredClone(old);(await store.transaction(async ()=>(await close(r,[],'Lobby expired. Entries returned.',now,'cancelled'))));remember(r);(await publish(r));changed=true;continue;}
    if(old.status!=='playing')continue;if(now<old.starts_at){const second=Math.ceil((old.starts_at-now)/1000);if(old.countdown!==second){old.countdown=second;(await publish(old));}continue;}
-   if(now-old.last_tick>3000){const r=structuredClone(old);(await store.transaction(async ()=>(await close(r,[],'Connection to the game server paused. Entries returned.',now,'cancelled'))));rooms.set(r.id,r);(await publish(r));changed=true;continue;}
+   if(now-old.last_tick>3000){const r=structuredClone(old);(await store.transaction(async ()=>(await close(r,[],'Connection to the game server paused. Entries returned.',now,'cancelled'))));remember(r);(await publish(r));changed=true;continue;}
    const steps=Math.min(10,Math.floor((now-old.last_tick)/50));if(!steps)continue;let r={...old,state:old.state};
    for(let step=0;step<steps&&!r.state.finished;step++){
     const input=r.players.map((p,i)=>{if(p.bot)return worldIds.has(r.game_id)?worldBot(r.state,i):{};const row=inputs.get(r.id)?.[i];if(!row||now-row.at>=650)return {};const held={...row.controls,...row.pressed};row.pressed={};return held;});
@@ -95,7 +112,7 @@ export async function createArcadeRooms(store){
     r.state=simulationIds.has(r.game_id)?advanceSimulation(r.state,input):worldIds.has(r.game_id)?advanceWorld(r.state,input):puzzleIds.has(r.game_id)?advancePuzzle(r.state):advanceParty(r.state);r.last_tick+=50;
    }
    if(r.state.finished){r=structuredClone(r);(await store.transaction(async ()=>(await close(r,r.state.winners.map(i=>r.players[i].id),r.state.reason,now))));changed=true;}
-   else if(now-r.last_saved>=1000){r.last_saved=now;(await save(r));}rooms.set(r.id,r);if(worldIds.has(r.game_id)||r.state.tick%2===0||r.state.finished)(await publish(r));
+   remember(r);if(worldIds.has(r.game_id)||r.state.tick%2===0||r.state.finished)(await publish(r));
   }return changed;},
  };
  for(const method of ['start','action','tick']){const operation=api[method];api[method]=(...args)=>serial(()=>operation(...args));}

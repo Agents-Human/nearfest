@@ -10,3 +10,5 @@
 .funding-step{display:grid;gap:18px}.funding-step>p{font-size:13px;line-height:1.6;margin:0;color:var(--muted)}.funding-step .full{margin:0}.wallet-funding-help{display:flex;align-items:center;justify-content:space-between;gap:12px}.wallet-funding-help>a,.wallet-funding-help>.text-button{font-size:12px;margin:0}
 @media(max-width:480px){.modal.wallet-modal{max-height:calc(100dvh - 24px)}.modal.wallet-modal>.modal-head{padding:17px 20px}.modal.wallet-modal>.modal-head h2{font-size:27px}.wallet-panel{padding:20px;gap:20px}.wallet-balance-line>strong{font-size:38px}}
 .wallet-activity-list{max-height:280px;overflow-y:auto;overscroll-behavior:contain}.wallet-activity-row time{font-size:10px;color:var(--muted)}.wallet-activity-row>a{padding:8px;font-size:16px;text-decoration:none}.wallet-activity-row:last-child{border-bottom:0}
+
+.wallet-panel>.wallet-logout{min-height:44px;margin:0;font-size:13px}

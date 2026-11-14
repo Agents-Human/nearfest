@@ -36,7 +36,7 @@ export function createPlay(store,{curate=curateQuestions}={}) {
      if(pending){const old=(await finishExpired(JSON.parse(pending.json)));if(!publicRun(old).done)return publicRun(old);}
      const difficulty=['mixed','brainy'].includes(options.difficulty)?options.difficulty:'mixed',candidates=candidatesFor(id,difficulty);let questions=shuffle(candidates).slice(0,game.rounds),curation=id==='chess'?'puzzle':banks[id]?'bank':'generated';
      if(game.rounds>1)try{const curated=await curate(candidates,{topic:game.label,difficulty,count:game.rounds});if(curated){questions=curated;curation='ai';}}catch{/* The bounded bank stays playable when the curator is unavailable. */}
-     const now=Date.now(),r={id:randomUUID(),user_id:user.id,game_id:id,questions,index:0,score:0,started_at:now,ends_at:now+game.seconds*1000,curation,difficulty,shared:false};(await save(r));return publicRun(r);
+     return store.transaction(async()=>{const now=Date.now(),latest=await db.prepare('SELECT json FROM play_runs WHERE user_id=$1 AND game_id=$2 ORDER BY created_order DESC LIMIT 1 FOR UPDATE').get(user.id,id);if(latest){const existing=await finishExpired(JSON.parse(latest.json));if(!publicRun(existing).done)return publicRun(existing);}const r={id:randomUUID(),user_id:user.id,game_id:id,questions,index:0,score:0,started_at:now,ends_at:now+game.seconds*1000,curation,difficulty,shared:false};await save(r);return publicRun(r);},{key:'solo-run:'+user.id+':'+id});
    })();starting.set(key,task);try{return await task;}finally{starting.delete(key);}
  }
  const api={

@@ -20,7 +20,7 @@ test('PostgreSQL transactions roll back and concurrent read/modify/write operati
   }),/abort/);
   assert.equal((await store.user('player')).credit,'0');
   await Promise.all(Array.from({length:12},()=>store.transaction(async()=>{
-   const user=await store.user('player');
+   const user=await store.user('player',{lock:true});
    await store.db.prepare('UPDATE users SET credit=$1 WHERE id=$2').run((BigInt(user.credit)+1n).toString(),'player');
   })));
   assert.equal((await store.user('player')).credit,'12');
@@ -104,16 +104,15 @@ test('parallel requests reuse two query connections, one sponsor connection, and
 });
 
 
-test('waiting write transactions leave a connection available for reads',async()=>{
+test('independent transactions proceed without the old global database lock',async()=>{
  const db=await openDatabase(process.env.TEST_DATABASE_URL,{schema:testSchema()});
- let release,entered;const gate=new Promise(resolve=>{release=resolve;}),started=new Promise(resolve=>{entered=resolve;});
- const first=db.transaction(async()=>{entered();await gate;});let second,timeout;
+ let release,entered,timer;const gate=new Promise(resolve=>{release=resolve;}),started=new Promise(resolve=>{entered=resolve;});
+ const first=db.transaction(async()=>{entered();await gate;});let second;
  try{
-  await started;second=db.transaction(()=>db.query('SELECT 2'));
-  const reading=db.query('SELECT 1 AS n');
-  const result=await Promise.race([reading,new Promise((_,reject)=>{timeout=setTimeout(()=>reject(Error('Queued writes starved a reader')),1000);})]);
-  assert.equal(result.rows[0].n,1);
- }finally{clearTimeout(timeout);release();await Promise.allSettled([first,second]);await db.close();}
+  await started;second=db.transaction(()=>db.query('SELECT 2 AS n'));
+  const result=await Promise.race([second,new Promise((_,reject)=>{timer=setTimeout(()=>reject(Error('Independent transaction was globally serialized')),1000);})]);
+  assert.equal(result.rows[0].n,2);
+ }finally{clearTimeout(timer);release();await Promise.allSettled([first,second]);await db.close();}
 });
 
 test('a real exhausted-pool timeout does not kill maintenance and it recovers after release',async()=>{

@@ -11,6 +11,8 @@ import { resolve, extname } from 'node:path';
 import {createWalletAuth} from './wallet-auth.mjs';
 import { openStore } from './store.mjs';
 import {startBackgroundJob} from './background-job.mjs';
+import {createJobQueue} from './job-queue.mjs';
+import {startJobs} from './jobs.mjs';
 import { UNIT, STORAGE, amount, validateDraft, createBet, shortText, moderate } from './domain.mjs';
 import { resolveBet, fixtures, fixture, scoreboard, prices, hasAI, semanticModerate } from './resolvers.mjs';
 import {createMultiplayer} from './multiplayer.mjs';
@@ -27,6 +29,7 @@ import { contractId, oracleReady, view, provider, transaction as nearTransaction
 const port = Number(process.env.PORT || 5189), origin = new URL(process.env.APP_ORIGIN || 'http://127.0.0.1:5188').origin;
 const host=process.env.HOST||(process.env.NODE_ENV==='production'?'0.0.0.0':'127.0.0.1');
 const store = await openStore();
+const jobQueue=await createJobQueue(store);
 const play=createPlay(store),community=createCommunity(store),quizRooms=createMultiplayer(store),boardRooms=createBoardRooms(store),arcadeRooms=(await createArcadeRooms(store));
 const roomService=id=>id.startsWith('arena-')?arcadeRooms:id.startsWith('board-')?boardRooms:quizRooms;
 const multiplayer={
@@ -38,13 +41,15 @@ const multiplayer={
  answer:async (id,user,data)=>{if(id.startsWith('board-'))throw Error('Use legal board moves.');return (await quizRooms.answer(id,user,data));},
  tick:async ()=>{const board=(await boardRooms.tick()),quiz=(await quizRooms.tick());return board||quiz;}
 };
-const economy=(await createNearEconomy(store,{services:{...multiplayer,community,changed:async id=>(await arcadeRooms.notify(id)),get:async (id,u,key)=>id.startsWith('arena-')?(await arcadeRooms.get(id,u,key)):(await multiplayer.get(id,u)),action:async (id,u,d,key)=>id.startsWith('arena-')?(await arcadeRooms.action(id,u,d,key)):(await multiplayer.action(id,u,d)),start:async (id,u,key)=>id.startsWith('arena-')?(await arcadeRooms.start(id,u,key)):(await multiplayer.start(id,u))}}));
+const storedResult=async id=>{const table=id.startsWith('arena-')?'arcade_rooms':id.startsWith('board-')?'skill_rooms':'multiplayer_rooms';const row=await store.db.prepare('SELECT json FROM '+table+' WHERE id=$1').get(id);if(!row)throw Error('Game result not found.');const room=JSON.parse(row.json);return {...room,players:room.players.map((player,index)=>({...player,score:room.state?.players?.[index]?.score??room.state?.scores?.[index]??player.score??0}))};};
+const economy=(await createNearEconomy(store,{services:{...multiplayer,community,result:storedResult,changed:async id=>(await arcadeRooms.notify(id)),get:async (id,u,key)=>id.startsWith('arena-')?(await arcadeRooms.get(id,u,key)):(await multiplayer.get(id,u)),action:async (id,u,d,key)=>id.startsWith('arena-')?(await arcadeRooms.action(id,u,d,key)):(await multiplayer.action(id,u,d)),start:async (id,u,key)=>id.startsWith('arena-')?(await arcadeRooms.start(id,u,key)):(await multiplayer.start(id,u))}}));
 const faucet=createFaucet(store);
 const { db } = store, streams = new Set(), arenaStreams = new Set(), limits = new Map(), resolving = new Set(), cache = new Map();
 const hash = x => createHash('sha256').update(x).digest('hex');
 const config = { network: 'testnet', contract_id: contractId, oracle_ready: oracleReady, ai_ready: hasAI, semantic_moderation: hasAI, room_storage_fee:'100000000000000000000000',currency:'NEAR',storage_fee: STORAGE.toString(), review_ms: 900000, resolution_ms: 172800000 };
 function broadcast() { for (const s of streams) s.write(`event: update\ndata: ${JSON.stringify({ at: Date.now() })}\n\n`); }
-function rate(key, max, ms = 60000) { const t = Date.now(); let v = limits.get(key); if (!v || v.until < t) { v = { count: 0, until: t + ms }; limits.set(key, v); } if (++v.count > max) throw Error('A little too fast. Please try again shortly.'); }
+let lastPruned=0;
+function rate(key, max, ms = 60000) { const t = Date.now();if(t-lastPruned>60000){for(const [id,value]of limits)if(value.until<t)limits.delete(id);lastPruned=t;} let v = limits.get(key); if (!v || v.until < t) { v = { count: 0, until: t + ms }; limits.set(key, v); } if (++v.count > max) throw Error('A little too fast. Please try again shortly.'); }
 function json(res, data, status = 200) { const serialized=JSON.stringify(data); res.writeHead(status, { 'content-type': 'application/json', 'cache-control': 'no-store', 'x-content-type-options': 'nosniff' }); res.end(serialized); }
 async function body(req) { let data = ''; for await (const chunk of req) { data += chunk; if (Buffer.byteLength(data) > 16000) throw Error('Request is too large.'); } try { return JSON.parse(data || '{}'); } catch { throw Error('Invalid request body.'); } }
 async function current(req) { const token = /(?:^|;\s*)slotvend=([^;]+)/.exec(req.headers.cookie || '')?.[1]; if (!token) return null; const s = (await db.prepare('SELECT user_id FROM sessions WHERE token=$1 AND expires>$2').get(hash(token), Date.now())); return s ? (await store.user(s.user_id)) : null; }
@@ -97,15 +102,15 @@ const server = createServer(async (req, res) => {
       res.writeHead(200, { 'content-type': 'text/event-stream', 'cache-control': 'no-cache', connection: 'keep-alive', 'x-accel-buffering': 'no' }); streams.add(res); res.write('event: ready\ndata: {}\n\n');
       const timer = setInterval(() => res.write(': heartbeat\n\n'), 20000); req.on('close', () => { clearInterval(timer); streams.delete(res); }); return;
     }
-    if ((path === '/api/session/guest'||path==='/api/session/practice') && req.method === 'POST') { rate('guest:' + req.socket.remoteAddress, 30, 3600000); const d = await body(req), name = shortText(d.name, 2, 24, 'Display name'); await review(name); const old = (await current(req)); const u = old?.kind === 'practice' ? old : (await store.ensureUser(randomBytes(8).toString('hex') + '.practice', name, 'practice')); (await db.prepare('UPDATE users SET name=$1 WHERE id=$2').run(name, u.id)); (await login(res, u)); return json(res, await profile((await store.user(u.id)))); }
-    if (path === '/api/profile' && req.method === 'POST') { const u=(await required(req)), d=await body(req), name=shortText(d.name,2,24,'Display name'); await review(name); (await db.prepare('UPDATE users SET name=$1 WHERE id=$2').run(name,u.id)); broadcast(); return json(res,await profile((await store.user(u.id)))); }
+    if ((path === '/api/session/guest'||path==='/api/session/practice') && req.method === 'POST') { rate('guest:' + req.socket.remoteAddress, 30, 3600000); const d = await body(req), name = shortText(d.name, 2, 24, 'Display name'); await review(name); const old = (await current(req)); const u = old?.kind === 'practice' ? old : (await store.ensureUser(randomBytes(8).toString('hex') + '.practice', name, 'practice')); await store.updateName(u.id,name); (await login(res, u)); return json(res, await profile((await store.user(u.id)))); }
+    if (path === '/api/profile' && req.method === 'POST') { const u=(await required(req)), d=await body(req), name=shortText(d.name,2,24,'Display name'); await review(name); await store.updateName(u.id,name); broadcast(); return json(res,await profile((await store.user(u.id)))); }
     if (path === '/api/session/logout' && req.method === 'POST') { const token = /(?:^|;\s*)slotvend=([^;]+)/.exec(req.headers.cookie || '')?.[1]; if (token) (await db.prepare('DELETE FROM sessions WHERE token=$1').run(hash(token))); res.setHeader('set-cookie', 'slotvend=; Path=/; HttpOnly; SameSite=Strict; Max-Age=0'); return json(res, { ok: true }); }
     if (path === '/api/auth/challenge' && req.method === 'POST') {
       rate('auth:' + req.socket.remoteAddress,15);return json(res,await walletAuth.challenge(await body(req)));
     }
     if (path === '/api/auth/verify' && req.method === 'POST') {
       const {accountId,name}=await walletAuth.verify(await body(req));
-      (await store.ensureUser(accountId,name||accountId,'wallet'));if(name)(await db.prepare('UPDATE users SET name=$1 WHERE id=$2').run(name,accountId));
+      (await store.ensureUser(accountId,name||accountId,'wallet'));if(name)await store.updateName(accountId,name);
       const u=(await store.user(accountId));(await login(res,u));return json(res,await profile(u));
     }
     if(path==='/api/arcade-dictionary'&&req.method==='GET')return json(res,{language:'English',minimum_length:3,words:[...new Set(WORDS)].filter(w=>w.length>=3).sort()});
@@ -218,43 +223,31 @@ const server = createServer(async (req, res) => {
     res.writeHead(200, { 'content-type': types[extname(file)] || 'application/octet-stream', 'x-content-type-options': 'nosniff', 'referrer-policy': 'strict-origin-when-cross-origin' }); res.end(await readFile(file));
   } catch (e) { if (!res.headersSent) json(res, { error: e.message || 'Something went wrong. Please try again.' }, 400); else res.end(); }
 });
-let processing = false;
-async function tick() {
-  if (processing) return; processing = true;
-  try {
-    for (const b of (await store.all()).filter(b => ['matched', 'proposed', 'disputed', 'open'].includes(b.status))) {
-      try {
-        const t = Date.now();
-        if (b.mode === 'live') { await sync(b.id); continue; }
-        if ((b.status === 'open' && t >= b.join_before) || (b.status !== 'open' && t >= b.resolve_until)) { (await store.move(b.id, b.creator, { type: 'timeout' })); broadcast(); }
-        else if (b.status === 'proposed' && t >= b.challenge_until) { (await store.move(b.id, b.creator, { type: 'finalize' })); broadcast(); }
-        else if (b.status === 'matched' && b.resolver !== 'players' && t >= b.ends_at && !(b.resolver === 'evidence' && !hasAI)) { await getEvidence(b.id); }
-      } catch { /* A missing source never guesses an outcome. Players retain settlement/refund paths. */ }
-    }
-    for (const [key, v] of limits) if (v.until < Date.now()) limits.delete(key);
-    walletAuth.prune();
-    (await db.prepare('DELETE FROM sessions WHERE expires<$1').run(Date.now()));
-  } finally { processing = false; }
+async function processBet(id){
+ const b=await store.bet(id);if(!b||!['matched','proposed','disputed','open'].includes(b.status))return;
+ const now=Date.now();
+ if(b.mode==='live'){await sync(id);return;}
+ if((b.status==='open'&&now>=b.join_before)||(b.status!=='open'&&now>=b.resolve_until)){await store.move(id,b.creator,{type:'timeout'});broadcast();}
+ else if(b.status==='proposed'&&now>=b.challenge_until){await store.move(id,b.creator,{type:'finalize'});broadcast();}
+ else if(b.status==='matched'&&b.resolver!=='players'&&now>=b.ends_at&&!(b.resolver==='evidence'&&!hasAI))await getEvidence(id);
 }
-const schedule=(name,milliseconds,work)=>startBackgroundJob(name,milliseconds,work,{onError:error=>console.error(name+':',error.message,JSON.stringify(db.connectionStats()))});
-const changed=operation=>async()=>{if(await operation())broadcast();};
-const jobs=[
- schedule('Arcade tick failed',50,changed(()=>arcadeRooms.tick())),
- schedule('Multiplayer settlement failed',1000,changed(()=>multiplayer.tick())),
- schedule('Escrow synchronization failed',5000,changed(()=>economy.tick())),
- schedule('Wallet recovery failed',20000,changed(()=>economy.recoverPending())),
- schedule('Faucet recovery failed',20000,changed(()=>faucet.tick())),
- schedule('Room maintenance failed',30000,tick),
-];
+await startJobs(store,{rooms:{arcade:arcadeRooms,board:boardRooms,quiz:quizRooms},economy,faucet,processBet,changed:broadcast});
+// The physics clock is in memory and exists only while a game is running.
+let realtime=null;
+const stopActivity=arcadeRooms.onActivity(active=>{
+ if(active&&!realtime)realtime=startBackgroundJob('Arcade simulation',50,async()=>{if(await arcadeRooms.tick())broadcast();},{onError:error=>console.error('Arcade simulation:',error.message)});
+ if(!active&&realtime){const previous=realtime;realtime=null;void previous.stop();}
+});
+
 server.listen(port,host,()=>{const address=server.address();console.log(`NearFest API http://${address.family==='IPv6'?'['+address.address+']':address.address}:${address.port}`);});
 let closing=false;
 function close() {
   if(closing)return;closing=true;
-  for(const job of jobs)void job.stop();
+  stopActivity();if(realtime)void realtime.stop();
   // Arcade SSE connections must close too, otherwise --watch never starts the replacement API.
   for(const response of [...streams,...arenaStreams])response.end();
   const force=setTimeout(()=>server.closeAllConnections(),3000);force.unref();
-  server.close(async ()=>{await Promise.all(jobs.map(job=>job.stop()));await db.close();clearTimeout(force);process.exit(0);});
+  server.close(async ()=>{if(realtime)await realtime.stop();await jobQueue.stop();await db.close();clearTimeout(force);process.exit(0);});
   server.closeIdleConnections();
 }
 process.on('SIGINT', close); process.on('SIGTERM', close);

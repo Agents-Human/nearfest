@@ -1,3 +1,4 @@
+import {listRoomRecords} from './room-records.mjs';
 import {withChoiceArt} from './choice-art.mjs';
 import {randomUUID} from 'node:crypto';
 import {amount,UNIT} from './domain.mjs';
@@ -9,10 +10,11 @@ export function createMultiplayer(store,{curate=curateQuestions}={}){
  const save=async r=>{await db.prepare('INSERT INTO multiplayer_rooms(id,json) VALUES($1,$2) ON CONFLICT(id) DO UPDATE SET json=excluded.json').run(r.id,JSON.stringify(r));await store.jobs?.scheduleRoom('quiz',r);};
  const credit=(r,id,n)=>{}; // Settlement is performed by NEAR escrow, never by a local balance.
  const debit=async (r,id,n)=>{if(BigInt(n)>0n){if(!r.near)throw Error('Sign a NEAR testnet deposit first.');(await store.reserveNear(r.id,id,n));}};
- async function publicRoom(r,user,now=Date.now()){
+ async function publicRoom(r,user,now=Date.now(),hydrate=true){
+   if(hydrate)await store.hydrateRooms([r]);
    const me=r.players.find(p=>p.id===user?.id),game=games.find(g=>g.id===r.game_id);let question=null;
    if(r.status==='playing'&&now>=r.starts_at&&now<r.ends_at&&me&&!me.left&&me.index<r.questions.length){const {answer,...q}=r.questions[me.index];question=withChoiceArt(q);}
-   return {near:(await store.nearStatus?.(r.id))||null,id:r.id,game_id:r.game_id,title:game?.title,category:game?.category,label:game?.label,art:game?.art||game?.id,host:r.host,status:r.status,phase:r.status==='playing'&&now<r.starts_at?'countdown':r.status,entry:r.entry,pot:(BigInt(r.entry)*BigInt(r.players.length)).toString(),max_players:r.max_players,starts_at:r.starts_at,ends_at:r.ends_at,expires_at:r.expires_at,total:r.questions.length||game?.rounds,curation:r.curation,visibility:r.visibility,players:(await Promise.all(r.players.map(async p=>({id:p.id,name:(await store.user(p.id))?.name||p.id,ready:p.ready,left:Boolean(p.left),score:p.score,index:p.index,done:r.status==='finished'||p.index>=r.questions.length&&r.questions.length>0,payout:p.payout||'0'})))),me:me?{index:me.index,score:me.score}:null,question,winners:r.winners||[],server_time:now};
+   return {near:store.cachedNearStatus?.(r.id,r.players)||null,id:r.id,game_id:r.game_id,title:game?.title,category:game?.category,label:game?.label,art:game?.art||game?.id,host:r.host,status:r.status,phase:r.status==='playing'&&now<r.starts_at?'countdown':r.status,entry:r.entry,pot:(BigInt(r.entry)*BigInt(r.players.length)).toString(),max_players:r.max_players,starts_at:r.starts_at,ends_at:r.ends_at,expires_at:r.expires_at,total:r.questions.length||game?.rounds,curation:r.curation,visibility:r.visibility,players:(await Promise.all(r.players.map(async p=>({id:p.id,name:store.cachedUser(p.id)?.name||p.id,ready:p.ready,left:Boolean(p.left),score:p.score,index:p.index,done:r.status==='finished'||p.index>=r.questions.length&&r.questions.length>0,payout:p.payout||'0'})))),me:me?{index:me.index,score:me.score}:null,question,winners:r.winners||[],server_time:now};
  }
  async function settle(r,now){
    if(r.status==='lobby'&&now>=r.expires_at){for(const p of r.players)credit(r,p.id,r.entry);r.status='cancelled';(await save(r));return true;}
@@ -24,7 +26,7 @@ export function createMultiplayer(store,{curate=curateQuestions}={}){
  async function expireOne(id,now=Date.now()){return store.transaction(async()=>{const row=await db.prepare('SELECT json FROM multiplayer_rooms WHERE id=$1 FOR UPDATE').get(id);if(!row)return false;const room=JSON.parse(row.json);const changed=await settle(room,now);await store.jobs?.scheduleRoom('quiz',room);return changed;});}
  return {
   expire:expireOne,
-   list:async (user,{mine=false}={})=>(await Promise.all((await db.prepare('SELECT json FROM multiplayer_rooms ORDER BY created_order DESC').all()).map(x=>JSON.parse(x.json)).filter(r=>BigInt(r.entry)===0n||r.near).filter(r=>mine?r.players.some(p=>p.id===user?.id):(r.visibility==='public'||r.players.some(p=>p.id===user?.id))&&(['lobby','playing'].includes(r.status)||r.players.some(p=>p.id===user?.id))).filter((_,i)=>mine||i<200).map(async r=>(await publicRoom(r,user))))),
+   list:async (user,options={})=>Promise.all((await listRoomRecords(store,'multiplayer_rooms',user,options)).map(room=>publicRoom(room,user,Date.now(),false))),
    get:async (id,user,now=Date.now())=>(await publicRoom((await read(id)),user,now)),
    create:async (data,user,now=Date.now(),funding=null)=>(await store.transaction(async ()=>{
      const game=games.find(g=>g.id===data.game_id);if(!game||game.engine)throw Error('Choose a multiplayer challenge pack.');
@@ -49,6 +51,6 @@ export function createMultiplayer(store,{curate=curateQuestions}={}){
    answer:async (id,user,data,now=Date.now())=>(await store.transaction(async ()=>{
      const r=(await read(id));(await settle(r,now));if(r.status!=='playing'||now<r.starts_at||now>=r.ends_at)throw Error('The round is not accepting answers.');const p=r.players.find(p=>p.id===user.id);if(!p||p.left)throw Error('Only active players can answer.');if(data.index!==p.index||p.index>=r.questions.length)throw Error('That answer has already been submitted.');const q=r.questions[p.index];if(q.type==='choice'&&(!Number.isInteger(data.answer)||data.answer<0||data.answer>=q.choices.length))throw Error('Choose an answer.');if(q.type==='chess'&&(typeof data.answer!=='string'||!/^[a-h][1-8][a-h][1-8]$/.test(data.answer)))throw Error('Choose a move.');p.score+=data.answer===q.answer?1:0;p.index++;(await save(r));(await settle(r,now));return (await publicRoom(r,user,now));
    })),
-   tick:async (now=Date.now())=>(await store.transaction(async ()=>{let changed=false;for(const row of (await db.prepare("SELECT json FROM multiplayer_rooms WHERE json::jsonb->>'status' IN ('lobby','playing')").all())){if((await settle(JSON.parse(row.json),now)))changed=true;}return changed;}))
+   tick:async (now=Date.now())=>(await store.transaction(async ()=>{let changed=false;for(const row of (await db.prepare("SELECT json FROM multiplayer_rooms WHERE json::jsonb->>'status' IN ('lobby','playing') FOR UPDATE").all())){if((await settle(JSON.parse(row.json),now)))changed=true;}return changed;}))
  };
 }

@@ -1,3 +1,4 @@
+import {listRoomRecords} from '../room-records.mjs';
 import {hasMatingMaterial} from './chess.mjs';
 import {randomUUID} from 'node:crypto';
 import {amount,UNIT} from '../domain.mjs';
@@ -27,15 +28,16 @@ export function createBoardRooms(store){
   if(r.status!=='playing'||now<r.starts_at)return false;
   const turn=r.board.turn;if(r.clocks[turn]-(now-r.clock_at)<=0){const canMate=r.game_id!=='chess-online'||hasMatingMaterial(r.board,1-turn);(await recordLeg(r,canMate?1-turn:null,canMate?'Opponent ran out of time.':'Timeout draw: opponent cannot mate with the remaining material.',now));(await save(r));return true;}return false;
  }
- async function view(r,user,now){
+ async function view(r,user,now,hydrate=true){
+  if(hydrate)await store.hydrateRooms([r]);
   const g=getSkillGame(r.game_id),index=r.players.findIndex(p=>p.id===user?.id),mySide=index<0?null:seat(r,index),clocks=[...(r.clocks||[CLOCK,CLOCK])];
   if(r.status==='playing'&&now>=r.starts_at)clocks[r.board.turn]=Math.max(0,clocks[r.board.turn]-(now-r.clock_at));
-  return {near:(await store.nearStatus?.(r.id))||null,id:r.id,game_id:r.game_id,engine:'skill',title:g.title,category:g.category,label:g.title,art:g.id,host:r.host,status:r.status,phase:r.status==='playing'&&now<r.starts_at?'countdown':r.status,entry:r.entry,pot:(BigInt(r.entry)*BigInt(r.players.length)).toString(),max_players:2,total:2,visibility:r.visibility,expires_at:r.expires_at,starts_at:r.starts_at,ends_at:r.ends_at,server_time:now,players:(await Promise.all(r.players.map(async p=>({...p,name:(await store.user(p.id))?.name||p.id,done:r.status==='finished',index:0,payout:p.payout||'0'})))),me:index<0?null:{index:0,score:r.players[index].score},question:null,curation:'deterministic',winners:r.winners||[],reason:r.reason||'',board:r.board?publicBoard(r.board):null,legal_moves:r.board&&r.status==='playing'&&now>=r.starts_at&&mySide===r.board.turn?legalMoves(r.board):[],my_side:mySide,turn_player:r.board?r.players[seat(r,r.board.turn)]?.id:null,clocks,leg:r.leg||1,results:r.results||[],revision:r.revision,draw_offer:r.draw_offer||null,rules_version:g.rules_version};
+  return {near:store.cachedNearStatus?.(r.id,r.players)||null,id:r.id,game_id:r.game_id,engine:'skill',title:g.title,category:g.category,label:g.title,art:g.id,host:r.host,status:r.status,phase:r.status==='playing'&&now<r.starts_at?'countdown':r.status,entry:r.entry,pot:(BigInt(r.entry)*BigInt(r.players.length)).toString(),max_players:2,total:2,visibility:r.visibility,expires_at:r.expires_at,starts_at:r.starts_at,ends_at:r.ends_at,server_time:now,players:(await Promise.all(r.players.map(async p=>({...p,name:store.cachedUser(p.id)?.name||p.id,done:r.status==='finished',index:0,payout:p.payout||'0'})))),me:index<0?null:{index:0,score:r.players[index].score},question:null,curation:'deterministic',winners:r.winners||[],reason:r.reason||'',board:r.board?publicBoard(r.board):null,legal_moves:r.board&&r.status==='playing'&&now>=r.starts_at&&mySide===r.board.turn?legalMoves(r.board):[],my_side:mySide,turn_player:r.board?r.players[seat(r,r.board.turn)]?.id:null,clocks,leg:r.leg||1,results:r.results||[],revision:r.revision,draw_offer:r.draw_offer||null,rules_version:g.rules_version};
  }
  async function expireOne(id,now=Date.now()){return store.transaction(async()=>{const row=await db.prepare('SELECT json FROM skill_rooms WHERE id=$1 FOR UPDATE').get(id);if(!row)return false;const room=JSON.parse(row.json);const changed=await expire(room,now);await store.jobs?.scheduleRoom('board',room);return changed;});}
  return {
   expire:expireOne,
-  list:async (user,{mine=false}={})=>(await Promise.all((await db.prepare('SELECT json FROM skill_rooms ORDER BY created_order DESC').all()).map(x=>JSON.parse(x.json)).filter(r=>BigInt(r.entry)===0n||r.near).filter(r=>mine?r.players.some(p=>p.id===user?.id):(r.visibility==='public'||r.players.some(p=>p.id===user?.id))&&(['lobby','playing'].includes(r.status)||r.players.some(p=>p.id===user?.id))).filter((_,i)=>mine||i<200).map(async r=>(await view(r,user,Date.now()))))),
+  list:async (user,options={})=>Promise.all((await listRoomRecords(store,'skill_rooms',user,options)).map(room=>view(room,user,Date.now(),false))),
   get:async (id,user,now=Date.now())=>(await store.transaction(async ()=>{const r=(await read(id));(await expire(r,now));return (await view(r,user,now));})),
   create:async (data,user,now=Date.now(),funding=null)=>(await store.transaction(async ()=>{
    const game=getSkillGame(data.game_id);if(!game)throw Error('Choose a supported skill game.');
@@ -68,6 +70,6 @@ export function createBoardRooms(store){
    r.revision++;(await save(r));return (await view(r,user,now));
   })),
   start:async (id,user,now=Date.now())=>(await store.transaction(async ()=>{const r=(await read(id));if(r.host!==user.id||r.status!=='lobby'||now>=r.expires_at||r.players.length!==2||r.players.some(p=>!p.ready))throw Error('Both players must be ready before the host starts.');r.leg=0;r.status='playing';nextLeg(r,now);(await save(r));return (await view(r,user,now));})),
-  tick:async (now=Date.now())=>(await store.transaction(async ()=>{let changed=false;for(const row of (await db.prepare("SELECT json FROM skill_rooms WHERE json::jsonb->>'status' IN ('lobby','playing')").all()))if((await expire(JSON.parse(row.json),now)))changed=true;return changed;})),
+  tick:async (now=Date.now())=>(await store.transaction(async ()=>{let changed=false;for(const row of (await db.prepare("SELECT json FROM skill_rooms WHERE json::jsonb->>'status' IN ('lobby','playing') FOR UPDATE").all()))if((await expire(JSON.parse(row.json),now)))changed=true;return changed;})),
  };
 }

@@ -46,21 +46,24 @@ async function connectDatabase(config,namespace){
   return runTransaction(fn,options);
  }
  async function runTransaction(fn,{key}={}){
-  const client=await pool.connect(),active={client,pending:Promise.resolve()};
+  const client=await pool.connect(),active={client,pending:Promise.resolve(),afterCommit:[]};
+  let value,releaseError;
   try{
    await client.query('BEGIN');
    if(key)await client.query('SELECT pg_advisory_xact_lock(hashtext(current_schema()),hashtext($1))',[key]);
-   const value=await context.run(active,fn);
-   await active.pending;
-   await client.query('COMMIT');return value;
-  }catch(error){await active.pending;await client.query('ROLLBACK');throw error;}finally{client.release();}
+   value=await context.run(active,fn);await active.pending;
+   await client.query('COMMIT');
+  }catch(error){await active.pending;try{await client.query('ROLLBACK');}catch(rollbackError){releaseError=rollbackError;}throw error;}finally{client.release(releaseError);}
+  for(const callback of active.afterCommit)try{await callback();}catch(error){console.error('Post-commit notification failed:',error.message);}
+  return value;
  }
  async function withLock(key,fn){
-  const client=await lockPool.connect();
-  try{await client.query('SELECT pg_advisory_lock(hashtext(current_schema()),hashtext($1))',[key]);return await fn();}
-  finally{try{await client.query('SELECT pg_advisory_unlock(hashtext(current_schema()),hashtext($1))',[key]);}finally{client.release();}}
+  const client=await lockPool.connect();let locked=false,releaseError;
+  try{try{await client.query('SELECT pg_advisory_lock(hashtext(current_schema()),hashtext($1))',[key]);locked=true;}catch(error){releaseError=error;throw error;}return await fn();}
+  finally{try{if(locked)await client.query('SELECT pg_advisory_unlock(hashtext(current_schema()),hashtext($1))',[key]);}catch(error){releaseError=error;throw error;}finally{client.release(releaseError);}}
  }
  const db={query,transaction,withLock,namespace,inTransaction:()=>Boolean(context.getStore()),
+  afterCommit:callback=>{const active=context.getStore();if(active){active.afterCommit.push(callback);return;}return callback();},
   connectionStats:()=>({queries:{total:pool.totalCount,idle:pool.idleCount,waiting:pool.waitingCount},locks:{total:lockPool.totalCount,idle:lockPool.idleCount,waiting:lockPool.waitingCount}}),
   exec:sql=>query(sql),
   prepare(sql){return {all:async(...values)=>(await query(sql,values)).rows,get:async(...values)=>(await query(sql,values)).rows[0],run:async(...values)=>({changes:(await query(sql,values)).rowCount})};},
@@ -93,6 +96,19 @@ async function connectDatabase(config,namespace){
      CREATE INDEX wallet_auth_challenges_expires ON wallet_auth_challenges(expires);
     `);
     await query('INSERT INTO schema_migrations(version) VALUES(3)');
+   }
+   if(!(await db.prepare('SELECT version FROM schema_migrations WHERE version=4').get())){
+    await query(`
+     CREATE INDEX arcade_room_players ON arcade_rooms USING gin((json::jsonb->'players'));
+     CREATE INDEX skill_room_players ON skill_rooms USING gin((json::jsonb->'players'));
+     CREATE INDEX multiplayer_room_players ON multiplayer_rooms USING gin((json::jsonb->'players'));
+     INSERT INTO near_payouts(room_id,user_id,amount,kind,created)
+      SELECT r.id,p->>'account_id',p->>'amount',CASE WHEN r.json::jsonb->>'status'='refunded' THEN 'refund' ELSE 'reward' END,r.updated
+      FROM near_rooms r CROSS JOIN LATERAL jsonb_array_elements(COALESCE(r.json::jsonb->'payouts','[]'::jsonb)) p
+      WHERE r.json::jsonb->>'status' IN ('settled','refunded') AND (p->>'amount')::numeric>0
+      ON CONFLICT(room_id,user_id) DO NOTHING;
+    `);
+    await query('INSERT INTO schema_migrations(version) VALUES(4)');
    }
   },{key:'schema-migrations'});
   return db;
