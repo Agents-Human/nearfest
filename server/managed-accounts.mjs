@@ -37,7 +37,7 @@ export function liveManagedChain(){return {
   return {hash:baseEncode(createHash('sha256').update(encodeTransaction(signed.transaction)).digest()),signed:Buffer.from(encodeTransaction(signed)).toString('base64')};
  },
  send:signed=>provider.sendTransactionUntil(decodeSignedTransaction(Buffer.from(signed,'base64')),'FINAL'),
- status:(hash,id)=>provider.viewTransactionStatus({txHash:hash,accountId:id,waitUntil:'FINAL'})
+ status:(hash,id)=>provider.viewTransactionStatus({txHash:hash,accountId:id,waitUntil:'NONE'})
 };}
 function username(value){
  if(typeof value!=='string'||!/^[a-zA-Z0-9][a-zA-Z0-9_.-]{2,23}$/.test(value))throw Error('Use a username with 3–24 letters, numbers, dots, hyphens or underscores.');

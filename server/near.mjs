@@ -3,7 +3,10 @@ import {createNearReader,availableBalance} from './near-reads.mjs';
 import { Account, JsonRpcProvider, actions } from 'near-api-js';
 export const contractId = process.env.NEAR_CONTRACT_ID || '';
 if(contractId&&!contractId.endsWith('.testnet'))throw Error('NearFest contracts must use a .testnet account.');
-export const provider = new JsonRpcProvider({ url: process.env.NEAR_RPC_URL || 'https://test.rpc.fastnear.com' });
+export const provider = new JsonRpcProvider(
+  { url: process.env.NEAR_RPC_URL || 'https://test.rpc.fastnear.com' },
+  { retries: 3, wait: 400, backoff: 1.5 }
+);
 export const oracleReady = Boolean(process.env.NEAR_ORACLE_ACCOUNT && process.env.NEAR_ORACLE_PRIVATE_KEY && contractId);
 const read=createNearReader();
 export async function view(method, args = {}) {

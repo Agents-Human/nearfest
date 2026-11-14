@@ -16,7 +16,7 @@ export function liveFaucet(){
   balance:async account=>{try{return BigInt(await new Account(account,provider).getBalance());}catch(error){if(/^[a-f0-9]{64}$/.test(account)&&/does not exist|UNKNOWN_ACCOUNT|unknown account/i.test(error.message))return 0n;throw error;}},
   async prepare(recipient,amount){const tx=await signer.createSignedTransaction({receiverId:recipient,actions:[actions.transfer(BigInt(amount))]});return {hash:baseEncode(createHash('sha256').update(encodeTransaction(tx.transaction)).digest()),signed:Buffer.from(encodeTransaction(tx)).toString('base64')};},
   send:signed=>provider.sendTransactionUntil(decodeSignedTransaction(Buffer.from(signed,'base64')),'FINAL'),
-  status:hash=>provider.viewTransactionStatus({txHash:hash,accountId:id,waitUntil:'FINAL'})
+  status:hash=>provider.viewTransactionStatus({txHash:hash,accountId:id,waitUntil:'NONE'})
  };
 }
 export function createFaucet(store,{chain=liveFaucet(),now=Date.now}={}){
