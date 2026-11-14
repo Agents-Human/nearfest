@@ -23,7 +23,8 @@ import {createCommunity} from './community.mjs';
 import { coverKey, streamLink } from './media.mjs';
 import { contractId, oracleReady, view, provider, transaction as nearTransaction, propose, assertTestnet, balance as nearBalance, requireBalance } from './near.mjs';
 
-const port = Number(process.env.PORT || 5189), origin = process.env.APP_ORIGIN || 'http://127.0.0.1:5188';
+// APP_ORIGIN comes from the environment (.env locally); browsers send a canonical origin without a trailing slash.
+const port = Number(process.env.PORT || 5189), origin = new URL(process.env.APP_ORIGIN || 'http://127.0.0.1:5188').origin;
 const host=process.env.HOST||(process.env.NODE_ENV==='production'?'0.0.0.0':'127.0.0.1');
 const store = await openStore();
 const play=createPlay(store),community=createCommunity(store),quizRooms=createMultiplayer(store),boardRooms=createBoardRooms(store),arcadeRooms=(await createArcadeRooms(store));
@@ -50,7 +51,7 @@ async function current(req) { const token = /(?:^|;\s*)slotvend=([^;]+)/.exec(re
 async function login(res, user) { const token = randomBytes(32).toString('hex'); (await db.prepare('INSERT INTO sessions VALUES($1,$2,$3)').run(hash(token), user.id, Date.now() + 7 * 86400000)); res.setHeader('set-cookie', `slotvend=${token}; Path=/; HttpOnly; SameSite=Strict; Max-Age=604800${origin.startsWith('https:') ? '; Secure' : ''}`); }
 async function review(text) { moderate(text); if (process.env.REQUIRE_SEMANTIC_MODERATION === 'true' && !hasAI) throw Error('Content creation is paused until the moderation service is configured.'); await semanticModerate(text); }
 async function required(req) { const u = (await current(req)); if (!u) throw Error('Choose a practice name or connect your NEAR wallet first.'); return u; }
-const walletAuth=createWalletAuth({origin,provider,network:assertTestnet,review});
+const walletAuth=createWalletAuth({origin,db,provider,network:assertTestnet,review});
 async function profile(u) { if (!u) return null; let credit = '0', pending = '0', chain_error = null, balance='0'; if(u.kind==='wallet'){try{await assertTestnet();balance=String(await nearBalance(u.id));}catch{chain_error='NEAR wallet balance unavailable.';}} if (u.kind === 'wallet' && contractId) { try { [credit, pending] = await Promise.all([view('get_credit', { account_id: u.id }), view('get_pending', { account_id: u.id })]); } catch { chain_error = 'NEAR balance unavailable. Try refreshing.'; } } return { ...u, balance, credit, pending, chain_error }; }
 async function decorated(b) { const media = (await db.prepare('SELECT cover,stream_json FROM room_media WHERE bet_id=$1').get(b.id)); const reactions = {}; for (const r of (await db.prepare('SELECT emoji,count(*) AS n FROM reactions WHERE bet_id=$1 GROUP BY emoji').all(b.id))) reactions[r.emoji] = r.n; return { ...b, cover: media?.cover || null, stream: media?.stream_json ? JSON.parse(media.stream_json) : null, creator_name: (await store.user(b.creator))?.name || b.creator, opponent_name: b.opponent ? (await store.user(b.opponent))?.name || b.opponent : null, reactions, chat_count: (await db.prepare('SELECT count(*) AS n FROM messages WHERE bet_id=$1').get(b.id)).n }; }
 async function room(id) { const b = (await store.bet(id)); if (!b) throw Error('This room was not found.'); return b; }

@@ -41,19 +41,15 @@ async function connectDatabase(config,namespace){
   const result=active.pending.then(()=>active.client.query(sql,params));
   active.pending=result.catch(()=>{});return result;
  };
- let transactions=Promise.resolve();
- function transaction(fn){
+ function transaction(fn,options={}){
   if(context.getStore())return fn();
-  // Wait before checking out a connection, leaving readers a free pool slot.
-  const result=transactions.then(()=>runTransaction(fn));
-  transactions=result.catch(()=>{});return result;
+  return runTransaction(fn,options);
  }
- async function runTransaction(fn){
+ async function runTransaction(fn,{key}={}){
   const client=await pool.connect(),active={client,pending:Promise.resolve()};
   try{
    await client.query('BEGIN');
-   // Preserve SQLite's serialized read/modify/write semantics across app processes.
-   await client.query("SELECT pg_advisory_xact_lock(hashtext(current_schema()), 1)");
+   if(key)await client.query('SELECT pg_advisory_xact_lock(hashtext(current_schema()),hashtext($1))',[key]);
    const value=await context.run(active,fn);
    await active.pending;
    await client.query('COMMIT');return value;
@@ -64,7 +60,7 @@ async function connectDatabase(config,namespace){
   try{await client.query('SELECT pg_advisory_lock(hashtext(current_schema()),hashtext($1))',[key]);return await fn();}
   finally{try{await client.query('SELECT pg_advisory_unlock(hashtext(current_schema()),hashtext($1))',[key]);}finally{client.release();}}
  }
- const db={query,transaction,withLock,
+ const db={query,transaction,withLock,namespace,inTransaction:()=>Boolean(context.getStore()),
   connectionStats:()=>({queries:{total:pool.totalCount,idle:pool.idleCount,waiting:pool.waitingCount},locks:{total:lockPool.totalCount,idle:lockPool.idleCount,waiting:lockPool.waitingCount}}),
   exec:sql=>query(sql),
   prepare(sql){return {all:async(...values)=>(await query(sql,values)).rows,get:async(...values)=>(await query(sql,values)).rows[0],run:async(...values)=>({changes:(await query(sql,values)).rowCount})};},
@@ -78,7 +74,27 @@ async function connectDatabase(config,namespace){
     await query(initialSchema);
     await query('INSERT INTO schema_migrations(version) VALUES(1)');
    }
-  });
+   if(!(await db.prepare('SELECT version FROM schema_migrations WHERE version=2').get())){
+    await query(`
+     CREATE INDEX skill_rooms_active ON skill_rooms((json::jsonb->>'status')) WHERE json::jsonb->>'status' IN ('lobby','playing');
+     CREATE INDEX multiplayer_rooms_active ON multiplayer_rooms((json::jsonb->>'status')) WHERE json::jsonb->>'status' IN ('lobby','playing');
+     CREATE INDEX arcade_rooms_active ON arcade_rooms((json::jsonb->>'status')) WHERE json::jsonb->>'status' IN ('lobby','playing');
+     CREATE INDEX near_intents_pending ON near_intents(created) WHERE complete=0;
+     CREATE INDEX near_rooms_pending ON near_rooms((json::jsonb->>'status')) WHERE json::jsonb->>'status' NOT IN ('settled','refunded');
+     CREATE INDEX faucet_claims_pending ON faucet_claims(created) WHERE status='pending';
+     CREATE INDEX bets_active ON bets((json::jsonb->>'status')) WHERE json::jsonb->>'status' IN ('open','matched','proposed','disputed');
+     CREATE INDEX prepared_expires ON prepared(expires);
+    `);
+    await query('INSERT INTO schema_migrations(version) VALUES(2)');
+   }
+   if(!(await db.prepare('SELECT version FROM schema_migrations WHERE version=3').get())){
+    await query(`
+     CREATE TABLE wallet_auth_challenges(id TEXT PRIMARY KEY,json TEXT NOT NULL,expires BIGINT NOT NULL);
+     CREATE INDEX wallet_auth_challenges_expires ON wallet_auth_challenges(expires);
+    `);
+    await query('INSERT INTO schema_migrations(version) VALUES(3)');
+   }
+  },{key:'schema-migrations'});
   return db;
  }catch(error){await Promise.all([pool.end(),lockPool.end()]);throw error;}
 }

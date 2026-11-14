@@ -24,7 +24,7 @@ export function candidatesFor(id,difficulty='mixed') {
 }
 export function createPlay(store,{curate=curateQuestions}={}) {
  const {db}=store,starting=new Map();
- const read=async id=>{const r=(await db.prepare('SELECT json FROM play_runs WHERE id=$1').get(id));if(!r)throw Error('Game not found.');return JSON.parse(r.json);};
+ const read=async id=>{const r=(await db.prepare('SELECT json FROM play_runs WHERE id=$1'+(db.inTransaction()?' FOR UPDATE':'')).get(id));if(!r)throw Error('Game not found.');return JSON.parse(r.json);};
  const save=async r=>(await db.prepare('INSERT INTO play_runs(id,user_id,game_id,json) VALUES($1,$2,$3,$4) ON CONFLICT(id) DO UPDATE SET json=excluded.json').run(r.id,r.user_id,r.game_id,JSON.stringify(r)));
  function publicRun(r,now=Date.now()){const done=r.abandoned||r.index>=r.questions.length||now>=r.ends_at;let question=null;if(!done){const {answer,...q}=r.questions[r.index];question=withChoiceArt(q);}return {id:r.id,game_id:r.game_id,index:r.index,total:r.questions.length,score:r.score,ends_at:r.ends_at,abandoned:Boolean(r.abandoned),done,question,curation:r.curation||'bank',difficulty:r.difficulty||'mixed',completed_at:r.completed_at||null,shared:r.shared===true};}
  async function finishExpired(r,now=Date.now()){if(now>=r.ends_at&&!r.completed_at){r.completed_at=r.ends_at;(await save(r));}return r;}

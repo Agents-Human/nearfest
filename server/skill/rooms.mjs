@@ -5,8 +5,8 @@ import {getSkillGame,initialState,legalMoves,applyMove,publicBoard,ended} from '
 const CLOCK=5*60*1000;
 export function createBoardRooms(store){
  const {db}=store;
- const read=async id=>{const row=(await db.prepare('SELECT json FROM skill_rooms WHERE id=$1').get(id));if(!row)throw Error('This game room was not found.');return JSON.parse(row.json);};
- const save=async r=>(await db.prepare('INSERT INTO skill_rooms(id,json) VALUES($1,$2) ON CONFLICT(id) DO UPDATE SET json=excluded.json').run(r.id,JSON.stringify(r)));
+ const read=async id=>{const row=(await db.prepare('SELECT json FROM skill_rooms WHERE id=$1'+(db.inTransaction()?' FOR UPDATE':'')).get(id));if(!row)throw Error('This game room was not found.');return JSON.parse(row.json);};
+ const save=async r=>{await db.prepare('INSERT INTO skill_rooms(id,json) VALUES($1,$2) ON CONFLICT(id) DO UPDATE SET json=excluded.json').run(r.id,JSON.stringify(r));await store.jobs?.scheduleRoom('board',r);};
  const credit=(r,id,n)=>{}; // Settlement is performed by NEAR escrow, never by a local balance.
  const debit=async (r,id,n)=>{if(BigInt(n)>0n){if(!r.near)throw Error('Sign a NEAR testnet deposit first.');(await store.reserveNear(r.id,id,n));}};
  const seat=(r,side)=>r.leg===1?side:1-side;
@@ -32,7 +32,9 @@ export function createBoardRooms(store){
   if(r.status==='playing'&&now>=r.starts_at)clocks[r.board.turn]=Math.max(0,clocks[r.board.turn]-(now-r.clock_at));
   return {near:(await store.nearStatus?.(r.id))||null,id:r.id,game_id:r.game_id,engine:'skill',title:g.title,category:g.category,label:g.title,art:g.id,host:r.host,status:r.status,phase:r.status==='playing'&&now<r.starts_at?'countdown':r.status,entry:r.entry,pot:(BigInt(r.entry)*BigInt(r.players.length)).toString(),max_players:2,total:2,visibility:r.visibility,expires_at:r.expires_at,starts_at:r.starts_at,ends_at:r.ends_at,server_time:now,players:(await Promise.all(r.players.map(async p=>({...p,name:(await store.user(p.id))?.name||p.id,done:r.status==='finished',index:0,payout:p.payout||'0'})))),me:index<0?null:{index:0,score:r.players[index].score},question:null,curation:'deterministic',winners:r.winners||[],reason:r.reason||'',board:r.board?publicBoard(r.board):null,legal_moves:r.board&&r.status==='playing'&&now>=r.starts_at&&mySide===r.board.turn?legalMoves(r.board):[],my_side:mySide,turn_player:r.board?r.players[seat(r,r.board.turn)]?.id:null,clocks,leg:r.leg||1,results:r.results||[],revision:r.revision,draw_offer:r.draw_offer||null,rules_version:g.rules_version};
  }
+ async function expireOne(id,now=Date.now()){return store.transaction(async()=>{const row=await db.prepare('SELECT json FROM skill_rooms WHERE id=$1 FOR UPDATE').get(id);if(!row)return false;const room=JSON.parse(row.json);const changed=await expire(room,now);await store.jobs?.scheduleRoom('board',room);return changed;});}
  return {
+  expire:expireOne,
   list:async (user,{mine=false}={})=>(await Promise.all((await db.prepare('SELECT json FROM skill_rooms ORDER BY created_order DESC').all()).map(x=>JSON.parse(x.json)).filter(r=>BigInt(r.entry)===0n||r.near).filter(r=>mine?r.players.some(p=>p.id===user?.id):(r.visibility==='public'||r.players.some(p=>p.id===user?.id))&&(['lobby','playing'].includes(r.status)||r.players.some(p=>p.id===user?.id))).filter((_,i)=>mine||i<200).map(async r=>(await view(r,user,Date.now()))))),
   get:async (id,user,now=Date.now())=>(await store.transaction(async ()=>{const r=(await read(id));(await expire(r,now));return (await view(r,user,now));})),
   create:async (data,user,now=Date.now(),funding=null)=>(await store.transaction(async ()=>{
@@ -66,6 +68,6 @@ export function createBoardRooms(store){
    r.revision++;(await save(r));return (await view(r,user,now));
   })),
   start:async (id,user,now=Date.now())=>(await store.transaction(async ()=>{const r=(await read(id));if(r.host!==user.id||r.status!=='lobby'||now>=r.expires_at||r.players.length!==2||r.players.some(p=>!p.ready))throw Error('Both players must be ready before the host starts.');r.leg=0;r.status='playing';nextLeg(r,now);(await save(r));return (await view(r,user,now));})),
-  tick:async (now=Date.now())=>(await store.transaction(async ()=>{let changed=false;for(const row of (await db.prepare('SELECT json FROM skill_rooms').all()))if((await expire(JSON.parse(row.json),now)))changed=true;return changed;})),
+  tick:async (now=Date.now())=>(await store.transaction(async ()=>{let changed=false;for(const row of (await db.prepare("SELECT json FROM skill_rooms WHERE json::jsonb->>'status' IN ('lobby','playing')").all()))if((await expire(JSON.parse(row.json),now)))changed=true;return changed;})),
  };
 }

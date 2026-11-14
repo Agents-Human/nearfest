@@ -5,8 +5,8 @@ import {games,candidatesFor} from './play.mjs';
 import {curateQuestions} from './curator.mjs';
 export function createMultiplayer(store,{curate=curateQuestions}={}){
  const {db}=store,pending=new Map();
- const read=async id=>{const row=(await db.prepare('SELECT json FROM multiplayer_rooms WHERE id=$1').get(id));if(!row)throw Error('This multiplayer room was not found.');return JSON.parse(row.json);};
- const save=async r=>(await db.prepare('INSERT INTO multiplayer_rooms(id,json) VALUES($1,$2) ON CONFLICT(id) DO UPDATE SET json=excluded.json').run(r.id,JSON.stringify(r)));
+ const read=async id=>{const row=(await db.prepare('SELECT json FROM multiplayer_rooms WHERE id=$1'+(db.inTransaction()?' FOR UPDATE':'')).get(id));if(!row)throw Error('This multiplayer room was not found.');return JSON.parse(row.json);};
+ const save=async r=>{await db.prepare('INSERT INTO multiplayer_rooms(id,json) VALUES($1,$2) ON CONFLICT(id) DO UPDATE SET json=excluded.json').run(r.id,JSON.stringify(r));await store.jobs?.scheduleRoom('quiz',r);};
  const credit=(r,id,n)=>{}; // Settlement is performed by NEAR escrow, never by a local balance.
  const debit=async (r,id,n)=>{if(BigInt(n)>0n){if(!r.near)throw Error('Sign a NEAR testnet deposit first.');(await store.reserveNear(r.id,id,n));}};
  async function publicRoom(r,user,now=Date.now()){
@@ -21,7 +21,9 @@ export function createMultiplayer(store,{curate=curateQuestions}={}){
    for(const p of winners){const extra=remainder>0n?1n:0n;remainder-=extra;p.payout=(share+extra).toString();credit(r,p.id,p.payout);}
    r.winners=high>0||winners.length<r.players.length?winners.map(p=>p.id):[];r.status='finished';r.finished_at=now;(await save(r));return true;
  }
+ async function expireOne(id,now=Date.now()){return store.transaction(async()=>{const row=await db.prepare('SELECT json FROM multiplayer_rooms WHERE id=$1 FOR UPDATE').get(id);if(!row)return false;const room=JSON.parse(row.json);const changed=await settle(room,now);await store.jobs?.scheduleRoom('quiz',room);return changed;});}
  return {
+  expire:expireOne,
    list:async (user,{mine=false}={})=>(await Promise.all((await db.prepare('SELECT json FROM multiplayer_rooms ORDER BY created_order DESC').all()).map(x=>JSON.parse(x.json)).filter(r=>BigInt(r.entry)===0n||r.near).filter(r=>mine?r.players.some(p=>p.id===user?.id):(r.visibility==='public'||r.players.some(p=>p.id===user?.id))&&(['lobby','playing'].includes(r.status)||r.players.some(p=>p.id===user?.id))).filter((_,i)=>mine||i<200).map(async r=>(await publicRoom(r,user))))),
    get:async (id,user,now=Date.now())=>(await publicRoom((await read(id)),user,now)),
    create:async (data,user,now=Date.now(),funding=null)=>(await store.transaction(async ()=>{
@@ -47,6 +49,6 @@ export function createMultiplayer(store,{curate=curateQuestions}={}){
    answer:async (id,user,data,now=Date.now())=>(await store.transaction(async ()=>{
      const r=(await read(id));(await settle(r,now));if(r.status!=='playing'||now<r.starts_at||now>=r.ends_at)throw Error('The round is not accepting answers.');const p=r.players.find(p=>p.id===user.id);if(!p||p.left)throw Error('Only active players can answer.');if(data.index!==p.index||p.index>=r.questions.length)throw Error('That answer has already been submitted.');const q=r.questions[p.index];if(q.type==='choice'&&(!Number.isInteger(data.answer)||data.answer<0||data.answer>=q.choices.length))throw Error('Choose an answer.');if(q.type==='chess'&&(typeof data.answer!=='string'||!/^[a-h][1-8][a-h][1-8]$/.test(data.answer)))throw Error('Choose a move.');p.score+=data.answer===q.answer?1:0;p.index++;(await save(r));(await settle(r,now));return (await publicRoom(r,user,now));
    })),
-   tick:async (now=Date.now())=>(await store.transaction(async ()=>{let changed=false;for(const row of (await db.prepare('SELECT json FROM multiplayer_rooms').all())){if((await settle(JSON.parse(row.json),now)))changed=true;}return changed;}))
+   tick:async (now=Date.now())=>(await store.transaction(async ()=>{let changed=false;for(const row of (await db.prepare("SELECT json FROM multiplayer_rooms WHERE json::jsonb->>'status' IN ('lobby','playing')").all())){if((await settle(JSON.parse(row.json),now)))changed=true;}return changed;}))
  };
 }

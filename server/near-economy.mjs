@@ -11,21 +11,22 @@ const digest=x=>createHash('sha256').update(typeof x==='string'?x:JSON.stringify
 const member=(r,id)=>r?.members.find(m=>m.account_id===id);
 const terminal=r=>['settled','refunded'].includes(r?.status);
 export async function createNearEconomy(store,{chain=near,services}={}){
- const {db}=store,confirming=new Map(),reconciling=new Map();let processing=false,recovering=false,recoveryCursor=0,revision=0;
- const cached=async id=>{const r=(await db.prepare('SELECT * FROM near_rooms WHERE id=$1').get(id));return r?{...JSON.parse(r.json),error:r.error}:null;};
+ const {db}=store,confirming=new Map(),reconciling=new Map(),roomCache=new Map();let processing=false,recovering=false,recoveryCursor=0,revision=0;
+ const cached=async id=>{const r=(await db.prepare('SELECT * FROM near_rooms WHERE id=$1').get(id));if(!r)return null;const value={...JSON.parse(r.json),error:r.error};roomCache.set(id,value);return value;};
  async function rememberPayouts(r,created){if(terminal(r))for(const payout of r.payouts||[])if(BigInt(payout.amount)>0n)(await db.prepare('INSERT INTO near_payouts(room_id,user_id,amount,kind,created) VALUES($1,$2,$3,$4,$5) ON CONFLICT(room_id,user_id) DO NOTHING').run(r.id,payout.account_id,payout.amount,r.status==='refunded'?'refund':'reward',created));}
- for(const row of (await db.prepare('SELECT json,updated FROM near_rooms').all()))(await rememberPayouts(JSON.parse(row.json),row.updated));
- const save=async (r,kind)=>{const json=JSON.stringify(r),previous=(await db.prepare('SELECT json,error FROM near_rooms WHERE id=$1').get(r.id));(await db.prepare('INSERT INTO near_rooms(id,kind,json,updated,error) VALUES($1,$2,$3,$4,NULL) ON CONFLICT(id) DO UPDATE SET json=excluded.json,updated=excluded.updated,error=NULL').run(r.id,kind,json,Date.now()));(await rememberPayouts(r,Date.now()));if(previous?.json!==json||previous?.error){revision++;await services.changed?.(r.id);}};
+ for(const row of (await db.prepare("SELECT json,updated,error FROM near_rooms WHERE json::jsonb->>'status' NOT IN ('settled','refunded')").all())){const room={...JSON.parse(row.json),error:row.error};roomCache.set(room.id,room);await rememberPayouts(room,row.updated);}
+ const save=async (r,kind)=>{roomCache.set(r.id,{...r,error:null});const json=JSON.stringify(r),previous=(await db.prepare('SELECT json,error FROM near_rooms WHERE id=$1').get(r.id));(await db.prepare('INSERT INTO near_rooms(id,kind,json,updated,error) VALUES($1,$2,$3,$4,NULL) ON CONFLICT(id) DO UPDATE SET json=excluded.json,updated=excluded.updated,error=NULL').run(r.id,kind,json,Date.now()));(await rememberPayouts(r,Date.now()));await store.jobs?.scheduleNear(r);if(previous?.json!==json||previous?.error){revision++;await services.changed?.(r.id);}};
  store.nearStatus=async id=>{const r=(await cached(id));let missing=[];if(r?.kind==='game'){const table=id.startsWith('arena-')?'arcade_rooms':id.startsWith('board-')?'skill_rooms':'multiplayer_rooms';const local=(await db.prepare(`SELECT json FROM ${table} WHERE id=$1`).get(id));if(local){const players=JSON.parse(local.json).players;missing=r.members.filter(m=>!players.some(p=>p.id===m.account_id)).map(m=>m.account_id);}}return r?{unconfirmed_members:missing,network:'testnet',contract_id:chain.contractId,status:r.status,error:r.error||null,refund_at:r.refund_at,entry:r.entry,storage_fee:ROOM_STORAGE.toString(),evidence_hash:r.evidence_hash,explorer:`https://testnet.nearblocks.io/address/${chain.contractId}`} :null;};
+ store.cachedNearStatus=(id,players=[])=>{const r=roomCache.get(id);return r?{unconfirmed_members:r.kind==='game'?r.members.filter(m=>!players.some(p=>p.id===m.account_id)).map(m=>m.account_id):[],network:'testnet',contract_id:chain.contractId,status:r.status,error:r.error||null,refund_at:r.refund_at,entry:r.entry,storage_fee:ROOM_STORAGE.toString(),evidence_hash:r.evidence_hash,explorer:`https://testnet.nearblocks.io/address/${chain.contractId}`}:null;};
  store.reserveNear=async (id,account,n)=>{if(BigInt(n)===0n)return;const r=(await cached(id)),u=(await store.user(account));if(u?.kind!=='wallet'||!r||r.status!=='open'||BigInt(member(r,account)?.amount||0)<BigInt(n))throw Error('Confirm your NEAR testnet deposit in your wallet first.');};
  const requireWallet=u=>{if(u?.kind!=='wallet')throw Error('Connect your NEAR testnet wallet to play for stakes.');if(!chain.contractId||!chain.oracleReady)throw Error('NEAR testnet escrow is not connected yet.');};
  async function checkBalance(u,deposit){if(BigInt(await chain.balance(u.id))<deposit)throw Error('Your wallet balance cannot cover this stake and the required contract storage.');}
  async function load(id,kind){const r=await chain.view('get_room',{id});if(!r)throw Error('NEAR escrow not found. The wallet transaction may still be confirming.');(await save(r,kind));return r;}
- async function intent(u,operation,id,kind,data,args,method,deposit='0',extra={}){
+ async function intent(u,operation,id,kind,data,args,method,deposit='0',extra={}){return store.transaction(async()=>{
   const existing=(await db.prepare('SELECT id,json FROM near_intents WHERE user_id=$1 AND complete=0 ORDER BY created DESC LIMIT 30').all(u.id)).find(x=>{const p=JSON.parse(x.json);return p.id===id&&p.operation===operation&&p.method===method&&JSON.stringify(p.data)===JSON.stringify(data);});
   if(existing)return {resume:true,intent_id:existing.id,transaction:{...chain.transaction(method,JSON.parse(existing.json).args,JSON.parse(existing.json).deposit),signerId:u.id}};
-  const iid=randomUUID(),p={operation,id,kind,data,args,method,deposit,...extra};(await db.prepare('INSERT INTO near_intents(id,user_id,json,created) VALUES($1,$2,$3,$4)').run(iid,u.id,JSON.stringify(p),Date.now()));return {intent_id:iid,transaction:{...chain.transaction(method,args,deposit),signerId:u.id}};
- }
+  const iid=randomUUID(),p={operation,id,kind,data,args,method,deposit,...extra};(await db.prepare('INSERT INTO near_intents(id,user_id,json,created) VALUES($1,$2,$3,$4)').run(iid,u.id,JSON.stringify(p),Date.now()));await store.jobs?.schedule('near-intent',iid,Date.now()+20000);return {intent_id:iid,transaction:{...chain.transaction(method,args,deposit),signerId:u.id}};
+ });}
  async function pendingCreations(u){return (await db.prepare('SELECT id,json FROM near_intents WHERE user_id=$1 AND complete=0 ORDER BY created DESC').all(u.id)).filter(row=>JSON.parse(row.json).operation==='create');}
  function creationTerms(kind,d){
   if(kind==='game')return JSON.stringify({game_id:d.game_id,entry:amount(String(d.entry)).toString(),max_players:Number(d.max_players),visibility:d.visibility==='invite'?'invite':'public',difficulty:d.difficulty==='brainy'?'brainy':'mixed',race_seconds:d.game_id==='pocket-racers'?Number(d.race_seconds??DEFAULT_RACE_SECONDS):null,settings:d.game_id==='platform-relay'?platformSettings(d.settings):null});
@@ -64,6 +65,7 @@ export async function createNearEconomy(store,{chain=near,services}={}){
   await checkBalance(u,entry+ROOM_STORAGE);
   // Serialize the final check and insert across connections and app processes.
   const prepared=await store.transaction(async()=>{
+   await db.query('SELECT id FROM users WHERE id=$1 FOR UPDATE',[u.id]);
    const concurrent=await pendingCreations(u);if(concurrent.length)return {concurrent};
    const args={id,kind,entry:entry.toString(),max_members:max,join_until:join,refund_at:refund,terms_hash:digest(data)};
    return {payment:await intent(u,'create',id,kind,data,args,'create_room',(entry+ROOM_STORAGE).toString())};
@@ -195,20 +197,44 @@ export async function createNearEconomy(store,{chain=near,services}={}){
   if(p.method==='create_room'&&Date.now()>=p.args.join_until)throw Error('This room request has expired. We’re clearing it automatically.');
   return {intent_id:iid,transaction:{...chain.transaction(p.method,p.args,p.deposit),signerId:u.id}};
  }
- async function tick(){if(processing||!chain.oracleReady)return false;processing=true;const previousRevision=revision;try{
-  for(const row of (await db.prepare('SELECT * FROM near_rooms').all())){
-   const previous=JSON.parse(row.json);if(terminal(previous))continue;
-   try{
-    if(row.kind!=='game'){(await services.community.sync(row.id,await load(row.id,row.kind)));continue;}
-    let local;try{local=(await services.get(row.id,{id:previous.host}));}catch{continue;}
-    if(!['finished','cancelled'].includes(local.status))continue;
-    let r=await load(row.id,'game');if(!terminal(r)){
-     if(local.status==='cancelled'||r.status==='open')await chain.oracleCall('cancel_room',{id:row.id});
-     else{const winners=local.players.filter(p=>BigInt(p.payout||'0')>0n).map(p=>p.id);const refund=winners.length===local.players.length&&local.players.every(p=>p.payout===local.entry);await chain.oracleCall('settle_game',{id:row.id,winners:refund?[]:winners,evidence_hash:digest({id:row.id,game:local.game_id,players:local.players.map(p=>({id:p.id,score:p.score,payout:p.payout})),reason:local.reason||'',results:local.results||[]})});}
-     await load(row.id,'game');
-    }
-   }catch(e){const message=String(e.message).slice(0,300);(await db.prepare('UPDATE near_rooms SET error=$1 WHERE id=$2').run(message,row.id));if(message!==row.error){revision++;await services.changed?.(row.id);}}
+ async function recoverIntent(id){
+  const row=await db.prepare('SELECT * FROM near_intents WHERE id=$1 AND complete=0').get(id);if(!row)return false;
+  const u=await store.user(row.user_id);if(!u)throw Error('Pending payment owner is missing.');
+  const p=JSON.parse(row.json),remote=await chain.view('get_room',{id:p.id});
+  if(!remote){
+   if(p.method==='create_room'&&Date.now()>=p.args.join_until+60000){await db.prepare('UPDATE near_intents SET complete=1,result=$1 WHERE id=$2 AND complete=0').run(JSON.stringify({cancelled:true,expired:true}),id);return true;}
+   throw Error('Wallet transaction is still awaiting confirmation.');
   }
- }finally{processing=false;}return revision!==previousRevision;}
- return {create,action,confirm,abandon,tick,cached,pending,history,reconcile,recoverPending,retry,load};
+  await confirm(id,u);return true;
+ }
+ async function settleRoom(id){
+  if(!chain.contractId||!chain.oracleReady)return false;
+  const row=await db.prepare('SELECT * FROM near_rooms WHERE id=$1').get(id);if(!row)return false;
+  const previous=JSON.parse(row.json);if(terminal(previous))return false;
+  try{
+   if(row.kind!=='game'){
+    const remote=await load(id,row.kind);await services.community.sync(id,remote);
+    if(!terminal(remote))await store.jobs?.schedule('near-room',id,Date.now()+60000);
+    return true;
+   }
+   let local;try{local=await services.get(id,{id:previous.host});}catch{return false;}
+   if(!['finished','cancelled'].includes(local.status))return false;
+   const remote=await load(id,'game');
+   if(!terminal(remote)){
+    if(local.status==='cancelled'||remote.status==='open')await chain.oracleCall('cancel_room',{id});
+    else{const winners=local.players.filter(p=>BigInt(p.payout||'0')>0n).map(p=>p.id),refund=winners.length===local.players.length&&local.players.every(p=>p.payout===local.entry);await chain.oracleCall('settle_game',{id,winners:refund?[]:winners,evidence_hash:digest({id,game:local.game_id,players:local.players.map(p=>({id:p.id,score:p.score,payout:p.payout})),reason:local.reason||'',results:local.results||[]})});}
+    await load(id,'game');
+   }
+   return true;
+  }catch(error){
+   const message=String(error.message).slice(0,300);await db.prepare('UPDATE near_rooms SET error=$1 WHERE id=$2').run(message,id);
+   roomCache.set(id,{...previous,error:message});if(message!==row.error){revision++;await services.changed?.(id);}throw error;
+  }
+ }
+ // Explicit recovery API retained for callers/tests; the worker dispatches a single ID.
+ async function tick(){if(processing||!chain.oracleReady)return false;processing=true;const prior=revision;try{
+  for(const row of (await db.prepare("SELECT id FROM near_rooms WHERE json::jsonb->>'status' NOT IN ('settled','refunded')").all()))try{await settleRoom(row.id);}catch{}
+ }finally{processing=false;}return revision!==prior;}
+
+ return {create,action,confirm,abandon,tick,cached,pending,history,reconcile,recoverPending,retry,load,recoverIntent,settleRoom,enabled:Boolean(chain.contractId&&chain.oracleReady)};
 }
