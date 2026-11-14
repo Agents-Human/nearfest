@@ -79,3 +79,25 @@ test('a failed import rolls back all copied rows',async()=>{
   assert.equal((await db.prepare('SELECT count(*) AS n FROM users').get()).n,0);
  }finally{source.close();if(db)await db.close();await rm(directory,{recursive:true,force:true});}
 });
+
+
+test('parallel requests reuse two query connections, one sponsor connection, and close all three',async()=>{
+ const schema=testSchema(),db=await openDatabase(process.env.TEST_DATABASE_URL,{schema});
+ try{
+  const results=await Promise.all(Array.from({length:12},()=>db.query('SELECT pg_backend_pid() AS pid,pg_sleep(0.01)')));
+  const queryPids=new Set(results.map(result=>result.rows[0].pid));
+  assert.equal(queryPids.size,2);
+  await db.withLock('pool-test',async()=>{
+   const rows=(await db.query('SELECT pid FROM pg_stat_activity WHERE datname=current_database() AND application_name=$1 AND query LIKE $2',['nearfest','SELECT pg_advisory_lock%'])).rows;
+   assert(rows.length>=1);
+   const ownPid=(await db.query('SELECT pg_backend_pid() AS pid')).rows[0].pid;
+   assert(queryPids.has(ownPid));
+  });
+  await db.close();
+  const observer=await openDatabase(process.env.TEST_DATABASE_URL,{schema:testSchema()});
+  try{
+   const stillOpen=await observer.query('SELECT pid FROM pg_stat_activity WHERE pid=ANY($1::int[])',[[...queryPids]]);
+   assert.equal(stillOpen.rowCount,0);
+  }finally{await observer.close();}
+ }catch(error){await db.close();throw error;}
+});
