@@ -2,6 +2,7 @@ import type {User} from './api';
 
 export type AccessRequest = {
   wallet?: boolean;
+  autoConnect?: boolean;
   minimum?: string;
   label?: string;
   next?: () => void | Promise<void>;
@@ -19,5 +20,5 @@ export function hasAccess(user: User | null, request: AccessRequest) {
   return Boolean(user && (!request.wallet || user.kind === 'wallet' && !user.chain_error && BigInt(user.balance) >= BigInt(request.minimum || '0')));
 }
 export function requestOnboarding(request: AccessRequest = {}) {
-  window.dispatchEvent(new CustomEvent('nearfest:onboard', {detail: request}));
+  window.dispatchEvent(new CustomEvent('nearfest:onboard', {detail: {autoConnect:true,...request}}));
 }

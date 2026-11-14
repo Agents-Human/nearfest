@@ -30,8 +30,8 @@ export async function api<T>(path: string, data?: unknown): Promise<T> {
 }
 export {formatNear as money} from '../shared/near-amount.mjs';
 export function remaining(time: number) { const n = time - Date.now(); if (n <= 0) return 'Time’s up'; if (n < 60000) return '< 1 min'; if (n < 3600000) return `${Math.ceil(n / 60000)} min`; if (n < 86400000) return `${Math.ceil(n / 3600000)} hr`; return `${Math.ceil(n / 86400000)} days`; }
-export const cats = ['All bets', 'Sports', 'Gaming', 'Life', 'Crypto', 'Facts', 'Science', 'Maths'];
-export const icons: Record<string, string> = { 'All bets': '✳', Sports: '⚽', Gaming: '👾', Life: '✌', Crypto: '₿', Facts: '🔎', Science: '🧪', Maths: '∑' };
+export const cats = ['All challenges', 'Sports', 'Gaming', 'Life', 'Crypto', 'Facts', 'Science', 'Maths'];
+export const icons: Record<string, string> = { 'All challenges': '✳', Sports: '⚽', Gaming: '👾', Life: '✌', Crypto: '₿', Facts: '🔎', Science: '🧪', Maths: '∑' };
 export const resolverNames: Record<string, string> = { players: 'Player agreement', sports: 'Sports API', crypto: 'Price API', maths: 'Maths engine', evidence: 'AI + sources' };
 
 export function coverFor(bet: Pick<Bet, 'category' | 'title' | 'cover'>) { const key = bet.cover || (bet.category === 'Sports' ? 'sports' : /chess|gaming/i.test(bet.title + bet.category) || bet.category === 'Life' ? 'chess' : 'science'); return `/art/${key}.png`; }

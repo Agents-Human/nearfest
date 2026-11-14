@@ -84,6 +84,6 @@ export async function resolveBet(bet, now = Date.now()) {
     if (typeof answer.verdict !== 'boolean' || typeof answer.explanation !== 'string' || !Array.isArray(answer.citations) || !answer.citations.length) throw Error('The evidence is inconclusive. No automatic payout was proposed; use player agreement or the chosen referee.');
     sources = answer.citations.map(c => { const p = pages.find(p => p.id === c.source_id); if (!p || typeof c.quote !== 'string' || c.quote.length < 12 || c.quote.length > 180 || !p.text.includes(c.quote)) throw Error('The judge’s citations did not match the source. No verdict was issued.'); return { title: p.title, url: p.url, quote: c.quote, content_hash: createHash('sha256').update(p.text).digest('hex') }; });
     result = { outcome: answer.verdict ? 'creator' : 'opponent', explanation: answer.explanation.slice(0, 1500) }; provider = `NEAR AI · ${AI_MODEL}`;
-  } else throw Error('This bet is settled by its players or referee.');
+  } else throw Error('This challenge is settled by its players or referee.');
   return { ...result, provider, sources, observed_at: now, limitation: bet.resolver === 'evidence' ? 'AI interpretation of Wikipedia extracts; citations are checked for exact text, not independently proven true. Players may challenge.' : 'A server reads the named source. The on-chain oracle is trusted to report it honestly; players may challenge.' };
 }

@@ -90,10 +90,10 @@ export function transition(original, actor, action, now = Date.now()) {
       if (actor === b.creator || actor === b.referee || (b.invitee && actor !== b.invitee)) throw Error('This account cannot take the other side.');
       b.opponent = actor; b.status = 'matched'; debit = b.stake; break;
     case 'cancel':
-      if (b.status !== 'open' || actor !== b.creator) throw Error('Only the creator can cancel an unmatched bet.');
+      if (b.status !== 'open' || actor !== b.creator) throw Error('Only the creator can cancel an unmatched challenge.');
       b.status = 'cancelled'; credits.push([b.creator, b.stake]); break;
     case 'concede':
-      if (!active || !player || now >= b.resolve_until) throw Error('You cannot concede this bet.');
+      if (!active || !player || now >= b.resolve_until) throw Error('You cannot concede this challenge.');
       finish(actor === b.creator ? 'opponent' : 'creator'); break;
     case 'vote':
       if (!active || !player || now < b.ends_at || now >= b.resolve_until || !outcome) throw Error('Players can report results during the 48-hour settlement window.');
@@ -103,7 +103,7 @@ export function transition(original, actor, action, now = Date.now()) {
       if (b.status !== 'disputed' || actor !== b.referee || now >= b.resolve_until || !outcome) throw Error('Only the agreed referee can settle this dispute.');
       finish(outcome); break;
     case 'propose':
-      if (actor !== 'oracle' || b.resolver === 'players' || b.status !== 'matched' || now < b.ends_at || now + CHALLENGE_MS >= b.resolve_until || !outcome) throw Error('An automatic verdict is not available for this bet.');
+      if (actor !== 'oracle' || b.resolver === 'players' || b.status !== 'matched' || now < b.ends_at || now + CHALLENGE_MS >= b.resolve_until || !outcome) throw Error('An automatic verdict is not available for this challenge.');
       b.proposed_outcome = outcome; b.evidence = action.evidence; b.challenge_until = now + CHALLENGE_MS; b.status = 'proposed'; break;
     case 'challenge':
       if (!player || b.status !== 'proposed' || now >= b.challenge_until) throw Error('Only a player can challenge during the verdict review window.');
@@ -114,7 +114,7 @@ export function transition(original, actor, action, now = Date.now()) {
     case 'timeout':
       if (b.status === 'open' && now >= b.join_before) { b.status = 'cancelled'; credits.push([b.creator, b.stake]); }
       else if (active && now >= b.resolve_until) finish('draw'); else throw Error('The refund deadline has not arrived.'); break;
-    default: throw Error('Unknown bet action.');
+    default: throw Error('Unknown challenge action.');
   }
   return { bet: b, credits, debit };
 }

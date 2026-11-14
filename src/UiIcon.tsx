@@ -14,6 +14,8 @@ export default function UiIcon({name,size=20,...props}:SVGProps<SVGSVGElement>&{
   back:<path d="M20 12H4m6-6-6 6 6 6"/>,
   clock:<><circle cx="12" cy="12" r="9"/><path d="M12 7v5l4 2"/></>,
   check:<path d="m4 12 5 5L20 6"/>,
+  share:<><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><path d="m8.6 10.5 6.8-4m-6.8 7 6.8 4"/></>,
+  copy:<><rect x="8" y="8" width="12" height="13" rx="2"/><path d="M15 8V5a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h3"/></>,
   ball:<><circle cx="12" cy="12" r="9"/><path d="m12 7 5 4-2 6H9l-2-6 5-4Zm0-4v4m9 3-4 1m0 9-2-3m-8 3 2-3M3 10l4 1"/></>,
   flask:<><path d="M9 3h6m-5 0v6l-6 10a1 1 0 0 0 1 2h14a1 1 0 0 0 1-2L14 9V3M7 15h10"/><circle cx="10" cy="18" r=".5"/></>,
   maths:<><rect x="4" y="3" width="16" height="18" rx="3"/><path d="M8 7h8M8 12h2m4 0h2m-8 5h2m4 0h2"/></>,

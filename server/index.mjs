@@ -8,9 +8,9 @@ import { createServer } from 'node:http';
 import { randomBytes, randomUUID, createHash } from 'node:crypto';
 import { readFile, stat } from 'node:fs/promises';
 import { resolve, extname } from 'node:path';
-import { verifyMessage } from 'near-api-js/nep413';
+import {createWalletAuth} from './wallet-auth.mjs';
 import { openStore } from './store.mjs';
-import { UNIT, STORAGE, amount, validateDraft, createBet, shortText, validAccount, moderate } from './domain.mjs';
+import { UNIT, STORAGE, amount, validateDraft, createBet, shortText, moderate } from './domain.mjs';
 import { resolveBet, fixtures, fixture, scoreboard, prices, hasAI, semanticModerate } from './resolvers.mjs';
 import {createMultiplayer} from './multiplayer.mjs';
 import {createBoardRooms} from './skill/rooms.mjs';
@@ -39,7 +39,7 @@ const economy=createNearEconomy(store,{services:{...multiplayer,community,change
 setInterval(()=>{void economy.tick().then(changed=>{if(changed)broadcast();}).catch(()=>{});},5000).unref();
 const faucet=createFaucet(store);
 const walletRecoveryTimer=setInterval(()=>{void Promise.all([economy.recoverPending(),faucet.tick()]).then(results=>{if(results.some(Boolean))broadcast();}).catch(()=>{});},20000);walletRecoveryTimer.unref();
-const { db } = store, streams = new Set(), arenaStreams = new Set(), challenges = new Map(), limits = new Map(), resolving = new Set(), cache = new Map();
+const { db } = store, streams = new Set(), arenaStreams = new Set(), limits = new Map(), resolving = new Set(), cache = new Map();
 const hash = x => createHash('sha256').update(x).digest('hex');
 const config = { network: 'testnet', contract_id: contractId, oracle_ready: oracleReady, ai_ready: hasAI, semantic_moderation: hasAI, room_storage_fee:'100000000000000000000000',currency:'NEAR',storage_fee: STORAGE.toString(), review_ms: 900000, resolution_ms: 172800000 };
 function broadcast() { for (const s of streams) s.write(`event: update\ndata: ${JSON.stringify({ at: Date.now() })}\n\n`); }
@@ -50,11 +50,12 @@ function current(req) { const token = /(?:^|;\s*)slotvend=([^;]+)/.exec(req.head
 function login(res, user) { const token = randomBytes(32).toString('hex'); db.prepare('INSERT INTO sessions VALUES(?,?,?)').run(hash(token), user.id, Date.now() + 7 * 86400000); res.setHeader('set-cookie', `slotvend=${token}; Path=/; HttpOnly; SameSite=Strict; Max-Age=604800${origin.startsWith('https:') ? '; Secure' : ''}`); }
 async function review(text) { moderate(text); if (process.env.REQUIRE_SEMANTIC_MODERATION === 'true' && !hasAI) throw Error('Content creation is paused until the moderation service is configured.'); await semanticModerate(text); }
 function required(req) { const u = current(req); if (!u) throw Error('Choose a practice name or connect your NEAR wallet first.'); return u; }
+const walletAuth=createWalletAuth({origin,provider,network:assertTestnet,review});
 async function profile(u) { if (!u) return null; let credit = '0', pending = '0', chain_error = null, balance='0'; if(u.kind==='wallet'){try{await assertTestnet();balance=String(await nearBalance(u.id));}catch{chain_error='NEAR wallet balance unavailable.';}} if (u.kind === 'wallet' && contractId) { try { [credit, pending] = await Promise.all([view('get_credit', { account_id: u.id }), view('get_pending', { account_id: u.id })]); } catch { chain_error = 'NEAR balance unavailable. Try refreshing.'; } } return { ...u, balance, credit, pending, chain_error }; }
 function decorated(b) { const media = db.prepare('SELECT cover,stream_json FROM room_media WHERE bet_id=?').get(b.id); const reactions = {}; for (const r of db.prepare('SELECT emoji,count(*) AS n FROM reactions WHERE bet_id=? GROUP BY emoji').all(b.id)) reactions[r.emoji] = r.n; return { ...b, cover: media?.cover || null, stream: media?.stream_json ? JSON.parse(media.stream_json) : null, creator_name: store.user(b.creator)?.name || b.creator, opponent_name: b.opponent ? store.user(b.opponent)?.name || b.opponent : null, reactions, chat_count: db.prepare('SELECT count(*) AS n FROM messages WHERE bet_id=?').get(b.id).n }; }
 function room(id) { const b = store.bet(id); if (!b) throw Error('This room was not found.'); return b; }
 async function sync(id) {
-  const raw = await view('get_bet', { id: Number(id.replace(/^n/, '')) }); if (!raw) throw Error('This bet was not found on NEAR.');
+  const raw = await view('get_bet', { id: Number(id.replace(/^n/, '')) }); if (!raw) throw Error('This challenge was not found on NEAR.');
   // Only surface creations prepared through this moderated application. Other chain writes remain directly accessible via RPC.
   const prior = store.bet('n' + raw.id), prep = db.prepare('SELECT * FROM prepared WHERE request_id=? AND user_id=?').get(raw.request_id, raw.creator);
   if (!prior && !prep) throw Error('This room has not passed NearFest content review.');
@@ -69,7 +70,7 @@ async function getEvidence(id) {
   if (resolving.has(id)) throw Error('A result check is already running.'); resolving.add(id);
   try {
     let b = room(id); if (b.mode === 'live') b = await sync(id);
-    if (b.status !== 'matched' || Date.now() < b.ends_at) throw Error('Results can be checked after the agreed finish time for a matched bet.');
+    if (b.status !== 'matched' || Date.now() < b.ends_at) throw Error('Results can be checked after the agreed finish time for a matched challenge.');
     const evidence = await resolveBet(b), digest = hash(JSON.stringify(evidence));
     if (b.mode === 'practice') store.move(id, 'oracle', { type: 'propose', outcome: evidence.outcome, evidence });
     else { db.prepare('INSERT OR REPLACE INTO evidence VALUES(?,?,?)').run(id, digest, JSON.stringify(evidence)); await propose(Number(id.slice(1)), digest, evidence.outcome); await sync(id); }
@@ -99,15 +100,12 @@ const server = createServer(async (req, res) => {
     if (path === '/api/profile' && req.method === 'POST') { const u=required(req), d=await body(req), name=shortText(d.name,2,24,'Display name'); await review(name); db.prepare('UPDATE users SET name=? WHERE id=?').run(name,u.id); broadcast(); return json(res,await profile(store.user(u.id))); }
     if (path === '/api/session/logout' && req.method === 'POST') { const token = /(?:^|;\s*)slotvend=([^;]+)/.exec(req.headers.cookie || '')?.[1]; if (token) db.prepare('DELETE FROM sessions WHERE token=?').run(hash(token)); res.setHeader('set-cookie', 'slotvend=; Path=/; HttpOnly; SameSite=Strict; Max-Age=0'); return json(res, { ok: true }); }
     if (path === '/api/auth/challenge' && req.method === 'POST') {
-      rate('auth:' + req.socket.remoteAddress, 15); const { account_id, name: requestedName } = await body(req); const name=requestedName===undefined?null:shortText(requestedName,2,24,'Display name'); if(name)await review(name); if (!validAccount(account_id)) throw Error('Invalid NEAR account.');
-      const id = randomUUID(), challenge = { id, account_id, name, nonce: randomBytes(32).toString('base64'), message: `Sign in to NearFest on NEAR testnet. No transaction or spending permission. Request: ${id}`, recipient: origin, expires: Date.now() + 300000 };
-      challenges.set(id, challenge); return json(res, challenge);
+      rate('auth:' + req.socket.remoteAddress,15);return json(res,await walletAuth.challenge(await body(req)));
     }
     if (path === '/api/auth/verify' && req.method === 'POST') {
-      const d = await body(req), c = challenges.get(d.id); challenges.delete(d.id);
-      if (!c || c.expires < Date.now() || c.account_id !== d.accountId) throw Error('Sign-in expired. Please reconnect.');
-      await assertTestnet();await verifyMessage({ signerAccountId: d.accountId, signerPublicKey: d.publicKey, signature: new Uint8Array(Buffer.from(d.signature, 'base64')), payload: { message: c.message, recipient: c.recipient, nonce: new Uint8Array(Buffer.from(c.nonce, 'base64')) }, provider });
-      store.ensureUser(d.accountId, c.name || d.accountId, 'wallet'); if(c.name)db.prepare('UPDATE users SET name=? WHERE id=?').run(c.name,d.accountId); const u=store.user(d.accountId); login(res, u); return json(res, await profile(u));
+      const {accountId,name}=await walletAuth.verify(await body(req));
+      store.ensureUser(accountId,name||accountId,'wallet');if(name)db.prepare('UPDATE users SET name=? WHERE id=?').run(name,accountId);
+      const u=store.user(accountId);login(res,u);return json(res,await profile(u));
     }
     if(path==='/api/arcade-dictionary'&&req.method==='GET')return json(res,{language:'English',minimum_length:3,words:[...new Set(WORDS)].filter(w=>w.length>=3).sort()});
     const arenaMatch=/^\/api\/arcade\/([^/]+)(?:\/(input|events|action|start|messages))?$/.exec(path);
@@ -170,7 +168,7 @@ const server = createServer(async (req, res) => {
       if (d.resolver === 'sports') { const {event}=await fixture(d.resolver_config.league,d.resolver_config.event_id);const {team,phase}=verifySportsEntry(d,event,{practice:u.kind==='practice'});d.resolver_config.in_play=phase==='live';d.title=`Will ${team.team.displayName} win ${new Date(event.date).toLocaleDateString('en-GB',{timeZone:'UTC'})}?`; }
       if (path === '/api/preview') return json(res, d);
       if (u.kind === 'practice') { const b = store.create(createBet(randomUUID(), u.id, d, 'practice')); broadcast(); return json(res, decorated(b), 201); }
-      if (!contractId) throw Error('The NEAR testnet contract must be configured before creating a wallet bet.');
+      if (!contractId) throw Error('The NEAR testnet contract must be configured before creating a wallet-funded challenge.');
       if (d.resolver !== 'players' && !oracleReady) throw Error('The automatic result signer is not configured for NEAR yet.');
       if (d.resolver === 'evidence' && !hasAI) throw Error('NEAR AI is not configured. Choose another settlement method.');
       for (const [key, max] of [['title', 120], ['rules', 500], ['side_a', 40], ['side_b', 40]]) if (Buffer.byteLength(d[key]) > max) throw Error(`${key} is too long for on-chain storage. Shorten the text.`);
@@ -234,7 +232,7 @@ async function tick() {
       } catch { /* A missing source never guesses an outcome. Players retain settlement/refund paths. */ }
     }
     for (const [key, v] of limits) if (v.until < Date.now()) limits.delete(key);
-    for (const [key, v] of challenges) if (v.expires < Date.now()) challenges.delete(key);
+    walletAuth.prune();
     db.prepare('DELETE FROM sessions WHERE expires<?').run(Date.now());
   } finally { processing = false; }
 }

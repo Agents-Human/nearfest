@@ -14,7 +14,7 @@ The deployed WASM was downloaded through NEAR RPC and its SHA-256 compared to th
 ## Demo flow
 
 1. Open a competitive title such as Connect Four, Mancala or Paddle Duel and choose **Play with friends**.
-2. Connect a testnet wallet and sign the NEP-413 sign-in message. The signature does not authorize spending.
+2. Choose **Join**. If sign-in is needed, it starts immediately. The connector combines wallet connection and NEP-413 authentication using `signMessageParams`; the app reuses an existing authenticated session without opening the wallet. A player name is optional. Authentication does not authorize spending.
 3. Choose the entry amount, create the room, and approve its deposit transaction. Share the room link with a second independent wallet.
 4. The other player deposits the same entry; both mark ready. The host confirms the on-chain participant list and starts.
 5. Play the match. The game server validates inputs, computes the result and submits the result hash and winner set through the separate oracle.
@@ -45,7 +45,7 @@ Waiting game rooms accept deposits for 30 minutes. The host can cancel a waiting
 
 The wallet shows the available balance, a small Collect action when credit is available, and collapsed funding and Activity sections. The server checks pending payments every 20 seconds, restores confirmed room membership, and retires an unpaid creation only after a successful finalized read finds no room after its signing deadline plus a one-minute finality buffer. It never resends a room deposit or requests a wallet signature in the background. If approval is still needed, Activity offers Continue using the original room and contribution receipt. Game-server failures retry settlement; an expired pot remains refundable on chain.
 
-Activity retains confirmed room actions, expired unpaid requests, faucet transfers, winnings and refunds in SQLite across browser and server restarts. Payout entries are recorded once from verified terminal escrow state. It displays the latest 30 entries and links to the full wallet transaction history on NEAR. Balance refreshes run while the app is visible and on return to the tab. Server recovery continues with the browser closed; reconnecting restores rooms into My rooms. Existing funded players go directly from Join to wallet approval. Collect still requires wallet approval. PostgreSQL is not required for this single-server workflow.
+Activity retains confirmed room actions, expired unpaid requests, faucet transfers, winnings and refunds in SQLite across browser and server restarts. Payout entries are recorded once from verified terminal escrow state. It displays the latest 30 entries and links to the full wallet transaction history on NEAR. Balance refreshes run while the app is visible and on return to the tab. Server recovery continues with the browser closed; reconnecting restores rooms into My rooms. Existing funded players go directly from Join to wallet approval. First-time players use one combined connection and authentication action that starts directly from Join; there is no Account/Wallet/Continue wizard and no Ready to join confirmation. Names equal to wallet addresses are valid. Collect still requires wallet approval. PostgreSQL is not required for this single-server workflow.
 
 ## Local setup and checks
 
@@ -67,7 +67,7 @@ Optional `NEAR_AI_API_KEY` is separate from wallet and escrow setup. It is not c
 
 ## In-app testnet funding
 
-Onboarding and the account panel offer **Add test NEAR**, showing the currently available grant before submission. A separate faucet wallet pays the transfer and gas; an empty connected wallet does not need to approve a spending transaction or leave NearFest. Sign-in is still required, and the recipient is always the authenticated account, never an address supplied in a request body. Mainnet is rejected.
+Joining automatically requests a free grant if the wallet cannot cover its entry and fees, then proceeds directly to wallet entry approval. The account panel also offers manual **Add test NEAR**. If funding is unavailable or limited, joining stays on the same screen and checks again when the player returns with funds. A separate faucet wallet pays the transfer and gas; an empty connected wallet does not need to approve a spending transaction or leave NearFest. Sign-in is still required, and the recipient is always the authenticated account, never an address supplied in a request body. Mainnet is rejected.
 
 Funding is available below a 10 NEAR wallet balance, once every 24 hours per wallet. Persistent limits also cap five top-ups per network address per hour, ten total per hour and twenty per day. The faucet retains at least 0.1 NEAR after a transfer. The external faucet remains a backup when this reserve is empty or the service is limited. Shared networks can hit the network-address limit; this is a bounded hackathon demo faucet, not Sybil-resistant distribution.
 

@@ -23,9 +23,9 @@ test('practice opponent finishes an available win and blocks an immediate loss',
  assert.equal(choosePracticeMove(threat).column,1);
 });
 test('every published title offers solo and online modes, including all knowledge challenges',()=>{
- assert.equal(discoveryGames.length,60);assert.equal(new Set(discoveryGames.map(g=>g.id)).size,60);
+ assert.equal(discoveryGames.length,58);assert.equal(new Set(discoveryGames.map(g=>g.id)).size,58);
  assert(discoveryGames.every(g=>g.solo&&g.multiplayer));
  assert(discoveryGames.every(g=>!['local','imported'].includes(g.engine)));
  for(const id of ['maths','science','trivia','times','fractions','chess'])assert(discoveryGames.some(g=>g.id===id),id);
- assert.equal(discoveryGames.find(g=>g.id==='oware').title,'Mancala');assert(!discoveryGames.some(g=>g.id==='kalah'||g.id==='ludo'));
+ assert.equal(discoveryGames.find(g=>g.id==='oware').title,'Mancala');assert(!discoveryGames.some(g=>['kalah','ludo','pocket-soccer','marble-run'].includes(g.id)));
 });
